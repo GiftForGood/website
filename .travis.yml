@@ -10,8 +10,5 @@ script:
   - yarn build
 
 after_success:
-  skip-cleanup: true
-  provider: script
-  script: 
-    - npm install -g surge
-    - ./config/travis/deploy-surge.sh
+  - npm install -g surge
+  - ./config/travis/deploy-surge.sh
