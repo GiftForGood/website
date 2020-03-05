@@ -9,11 +9,9 @@ git:
 script:
   - yarn build
 
-deploy:
+after_success:
   skip-cleanup: true
   provider: script
   script: 
     - npm install -g surge
     - ./config/travis/deploy-surge.sh
-  on:
-    branch: master
