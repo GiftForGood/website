@@ -1,0 +1,19 @@
+language: node_js
+cache:
+  directories:
+    - ~/.npm
+node_js:
+  - '10'
+git:
+  depth: 3
+script:
+  - yarn build
+
+deploy:
+  skip-cleanup: true
+  provider: script
+  script: 
+    - npm install -g surge
+    - ./config/travis/deploy-surge.sh
+  on:
+    branch: master
