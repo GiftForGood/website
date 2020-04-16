@@ -1,11 +1,11 @@
-This project
+This project is built with [Next.js](https://nextjs.org/) on top of [React](https://reactjs.org/).
 
 ## Prerequisites
 - [Node.js 10.13](https://nodejs.org/en/) or later
 
 ## Setting up
 
-Run `npm install` to install all the relevant dependencies such as React, Next etc.   
+Run `npm install` in the root directory to install all the relevant dependencies such as React, Next.js etc.   
 
 ## Available Scripts
 
