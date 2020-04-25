@@ -27,6 +27,10 @@ Starts a Next.js production server at [http://localhost:3000](http://localhost:3
 
 Builds the app for production to the `.next` folder.<br />
 
+### `npm run export` or `next build && next export`
+
+Exports your app into static HTML, which can be run standalone without the need of a Node.js server. The static version of the app will be available in the `out` directory.
+
 ## Learn More
 
 You can learn more in the [Getting Started With Next.js](https://nextjs.org/docs/getting-started).
