@@ -6,9 +6,7 @@ node_js:
 - '10'
 git:
   depth: 3
-before_install:
-- openssl aes-256-cbc -K $encrypted_2a03bfc35e23_key -iv $encrypted_2a03bfc35e23_iv
-  -in .travis/dokku-deploy.key.enc -out .travis/dokku-deploy.key -d
+
 script:
 - npm run lint
 - npm run export
