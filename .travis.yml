@@ -1,0 +1,16 @@
+language: node_js
+cache:
+  directories:
+    - ~/.npm
+node_js:
+  - '10'
+git:
+  depth: 3
+
+script:
+  - npm run lint
+  - npm run export
+
+after_success:
+  - chmod +x .travis/deploy-dokku.sh
+  - ./config/travis/deploy-dokku.sh
