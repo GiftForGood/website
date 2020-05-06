@@ -16,7 +16,7 @@
   "scripts": {
     "dev": "next",
     "build": "next build",
-    "start": "next start",
+    "start": "next start -p $PORT",
     "export": "next build && next export",
     "lint": "prettier --check pages/*.js",
     "format": "prettier --write pages/*.js"
