@@ -31,6 +31,14 @@ Builds the app for production to the `.next` folder.<br />
 
 Exports your app into static HTML, which can be run standalone without the need of a Node.js server. The static version of the app will be available in the `out` directory.
 
+### `npm run lint`
+
+Runs a series of checks on the code formatting. 
+
+### `npm run format`
+
+Automatically formats the code to our specified code formatting.
+
 ## Learn More
 
 You can learn more in the [Getting Started With Next.js](https://nextjs.org/docs/getting-started).
