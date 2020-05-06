@@ -33,11 +33,11 @@ Exports your app into static HTML, which can be run standalone without the need 
 
 ### `npm run lint`
 
-Runs a series of checks on the code formatting. 
+Runs a series of checks on the code formatting according to the `.prettierrc.json` configuration file. 
 
 ### `npm run format`
 
-Automatically formats the code to our specified code formatting.
+Automatically formats the code according to the `.prettierrc.json` configuration file.
 
 ## Learn More
 
