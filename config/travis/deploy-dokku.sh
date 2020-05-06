@@ -7,4 +7,4 @@ ssh-keyscan "$DOKKU_HOST" >> ~/.ssh/known_hosts;
 git remote add deploy dokku@"$DOKKU_HOST":"$DOKKU_APP";
 git config --global push.default simple;
 git fetch --unshallow;
-git push deploy master;
+git push deploy master --force;
