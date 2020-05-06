@@ -21,7 +21,7 @@ notifications:
   webhooks:
     urls:
       - https://gfg-telegram-hooks.glitch.me/travis
-    on_success: change # default: always
+    on_success: always # default: always
     on_failure: always # default: always
     on_start:   change # default: never
     on_cancel:  always # default: always
