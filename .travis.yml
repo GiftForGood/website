@@ -6,19 +6,15 @@ node_js:
 - '10'
 git:
   depth: 3
-
 before_install:
-  - openssl aes-256-cbc -K $encrypted_2a03bfc35e23_key -iv $encrypted_2a03bfc35e23_iv
-    -in .travis/dokku-deploy.key.enc -out .travis/dokku-deploy.key -d
-
+- openssl aes-256-cbc -K $encrypted_2a03bfc35e23_key -iv $encrypted_2a03bfc35e23_iv
+  -in .travis/dokku-deploy.key.enc -out .travis/dokku-deploy.key -d
 script:
 - npm run lint
 - npm run export
-
 after_success:
-  - chmod +x ./config/travis/deploy-dokku.sh
-  - |
-    if [ "$TRAVIS_BRANCH" == "master" ] && [ "$TRAVIS_PULL_REQUEST" = "false" ]; then
-      bash ./config/travis/deploy-dokku.sh;
-    fi;
-
+- chmod +x ./config/travis/deploy-dokku.sh
+- |
+  if [ "$TRAVIS_BRANCH" == "master" ] && [ "$TRAVIS_PULL_REQUEST" = "false" ]; then
+    bash ./config/travis/deploy-dokku.sh;
+  fi;
