@@ -1,4 +1,4 @@
-class ReportAPI {
+class ReportsAPI {
   /**
    * Report a wish
    * @param {string} wishID The reported wish id
@@ -16,4 +16,4 @@ class ReportAPI {
   async reportDonation(donationID, userId, reason) {}
 }
 
-export default ReportAPI;
+export default ReportsAPI;
