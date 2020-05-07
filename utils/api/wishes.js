@@ -3,6 +3,10 @@ class WishesAPI {
 	#prevPendingWishesForCategoryDoc;
 	#npoWishesQuery;
 	#prevNPOWishesDoc;
+	#npoWishesByStatusQuery;
+	#prevNPOWishesByStatusDoc;
+	#completedDonorWishesQuery;
+	#prevCompletedDonorWishesDoc;
 
 	/**
 	 * Create a new wish
@@ -14,16 +18,24 @@ class WishesAPI {
 	async create(title, description, categories) {}
 
 	/**
-	 * Get the top X wishes belonging to a category that are pending, sorted by timestamp
+	 * Search wishes containing the text both in the title and description
+	 * @param {string} text
+	 * @throws {FirestoreError}
+	 * @return {array} A list of wishes that contain the text
+	 */
+	async search(text) {}
+
+	/**
+	 * Get the top X pending wishes belonging to a category, sorted by timestamp
 	 * @param {string} category The category name
 	 * @param {number} limit The number of wishes to return
 	 * @throws {FirestoreError}
-	 * @returns {array} A list of X wishes sorted by timestamp
+	 * @return {array} A list of X pending wishes, sorted by timestamp
 	 */
-	async getTopXWishes(category, limit) {}
+	async getTopXPendingWishes(category, limit) {}
 
 	/**
-	 * Get pending wishes belonging to a category. Only return WISHES_BATCH_SIZE results
+	 * Get the initial batch of pending wishes belonging to a category. Only return WISHES_BATCH_SIZE results
 	 * @param {string} category The category's name
 	 * @param {string} orderBy The way to order the wishes
 	 * @throws {FirestoreError}
@@ -32,7 +44,7 @@ class WishesAPI {
 	async getInitialBatchOfPendingWishesForCategory(category, orderBy) {}
 
 	/**
-	 * Get the next batch of category wishes that was previously queried. Only return WISHES_BATCH_SIZE results
+	 * Get the next batch of pending wishes belonging to a category that was previously queried. Only return WISHES_BATCH_SIZE results
 	 * @throws {ReferenceError}
 	 * @throws {FirestoreError}
 	 * @return {array} The ordered wishes belonging to a category
@@ -41,14 +53,14 @@ class WishesAPI {
 
 	/**
 	 * Get a wish by its id
-	 * @param {string} id
+	 * @param {string} id The wish id
 	 * @throws {FirestoreError}
 	 * @return {object} The wish info
 	 */
 	async getWish(id) {}
 
 	/**
-	 * Get wishes belonging to a NPO. Only return WISHES_BATCH_SIZE results
+	 * Get the initial batch of wishes belonging to a NPO. Only return WISHES_BATCH_SIZE results
 	 * @param {string} npoID
 	 * @return {array} A list of wishes belonging to a NPO
 	 */
@@ -56,12 +68,47 @@ class WishesAPI {
 
 	/**
 	 * Get the next batch of NPO wishes that was previously queried. Only return WISHES_BATCH_SIZE results
+	 * @throws {ReferenceError}
+	 * @throws {FirestoreError}
 	 * @return {array} A list of wishes belonging to a NPO
 	 */
 	async getNextBatchOfNPOWishes() {}
 
 	/**
-	 * Update the fields of the wishes. Does not include updating of status
+	 * Get the initial batch of wishes belonging to a NPO filter by its status. Only return WISHES_BATCH_SIZE results
+	 * @param {string} npoID
+	 * @param {string} status The status of the wishes
+	 * @throws {FirestoreError}
+	 * @return {array} A list of wishes belonging NPO, filtered by status
+	 */
+	async getInitialBatchOfNPOWishesFilterByStatus(npoID, status) {}
+
+	/**
+	 * Get the next batch of wishes belonging to a NPO filter by its status. Only return WISHES_BATCH_SIZE results
+	 * @throws {ReferenceError}
+	 * @throws {FirestoreError}
+	 * @return {array} A list of wishes belonging to a NPO, filtered by status
+	 */
+	async getNextBatchOfNPOWishesFilterByStatus() {}
+
+	/**
+	 * Get the initial batch of wishes that are completed by a donor. Only return WISHES_BATCH_SIZE results
+	 * @param {string} donorID
+	 * @throws {FirestoreError}
+	 * @return {array} A list of wishes that are completed by a donor
+	 */
+	async getInitialBatchOfDonorCompletedWishes(donorID) {}
+
+	/**
+	 * Get the next batch of wishes completed by a donor that was previously queried. Only return WISHES_BATCH_SIZE results
+	 * @throws {ReferenceError}
+	 * @throws {FirestoreError}
+	 * @return {array} A list of wishes that are completed by a donor
+	 */
+	async getNextBatchOfDonorCompletedWishes() {}
+
+	/**
+	 * Update the fields of a wish. Does not include updating of status
 	 * @param {string} id The wish id
 	 * @param {object} data The data to update to
 	 * @return {boolean} true if the wish field/s is updated, false otherwise
