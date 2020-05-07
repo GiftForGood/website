@@ -1,6 +1,6 @@
 class WishesAPI {
-  #categoryPendingWishesQuery;
-  #prevPendingWishesDoc;
+  #pendingWishesForCategoryQuery;
+  #prevPendingWishesForCategoryDoc;
   #npoWishesQuery;
   #prevNPOWishesDoc;
 
@@ -23,21 +23,21 @@ class WishesAPI {
   async getTopXWishes(category, limit) {}
 
   /**
-   * Get pending wishes belonging to a category. Only return 21 results
+   * Get pending wishes belonging to a category. Only return WISHES_BATCH_SIZE results
    * @param {string} category The category's name
    * @param {string} orderBy The way to order the wishes
    * @throws {FirestoreError} 
    * @return {array} A list of ordered wishes belonging to a category
    */
-  async getPendingWishes(category, orderBy) {}
+  async getInitialBatchOfPendingWishesForCategory(category, orderBy) {}
 
   /**
-   * Get the next batch of category wishes that was previously queried. Only return 21 results
+   * Get the next batch of category wishes that was previously queried. Only return WISHES_BATCH_SIZE results
    * @throws {ReferenceError}
    * @throws {FirestoreError}
    * @return {array} The ordered wishes belonging to a category 
    */
-  async getNextBatchOfCategoryPendingWishes() {}
+  async getNextBatchOfPendingWishesForCategory() {}
 
   /**
    * Get a wish by its id
@@ -48,14 +48,14 @@ class WishesAPI {
   async getWish(id) {}
 
   /**
-   * Get wishes belonging to a NPO. Only return 21 results
+   * Get wishes belonging to a NPO. Only return WISHES_BATCH_SIZE results
    * @param {string} npoID 
    * @return {array} A list of wishes belonging to a NPO
    */
-  async getNPOWishes(npoID) {}
+  async getInitialBatchOfNPOWishes(npoID) {}
 
   /**
-   * Get the next batch of NPO wishes that was previously queried. Only return 21 results
+   * Get the next batch of NPO wishes that was previously queried. Only return WISHES_BATCH_SIZE results
    * @return {array} A list of wishes belonging to a NPO
    */
   async getNextBatchOfNPOWishes() {}
