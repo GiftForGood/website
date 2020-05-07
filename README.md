@@ -42,3 +42,9 @@ Automatically formats the code according to the `.prettierrc.json` configuration
 ## Learn More
 
 You can learn more in the [Getting Started With Next.js](https://nextjs.org/docs/getting-started).
+
+## Environment Variables 
+To use environment variables within the project:
+1. `mv .env.sample .env`
+2. Add environment variables inside `.env` 
+3. Add environment variables inside `next.config.js`
