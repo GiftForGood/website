@@ -1,4 +1,4 @@
-import firebase from "firebase/app";
+import firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/firestore';
 
@@ -9,7 +9,7 @@ var config = {
   projectId: process.env.FIREBASE_PROJECT_ID,
   storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
   messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.FIREBASE_APP_ID
+  appId: process.env.FIREBASE_APP_ID,
 };
 
 if (!firebase.apps.length) {
@@ -17,4 +17,5 @@ if (!firebase.apps.length) {
 }
 
 const firebaseAuth = firebase.auth();
-export { firebaseAuth, firebase };
+const db = firebase.firestore();
+export { firebaseAuth, db, firebase };
