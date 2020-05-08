@@ -1,18 +1,13 @@
 import { createStore, applyMiddleware, combineReducers } from 'redux';
 import thunk from "redux-thunk";
 import logger from "redux-logger";
-// import sessionReducer from "./components/session";
-// import buildReducer from "./components/build";
-// import navbarReducer from "./components/nav";
-// import browseReducer from './components/browse';
+
+import registerReducer from "./src/components/register";
 
 const initialState = {};
 
 const rootReducer = combineReducers({
-  // session: sessionReducer,
-  // build: buildReducer,
-  // navbar: navbarReducer,
-  // browse: browseReducer
+  register: registerReducer,
 });
 
 const middlewares = [thunk];
