@@ -1,5 +1,5 @@
 import runMiddleware from '../middleware';
-import sessionHandler from '../sessionHandler';
+import sessionHandler from '../session/sessionHandler';
 import firebase from '../admin-firebase';
 
 export async function isAuthenticated(req, res) {
