@@ -53,12 +53,18 @@ class AuthAPI {
   async loginDonorWithEmailAndPassword(email, password) {}
 
   /**
-   *
+   * Sign in a NPO
    * @param {string} email
    * @param {string} password
    * @return {object} A firebase document of the NPO info
    */
   async loginNPO(email, password) {}
+
+  /**
+   * Login through session
+   * @param {string} token The firebase token
+   */
+  async silentLogin(token) {}
 
   /**
    * Logout a user (donor & NPO)
