@@ -1,13 +1,4 @@
 class WishesAPI {
-  #pendingWishesForCategoryQuery;
-  #prevPendingWishesForCategoryDoc;
-  #npoWishesQuery;
-  #prevNPOWishesDoc;
-  #npoWishesByStatusQuery;
-  #prevNPOWishesByStatusDoc;
-  #completedDonorWishesQuery;
-  #prevCompletedDonorWishesDoc;
-
   /**
    * Create a new wish
    * @param {string} title The wish title
@@ -20,92 +11,59 @@ class WishesAPI {
   /**
    * Search wishes containing the text both in the title and description
    * @param {string} text
-   * @throws {FirestoreError}
-   * @return {array} A list of wishes that contain the text
+   * @return {object} A firebase document of wishes that contain the text
    */
   async search(text) {}
 
   /**
    * Get the top X pending wishes belonging to a category, sorted by timestamp
    * @param {string} category The category name
-   * @param {number} limit The number of wishes to return
-   * @throws {FirestoreError}
-   * @return {array} A list of X pending wishes, sorted by timestamp
+   * @param {number} n The number of wishes to return
+   * @return {object} A firebase document of the top n pending wishes
    */
-  async getTopXPendingWishes(category, limit) {}
+  async getTopNPendingWishes(category, n) {}
 
   /**
-   * Get the initial batch of pending wishes belonging to a category. Only return WISHES_BATCH_SIZE results
+   * Get the initial batch of pending wishes belonging to a category. Only return results of WISHES_BATCH_SIZE
    * @param {string} category The category's name
    * @param {string} orderBy The way to order the wishes
-   * @throws {FirestoreError}
-   * @return {array} A list of ordered wishes belonging to a category
+   * @param {boolean} isReverse Indicates if the query should be ordered in reverse
+   * @param {object} previousDocument The previous firebase document to start the query after. If the field is not given, the query will start from the first document
+   * @return {object} A firebase document of ordered pending wishes belonging to a category
    */
-  async getInitialBatchOfPendingWishesForCategory(category, orderBy) {}
-
-  /**
-   * Get the next batch of pending wishes belonging to a category that was previously queried. Only return WISHES_BATCH_SIZE results
-   * @throws {ReferenceError}
-   * @throws {FirestoreError}
-   * @return {array} The ordered wishes belonging to a category
-   */
-  async getNextBatchOfPendingWishesForCategory() {}
+  async getPendingWishesForCategory(category, orderBy, isReverse, previousDocument = null) {}
 
   /**
    * Get a wish by its id
    * @param {string} id The wish id
-   * @throws {FirestoreError}
-   * @return {object} The wish info
+   * @return {object} A firebase document of the wish info
    */
   async getWish(id) {}
 
   /**
-   * Get the initial batch of wishes belonging to a NPO. Only return WISHES_BATCH_SIZE results
+   * Get the initial batch of wishes belonging to a NPO. Only return results of WISHES_BATCH_SIZE
    * @param {string} npoID
-   * @return {array} A list of wishes belonging to a NPO
+   * @param {object} previousDocument The previous firebase document to start the query after. If the field is not given, the query will start from the first document
+   * @return {object} A firebase document of wishes belonging to a NPO
    */
-  async getInitialBatchOfNPOWishes(npoID) {}
+  async getNPOWishes(npoID, previousDocument = null) {}
 
   /**
-   * Get the next batch of NPO wishes that was previously queried. Only return WISHES_BATCH_SIZE results
-   * @throws {ReferenceError}
-   * @throws {FirestoreError}
-   * @return {array} A list of wishes belonging to a NPO
-   */
-  async getNextBatchOfNPOWishes() {}
-
-  /**
-   * Get the initial batch of wishes belonging to a NPO filter by its status. Only return WISHES_BATCH_SIZE results
+   * Get the initial batch of wishes belonging to a NPO filter by its status. Only return results of WISHES_BATCH_SIZE
    * @param {string} npoID
    * @param {string} status The status of the wishes
-   * @throws {FirestoreError}
-   * @return {array} A list of wishes belonging NPO, filtered by status
+   * @param {object} previousDocument The previous firebase document to start the query after. If the field is not given, the query will start from the first document
+   * @return {object} A firebase document of wishes belonging to a NPO, filtered by status
    */
-  async getInitialBatchOfNPOWishesFilterByStatus(npoID, status) {}
+  async getNPOWishesFilterByStatus(npoID, status, previousDocument = null) {}
 
   /**
-   * Get the next batch of wishes belonging to a NPO filter by its status. Only return WISHES_BATCH_SIZE results
-   * @throws {ReferenceError}
-   * @throws {FirestoreError}
-   * @return {array} A list of wishes belonging to a NPO, filtered by status
-   */
-  async getNextBatchOfNPOWishesFilterByStatus() {}
-
-  /**
-   * Get the initial batch of wishes that are completed by a donor. Only return WISHES_BATCH_SIZE results
+   * Get the initial batch of wishes that are completed by a donor. Only return results of WISHES_BATCH_SIZE
    * @param {string} donorID
-   * @throws {FirestoreError}
-   * @return {array} A list of wishes that are completed by a donor
+   * @param {object} previousDocument The previous firebase document to start the query after. If the field is not given, the query will start from the first document
+   * @return {object} AA firebase document of wishes that a completed by a donor
    */
-  async getInitialBatchOfDonorCompletedWishes(donorID) {}
-
-  /**
-   * Get the next batch of wishes completed by a donor that was previously queried. Only return WISHES_BATCH_SIZE results
-   * @throws {ReferenceError}
-   * @throws {FirestoreError}
-   * @return {array} A list of wishes that are completed by a donor
-   */
-  async getNextBatchOfDonorCompletedWishes() {}
+  async getDonorCompletedWishes(donorID, previousDocument = null) {}
 
   /**
    * Update the fields of a wish. Does not include updating of status

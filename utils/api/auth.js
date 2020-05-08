@@ -1,33 +1,30 @@
 class AuthAPI {
   /**
    * Register a donor with Google
-   * @throws {Error}
-   * @return {object} The donor's info
+   * @return {object} A firebase document of the donor info
    */
   async registerDonorWithGoogle() {}
 
   /**
    * Register a donor with email and password
-   * @param {string}  email
-   * @param {string}  password
-   * @throws {Error}
-   * @return {object} The donor's info
+   * @param {string} email
+   * @param {string} password
+   * @return {object} A firebase document of the donor info
    */
   async registerDonorWithEmailAndPassword(email, password) {}
 
   /**
    * Register a NPO
-   * @param {string}  name
-   * @param {number}  contact
-   * @param {string}  email
-   * @param {string}  password
-   * @param {string}  organizationName
-   * @param {string}  registeredUnder
-   * @param {object}  dateOfRegistration
-   * @param {string}  proofImageUrl
-   * @param {string}  activities
-   * @throws {Error}
-   * @return {object} The NPO's info
+   * @param {string} name
+   * @param {number} contact
+   * @param {string} email
+   * @param {string} password
+   * @param {string} organizationName
+   * @param {string} registeredUnder
+   * @param {object} dateOfRegistration
+   * @param {string} proofImageUrl
+   * @param {string} activities
+   * @return {object} A firebase document of the NPO info
    */
   async registerNPO(
     name,
@@ -43,32 +40,28 @@ class AuthAPI {
 
   /**
    * Sign in a donor with Google
-   * @throws {Error}  Failed to login donor
-   * @return {object}     The donor's info
+   * @return {object} A firebase document of the donor info
    */
   async loginDonorWithGoogle() {}
 
   /**
    * Sign in a donor with email and password
-   * @param {string}  email
-   * @param {string}  password
-   * @throws {Error}
-   * @return {object} The donor's info
+   * @param {string} email
+   * @param {string} password
+   * @return {object} A firebase document of the donor info
    */
   async loginDonorWithEmailAndPassword(email, password) {}
 
   /**
    *
-   * @param {string}  email
-   * @param {string}  password
-   * @throws {Error}
-   * @return {object} The NPO's info
+   * @param {string} email
+   * @param {string} password
+   * @return {object} A firebase document of the NPO info
    */
   async loginNPO(email, password) {}
 
   /**
    * Logout a user (donor & NPO)
-   * @throws {Error}
    */
   async logout() {}
 }

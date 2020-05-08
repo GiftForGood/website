@@ -1,13 +1,4 @@
 class DonationsAPI {
-  #pendingDonationsForCategoryQuery;
-  #prevPendingDonationsForCategoryDoc;
-  #donorDonationsQuery;
-  #prevDonorDonationsDoc;
-  #donorDonationsByStatusQuery;
-  #prevDonorDonationsByStatusDoc;
-  #completedNPODonationsQuery;
-  #prevCompletedNPODonationsDoc;
-
   /**
    * Create a new donation
    * @param {string} title The donation title
@@ -38,92 +29,51 @@ class DonationsAPI {
   /**
    * Search donations containing the text both in the title and description
    * @param {string} text
-   * @throws {FirestoreError}
-   * @return {array} A list of donations that contain the text
+   * @return {object} A firebase document of donations that contain the text
    */
   async search(text) {}
 
   /**
    * Get the top X pending donations belonging to a category, sorted by timestamp
    * @param {string} category The category name
-   * @param {number} limit The number of donations to return
-   * @throws {FirestoreError}
-   * @returns {array} A list of X pending donations, sorted by timestamp
+   * @param {number} n The number of donations to return
+   * @returns {object} A firebase document of the top n pending donations
    */
-  async getTopXPendingDonations(category, limit) {}
+  async getTopNPendingDonations(category, n) {}
 
   /**
-   * Get the initial batch of pending donations belonging to a category. Only return DONATIONS_BATCH_SIZE results
+   * Get the initial batch of pending donations belonging to a category. Only return results of DONATIONS_BATCH_SIZE
    * @param {string} category The category's name
    * @param {string} orderBy The way to order the donations
-   * @throws {FirestoreError}
-   * @return {array} A list of ordered donations belonging to a category
+   * @param {boolean} isReverse Indicates if the query should be ordered in reverse
+   * @param {object} previousDocument The previous firebase document to start the query after. If the field is not given, the query will start from the first document
+   * @return {object} A firebase document of ordered pending donations belonging to a category
    */
-  async getInitialBatchOfPendingDonationsForCategory(category, orderBy) {}
-
-  /**
-   * Get the next batch of pending donations belonging to a category that was previously queried. Only return DONATIONS_BATCH_SIZE results
-   * @throws {ReferenceError}
-   * @throws {FirestoreError}
-   * @return {array} The ordered donations belonging to a category
-   */
-  async getNextBatchOfPendingDonationsForCategory() {}
+  async getPendingDonationsForCategory(category, orderBy, isReverse, previousDocument = null) {}
 
   /**
    * Get a donation by its id
    * @param {string} id
-   * @throws {FirestoreError}
-   * @return {object} The donation info
+   * @return {object} A firebase document of the donation info
    */
   async getDonation(id) {}
 
   /**
    * Get the initial batch of donations belonging to a donor. Only return DONATIONS_BATCH_SIZE results
    * @param {string} donorID
-   * @return {array} A list of donations belonging to a NPO
+   * @param {object} previousDocument The previous firebase document to start the query after. If the field is not given, the query will start from the first document
+   * @return {object} A firebase document of donations belonging to a NPO
    */
-  async getInitialBatchOfDonorDonations(donorID) {}
-
-  /**
-   * Get the next batch of donor donations that was previously queried. Only return DONATIONS_BATCH_SIZE results
-   * @throws {ReferenceError}
-   * @throws {FirestoreError}
-   * @return {array} A list of donations belonging to a donor
-   */
-  async getNextBatchOfDonorDonations() {}
+  async getDonorDonations(donorID, previousDocument = null) {}
 
   /**
    * Get the initial batch of donations belonging to a donor filter by its status. Only return DONATIONS_BATCH_SIZE results
    * @param {string} npoID
    * @param {string} status The status of the donations
-   * @throws {FirestoreError}
-   * @return {array} A list of donations belonging donor, filtered by status
+   * @param {object} previousDocument The previous firebase document to start the query after. If the field is not given, the query will start from the first document
+   * @return {object} A firebase document of donations belonging a donor, filtered by status
    */
-  async getInitialBatchOfDonorDonationsFilterByStatus(donorID, status) {}
-
-  /**
-   * Get the next batch of donations belonging to a donor filter by its status. Only return DONATIONS_BATCH_SIZE results
-   * @throws {ReferenceError}
-   * @throws {FirestoreError}
-   * @return {array} A list of donations belonging to a donor, filtered by status
-   */
-  async getNextBatchOfDonorDonationsFilterByStatus() {}
-
-  /**
-   * Get the initial batch of donations that are completed by a NPO. Only return DONATIONS_BATCH_SIZE results
-   * @param {string} npoID
-   * @throws {FirestoreError}
-   * @return {array} A list of donations that are completed by a NPO
-   */
-  async getInitialBatchOfNPOCompletedDonations(npoID) {}
-
-  /**
-   * Get the next batch of donations completed by a NPO that was previously queried. Only return DONATIONS_BATCH_SIZE results
-   * @throws {ReferenceError}
-   * @throws {FirestoreError}
-   * @return {array} A list of donations that are completed by a NPO
-   */
-  async getNextBatchOfNPOCompletedDonations() {}
+  async getDonorDonationsFilterByStatus(donorID, status, previousDocument = null) {}
 
   /**
    * Update the fields of a donation. Does not include updating of status

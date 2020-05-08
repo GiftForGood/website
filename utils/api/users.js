@@ -9,7 +9,7 @@ class UsersAPI {
   /**
    * Gets the current logged in user info
    * @throws {ReferenceError} No logged in user
-   * @return {object} The current logged in user info
+   * @return {object} A firebase document of the current logged in user info
    */
   async currentUser() {}
 
@@ -23,8 +23,7 @@ class UsersAPI {
   /**
    * Get a user info by its id
    * @param {string} id The user id to search by
-   * @throws {FirestoreError}
-   * @return {object} The user info
+   * @return {object} A firebase document of the user info
    */
   async getUser(id) {}
 }
