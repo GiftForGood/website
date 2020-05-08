@@ -1,6 +1,6 @@
 import { db } from '../firebase';
 
-const COLLECTION_NAME = 'npoOrganizations';
+const npoOrganizationsCollection = db.collection('npoOrganizations');
 
 class NPOOrganizationAPI {
   /**
@@ -8,7 +8,7 @@ class NPOOrganizationAPI {
    * @return {object} A firebase document of all the npo organizations
    */
   async getAll() {
-    return db.collection(COLLECTION_NAME).get();
+    return npoOrganizationsCollection.get();
   }
 
   /**
@@ -17,7 +17,7 @@ class NPOOrganizationAPI {
    * @return {object} A firebase document of the NPO organization info
    */
   async get(name) {
-    return db.collection(COLLECTION_NAME).where('name', '==', name).get();
+    return npoOrganizationsCollection.where('name', '==', name).get();
   }
 }
 
