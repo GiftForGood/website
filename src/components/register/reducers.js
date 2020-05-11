@@ -1,51 +1,54 @@
-import { LANDING, NPO_REGISTER, DONOR_REGISTER, NPO_DETAILS } from './utils/SubPages'
+import { LANDING, NPO_REGISTER, DONOR_REGISTER, NPO_DETAILS } from './utils/SubPages';
 const initialState = {
 	organization: null,
 	name: '',
 	contactNumber: '',
-  currentPage: LANDING
+	currentPage: LANDING,
 };
 
 const registerReducer = (state = initialState, action) => {
 	switch (action.type) {
-		case 'signup/SET_NPO_ORG_DETAILS':
+		case 'register/SET_NPO_ORG_DETAILS':
 			return {
 				...state,
 				organization: action.organization,
 			};
-		case 'signup/SET_NPO_REGISTER_DETAILS':
+
+		case 'register/SET_NPO_REGISTER_DETAILS':
 			return {
 				...state,
 				name: action.name,
 				contactNumber: action.contactNumber,
 			};
-		case 'signup/SET_IS_NPO_REGISTER':
+
+		case 'register/SET_IS_NPO_REGISTER':
 			return {
 				...state,
-        currentPage: NPO_REGISTER
-			};
-		case 'signup/SET_IS_DONOR_REGISTER':
-			return {
-				...state,
-				currentPage: DONOR_REGISTER
+				currentPage: NPO_REGISTER,
 			};
 
-		case 'signup/SET_IS_BACK_TO_LANDING':
+		case 'register/SET_IS_DONOR_REGISTER':
 			return {
 				...state,
-				currentPage: LANDING
+				currentPage: DONOR_REGISTER,
 			};
 
-		case 'signup/SET_IS_BACK_TO_NPO_REGISTER':
+		case 'register/SET_IS_BACK_TO_LANDING':
 			return {
 				...state,
-        currentPage: NPO_REGISTER
+				currentPage: LANDING,
 			};
 
-		case 'signup/SET_IS_NPO_DETAILS':
+		case 'register/SET_IS_BACK_TO_NPO_REGISTER':
 			return {
 				...state,
-				currentPage: NPO_DETAILS
+				currentPage: NPO_REGISTER,
+			};
+
+		case 'register/SET_IS_NPO_DETAILS':
+			return {
+				...state,
+				currentPage: NPO_DETAILS,
 			};
 		default:
 			return state;

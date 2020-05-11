@@ -1,5 +1,5 @@
 import React from 'react';
-import { withRouter } from 'next/Router';
+import { withRouter } from 'next/router';
 import { withRedux } from '../utils/withRedux';
 import { isAuthenticated } from '../utils/authentication';
 import RegisterPage from '../src/components/register/pages/RegisterPage';
@@ -12,7 +12,9 @@ export async function getServerSideProps({ params, req, res, query }) {
 		res.end();
 	}
 	return {
-		props: {},
+		props: {
+			user
+		},
 	};
 }
 

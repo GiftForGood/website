@@ -1,18 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { withRouter } from 'next/router';
-import { useDispatch, useSelector } from 'react-redux';
-
-import { getName, getContactNumber, getOrganization, getCurrentPage } from '../selectors';
-
-import {
-	setNpoOrganizationDetails,
-	setIsNpoRegister,
-	setIsNpoDetails,
-	setIsDonorRegister,
-	setIsBackToLanding,
-	setIsBackToNpoRegister,
-} from '../actions';
-
+import React from 'react';
+import { useSelector } from 'react-redux';
+import { getCurrentPage } from '../selectors';
 import { LANDING, NPO_REGISTER, DONOR_REGISTER, NPO_DETAILS } from '../utils/SubPages';
 
 import RegisterLanding from '../modules/RegisterLanding';
@@ -47,4 +35,4 @@ const RegisterPage = (props, state) => {
 	);
 };
 
-export default withRouter(RegisterPage);
+export default RegisterPage;

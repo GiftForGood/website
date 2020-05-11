@@ -5,7 +5,7 @@ import { withRouter } from "next/router";
 const RegisterBackground = (props, state) => {
   return (
     <div>
-      <RegisterBackground />
+      RegisterBackground
     </div>
   );
 };
