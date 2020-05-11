@@ -8,7 +8,7 @@ const ImageContainer = styled.div`
   width: 100%;
   height: 100%;
   position: absolute;
-  objectfit: cover;
+  object-fit: cover;
   filter: brightness(70%);
 `;
 
