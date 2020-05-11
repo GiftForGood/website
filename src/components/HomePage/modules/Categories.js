@@ -6,7 +6,7 @@ import api from '../../../../utils/api/index';
 import styled from 'styled-components';
 
 const Container = styled.div`
-  margin: 0 2% 0 2%;
+  margin: 0 auto;
 `;
 
 const CategoryBox = styled.div`
@@ -20,7 +20,7 @@ const CategoryBox = styled.div`
 `;
 
 const ResizableTitle = styled.div`
-  font-size: calc(10px + 1vw);
+  font-size: calc(10px + 0.5vw);
   font-weight: bold;
 `;
 
@@ -31,7 +31,8 @@ const CategoryName = styled.div`
 `;
 
 const ScrollableRow = styled.div`
-  width: 96vw;
+  width: fit-content;
+  max-width: 100vw;
   overflow-x: scroll;
 `;
 
@@ -59,6 +60,24 @@ const dummyCategoriesData = [
     id: '123',
     imageUrl: '123',
     name: 'flat',
+  },
+  {
+    iconUrl: 'url',
+    id: '123',
+    imageUrl: '123',
+    name: 'flrewrewdsat',
+  },
+  {
+    iconUrl: 'url',
+    id: '123',
+    imageUrl: '123',
+    name: 'flatdsdfds',
+  },
+  {
+    iconUrl: 'url',
+    id: '123',
+    imageUrl: '123',
+    name: 'dasdsad',
   },
   {
     iconUrl: 'url',

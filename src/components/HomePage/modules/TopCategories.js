@@ -8,7 +8,7 @@ const TopCategoriesContainer = styled.div`
 `;
 
 const ResizableTitle = styled.div`
-  font-size: calc(10px + 1vw);
+  font-size: calc(10px + 0.5vw);
   font-weight: bold;
 `;
 
