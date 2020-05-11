@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { withRouter } from 'next/router';
 import { Button, InputField, Stack, Checkbox, Text, TextLink } from '@kiwicom/orbit-components/lib';
 import ChevronLeft from '@kiwicom/orbit-components/lib/icons/ChevronLeft';
 
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
@@ -12,13 +12,13 @@ import { setIsBackToNpoRegister, setNpoDetails } from '../actions';
 const RegisterNpoDetails = () => {
 	const dispatch = useDispatch();
 
-	const handleBackToLandingOnClick = () => {
+	const handleBackToNpoRegisterOnClick = () => {
 		dispatch(setIsBackToNpoRegister());
 	};
 
 	const handleFormSubmission = (values) => {
-		dispatch(setNpoDetails(values.name, values.mobileNumber))
-		// TODO: API to call Firebase 
+		dispatch(setNpoDetails(values.name, values.mobileNumber));
+		// TODO: API to call Firebase
 	};
 
 	const validationSchema = Yup.object().shape({
@@ -54,7 +54,7 @@ const RegisterNpoDetails = () => {
 
 	return (
 		<div>
-			<Button circled iconLeft={<ChevronLeft />} onClick={handleBackToLandingOnClick} />
+			<Button circled iconLeft={<ChevronLeft />} onClick={handleBackToNpoRegisterOnClick} />
 			<form onSubmit={formik.handleSubmit}>
 				<Stack>
 					<InputField

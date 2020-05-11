@@ -10,16 +10,17 @@ import {
 	Select,
 	Stack,
 	Textarea,
+	Text,
+	Heading,
 } from '@kiwicom/orbit-components/lib';
 import ChevronLeft from '@kiwicom/orbit-components/lib/icons/ChevronLeft';
 
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
 import { setIsNpoDetails, setIsBackToLanding, setNpoOrganizationDetails } from '../actions';
-import { months } from '../../../../utils/constants/month'
-
+import { months } from '../../../../utils/constants/month';
 
 const RegisterNpoOrganization = () => {
 	// TODO: Restore state when user comes back to this page
@@ -94,8 +95,13 @@ const RegisterNpoOrganization = () => {
 	return (
 		<div>
 			<Button circled iconLeft={<ChevronLeft />} onClick={handleBackToLandingOnClick} />
+			<Text align="center" as="div">
+				<Heading spaceAfter="largest" size="large" weight="bold">
+					I am a Non Profit Organization
+				</Heading>
+			</Text>
 			<form onSubmit={formik.handleSubmit}>
-				<Stack>
+				<Stack spacing="comfy">
 					<Select
 						label="Organization you are from"
 						name="name"
@@ -192,7 +198,9 @@ const RegisterNpoOrganization = () => {
 						{...formik.getFieldProps('activities')}
 					/>
 
-					<Button submit width="100px">Next</Button>
+					<Button submit width="100px">
+						Next
+					</Button>
 				</Stack>
 			</form>
 		</div>
