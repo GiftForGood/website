@@ -5,6 +5,14 @@ export function setNpoOrganizationDetails(organization) {
 	};
 }
 
+export function setNpoDetails(name, contactNumber) {
+	return {
+		type: 'register/SET_NPO_REGISTER_DETAILS',
+		name,
+		contactNumber
+	};
+}
+
 export function setIsNpoRegister() {
 	return {
 		type: 'register/SET_IS_NPO_REGISTER',

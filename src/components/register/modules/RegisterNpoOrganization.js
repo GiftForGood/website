@@ -131,7 +131,7 @@ const RegisterNpoOrganization = () => {
 					<InputField
 						label="Registration Number"
 						name="registrationNumber"
-						placeholder=" Registration Number"
+						placeholder="Registration Number"
 						error={
 							formik.touched.registrationNumber && formik.errors.registrationNumber
 								? formik.errors.registrationNumber
