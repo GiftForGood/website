@@ -26,7 +26,7 @@ export async function isAuthenticatedFailureRouteBackToLogin(req, res) {
   const user =
     req.session && req.session.decodedToken ? req.session.decodedToken : null;
   if (!user) {
-    res.writeHead(302, { Location: '/test' });
+    res.writeHead(302, { Location: '/login' });
     res.end();
     return;
   }
