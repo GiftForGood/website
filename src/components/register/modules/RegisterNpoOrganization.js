@@ -18,57 +18,8 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
 import { setIsNpoDetails, setIsBackToLanding, setNpoOrganizationDetails } from '../actions';
+import { months } from '../../../../utils/constants/month'
 
-const months = [
-	{
-		label: 'January',
-		value: 'January',
-	},
-	{
-		label: 'February',
-		value: 'February',
-	},
-	{
-		label: 'March',
-		value: 'March',
-	},
-	{
-		label: 'April',
-		value: 'April',
-	},
-	{
-		label: 'May',
-		value: 'May',
-	},
-	{
-		label: 'June',
-		value: 'June',
-	},
-	{
-		label: 'July',
-		value: 'July',
-	},
-	{
-		label: 'August',
-		value: 'August',
-	},
-	{
-		label: 'September',
-		value: 'September',
-	},
-	{
-		label: 'October',
-		value: 'October',
-	},
-	{
-		label: 'November',
-		value: 'November',
-	},
-	{
-		label: 'December',
-		value: 'December',
-	},
-];
 
 const RegisterNpoOrganization = () => {
 	// TODO: Restore state when user comes back to this page
