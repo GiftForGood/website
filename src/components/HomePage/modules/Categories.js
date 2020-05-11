@@ -32,7 +32,7 @@ const CategoryName = styled.div`
 
 const ScrollableRow = styled.div`
   width: fit-content;
-  max-width: 100vw;
+  max-width: 95vw;
   overflow-x: scroll;
 `;
 
@@ -83,19 +83,19 @@ const dummyCategoriesData = [
     iconUrl: 'url',
     id: '123',
     imageUrl: '123',
-    name: 'flrewrewdsat',
+    name: 'eqrewq',
   },
   {
     iconUrl: 'url',
     id: '123',
     imageUrl: '123',
-    name: 'flatdsdfds',
+    name: 'dfsf',
   },
   {
     iconUrl: 'url',
     id: '123',
     imageUrl: '123',
-    name: 'dasdsad',
+    name: 'dasddfssad',
   },
 ];
 

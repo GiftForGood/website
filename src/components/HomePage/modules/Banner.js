@@ -19,7 +19,16 @@ const TitleArea = styled.div`
   left: 50%;
   width: 50%;
   transform: translate(-50%, -50%);
+`;
+
+const Title = styled.div`
   font-size: calc(10px + 1vw);
+  font-weight: bold;
+`;
+
+const SubTitle = styled.div`
+  font-size: calc(10px + 0.5vw);
+  margin-top: 10px;
 `;
 
 const BannerContainer = styled.div`
@@ -50,11 +59,8 @@ const BannerImage = () => {
 const BannerText = () => {
   return (
     <TitleArea>
-      {title}
-      <div style={{ marginTop: '10px' }}>
-        {/* not sure how to overwrite the css of a component, hence the extra div */}
-        <div>{subTitle}</div>
-      </div>
+      <Title>{title}</Title>
+      <SubTitle>{subTitle}</SubTitle>
     </TitleArea>
   );
 };
