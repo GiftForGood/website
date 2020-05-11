@@ -53,7 +53,7 @@ class WishesAPI {
       updatedDateTime: timeNow,
       lastActionByUserDateTime: timeNow,
       expireDateTime: expiryDateTime,
-      isBumped: false
+      isBumped: false,
     };
     newWish.set(data);
 
@@ -94,19 +94,24 @@ class WishesAPI {
    * @throws {FirebaseError}
    * @return {object} A firebase document of ordered pending wishes belonging to a category
    */
-  async getPendingWishesForCategory(categoryId, orderBy = WishesSortTypeConstant.TIMESTAMP, isReverse = false, previousDocument = null) {
+  async getPendingWishesForCategory(
+    categoryId,
+    orderBy = WishesSortTypeConstant.TIMESTAMP,
+    isReverse = false,
+    previousDocument = null
+  ) {
     // TODO: Sort by distance not implemented
-    
+
     let sortOrder = 'asc';
     if (isReverse) {
       sortOrder = 'desc';
     }
 
-    const categoryInfo = await this._getCategoryInfoById(categoryId)
+    const categoryInfo = await this._getCategoryInfoById(categoryId);
 
     const orderByField = this._getOrderByField(orderBy);
     if (orderByField === '') {
-      throw ReferenceError('Invalid orderBy type specified')
+      throw ReferenceError('Invalid orderBy type specified');
     }
 
     if (previousDocument == null) {
@@ -240,13 +245,13 @@ class WishesAPI {
     }
 
     const categoriesInfo = await this._getWishCategoriesInfo(wishInfo.categories, categories);
-    
+
     let data = {
       title: title,
       description: description,
       categories: categoriesInfo,
-      updatedDateTime: Date.now()
-    }
+      updatedDateTime: Date.now(),
+    };
 
     wishesCollection.doc(id).update(data);
 
@@ -414,15 +419,15 @@ class WishesAPI {
     let categoriesInfo = [];
 
     for (const name of updatedCategoriesName) {
-      let categoryInfo = existingCategories.find(category => category.name === name);
+      let categoryInfo = existingCategories.find((category) => category.name === name);
 
       if (typeof categoryInfo === 'undefined') {
         categoryInfo = await this._getCategoryInfoByName(name);
-      } 
+      }
 
       categoriesInfo.push(categoryInfo);
     }
-    
+
     return categoriesInfo;
   }
 
