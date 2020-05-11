@@ -33,9 +33,7 @@ const TopCategories = () => {
 
   return (
     <TopCategoriesContainer>
-      <ResizableTitle>
-        Top Categories
-      </ResizableTitle>
+      <ResizableTitle>Top Categories</ResizableTitle>
       <Stack largeDesktop={{ direction: 'row' }} largeMobile={{ direction: 'column' }} align="center">
         {getWishesForCategories()}
       </Stack>

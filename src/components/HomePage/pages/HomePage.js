@@ -9,7 +9,7 @@ const styles = {
   homePage: {
     height: '100vh',
     width: '100vw',
-  }
+  },
 };
 
 const HomePage = () => {

@@ -8,7 +8,7 @@ const ImageContainer = styled.div`
   width: 100%;
   height: 100%;
   position: absolute;
-  objectFit: cover;
+  objectfit: cover;
   filter: brightness(70%);
 `;
 
@@ -53,9 +53,7 @@ const BannerText = () => {
       {title}
       <div style={{ marginTop: '10px' }}>
         {/* not sure how to overwrite the css of a component, hence the extra div */}
-        <div>
-          {subTitle}
-        </div>
+        <div>{subTitle}</div>
       </div>
     </TitleArea>
   );

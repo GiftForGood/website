@@ -77,7 +77,7 @@ const dummyCategoriesData = [
     id: '123',
     imageUrl: '123',
     name: 'dasdsad',
-  }
+  },
 ];
 
 const Categories = () => {
@@ -99,7 +99,9 @@ const Categories = () => {
             </Desktop>
             <Mobile>
               <CategoryName>
-                <Text type="white" size="small">{category.name}</Text>
+                <Text type="white" size="small">
+                  {category.name}
+                </Text>
               </CategoryName>
             </Mobile>
           </CategoryBox>
@@ -110,9 +112,7 @@ const Categories = () => {
 
   return (
     <Container>
-      <ResizableTitle>
-        Explore GiftForGood
-      </ResizableTitle>
+      <ResizableTitle>Explore GiftForGood</ResizableTitle>
       <ScrollableRow>
         <CategoryRow />
       </ScrollableRow>
