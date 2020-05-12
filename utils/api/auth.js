@@ -86,7 +86,11 @@ class AuthAPI {
    * Sign in a donor with email and password
    * @param {string} email
    * @param {string} password
-   * @return {object} A firebase document of the donor info
+   * @throws
+   * @return {array} [token, userProfile, userDoc]
+   *  token: JWT
+   *  userProfile: The user profile
+   *  userDoc: Firebase document that contains the userInfo in the db
    */
   async loginDonorWithEmailAndPassword(email, password) {
     await firebaseAuth.signInWithEmailAndPassword(email, password);
