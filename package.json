@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@kiwicom/orbit-components": "^0.82.1",
+    "@kiwicom/orbit-components": "^0.84.2",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
@@ -19,6 +19,7 @@
   },
   "scripts": {
     "dev": "next",
+    "dev-local": "next --hostname 0.0.0.0",
     "build": "next build",
     "start": "next start -p $PORT",
     "export": "next build && next export",

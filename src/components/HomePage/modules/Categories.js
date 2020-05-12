@@ -22,6 +22,7 @@ const CategoryBox = styled.div`
 const ResizableTitle = styled.div`
   font-size: calc(10px + 0.5vw);
   font-weight: bold;
+  margin-bottom: 10px;
 `;
 
 const CategoryNameInBox = styled.div`
