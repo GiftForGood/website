@@ -31,17 +31,17 @@ const GreySubtleButton = styled.button`
     border-color: 1px solid #707070;
     background: Transparent;
     color: #707070;
-	}
+  }
 
-	:hover {
-		border-color: 1px solid #707070;
+  :hover {
+    border-color: 1px solid #707070;
     background: Transparent;
     color: #707070;
   }
-  
+
   :focus {
-		box-shadow: 0 0 0 3px #707070;
-	}
+    box-shadow: 0 0 0 3px #707070;
+  }
 `;
 
 const TopCategoryCard = styled.div`
@@ -56,7 +56,6 @@ const TopCategoryCard = styled.div`
 const GreyText = styled.div`
   color: #707070;
 `;
-
 
 const dummyWishesForTopThreeCategories = [
   [
@@ -228,22 +227,17 @@ const TopCategories = () => {
     return dummyWishesForTopThreeCategories.map((categoryWishes, i) => {
       return (
         <TopCategoryCard key={topThreeCategories[i]}>
-          <Card
-          title={topThreeCategories[i]}
-          asComponent={TopCategoryCard}
-          >
-          {categoryWishes.map((wish) => {
-            return (
-              <CardSection key={wish.wishesId} title={wish.organization.name}>
-                {wish.title + ' ' + wish.description}
-              </CardSection>
-            );
-          })}
+          <Card title={topThreeCategories[i]} asComponent={TopCategoryCard}>
+            {categoryWishes.map((wish) => {
+              return (
+                <CardSection key={wish.wishesId} title={wish.organization.name}>
+                  {wish.title + ' ' + wish.description}
+                </CardSection>
+              );
+            })}
             <CenteredButton>
               <Button size="small" asComponent={GreySubtleButton} onClick={function () {}}>
-                <GreyText>
-                  View all
-                </GreyText>
+                <GreyText>View all</GreyText>
               </Button>
             </CenteredButton>
           </Card>
