@@ -70,7 +70,9 @@ const TimePosted = ({ numberOfHoursAgo }) => {
 const CardHeader = ({ name, imageUrl }) => {
   return (
     <CardHeaderContainer>
-      <Avatar imageUrl={imageUrl} />
+      <div style={{ float: 'left' }}>
+        <Avatar imageUrl={imageUrl} />
+      </div>
       <AvatarDetails name={name} distance="2.5" />
       <TimePosted numberOfHoursAgo="1" />
     </CardHeaderContainer>

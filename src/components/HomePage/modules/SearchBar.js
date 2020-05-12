@@ -9,7 +9,7 @@ const SearchBarContainer = styled.div`
   top: 60%;
   left: 50%;
   width: 50%;
-  min-width: 10rem;
+  min-width: 15rem;
   transform: translate(-50%, -50%);
 `;
 

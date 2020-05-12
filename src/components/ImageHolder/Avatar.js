@@ -1,18 +1,14 @@
-const styles = {
-  avatar: {
-    width: '40px',
-    height: '40px',
-    borderRadius: '50%',
-    objectFit: 'cover',
-  },
-};
+import styled from 'styled-components';
+
+const CircularImage = styled.img`
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+`;
 
 const Avatar = ({ imageUrl }) => {
-  return (
-    <div style={{ float: 'left' }}>
-      <img style={styles.avatar} src={imageUrl} />
-    </div>
-  );
+  return <CircularImage src={imageUrl} />;
 };
 
 export default Avatar;
