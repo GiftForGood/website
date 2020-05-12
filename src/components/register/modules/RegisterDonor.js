@@ -15,9 +15,27 @@ import * as Yup from 'yup';
 
 import { setIsBackToLanding } from '../actions';
 import styled from 'styled-components';
+import { colors } from '../../../../utils/constants/colors';
+
 
 const HeadingColor = styled.div`
-	color: #ed5555;
+	color: ${colors.donorBackground};
+`;
+
+const RedButton = styled.button`
+	background: ${colors.donorBackground};
+
+	:active {
+		background: ${colors.donorHoverActive};
+	}
+
+	:hover {
+		background: ${colors.donorHoverActive};
+	}
+
+	:focus {
+		box-shadow: 0 0 0 3px rgba(222, 24, 24, 0.5);
+	}
 `;
 
 const RegisterDonor = () => {
@@ -107,7 +125,7 @@ const RegisterDonor = () => {
 						{...formik.getFieldProps('passwordConfirmation')}
 					/>
 
-					<Button submit fullWidth={true}>
+					<Button submit fullWidth={true} asComponent={RedButton}>
 						Register
 					</Button>
 				</Stack>

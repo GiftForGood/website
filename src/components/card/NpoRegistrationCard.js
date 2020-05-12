@@ -1,16 +1,17 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Text, Heading, Button } from '@kiwicom/orbit-components/lib';
+import { colors } from '../../../utils/constants/colors';
 
 const BlueButton = styled.button`
-	background: #065ef5;
+	background: ${colors.npoBackground};
 
 	:active {
-		background: #0554dc;
+		background: ${colors.npoHoverActive};
 	}
 
 	:hover {
-		background: #0554dc;
+		background: ${colors.npoHoverActive};
 	}
 
 	:focus {
@@ -46,7 +47,7 @@ const CardAction = styled.div`
 `;
 
 const HeadingColor = styled.div`
-	color: #065ef5;
+	color: ${colors.npoBackground};
 `;
 
 const Card = ({ onClick }) => {
