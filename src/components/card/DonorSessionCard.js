@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { Text, Heading, Button } from '@kiwicom/orbit-components/lib';
 import { colors } from '../../../utils/constants/colors';
-import BlueButton from '../../components/button/BlueButton'
+import RedButton from '../button/RedButton'
 
 const CardWrapper = styled.div`
 	display: flex;
@@ -10,7 +10,7 @@ const CardWrapper = styled.div`
 	justify-content: space-between;
 	border-radius: 3px;
 	box-shadow: 0px 0px 2px 0px rgba(37, 42, 49, 0.16), 0px 1px 4px 0px rgba(37, 42, 49, 0.12);
-	height: 275px;
+	min-height: 300px;
 `;
 const Description = styled.div`
 	font-family: 'Roboto', -apple-system, '.SFNSText-Regular', 'San Francisco', 'Segoe UI', 'Helvetica Neue',
@@ -32,16 +32,16 @@ const CardAction = styled.div`
 `;
 
 const HeadingColor = styled.div`
-	color: ${colors.npoBackground};
+	color: ${colors.donorBackground};
 `;
 
-const Card = ({ onClick }) => {
+const Card = ({ onClick, buttonTitle }) => {
 	const Title = () => {
 		return (
 			<div>
 				<Text size="large">I am a</Text>
 				<Heading type="title2">
-					<HeadingColor> Non Profit Organization</HeadingColor>
+					<HeadingColor>Donor</HeadingColor>
 				</Heading>
 			</div>
 		);
@@ -51,15 +51,12 @@ const Card = ({ onClick }) => {
 		<CardWrapper>
 			<CardContent>
 				<Title />
-				<Description>
-					As a Non Profit Organization, you can gain access to thousands of donors and even see what other Non Profit
-					Organizations are requesting.
-				</Description>
+				<Description>With over 300 Non Profit Organization, you will definitely find something to donate.</Description>
 			</CardContent>
 
 			<CardAction>
-				<Button fullWidth={true} size="small" asComponent={BlueButton} onClick={onClick}>
-					Sign up
+				<Button fullWidth={true} size="small" asComponent={RedButton} onClick={onClick}>
+					{buttonTitle}
 				</Button>
 			</CardAction>
 		</CardWrapper>

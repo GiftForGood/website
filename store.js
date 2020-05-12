@@ -3,11 +3,13 @@ import thunk from "redux-thunk";
 import logger from "redux-logger";
 
 import registerReducer from "./src/components/register";
+import loginReducer from "./src/components/login";
 
 const initialState = {};
 
 const rootReducer = combineReducers({
   register: registerReducer,
+  login: loginReducer
 });
 
 const middlewares = [thunk];
