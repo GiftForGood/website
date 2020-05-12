@@ -114,11 +114,11 @@ const RegisterNpoOrganization = () => {
 				spaceAfter="normal"
 			/>
 			<Text align="center" as="div" spaceAfter="largest">
-				<Stack direction="row" align="center" justify="center">
-					<Heading size="large" weight="bold">
+				<Stack direction="column" align="center" justify="center" desktop={{direction: 'row'}}>
+					<Heading size="normal" weight="bold">
 						I am a
 					</Heading>
-					<Heading size="large" weight="bold">
+					<Heading size="normal" weight="bold">
 						<HeadingColor>Non Profit Organization</HeadingColor>
 					</Heading>
 				</Stack>
