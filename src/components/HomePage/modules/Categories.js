@@ -14,7 +14,6 @@ const SquareBox = styled.div`
   height: calc(75px + 2vw);
   min-width: 75px;
   min-height: 75px;
-  border-radius: 1vw;
   position: relative;
 `;
 
@@ -42,10 +41,11 @@ const styles = {
     height: '100%',
     objectFit: 'cover',
     filter: 'brightness(70%)',
-  }
-}
+    borderRadius: '1vw',
+  },
+};
 
-const SquareImageBox = ({imageUrl, caption, captionSize, captionType}) => {
+const SquareImageBox = ({ imageUrl, caption, captionSize, captionType }) => {
   return (
     <SquareBox>
       <img style={styles.imageStyle} src={imageUrl} />
@@ -54,7 +54,7 @@ const SquareImageBox = ({imageUrl, caption, captionSize, captionType}) => {
           captionType: primary, secondary, info, success, warning, critical, white
           captionSize: small, normal, large
         */}
-        <Text type={captionType || "white"} size={captionSize || "small"}>
+        <Text type={captionType || 'white'} size={captionSize || 'small'}>
           {caption}
         </Text>
       </CaptionInBox>
