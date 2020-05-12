@@ -63,5 +63,4 @@ const RegisterBackground = (props, state) => {
 		</>
 	);
 };
-
 export default RegisterBackground;
