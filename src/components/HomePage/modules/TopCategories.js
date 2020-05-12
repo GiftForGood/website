@@ -5,6 +5,8 @@ import api from '../../../../utils/api/index';
 import styled from 'styled-components';
 import Avatar from '../../ImageHolder/Avatar';
 import GreySubtleButton from '../../Button/Button';
+import Desktop from '@kiwicom/orbit-components/lib/Desktop';
+import Mobile from '@kiwicom/orbit-components/lib/Mobile';
 
 const TopCategoriesContainer = styled.div`
   text-align: center;
@@ -23,7 +25,7 @@ const CardWrapper = styled.div`
   flex-direction: column;
   justify-content: space-between;
   border-radius: 3px;
-  box-shadow: 0px 0px 2px 0px rgba(37, 42, 49, 0.16), 0px 1px 4px 0px rgba(37, 42, 49, 0.12);
+  box-shadow: 0px 0px 10px 0px rgba(37, 42, 49, 0.16), 0px 2px 8px 0px rgba(37, 42, 49, 0.12);
   width: 100%;
 `;
 
@@ -35,6 +37,15 @@ const CardHeaderContainer = styled.div`
   display: inline-block;
   width: 100%;
   margin-bottom: 1vh;
+`;
+
+const ClickableDiv = styled.a`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 1;
 `;
 
 const AvatarDetails = ({ name, distance }) => {
@@ -89,9 +100,16 @@ const CardContent = ({ title, description, name, imageUrl }) => {
 const CategoryHeader = ({ title }) => {
   return (
     <div style={{ width: '100%' }}>
-      <Text size="large" align="center" weight="bold">
-        {title}
-      </Text>
+      <Desktop>
+        <Text size="large" align="center" weight="bold">
+          {title}
+        </Text>
+      </Desktop>
+      <Mobile>
+        <Text size="normal" align="center" weight="bold">
+          {title}
+        </Text>
+      </Mobile>
     </div>
   );
 };
@@ -265,15 +283,16 @@ const TopCategories = () => {
   const getTopNCategoryCards = () => {
     const router = useRouter();
     return dummyWishesForTopThreeCategories.map((categoryWishes, i) => {
-      const href = '/category/' + topThreeCategories[i];
+      const categoryHref = '/category/' + topThreeCategories[i];
       const handleClick = (event) => {
         event.preventDefault();
-        router.push(href);
+        router.push(categoryHref);
       };
       return (
         <CardWrapper key={topThreeCategories[i]}>
           <Card header={<CategoryHeader title={topThreeCategories[i]} />}>
             {categoryWishes.map((wish) => {
+              const postHref = '/wishes/' + wish.wishesId;
               return (
                 <CardSection
                   key={wish.wishesId}
@@ -285,7 +304,9 @@ const TopCategories = () => {
                       imageUrl={wish.user.profileImageUrl}
                     />
                   }
-                />
+                >
+                  <ClickableDiv href={postHref} onClick={handleClick} />
+                </CardSection>
               );
             })}
             <Button size="small" asComponent={GreySubtleButton} onClick={handleClick}>
@@ -300,7 +321,7 @@ const TopCategories = () => {
   return (
     <TopCategoriesContainer>
       <ResizableTitle style={{ marginBottom: '1vh' }}>Top Categories</ResizableTitle>
-      <Stack desktop={{ direction: 'row' }} direction="column" align="center">
+      <Stack desktop={{ direction: 'row' }} direction="column" align="center" spacing="extraLoose">
         {getTopNCategoryCards()}
       </Stack>
     </TopCategoriesContainer>
