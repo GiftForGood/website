@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import { Stack, Card, CardSection, Button, Text } from '@kiwicom/orbit-components/lib';
 import api from '../../../../utils/api/index';
 import styled from 'styled-components';
-import Heading from '@kiwicom/orbit-components/lib/Heading';
+import Avatar from '../../ImageHolder/Avatar';
+import GreySubtleButton from '../../Button/Button';
 
 const TopCategoriesContainer = styled.div`
   text-align: center;
@@ -16,32 +18,7 @@ const ResizableTitle = styled.div`
   font-weight: bold;
 `;
 
-const GreySubtleButton = styled.button`
-  border: 0.5px solid #707070;
-  border-radius: 25px;
-  font-size: 10px;
-  background: Transparent;
-  text-align: center;
-  margin: 0.5vh auto;
-
-  :active {
-    border-color: 1px solid #707070;
-    background: Transparent;
-    color: #707070;
-  }
-
-  :hover {
-    border-color: 1px solid #707070;
-    background: Transparent;
-    color: #707070;
-  }
-
-  :focus {
-    box-shadow: 0 0 0 3px #707070;
-  }
-`;
-
-const TopCategoryCard = styled.div`
+const CardWrapper = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -59,23 +36,6 @@ const CardHeaderContainer = styled.div`
   width: 100%;
   margin-bottom: 1vh;
 `;
-
-const styles = {
-  avatar: {
-    width: '40px',
-    height: '40px',
-    borderRadius: '50%',
-    objectFit: 'cover',
-  },
-};
-
-const Avatar = ({ imageUrl }) => {
-  return (
-    <div style={{ float: 'left' }}>
-      <img style={styles.avatar} src={imageUrl} />
-    </div>
-  );
-};
 
 const AvatarDetails = ({ name, distance }) => {
   return (
@@ -140,7 +100,7 @@ const dummyWishesForTopThreeCategories = [
   [
     {
       user: {
-        profileImageUrl: 'url',
+        profileImageUrl: '/assets/wishes-banner.jpg',
         userName: 'hello',
         userId: 'id',
       },
@@ -156,7 +116,7 @@ const dummyWishesForTopThreeCategories = [
     },
     {
       user: {
-        profileImageUrl: 'url',
+        profileImageUrl: '/assets/wishes-banner.jpg',
         userName: 'hello',
         userId: 'id',
       },
@@ -172,7 +132,7 @@ const dummyWishesForTopThreeCategories = [
     },
     {
       user: {
-        profileImageUrl: 'url',
+        profileImageUrl: '/assets/wishes-banner.jpg',
         userName: 'hello',
         userId: 'id',
       },
@@ -190,7 +150,7 @@ const dummyWishesForTopThreeCategories = [
   [
     {
       user: {
-        profileImageUrl: 'url',
+        profileImageUrl: '/assets/wishes-banner.jpg',
         userName: 'hello',
         userId: 'id',
       },
@@ -206,7 +166,7 @@ const dummyWishesForTopThreeCategories = [
     },
     {
       user: {
-        profileImageUrl: 'url',
+        profileImageUrl: '/assets/wishes-banner.jpg',
         userName: 'hello',
         userId: 'id',
       },
@@ -222,7 +182,7 @@ const dummyWishesForTopThreeCategories = [
     },
     {
       user: {
-        profileImageUrl: 'url',
+        profileImageUrl: '/assets/wishes-banner.jpg',
         userName: 'hello',
         userId: 'id',
       },
@@ -240,7 +200,7 @@ const dummyWishesForTopThreeCategories = [
   [
     {
       user: {
-        profileImageUrl: 'url',
+        profileImageUrl: '/assets/wishes-banner.jpg',
         userName: 'hello',
         userId: 'id',
       },
@@ -256,7 +216,7 @@ const dummyWishesForTopThreeCategories = [
     },
     {
       user: {
-        profileImageUrl: 'url',
+        profileImageUrl: '/assets/wishes-banner.jpg',
         userName: 'hello',
         userId: 'id',
       },
@@ -272,7 +232,7 @@ const dummyWishesForTopThreeCategories = [
     },
     {
       user: {
-        profileImageUrl: 'url',
+        profileImageUrl: '/assets/wishes-banner.jpg',
         userName: 'hello',
         userId: 'id',
       },
@@ -303,9 +263,15 @@ const TopCategories = () => {
   // });
 
   const getTopNCategoryCards = () => {
+    const router = useRouter();
     return dummyWishesForTopThreeCategories.map((categoryWishes, i) => {
+      const href = '/category/' + topThreeCategories[i];
+      const handleClick = (event) => {
+        event.preventDefault();
+        router.push(href);
+      };
       return (
-        <TopCategoryCard key={topThreeCategories[i]}>
+        <CardWrapper key={topThreeCategories[i]}>
           <Card header={<CategoryHeader title={topThreeCategories[i]} />}>
             {categoryWishes.map((wish) => {
               return (
@@ -316,17 +282,17 @@ const TopCategories = () => {
                       name={wish.organization.name}
                       title={wish.title}
                       description={wish.description}
-                      imageUrl="/assets/wishes-banner.jpg"
+                      imageUrl={wish.user.profileImageUrl}
                     />
                   }
                 />
               );
             })}
-            <Button size="small" asComponent={GreySubtleButton} onClick={function () {}}>
+            <Button size="small" asComponent={GreySubtleButton} onClick={handleClick}>
               <GreyText>View all</GreyText>
             </Button>
           </Card>
-        </TopCategoryCard>
+        </CardWrapper>
       );
     });
   };

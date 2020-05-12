@@ -29,8 +29,9 @@ const HomePage = () => {
           <TopCategories />
         </Grid>
       </Desktop>
+
       <Mobile>
-        <Grid style={styles.homePageComponents} rows="2fr 1fr 15fr" rowGap="1vh" columns="1fr">
+        <Grid style={styles.homePageComponents} rows="2fr 1fr 10fr" rowGap="1vh" columns="1fr">
           <Banner />
           <Categories />
           <TopCategories />

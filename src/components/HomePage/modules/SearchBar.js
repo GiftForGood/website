@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 import Search from '@kiwicom/orbit-components/lib/icons/Search';
-import { Stack, InputField, Button } from '@kiwicom/orbit-components/lib';
+import { InputField, Button } from '@kiwicom/orbit-components/lib';
 import styled from 'styled-components';
 
 const SearchBarContainer = styled.div`
@@ -16,7 +16,15 @@ const SearchBarContainer = styled.div`
 const SearchBar = () => {
   return (
     <SearchBarContainer>
-      <InputField inputMode="search" placeholder="Search post or users" suffix={<Search />} />
+      <InputField
+        inputMode="search"
+        placeholder="Search post or users"
+        suffix={
+          <Button type="white" onClick={function () {}}>
+            <Search />{' '}
+          </Button>
+        }
+      />
     </SearchBarContainer>
   );
 };
