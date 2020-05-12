@@ -24,7 +24,7 @@ const ResizableTitle = styled.div`
   font-weight: bold;
 `;
 
-const CategoryName = styled.div`
+const CategoryNameInBox = styled.div`
   position: absolute;
   top: 80%;
   left: 10%;
@@ -112,16 +112,16 @@ const Categories = () => {
           <CategoryBox key={category.name}>
             <Text type="white">{category.imageUrl}</Text>
             <Desktop>
-              <CategoryName>
+              <CategoryNameInBox>
                 <Text type="white">{category.name}</Text>
-              </CategoryName>
+              </CategoryNameInBox>
             </Desktop>
             <Mobile>
-              <CategoryName>
+              <CategoryNameInBox>
                 <Text type="white" size="small">
                   {category.name}
                 </Text>
-              </CategoryName>
+              </CategoryNameInBox>
             </Mobile>
           </CategoryBox>
         ))}
