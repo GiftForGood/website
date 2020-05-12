@@ -4,8 +4,8 @@ import styled from 'styled-components';
 const SquareBox = styled.div`
   width: calc(75px + 2vw);
   height: calc(75px + 2vw);
-  min-width: 100px;
-  min-height: 100px;
+  min-width: 80px;
+  min-height: 80px;
   position: relative;
 `;
 
