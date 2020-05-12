@@ -89,7 +89,7 @@ class WishesAPI {
    * @param {object} categoryId The category id
    * @param {string} orderBy The way to order the wishes. Only wishesSortTypeAllowed
    * @param {boolean} isReverse Indicates if the query should be ordered in reverse
-   * @param {object} previousDocument The previous firebase document to start the query after. If the field is not given, the query will start from the first document
+   * @param {object} lastQueriedDocument The last queried firebase document to start the query after. If the field is not given, the query will start from the first document
    * @throws {ReferenceError}
    * @throws {FirebaseError}
    * @return {object} A firebase document of ordered pending wishes belonging to a category
@@ -98,7 +98,7 @@ class WishesAPI {
     categoryId,
     orderBy = WishesSortTypeConstant.TIMESTAMP,
     isReverse = false,
-    previousDocument = null
+    lastQueriedDocument = null
   ) {
     // TODO: Sort by distance not implemented
 
@@ -114,7 +114,7 @@ class WishesAPI {
       throw ReferenceError('Invalid orderBy type specified');
     }
 
-    if (previousDocument == null) {
+    if (lastQueriedDocument == null) {
       // First page
       return wishesCollection
         .where('categories', 'array-contains', categoryInfo)
@@ -128,7 +128,7 @@ class WishesAPI {
         .where('categories', 'array-contains', categoryInfo)
         .where('status', '==', 'pending')
         .orderBy(orderByField, sortOrder)
-        .startAfter(previousDocument)
+        .startAfter(lastQueriedDocument)
         .limit(Constants.WISHES_BATCH_SIZE)
         .get();
     }
@@ -147,12 +147,12 @@ class WishesAPI {
   /**
    * Get the initial batch of wishes belonging to a NPO. Only return results of WISHES_BATCH_SIZE
    * @param {string} npoId
-   * @param {object} previousDocument The previous firebase document to start the query after. If the field is not given, the query will start from the first document
+   * @param {object} lastQueriedDocument The last queried firebase document to start the query after. If the field is not given, the query will start from the first document
    * @throws {FirebaseError}
    * @return {object} A firebase document of wishes belonging to a NPO
    */
-  async getNPOWishes(npoId, previousDocument = null) {
-    if (previousDocument == null) {
+  async getNPOWishes(npoId, lastQueriedDocument = null) {
+    if (lastQueriedDocument == null) {
       // First page
       return wishesCollection
         .where('user.userId', '==', npoId)
@@ -164,7 +164,7 @@ class WishesAPI {
       return wishesCollection
         .where('user.userId', '==', npoId)
         .orderBy('postedDateTime', 'desc')
-        .startAfter(previousDocument)
+        .startAfter(lastQueriedDocument)
         .limit(Constants.WISHES_BATCH_SIZE)
         .get();
     }
@@ -174,12 +174,12 @@ class WishesAPI {
    * Get the initial batch of wishes belonging to a NPO filter by its status. Only return results of WISHES_BATCH_SIZE
    * @param {string} npoId
    * @param {string} status The status of the wishes
-   * @param {object} previousDocument The previous firebase document to start the query after. If the field is not given, the query will start from the first document
+   * @param {object} lastQueriedDocument The last queried firebase document to start the query after. If the field is not given, the query will start from the first document
    * @throws {FirebaseError}
    * @return {object} A firebase document of wishes belonging to a NPO, filtered by status
    */
-  async getNPOWishesFilterByStatus(npoId, status, previousDocument = null) {
-    if (previousDocument == null) {
+  async getNPOWishesFilterByStatus(npoId, status, lastQueriedDocument = null) {
+    if (lastQueriedDocument == null) {
       // First page
       return wishesCollection
         .where('user.userId', '==', npoId)
@@ -193,7 +193,7 @@ class WishesAPI {
         .where('user.userId', '==', npoId)
         .where('status', '==', status.toLowerCase())
         .orderBy('postedDateTime', 'desc')
-        .startAfter(previousDocument)
+        .startAfter(lastQueriedDocument)
         .limit(Constants.WISHES_BATCH_SIZE)
         .get();
     }
@@ -202,11 +202,11 @@ class WishesAPI {
   /**
    * Get the initial batch of wishes that are completed by a donor. Only return results of WISHES_BATCH_SIZE
    * @param {string} donorId
-   * @param {object} previousDocument The previous firebase document to start the query after. If the field is not given, the query will start from the first document
+   * @param {object} lastQueriedDocument The last queried firebase document to start the query after. If the field is not given, the query will start from the first document
    * @return {object} AA firebase document of wishes that a completed by a donor
    */
-  async getDonorCompletedWishes(donorId, previousDocument = null) {
-    if (previousDocument == null) {
+  async getDonorCompletedWishes(donorId, lastQueriedDocument = null) {
+    if (lastQueriedDocument == null) {
       // First page
       return wishesCollection
         .where('status', '==', 'completed')
@@ -220,7 +220,7 @@ class WishesAPI {
         .where('status', '==', 'completed')
         .where('completed.donorUserId', '==', donorId)
         .orderBy('postedDateTime', 'desc')
-        .startAfter(previousDocument)
+        .startAfter(lastQueriedDocument)
         .limit(Constants.WISHES_BATCH_SIZE)
         .get();
     }
