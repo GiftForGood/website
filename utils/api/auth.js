@@ -1,5 +1,5 @@
 import { db, firebaseAuth } from '../firebase';
-import firebase from "firebase/app";
+import firebase from 'firebase/app';
 
 const donorsCollection = db.collection('donors');
 
@@ -8,12 +8,12 @@ class AuthAPI {
    * Register a donor with Google
    * @throws
    * @return {array} [token, userProfile, userDoc]
-   *  token: JWT 
+   *  token: JWT
    *  userProfile: The user profile
    *  userDoc: Firebase document that contains the userInfo in the db
    */
   async registerDonorWithGoogle() {
-    await this._googleAuth()
+    await this._googleAuth();
     const token = await firebaseAuth.currentUser.getIdToken();
     const userProfile = firebaseAuth.currentUser;
     const userDoc = await this._createDonor(userProfile);
@@ -27,7 +27,7 @@ class AuthAPI {
    * @param {string} password
    * @throws
    * @return {array} [token, userProfile, userDoc]
-   *  token: JWT 
+   *  token: JWT
    *  userProfile: The user profile
    *  userDoc: Firebase document that contains the userInfo in the db
    */
@@ -69,14 +69,14 @@ class AuthAPI {
    * Sign in a donor with Google
    * @throws
    * @return {array} [token, userProfile, userDoc]
-   *  token: JWT 
+   *  token: JWT
    *  userProfile: The user profile
    *  userDoc: Firebase document that contains the userInfo in the db
    */
   async loginDonorWithGoogle() {
     await this._googleAuth();
     const token = await firebaseAuth.currentUser.getIdToken();
-    const userProfile = firebaseAuth.currentUser
+    const userProfile = firebaseAuth.currentUser;
     const userDoc = await this._getDonorDoc(userProfile.uid);
 
     return [token, userProfile, userDoc];
@@ -137,18 +137,18 @@ class AuthAPI {
 
   async _createDonor(userInfo) {
     if (userInfo == null) {
-      throw Error("No user profile created")
+      throw Error('No user profile created');
     }
 
     if (await this._doesDonorExist(userInfo.uid)) {
-      throw Error("Donor account already exists");
+      throw Error('Donor account already exists');
     }
 
     let name = userInfo.displayName;
     let profileImageUrl = userInfo.photoURL;
     if (userInfo.displayName == null) {
-      const email = userInfo.email
-      name = email.substring(0, email.lastIndexOf("@"))
+      const email = userInfo.email;
+      name = email.substring(0, email.lastIndexOf('@'));
     }
     if (userInfo.photoURL == null) {
       profileImageUrl = '';
@@ -173,10 +173,10 @@ class AuthAPI {
   }
 
   async _getDonorDoc(id) {
-    const snapshot = await donorsCollection.where('userId' , '==', id).get();
+    const snapshot = await donorsCollection.where('userId', '==', id).get();
 
     if (snapshot.empty) {
-      throw Error('No such donor account'); 
+      throw Error('No such donor account');
     }
 
     return snapshot.docs[0];
