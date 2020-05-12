@@ -8,6 +8,7 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
 import { setIsBackToNpoRegister, setNpoDetails } from '../actions';
+import BlueButton from '../../button/BlueButton'
 
 const RegisterNpoDetails = () => {
 	const dispatch = useDispatch();
@@ -122,7 +123,7 @@ const RegisterNpoDetails = () => {
 						}
 					/>
 
-					<Button submit fullWidth={true}>
+					<Button submit fullWidth={true} asComponent={BlueButton}>
 						Register
 					</Button>
 				</Stack>

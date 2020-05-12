@@ -16,27 +16,13 @@ import * as Yup from 'yup';
 import { setIsBackToLanding } from '../actions';
 import styled from 'styled-components';
 import { colors } from '../../../../utils/constants/colors';
+import RedButton from '../../button/RedButton'
 
 
 const HeadingColor = styled.div`
 	color: ${colors.donorBackground};
 `;
 
-const RedButton = styled.button`
-	background: ${colors.donorBackground};
-
-	:active {
-		background: ${colors.donorHoverActive};
-	}
-
-	:hover {
-		background: ${colors.donorHoverActive};
-	}
-
-	:focus {
-		box-shadow: 0 0 0 3px rgba(222, 24, 24, 0.5);
-	}
-`;
 
 const RegisterDonor = () => {
 	const dispatch = useDispatch();

@@ -2,22 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { Text, Heading, Button } from '@kiwicom/orbit-components/lib';
 import { colors } from '../../../utils/constants/colors';
-
-const BlueButton = styled.button`
-	background: ${colors.npoBackground};
-
-	:active {
-		background: ${colors.npoHoverActive};
-	}
-
-	:hover {
-		background: ${colors.npoHoverActive};
-	}
-
-	:focus {
-		box-shadow: 0 0 0 3px rgba(4, 65, 170, 0.5);
-	}
-`;
+import BlueButton from '../../components/button/BlueButton'
 
 const CardWrapper = styled.div`
 	display: flex;

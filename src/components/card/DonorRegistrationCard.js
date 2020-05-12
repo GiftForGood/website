@@ -2,22 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { Text, Heading, Button } from '@kiwicom/orbit-components/lib';
 import { colors } from '../../../utils/constants/colors';
-
-const RedButton = styled.button`
-	background: ${colors.donorBackground};
-
-	:active {
-		background: ${colors.donorHoverActive};
-	}
-
-	:hover {
-		background: ${colors.donorHoverActive};
-	}
-
-	:focus {
-		box-shadow: 0 0 0 3px rgba(222, 24, 24, 0.5);
-	}
-`;
+import RedButton from '../../components/button/RedButton'
 
 const CardWrapper = styled.div`
 	display: flex;

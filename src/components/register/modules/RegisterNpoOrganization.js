@@ -22,25 +22,16 @@ import * as Yup from 'yup';
 import { setIsNpoDetails, setIsBackToLanding, setNpoOrganizationDetails } from '../actions';
 import { months } from '../../../../utils/constants/month';
 import styled from 'styled-components';
-
-const BlueButton = styled.button`
-	background: #065ef5;
-
-	:active {
-		background: #0554dc;
-	}
-
-	:hover {
-		background: #0554dc;
-	}
-
-	:focus {
-		box-shadow: 0 0 0 3px rgba(4, 65, 170, 0.5);
-	}
-`;
+import BlueButton from '../../button/BlueButton'
 
 const HeadingColor = styled.div`
 	color: #065ef5;
+`;
+
+const NextButtonContainer = styled.div`
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-end;
 `;
 
 const RegisterNpoOrganization = () => {
@@ -124,7 +115,7 @@ const RegisterNpoOrganization = () => {
 			/>
 			<Text align="center" as="div" spaceAfter="largest">
 				<Stack direction="row" align="center" justify="center">
-					<Heading  size="large" weight="bold">
+					<Heading size="large" weight="bold">
 						I am a
 					</Heading>
 					<Heading size="large" weight="bold">
@@ -231,10 +222,14 @@ const RegisterNpoOrganization = () => {
 						{...formik.getFieldProps('activities')}
 					/>
 
-					<Button submit width="100px" asComponent={BlueButton}>
-						Next
-					</Button>
+					<NextButtonContainer>
+						<Button submit width="100px" asComponent={BlueButton}>
+							Next
+						</Button>
+					</NextButtonContainer>
 				</Stack>
+
+				<Text as="div" align="right"></Text>
 			</form>
 		</div>
 	);
