@@ -39,6 +39,10 @@ const BlueButton = styled.button`
 	}
 `;
 
+const HeadingColor = styled.div`
+	color: #065ef5;
+`;
+
 const RegisterNpoOrganization = () => {
 	// TODO: Restore state when user comes back to this page
 	const dispatch = useDispatch();
@@ -111,11 +115,22 @@ const RegisterNpoOrganization = () => {
 	});
 	return (
 		<div>
-			<Button type="secondary" circled iconLeft={<ChevronLeft />} onClick={handleBackToLandingOnClick} spaceAfter="normal"/>
-			<Text align="center" as="div">
-				<Heading spaceAfter="largest" size="large" weight="bold">
-					I am a Non Profit Organization
-				</Heading>
+			<Button
+				type="secondary"
+				circled
+				iconLeft={<ChevronLeft />}
+				onClick={handleBackToLandingOnClick}
+				spaceAfter="normal"
+			/>
+			<Text align="center" as="div" spaceAfter="largest">
+				<Stack direction="row" align="center" justify="center">
+					<Heading  size="large" weight="bold">
+						I am a
+					</Heading>
+					<Heading size="large" weight="bold">
+						<HeadingColor>Non Profit Organization</HeadingColor>
+					</Heading>
+				</Stack>
 			</Text>
 			<form onSubmit={formik.handleSubmit}>
 				<Stack spacing="loose">

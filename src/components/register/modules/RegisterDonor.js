@@ -14,7 +14,11 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
 import { setIsBackToLanding } from '../actions';
+import styled from 'styled-components';
 
+const HeadingColor = styled.div`
+	color: #ed5555;
+`;
 
 const RegisterDonor = () => {
 	const dispatch = useDispatch();
@@ -53,10 +57,15 @@ const RegisterDonor = () => {
 	return (
 		<div>
 			<Button type="secondary" circled iconLeft={<ChevronLeft />} onClick={handleBackToLandingOnClick} spaceAfter="normal"/>
-			<Text align="center" as="div">
-				<Heading spaceAfter="largest" weight="bold">
-					I am a Donor
-				</Heading>
+			<Text align="center" as="div" spaceAfter="largest">
+				<Stack direction="row" align="center" justify="center">
+					<Heading  size="large" weight="bold">
+						I am a
+					</Heading>
+					<Heading size="large" weight="bold">
+						<HeadingColor>Donor</HeadingColor>
+					</Heading>
+				</Stack>
 			</Text>
 			<SocialButton type="google" fullWidth={true} spaceAfter="normal">
 				Sign in with Google
