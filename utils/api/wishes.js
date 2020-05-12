@@ -392,15 +392,13 @@ class WishesAPI {
   }
 
   async _getCurrentUserInfo() {
-    // const user = firebaseAuth.currentUser;
+    const user = firebaseAuth.currentUser;
 
-    // if (user == null) {
-    //   return {};
-    // }
+    if (user == null) {
+      return {};
+    }
 
-    // const userId = user.uid;
-    // TODO: REMOVE
-    const userId = '5oBhU2SGiKEKOzNLa2zt';
+    const userId = user.uid;
     return this._getUserInfo(userId);
   }
 
