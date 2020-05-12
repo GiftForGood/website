@@ -49,7 +49,7 @@ const LoginNpo = () => {
 				circled
 				iconLeft={<ChevronLeft />}
 				onClick={handleBackToLandingOnClick}
-				spaceAfter="normal"
+				spaceAfter="large"
 			/>
 			<Text align="center" as="div" spaceAfter="largest">
 				<Stack direction="row" align="center" justify="center">
