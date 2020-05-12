@@ -21,6 +21,23 @@ import * as Yup from 'yup';
 
 import { setIsNpoDetails, setIsBackToLanding, setNpoOrganizationDetails } from '../actions';
 import { months } from '../../../../utils/constants/month';
+import styled from 'styled-components';
+
+const BlueButton = styled.button`
+	background: #065ef5;
+
+	:active {
+		background: #0554dc;
+	}
+
+	:hover {
+		background: #0554dc;
+	}
+
+	:focus {
+		box-shadow: 0 0 0 3px rgba(4, 65, 170, 0.5);
+	}
+`;
 
 const RegisterNpoOrganization = () => {
 	// TODO: Restore state when user comes back to this page
@@ -94,14 +111,14 @@ const RegisterNpoOrganization = () => {
 	});
 	return (
 		<div>
-			<Button circled iconLeft={<ChevronLeft />} onClick={handleBackToLandingOnClick} />
+			<Button type="secondary" circled iconLeft={<ChevronLeft />} onClick={handleBackToLandingOnClick} spaceAfter="normal"/>
 			<Text align="center" as="div">
 				<Heading spaceAfter="largest" size="large" weight="bold">
 					I am a Non Profit Organization
 				</Heading>
 			</Text>
 			<form onSubmit={formik.handleSubmit}>
-				<Stack spacing="comfy">
+				<Stack spacing="loose">
 					<Select
 						label="Organization you are from"
 						name="name"
@@ -191,6 +208,7 @@ const RegisterNpoOrganization = () => {
 							formik.setFieldValue('proofImage', event.currentTarget.files[0]);
 						}}
 					/>
+
 					<Textarea
 						label="Organization activities"
 						error={formik.touched.activities && formik.errors.activities ? formik.errors.activities : ''}
@@ -198,7 +216,7 @@ const RegisterNpoOrganization = () => {
 						{...formik.getFieldProps('activities')}
 					/>
 
-					<Button submit width="100px">
+					<Button submit width="100px" asComponent={BlueButton}>
 						Next
 					</Button>
 				</Stack>

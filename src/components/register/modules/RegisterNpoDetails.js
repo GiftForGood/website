@@ -54,7 +54,7 @@ const RegisterNpoDetails = () => {
 
 	return (
 		<div>
-			<Button circled iconLeft={<ChevronLeft />} onClick={handleBackToNpoRegisterOnClick} />
+			<Button type="secondary" circled iconLeft={<ChevronLeft />} onClick={handleBackToNpoRegisterOnClick} spaceAfter="normal"/>
 			<form onSubmit={formik.handleSubmit}>
 				<Stack>
 					<InputField

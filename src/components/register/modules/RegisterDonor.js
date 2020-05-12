@@ -52,7 +52,7 @@ const RegisterDonor = () => {
 
 	return (
 		<div>
-			<Button circled iconLeft={<ChevronLeft />} onClick={handleBackToLandingOnClick} />
+			<Button type="secondary" circled iconLeft={<ChevronLeft />} onClick={handleBackToLandingOnClick} spaceAfter="normal"/>
 			<Text align="center" as="div">
 				<Heading spaceAfter="largest" weight="bold">
 					I am a Donor
