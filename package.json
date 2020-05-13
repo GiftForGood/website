@@ -14,6 +14,7 @@
     "firebase": "^7.14.3",
     "firebase-admin": "^8.12.0",
     "formik": "^2.1.4",
+    "moment": "^2.25.3",
     "next": "^9.3.4",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
@@ -32,8 +33,8 @@
     "build": "next build",
     "start": "next start -p $PORT",
     "export": "next build && next export",
-    "lint": "prettier --check pages/*.js",
-    "format": "prettier --write pages/*.js"
+    "lint": "prettier --check '**/*.js'",
+    "format": "prettier --write '**/*.js'"
   },
   "eslintConfig": {
     "extends": "react-app"
