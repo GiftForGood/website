@@ -32,7 +32,7 @@
     "dev-local": "next --hostname 0.0.0.0",
     "build": "next build",
     "start": "next start -p $PORT",
-    "export": "next build && next export",
+    "export": "next build",
     "lint": "prettier --check '**/*.js'",
     "format": "prettier --write '**/*.js'"
   },
