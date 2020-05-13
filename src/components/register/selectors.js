@@ -1,20 +1,19 @@
 function getLocalState(state) {
-	return state.register;
+  return state.register;
 }
 
 export function getName(state) {
-	return getLocalState(state).name;
+  return getLocalState(state).name;
 }
 
 export function getContactNumber(state) {
-	return getLocalState(state).contactNumber;
+  return getLocalState(state).contactNumber;
 }
 
 export function getOrganization(state) {
-	return getLocalState(state).organization;
+  return getLocalState(state).organization;
 }
 
 export function getCurrentPage(state) {
-	return getLocalState(state).currentPage;
+  return getLocalState(state).currentPage;
 }
-

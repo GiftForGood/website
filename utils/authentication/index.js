@@ -4,15 +4,14 @@ import firebase from '../admin-firebase';
 
 export async function isAuthenticated(req, res) {
   await runMiddleware(req, res, sessionHandler);
-  const user =
-    req.session && req.session.decodedToken ? req.session.decodedToken : null;
+  const user = req.session && req.session.decodedToken ? req.session.decodedToken : null;
   let token = req.session.token;
   if (user) {
     try {
-      await firebase.auth().verifyIdToken(token)
-      return user
+      await firebase.auth().verifyIdToken(token);
+      return user;
     } catch (error) {
-      return null
+      return null;
     }
   }
   if (!user) {
@@ -23,8 +22,7 @@ export async function isAuthenticated(req, res) {
 
 export async function isAuthenticatedFailureRouteBackToLogin(req, res) {
   await runMiddleware(req, res, sessionHandler);
-  const user =
-    req.session && req.session.decodedToken ? req.session.decodedToken : null;
+  const user = req.session && req.session.decodedToken ? req.session.decodedToken : null;
   if (!user) {
     res.writeHead(302, { Location: '/login' });
     res.end();

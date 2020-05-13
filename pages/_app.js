@@ -12,15 +12,15 @@ const GlobalStyle = createGlobalStyle`
 const tokens = getTokens();
 
 export default class MyApp extends App {
-	render() {
-		const { Component, pageProps } = this.props;
-		return (
-			<ThemeProvider theme={{ orbit: tokens }}>
-				<>
-					<GlobalStyle />
-					<Component {...pageProps} />
-				</>
-			</ThemeProvider>
-		);
-	}
+  render() {
+    const { Component, pageProps } = this.props;
+    return (
+      <ThemeProvider theme={{ orbit: tokens }}>
+        <>
+          <GlobalStyle />
+          <Component {...pageProps} />
+        </>
+      </ThemeProvider>
+    );
+  }
 }

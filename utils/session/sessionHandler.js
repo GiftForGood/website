@@ -18,4 +18,4 @@ const sessionHandler = session({
   cookie: { maxAge: 604800000, httpOnly: true }, // week
 });
 
-export default sessionHandler
+export default sessionHandler;

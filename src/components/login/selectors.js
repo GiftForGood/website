@@ -1,8 +1,7 @@
 function getLocalState(state) {
-	return state.login;
+  return state.login;
 }
 
 export function getCurrentPage(state) {
-	return getLocalState(state).currentPage;
+  return getLocalState(state).currentPage;
 }
-

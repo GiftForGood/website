@@ -4,5 +4,5 @@ export const colors = {
   donorFocus: '#de1818',
   npoBackground: '#065ef5',
   npoHoverActive: '#0554dc',
-  npoFocus: '#0441aa'
-}
+  npoFocus: '#0441aa',
+};

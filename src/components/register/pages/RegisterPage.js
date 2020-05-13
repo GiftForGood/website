@@ -15,66 +15,66 @@ import dynamic from 'next/dynamic';
 const RegisterBackground = dynamic(() => import('../modules/RegisterBackground'), { ssr: false });
 
 const Wrapper = styled.div`
-	display: flex;
-	box-sizing: border-box;
+  display: flex;
+  box-sizing: border-box;
 
-	${media.largeMobile(css`
-		height: 100vh;
-	`)};
+  ${media.largeMobile(css`
+    height: 100vh;
+  `)};
 `;
 
 const Container = styled.div`
-	display: flex;
-	flex: 1;
-	box-sizing: border-box;
-	flex-direction: column;
+  display: flex;
+  flex: 1;
+  box-sizing: border-box;
+  flex-direction: column;
 
-	${media.largeMobile(css`
-		flex-direction: row;
-	`)};
+  ${media.largeMobile(css`
+    flex-direction: row;
+  `)};
 `;
 
 const RightPanel = styled.div`
-	padding: 30px 12px;
-	flex-basis: 60%;
-	display: flex;
-	flex-direction: column;
-	justify-content: space-between;
-	box-sizing: border-box;
+  padding: 30px 12px;
+  flex-basis: 60%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-sizing: border-box;
 
-	${media.largeMobile(css`
-		padding: 80px 4% 20px;
-		overflow-x: hidden;
-		overflow-y: scroll;
-	`)};
+  ${media.largeMobile(css`
+    padding: 80px 4% 20px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+  `)};
 `;
 
 const RegisterPage = (props, state) => {
-	const currentPage = useSelector(getCurrentPage);
+  const currentPage = useSelector(getCurrentPage);
 
-	function rightRegister(currentPage) {
-		switch (currentPage) {
-			case LANDING:
-				return <RegisterLanding />;
-			case NPO_REGISTER:
-				return <RegisterNpoOrganization />;
-			case DONOR_REGISTER:
-				return <RegisterDonor />;
-			case NPO_DETAILS:
-				return <RegisterNpoDetails />;
-			default:
-				return <RegisterLanding />;
-		}
-	}
+  function rightRegister(currentPage) {
+    switch (currentPage) {
+      case LANDING:
+        return <RegisterLanding />;
+      case NPO_REGISTER:
+        return <RegisterNpoOrganization />;
+      case DONOR_REGISTER:
+        return <RegisterDonor />;
+      case NPO_DETAILS:
+        return <RegisterNpoDetails />;
+      default:
+        return <RegisterLanding />;
+    }
+  }
 
-	return (
-		<Wrapper>
-			<Container>
-				<RegisterBackground />
-				<RightPanel>{rightRegister(currentPage)}</RightPanel>
-			</Container>
-		</Wrapper>
-	);
+  return (
+    <Wrapper>
+      <Container>
+        <RegisterBackground />
+        <RightPanel>{rightRegister(currentPage)}</RightPanel>
+      </Container>
+    </Wrapper>
+  );
 };
 
 export default RegisterPage;

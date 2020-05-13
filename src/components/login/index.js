@@ -1,5 +1,5 @@
-import * as selectors from "./selectors";
+import * as selectors from './selectors';
 
 export { selectors };
 
-export { default } from "./reducers";
+export { default } from './reducers';
