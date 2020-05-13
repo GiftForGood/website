@@ -116,16 +116,6 @@ class AuthAPI {
   async loginNPO(email, password) {}
 
   /**
-   * Login through session
-   * @param {string} token The firebase token
-   * @throws
-   */
-  async silentLogin(token) {
-    let decodedToken = await firebaseAuth.verifyIdToken(token);
-    return decodedToken;
-  }
-
-  /**
    * Send a verification email to the currently logged in user
    */
   async sendVerificationEmail() {
