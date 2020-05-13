@@ -7,7 +7,7 @@ const SquareBox = styled.div`
   min-width: 75px;
   min-height: 75px;
   position: relative;
-  background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(${props => props.src});
+  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${(props) => props.src});
   background-size: cover;
   border-radius: 1vw;
 `;
@@ -20,11 +20,11 @@ const CaptionInBox = styled.div`
 `;
 
 /**
- * 
- * @param {string} imageUrl: the url of the image 
- * @param {string} caption: the text displayed within the image 
- * @param {string} captionSize: small, normal, large 
- * @param {string} captionType: primary, secondary, info, success, warning, critical, white 
+ *
+ * @param {string} imageUrl: the url of the image
+ * @param {string} caption: the text displayed within the image
+ * @param {string} captionSize: small, normal, large
+ * @param {string} captionType: primary, secondary, info, success, warning, critical, white
  */
 const SquareImageBox = ({ imageUrl, caption, captionSize, captionType }) => {
   return (
