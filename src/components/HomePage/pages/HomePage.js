@@ -22,21 +22,11 @@ const styles = {
 const HomePage = () => {
   return (
     <HomePageContainer>
-      <Desktop>
-        <Grid style={styles.homePageComponents} rows="2fr 1fr auto" rowGap="1vh" columns="1fr">
-          <Banner />
-          <Categories />
-          <TopCategories />
-        </Grid>
-      </Desktop>
-
-      <Mobile>
-        <Grid style={styles.homePageComponents} rows="4fr 1fr auto" rowGap="1vh" columns="1fr">
-          <Banner />
-          <Categories />
-          <TopCategories />
-        </Grid>
-      </Mobile>
+      <Grid style={styles.homePageComponents} rows="3fr 1fr auto" rowGap="1vh" columns="1fr">
+        <Banner />
+        <Categories />
+        <TopCategories />
+      </Grid>
     </HomePageContainer>
   );
 };

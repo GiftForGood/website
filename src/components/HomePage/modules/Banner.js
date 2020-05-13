@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
-import { Stack, Text } from '@kiwicom/orbit-components/lib';
-import BannerImage from '../../ImageHolder/BannerImage';
+import { Stack } from '@kiwicom/orbit-components/lib';
 import SearchBar from './SearchBar';
 import styled from 'styled-components';
 
@@ -24,8 +23,12 @@ const SubTitle = styled.div`
   margin-top: 10px;
 `;
 
-const BannerContainer = styled.div`
+const BannerImageContainer = styled.div`
+  width: 100%;
+  height: 100%;
   position: relative;
+  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${(props) => props.src});
+  background-size: cover;
 `;
 
 const title = 'GiftForGood.sg';
@@ -43,13 +46,12 @@ const BannerText = () => {
 
 const Banner = () => {
   return (
-    <BannerContainer>
+    <BannerImageContainer src={bannerImageUrl}>
       <Stack align="center">
-        <BannerImage imageUrl={bannerImageUrl} />
         <BannerText />
         <SearchBar />
       </Stack>
-    </BannerContainer>
+    </BannerImageContainer>
   );
 };
 
