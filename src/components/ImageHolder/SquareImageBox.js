@@ -1,11 +1,12 @@
 import { Text } from '@kiwicom/orbit-components/lib';
 import styled from 'styled-components';
 
+
 const SquareBox = styled.div`
   width: calc(75px + 2vw);
   height: calc(75px + 2vw);
-  min-width: 80px;
-  min-height: 80px;
+  min-width: 75px;
+  min-height: 75px;
   position: relative;
 `;
 

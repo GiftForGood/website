@@ -23,7 +23,7 @@ const HomePage = () => {
   return (
     <HomePageContainer>
       <Desktop>
-        <Grid style={styles.homePageComponents} rows="2fr 1fr 4fr" rowGap="1vh" columns="1fr">
+        <Grid style={styles.homePageComponents} rows="2fr 1fr auto" rowGap="1vh" columns="1fr">
           <Banner />
           <Categories />
           <TopCategories />
@@ -31,7 +31,7 @@ const HomePage = () => {
       </Desktop>
 
       <Mobile>
-        <Grid style={styles.homePageComponents} rows="2fr 1fr 10fr" rowGap="1vh" columns="1fr">
+        <Grid style={styles.homePageComponents} rows="4fr 1fr auto" rowGap="1vh" columns="1fr">
           <Banner />
           <Categories />
           <TopCategories />
