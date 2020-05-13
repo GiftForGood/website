@@ -119,180 +119,163 @@ const CategoryHeader = ({ title }) => {
 const dummyWishesForTopThreeCategories = [
   [
     {
-      user: {
-        profileImageUrl: '/assets/wishes-banner.jpg',
-        userName: 'hello',
-        userId: 'id',
+      "expireDateTime": 1591894762124,
+      "wishesId": "OJxYnK5jhQrG1quNg08y",
+      "user": {
+        "userId": "5oBhU2SGiKEKOzNLa2zt",
+        "userName": "hello world",
+        "profileImageUrl": "https://res.cloudinary.com/giftforgood/image/upload/v1589378414/profile.jpg"
       },
-      organization: {
-        latitude: '102',
-        longitude: '103',
-        name: 'james',
-      },
-      postedDateTime: 1231321,
-      description: 'Rice supply running out for a family of 5… ',
-      title: 'Rice Supplies',
-      wishesId: '1232wqqe2r4',
+      "categories": [
+        {
+          "name": "Food",
+          "iconUrl": "food_icon",
+          "imageUrl": "https://res.cloudinary.com/giftforgood/image/upload/v1588842129/food.jpg",
+          "id": "LokORpW2MEKJx1ayG3h6"
+        },
+        {
+          "name": "Daily Necessities",
+          "iconUrl": "dailynecessities_icon",
+          "imageUrl": "https://res.cloudinary.com/giftforgood/image/upload/v1588842156/dailynecessities.jpg",
+          "id": "3ZurlkyhxGG6jYiuzoKB"
+        }
+      ],
+      "postedDateTime": 1589216362124,
+      "description": "Tamago",
+      "isBumped": false,
+      "status": "pending",
+      "updatedDateTime": 1589216362124,
+      "title": "Eggs Supplies",
+      "lastActionByUserDateTime": 1589216362124,
+      "organization": {
+        "address": "Queenstown MRT",
+        "latitude": "1.294835",
+        "name": "name",
+        "longitude": "103.805901"
+      }
     },
     {
-      user: {
-        profileImageUrl: '/assets/wishes-banner.jpg',
-        userName: 'hello',
-        userId: 'id',
+      "updatedDateTime": 1589217667843,
+      "title": "Rice Supplies",
+      "lastActionByUserDateTime": 1589216337607,
+      "organization": {
+        "address": "Queenstown MRT",
+        "latitude": "1.294835",
+        "name": "name",
+        "longitude": "103.805901"
       },
-      organization: {
-        latitude: '102',
-        longitude: '103',
-        name: 'james',
+      "expireDateTime": 1591894737607,
+      "user": {
+        "profileImageUrl": "https://res.cloudinary.com/giftforgood/image/upload/v1589378414/profile.jpg",
+        "userId": "5oBhU2SGiKEKOzNLa2zt",
+        "userName": "hello world"
       },
-      postedDateTime: 1231321,
-      description: 'Post',
-      title: '1.2',
-      wishesId: '1232e2rcxz4',
-    },
-    {
-      user: {
-        profileImageUrl: '/assets/wishes-banner.jpg',
-        userName: 'hello',
-        userId: 'id',
-      },
-      organization: {
-        latitude: '102',
-        longitude: '103',
-        name: 'james',
-      },
-      postedDateTime: 1231321,
-      description: 'Post',
-      title: '1.3',
-      wishesId: '1232fdge2r4',
-    },
+      "wishesId": "AMydcz5OjklcBRMZeN1L",
+      "categories": [
+        {
+          "name": "Food",
+          "iconUrl": "food_icon",
+          "imageUrl": "https://res.cloudinary.com/giftforgood/image/upload/v1588842129/food.jpg",
+          "id": "LokORpW2MEKJx1ayG3h6"
+        }
+      ],
+      "postedDateTime": 1589216337607,
+      "description": "I need rice",
+      "isBumped": false,
+      "status": "pending"
+    }
   ],
   [
     {
-      user: {
-        profileImageUrl: '/assets/wishes-banner.jpg',
-        userName: 'hello',
-        userId: 'id',
+      "isBumped": false,
+      "status": "pending",
+      "wishesId": "gjodjpc2oYgQvNJO3Tlp",
+      "user": {
+        "profileImageUrl": "https://res.cloudinary.com/giftforgood/image/upload/v1589378414/profile.jpg",
+        "userId": "5oBhU2SGiKEKOzNLa2zt",
+        "userName": "hello world"
       },
-      organization: {
-        latitude: '102',
-        longitude: '103',
-        name: 'james',
+      "categories": [
+        {
+          "name": "Furniture",
+          "iconUrl": "fake_url",
+          "imageUrl": "https://res.cloudinary.com/giftforgood/image/upload/v1588842161/furniture.jpg",
+          "id": "svFwKXrxv0KFkPc5oh95"
+        }
+      ],
+      "lastActionByUserDateTime": {
+        "seconds": 1589299200,
+        "nanoseconds": 0
       },
-      postedDateTime: 1231321,
-      description: 'Post',
-      title: '2.1',
-      wishesId: '12wew32e2r4',
-    },
-    {
-      user: {
-        profileImageUrl: '/assets/wishes-banner.jpg',
-        userName: 'hello',
-        userId: 'id',
+      "postedDateTime": {
+        "seconds": 1589299200,
+        "nanoseconds": 0
       },
-      organization: {
-        latitude: '102',
-        longitude: '103',
-        name: 'james',
+      "organization": {
+        "latitude": "1.2936",
+        "name": "Happiness NGO",
+        "longitude": "103.7845",
+        "address": "Kent Ridge"
       },
-      postedDateTime: 1231321,
-      description: 'Post',
-      title: '2.2',
-      wishesId: '1232fdsfde2r4',
-    },
-    {
-      user: {
-        profileImageUrl: '/assets/wishes-banner.jpg',
-        userName: 'hello',
-        userId: 'id',
-      },
-      organization: {
-        latitude: '102',
-        longitude: '103',
-        name: 'james',
-      },
-      postedDateTime: 1231321,
-      description: 'Post',
-      title: '2.3',
-      wishesId: '1232fdse2r4',
-    },
+      "title": "Tables",
+      "description": "I need tables",
+      "expireDateTime": {
+        "seconds": 1589904000,
+        "nanoseconds": 0
+      }
+    }
   ],
   [
     {
-      user: {
-        profileImageUrl: '/assets/wishes-banner.jpg',
-        userName: 'hello',
-        userId: 'id',
+      "updatedDateTime": 1589216145488,
+      "title": "Macbook Pro",
+      "lastActionByUserDateTime": 1589216145488,
+      "organization": {
+        "name": "name",
+        "longitude": "103.805901",
+        "address": "Queenstown MRT",
+        "latitude": "1.294835"
       },
-      organization: {
-        latitude: '102',
-        longitude: '103',
-        name: 'james',
+      "expireDateTime": 1591894545488,
+      "user": {
+        "userId": "5oBhU2SGiKEKOzNLa2zt",
+        "userName": "hello world",
+        "profileImageUrl": "https://res.cloudinary.com/giftforgood/image/upload/v1589378414/profile.jpg"
       },
-      postedDateTime: 1231321,
-      description: 'Post',
-      title: '3.1',
-      wishesId: '1232efds2r4',
-    },
-    {
-      user: {
-        profileImageUrl: '/assets/wishes-banner.jpg',
-        userName: 'hello',
-        userId: 'id',
-      },
-      organization: {
-        latitude: '102',
-        longitude: '103',
-        name: 'james',
-      },
-      postedDateTime: 1231321,
-      description: 'Post',
-      title: '3.2',
-      wishesId: '123few2e2r4',
-    },
-    {
-      user: {
-        profileImageUrl: '/assets/wishes-banner.jpg',
-        userName: 'hello',
-        userId: 'id',
-      },
-      organization: {
-        latitude: '102',
-        longitude: '103',
-        name: 'james',
-      },
-      postedDateTime: 1231321,
-      description: 'Post',
-      title: '3.3',
-      wishesId: '1232fdse2r4',
-    },
-  ],
+      "wishesId": "QmJfzd8LngQrlJfIiQNe",
+      "categories": [
+        {
+          "name": "Electronics",
+          "iconUrl": "fake_url",
+          "imageUrl": "https://res.cloudinary.com/giftforgood/image/upload/v1588842147/electronic.jpg",
+          "id": "IwmfcaTjKqrnviMxHQ5G"
+        }
+      ],
+      "postedDateTime": 1589216145488,
+      "description": "The new macbook pro 16-inch. 16GB RAM",
+      "status": "pending",
+      "isBumped": false
+    }
+  ]
 ];
 
-const TopCategories = () => {
-  const topThreeCategories = ['apparel', 'electronics', 'furniture'];
+const TopCategories = ({ numberOfPosts, numberOfCategories }) => {
+  const topThreeCategoriesId = ['LokORpW2MEKJx1ayG3h6', 'svFwKXrxv0KFkPc5oh95', 'IwmfcaTjKqrnviMxHQ5G'];
+  const topThreeCategoriesName = ['Food', 'Furniture', 'Electronics'];
   const [wishesOfTopThreeCategories, setWishesOfTopThreeCategories] = useState([]);
-  const numberOfCategories = 3;
 
-  // useEffect(() => {
-  //   setWishesOfTopThreeCategories(
-  //     topThreeCategories.map((category) => {
-  //       api.wishes.getTopNPendingWishes(category, numberOfCategories);
-  //     })
-  //   );
-  // });
 
   const getTopNCategoryCards = () => {
     const router = useRouter();
     return dummyWishesForTopThreeCategories.map((categoryWishes, i) => {
-      const categoryHref = '/category/' + topThreeCategories[i];
+      const categoryHref = '/category/' + topThreeCategoriesId[i];
       const handleClick = (event) => {
         event.preventDefault();
         router.push(categoryHref);
       };
       return (
-        <CardWrapper key={topThreeCategories[i]}>
-          <Card header={<CategoryHeader title={topThreeCategories[i]} />}>
+        <CardWrapper key={topThreeCategoriesId[i]}>
+          <Card header={<CategoryHeader title={topThreeCategoriesName[i]} />}>
             {categoryWishes.map((wish) => {
               const postHref = '/wishes/' + wish.wishesId;
               return (
@@ -323,7 +306,7 @@ const TopCategories = () => {
   return (
     <TopCategoriesContainer>
       <ResizableTitle style={{ marginBottom: '1vh' }}>Top Categories</ResizableTitle>
-      <Stack desktop={{ direction: 'row' }} direction="column" align="center" spacing="extraLoose">
+      <Stack desktop={{ direction: 'row' }} direction="column" align="start" spacing="extraLoose">
         {getTopNCategoryCards()}
       </Stack>
     </TopCategoriesContainer>

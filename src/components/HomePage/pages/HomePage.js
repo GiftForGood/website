@@ -19,13 +19,16 @@ const styles = {
   },
 };
 
+const numberOfPostsPerCategory = 3;
+const numberOfCategories = 3;
+
 const HomePage = () => {
   return (
     <HomePageContainer>
       <Grid style={styles.homePageComponents} rows="3fr 1fr auto" rowGap="1vh" columns="1fr">
         <Banner />
         <Categories />
-        <TopCategories />
+        <TopCategories numberOfPosts={numberOfPostsPerCategory} numberOfCategories={numberOfCategories} />
       </Grid>
     </HomePageContainer>
   );
