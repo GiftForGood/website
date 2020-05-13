@@ -1,5 +1,5 @@
-import React from 'react';
-import { Button, InputField, Stack, Text, SocialButton, Heading } from '@kiwicom/orbit-components/lib';
+import React, { useState } from 'react';
+import { Button, InputField, Stack, Text, SocialButton, Heading, Alert } from '@kiwicom/orbit-components/lib';
 import ChevronLeft from '@kiwicom/orbit-components/lib/icons/ChevronLeft';
 
 import { useDispatch } from 'react-redux';
@@ -10,6 +10,10 @@ import { setIsBackToLanding } from '../actions';
 import styled from 'styled-components';
 import { colors } from '../../../../utils/constants/colors';
 import RedButton from '../../button/RedButton';
+import api from '../../../../utils/api';
+import 'isomorphic-unfetch';
+import { useRouter, withRouter } from 'next/router';
+
 
 const HeadingColor = styled.div`
   color: ${colors.donorBackground};
@@ -17,13 +21,66 @@ const HeadingColor = styled.div`
 
 const LoginDonor = () => {
   const dispatch = useDispatch();
+  const [alertTitle, setAlertTitle] = useState('');
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertType, setAlertType] = useState('');
+  const [alertDescription, setAlertDescription] = useState('');
+  const router = useRouter();
+
+  const displayAlert = (title, description, type) => {
+    setShowAlert(true);
+    setAlertTitle(title);
+    setAlertDescription(description);
+    setAlertType(type);
+  };
 
   const handleBackToLandingOnClick = () => {
     dispatch(setIsBackToLanding());
   };
 
-  const handleFormSubmission = (values) => {
-    // TODO: API to call Firebase
+  const handleFormSubmission = async (values) => {
+    try {
+      const [token, user, userDoc] = await api.auth.loginDonorWithEmailAndPassword(values.email, values.password);
+      let result = await fetch('/api/sessionLogin', {
+        method: 'POST',
+        headers: new Headers({ 'Content-Type': 'application/json' }),
+        credentials: 'same-origin',
+        body: JSON.stringify({ token }),
+      });
+      let response = await result.json()
+      if (result.ok) {
+        //TODO: store inside redux store
+        router.push('/')
+      } else {
+        throw response.error
+      }
+
+    } catch (error) {
+      console.log(error.details);
+      displayAlert('Error', error.details, 'critical');
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    try {
+      const [token, user, userDoc] = await api.auth.loginDonorWithGoogle();
+      let result = await fetch('/api/sessionLogin', {
+        method: 'POST',
+        headers: new Headers({ 'Content-Type': 'application/json' }),
+        credentials: 'same-origin',
+        body: JSON.stringify({ token }),
+      });
+      let response = await result.json()
+      if (result.ok) {
+        //TODO: store inside redux store
+        router.push('/')
+      } else {
+        throw response.error
+      }
+    } catch (error) {
+      console.log(error);
+      displayAlert('Error', error.details, 'critical');
+    }
   };
 
   const validationSchema = Yup.object().shape({
@@ -61,14 +118,14 @@ const LoginDonor = () => {
           </Heading>
         </Stack>
       </Text>
-      <SocialButton type="google" fullWidth={true} spaceAfter="normal">
+      <SocialButton type="google" fullWidth={true} spaceAfter="normal" onClick={handleGoogleLogin}>
         Login with Google
       </SocialButton>
       <Text align="center" spaceAfter="normal">
         OR
       </Text>
       <form onSubmit={formik.handleSubmit}>
-        <Stack spacing="comfy">
+        <Stack spacing="comfy" spaceAfter="normal">
           <InputField
             type="email"
             label="Email"
@@ -91,8 +148,14 @@ const LoginDonor = () => {
           </Button>
         </Stack>
       </form>
+
+      {showAlert ? (
+        <Alert icon title={alertTitle} type={alertType}>
+          {alertDescription}
+        </Alert>
+      ) : null}
     </div>
   );
 };
 
-export default LoginDonor;
+export default withRouter(LoginDonor);

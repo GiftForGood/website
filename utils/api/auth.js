@@ -123,8 +123,11 @@ class AuthAPI {
    * Send a verification email to the currently logged in user
    */
   async sendVerificationEmail() {
+    const actionCodeSettings = {
+      url: 'http://localhost:3000/login',
+    };
     const user = firebaseAuth.currentUser;
-    return user.sendEmailVerification();
+    return user.sendEmailVerification(actionCodeSettings);
   }
 
   /**

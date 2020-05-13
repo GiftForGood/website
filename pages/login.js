@@ -4,10 +4,12 @@ import { withRedux } from '../utils/withRedux';
 import { isAuthenticated } from '../utils/authentication';
 import LoginPage from '../src/components/login/pages/LoginPage';
 
+
 // Route back to home page if already authenticated
 export async function getServerSideProps({ params, req, res, query }) {
   // let user = await isAuthenticated(req, res);
-  let user = null;
+  //await isAuthenticated()
+  let user = null;  
   if (user) {
     res.writeHead(200, { Location: '/' });
     res.end();
