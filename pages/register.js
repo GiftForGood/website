@@ -6,10 +6,9 @@ import RegisterPage from '../src/components/register/pages/RegisterPage';
 
 // Route back to home page if already authenticated
 export async function getServerSideProps({ params, req, res, query }) {
-  //let user = await isAuthenticated(req, res);
-  let user = null;
+  let user = await isAuthenticated(req, res);
   if (user) {
-    res.writeHead(200, { Location: '/' });
+    res.writeHead(302, { Location: '/' });
     res.end();
   }
   return {
