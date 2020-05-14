@@ -10,7 +10,7 @@ const Home = () => {
           font-family: 'Trebuchet MS';
         }
       `}</style>
-      <HomePage />
+      {/* <HomePage /> */}
     </div>
   );
 };
