@@ -45,7 +45,14 @@ const RegisterDonor = () => {
       displayAlert('Successfully Registered!', `A verification email has been sent to ${user.email}`, 'success' )
     } catch (error) {
       console.log(error)
-      displayAlert('Error', error.message, 'critical')
+      formik.setSubmitting(false)
+      if (error.code === "auth/email-already-in-use") {
+        displayAlert('Email already in use', error.message, 'critical')
+      } else if (error.code === "auth/invalid-email") {
+        displayAlert('Invalid Email', error.message, 'critical')
+      } else if (error.code === "auth/unable-to-create-user") {
+        displayAlert('Error', error.message, 'critical')
+      }
     }
   };
 
@@ -57,7 +64,9 @@ const RegisterDonor = () => {
       displayAlert('Successfully Registered!', `A verification email has been sent to ${user.email}`, 'success' )
     } catch (error) {
       console.log(error);
-      displayAlert('Error', error.message, 'critical')
+      if (error.code === "auth/unable-to-create-user") {
+        displayAlert('Error', error.message, 'critical')
+      }
     }
   };
 
