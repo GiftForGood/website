@@ -3,26 +3,38 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@kiwicom/orbit-components": "^0.82.1",
+    "@kiwicom/orbit-components": "^0.84.2",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
+    "axios": "^0.19.2",
     "cloudinary-react": "^1.5.0",
+    "connect-redis": "^4.0.4",
+    "cookie": "^0.4.1",
     "dotenv-webpack": "^1.7.0",
+    "express-session": "^1.17.1",
     "firebase": "^7.14.3",
     "firebase-admin": "^8.12.0",
+    "formik": "^2.1.4",
+    "isomorphic-unfetch": "^3.0.0",
     "moment": "^2.25.3",
     "next": "^9.3.4",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-redux": "^7.2.0",
     "react-scripts": "3.4.0",
-    "styled-components": "^5.0.1"
+    "redis": "^3.0.2",
+    "redux": "^4.0.5",
+    "redux-logger": "^3.0.6",
+    "redux-thunk": "^2.3.0",
+    "styled-components": "^5.0.1",
+    "yup": "^0.28.5"
   },
   "scripts": {
     "dev": "next",
+    "dev-local": "next --hostname 0.0.0.0",
     "build": "next build",
     "start": "next start -p $PORT",
-    "export": "next build && next export",
     "lint": "prettier --check '**/*.js'",
     "format": "prettier --write '**/*.js'"
   },
@@ -42,6 +54,8 @@
     ]
   },
   "devDependencies": {
+    "@kiwicom/babel-plugin-orbit-components": "^1.6.0",
+    "babel-plugin-styled-components": "^1.10.7",
     "prettier": "2.0.5"
   }
 }

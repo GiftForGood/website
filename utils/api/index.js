@@ -6,6 +6,7 @@ import ReportsAPI from './reports';
 import ReviewsAPI from './reviews';
 import UsersAPI from './users';
 import WishesAPI from './wishes';
+import TermsAndConditionsAPI from './termsandconditions';
 
 class API {
   auth = new AuthAPI();
@@ -16,6 +17,7 @@ class API {
   reviews = new ReviewsAPI();
   users = new UsersAPI();
   wishes = new WishesAPI();
+  termsandconditions = new TermsAndConditionsAPI();
 }
 
 const api = new API();
