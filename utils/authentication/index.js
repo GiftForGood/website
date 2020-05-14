@@ -1,38 +1,31 @@
-import runMiddleware from '../middleware';
-import sessionHandler from '../session/sessionHandler';
-//import firebase from '../admin-firebase';
-import 'isomorphic-unfetch';
-export async function isAuthenticated() {
-  // //await runMiddleware(req, res, sessionHandler);
-  // const user = req.session && req.session.decodedToken ? req.session.decodedToken : null;
-  const response = await fetch('http://localhost:3000/api/silentLogin', {
-    method: 'POST',
-    credentials: 'same-origin',
-  });
-  const data = await response.json()
-  console.log(data);
+import client from '../axios';
+import cookie from 'cookie';
 
-  // let token = req.session.token;
-  // if (user) {
-  //   try {
-  //     //await firebase.auth().verifyIdToken(token);
-  //     return user;
-  //   } catch (error) {
-  //     return null;
-  //   }
-  // }
-  // if (!user) {
-  //   console.log('Fail redirect to test page');
-  //   return user;
-  // }
+// called in getServerSideProps
+export async function isAuthenticated(req, res) {
+  try {
+    const response = await client.get('/api/silentLogin', {
+      headers: {
+        cookie: req.headers.cookie,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    return null;
+  }
 }
 
 export async function isAuthenticatedFailureRouteBackToLogin(req, res) {
-  //await runMiddleware(req, res, sessionHandler);
-  const user = req.session && req.session.decodedToken ? req.session.decodedToken : null;
-  if (!user) {
+  try {
+    const response = await client.get('/api/silentLogin', {
+      headers: {
+        cookie: req.headers.cookie,
+      },
+    });
+    return response.data;
+  } catch (error) {
     res.writeHead(302, { Location: '/login' });
     res.end();
-    return;
+    return null;
   }
 }
