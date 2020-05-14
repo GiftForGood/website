@@ -167,7 +167,6 @@ const TopCategories = ({ numberOfPosts, numberOfCategories }) => {
   };
 
   async function getWishesForTopCategories(numberOfPosts, numberOfCategories, topNCategories) {
-    console.log(topNCategories);
     let wishes = [];
     for (let i = 0; i < numberOfCategories; i++) {
       const response = await api.wishes.getTopNPendingWishes(topNCategories[i].id, numberOfPosts);
