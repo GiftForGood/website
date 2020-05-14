@@ -1,5 +1,6 @@
 import admin from '../../utils/admin-firebase';
 import cookie from 'cookie';
+import AuthError from '../../utils/api/error';
 
 async function handler(req, res) {
   const { method } = req;
@@ -42,14 +43,14 @@ async function getUser(decodedClaims) {
       let doc = await admin.firestore().collection('donors').get(decodedClaims.uid);
       return doc.data();
     } catch (error) {
-      throw new Error('User does not exists');
+      throw new AuthError('user-does-not-exist','User does not exists');
     }
   } else if (decodedClaims.npos) {
     try {
       let doc = await admin.firestore().collection('npos').get(decodedClaims.uid);
       return doc.data();
     } catch (error) {
-      throw new Error('User does not exists');
+      throw new AuthError('user-does-not-exist','User does not exists');
     }
   }
 }
