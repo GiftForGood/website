@@ -5,7 +5,7 @@ import api from '../../../../utils/api/index';
 import { dummyCategories } from '../../../../utils/dummyData/categories';
 import SquareImageBox from '../../imageContainers/SquareImageBox';
 import styled from 'styled-components';
-import { ChevronRight, ChevronLeft } from "@kiwicom/orbit-components/lib/icons";
+import { ChevronRight, ChevronLeft } from '@kiwicom/orbit-components/lib/icons';
 
 const Container = styled.div`
   margin: 0 auto;
@@ -27,7 +27,7 @@ const ScrollableRow = styled.div`
   max-width: 95vw;
   overflow-x: hidden;
   scroll-behavior: smooth;
-  padding: 10px; 
+  padding: 10px;
 `;
 
 const CarouselButton = styled.div`
@@ -50,7 +50,7 @@ const CarouselButton = styled.div`
 `;
 
 const CarouselArrow = styled.div`
-  ${(props) => props.direction === "left" ? "left: -5px" : "right: -5px"};
+  ${(props) => (props.direction === 'left' ? 'left: -5px' : 'right: -5px')};
   position: absolute;
   top: 50%;
   z-index: 10;
@@ -58,7 +58,7 @@ const CarouselArrow = styled.div`
   height: fit-content;
   transform: translate(0, -50%);
   background-color: 'grey';
-`
+`;
 
 const Categories = () => {
   const [categories, setCategories] = useState([]);
@@ -104,22 +104,36 @@ const Categories = () => {
 
   const getScrollableWidth = () => document.getElementById('scrollableCategory').clientWidth;
 
-  const scrollLeft = () => document.getElementById('scrollableCategory').scrollLeft -= getScrollableWidth();
+  const scrollLeft = () => (document.getElementById('scrollableCategory').scrollLeft -= getScrollableWidth());
 
-  const scrollRight = () => document.getElementById('scrollableCategory').scrollLeft += getScrollableWidth();
+  const scrollRight = () => (document.getElementById('scrollableCategory').scrollLeft += getScrollableWidth());
 
   return (
     <Container>
       <ResizableTitle>Explore GiftForGood</ResizableTitle>
       <CarouselContainer>
         <CarouselArrow direction="left">
-          <Button circled iconLeft={<ChevronLeft />} asComponent={CarouselButton} onClick={scrollLeft} type="white" size="small" />
+          <Button
+            circled
+            iconLeft={<ChevronLeft />}
+            asComponent={CarouselButton}
+            onClick={scrollLeft}
+            type="white"
+            size="small"
+          />
         </CarouselArrow>
         <ScrollableRow id="scrollableCategory">
           <RowOfCategories />
         </ScrollableRow>
         <CarouselArrow direction="right">
-          <Button circled iconLeft={<ChevronRight />} asComponent={CarouselButton} onClick={scrollRight} type="white" size="small" />
+          <Button
+            circled
+            iconLeft={<ChevronRight />}
+            asComponent={CarouselButton}
+            onClick={scrollRight}
+            type="white"
+            size="small"
+          />
         </CarouselArrow>
       </CarouselContainer>
     </Container>
