@@ -1,17 +1,14 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { withRouter } from 'next/router';
 import { withRedux } from '../utils/withRedux';
 import { isAuthenticated } from '../utils/authentication';
 import LoginPage from '../src/components/login/pages/LoginPage';
 
-
 // Route back to home page if already authenticated
 export async function getServerSideProps({ params, req, res, query }) {
-  // let user = await isAuthenticated(req, res);
-  //await isAuthenticated()
-  let user = null;  
+  let user = await isAuthenticated(req, res);
   if (user) {
-    res.writeHead(200, { Location: '/' });
+    res.writeHead(302, { Location: '/' });
     res.end();
   }
   return {

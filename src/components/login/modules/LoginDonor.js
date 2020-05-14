@@ -13,7 +13,7 @@ import RedButton from '../../button/RedButton';
 import api from '../../../../utils/api';
 import 'isomorphic-unfetch';
 import { useRouter, withRouter } from 'next/router';
-
+import client from '../../../../utils/axios';
 
 const HeadingColor = styled.div`
   color: ${colors.donorBackground};
@@ -41,20 +41,13 @@ const LoginDonor = () => {
   const handleFormSubmission = async (values) => {
     try {
       const [token, user, userDoc] = await api.auth.loginDonorWithEmailAndPassword(values.email, values.password);
-      let result = await fetch('/api/sessionLogin', {
-        method: 'POST',
-        headers: new Headers({ 'Content-Type': 'application/json' }),
-        credentials: 'same-origin',
-        body: JSON.stringify({ token }),
-      });
-      let response = await result.json()
-      if (result.ok) {
+      let response = await client.post('/api/sessionLogin', { token });
+      if (response.status === 200) {
         //TODO: store inside redux store
-        router.push('/')
+        router.push('/');
       } else {
-        throw response.error
+        throw response.error;
       }
-
     } catch (error) {
       console.log(error.details);
       displayAlert('Error', error.details, 'critical');
@@ -64,18 +57,12 @@ const LoginDonor = () => {
   const handleGoogleLogin = async () => {
     try {
       const [token, user, userDoc] = await api.auth.loginDonorWithGoogle();
-      let result = await fetch('/api/sessionLogin', {
-        method: 'POST',
-        headers: new Headers({ 'Content-Type': 'application/json' }),
-        credentials: 'same-origin',
-        body: JSON.stringify({ token }),
-      });
-      let response = await result.json()
-      if (result.ok) {
+      let response = await client.post('/api/sessionLogin', { token });
+      if (response.status === 200) {
         //TODO: store inside redux store
-        router.push('/')
+        router.push('/');
       } else {
-        throw response.error
+        throw response.error;
       }
     } catch (error) {
       console.log(error);
