@@ -27,8 +27,8 @@ const Calendar = ({ ...props }) => {
   props.renderDays = updateRenderDays(props.renderDays);
   const timeslot = generateTimeslots(props.timeslot.startTime, props.timeslot.endTime, props.timeslot.interval);
 
-  const initialDate = moment().format();
-  const [currentDate, setCurrentDate] = useState(moment(initialDate));
+  const initialDate = moment();
+  const [currentDate, setCurrentDate] = useState(moment().startOf('day'));
   const [selectedTimeslots, setSelectedTimeslots] = useState([]);
 
   const updateCurrentDate = (currentDate) => {
