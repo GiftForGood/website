@@ -1,11 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
 import Banner from '../modules/Banner';
 import Categories from '../modules/Categories';
 import TopCategories from '../modules/TopCategories';
 import { Grid } from '@kiwicom/orbit-components/lib';
-import Mobile from '@kiwicom/orbit-components/lib/Mobile';
-import Desktop from '@kiwicom/orbit-components/lib/Desktop';
 import styled from 'styled-components';
 
 const HomePageContainer = styled.div`

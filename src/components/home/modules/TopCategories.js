@@ -7,11 +7,12 @@ import Avatar from '../../imageContainers/Avatar';
 import GreySubtleButton from '../../buttons/GreySubtleButton';
 import Desktop from '@kiwicom/orbit-components/lib/Desktop';
 import Mobile from '@kiwicom/orbit-components/lib/Mobile';
-import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
+import { dummyWishesForTopThreeCategories } from '../../../../utils/dummyData/wishes';
+import { dummyCategories } from '../../../../utils/dummyData/categories';
 
 const TopCategoriesContainer = styled.div`
   text-align: center;
-  width: 80%;
+  width: 90%;
   margin: 0 auto;
   margin-bottom: 2vh;
 `;
@@ -115,7 +116,7 @@ const CardContent = ({ title, description, name, imageUrl }) => {
 const CategoryHeader = ({ title }) => {
   return (
     <div style={{ width: '100%', height: 'fit-content' }}>
-      <Desktop> 
+      <Desktop>
         <Text size="large" align="center" weight="bold">
           {title}
         </Text>
@@ -129,187 +130,67 @@ const CategoryHeader = ({ title }) => {
   );
 };
 
-const dummyWishesForTopThreeCategories = [
-  [
-    {
-      expireDateTime: 1591894762124,
-      wishesId: 'OJxYnK5jhQrG1quNg08y',
-      user: {
-        userId: '5oBhU2SGiKEKOzNLa2zt',
-        userName: 'hello world',
-        profileImageUrl: 'https://res.cloudinary.com/giftforgood/image/upload/v1589378414/profile.jpg',
-      },
-      categories: [
-        {
-          name: 'Food',
-          iconUrl: 'food_icon',
-          imageUrl: 'https://res.cloudinary.com/giftforgood/image/upload/v1588842129/food.jpg',
-          id: 'LokORpW2MEKJx1ayG3h6',
-        },
-        {
-          name: 'Daily Necessities',
-          iconUrl: 'dailynecessities_icon',
-          imageUrl: 'https://res.cloudinary.com/giftforgood/image/upload/v1588842156/dailynecessities.jpg',
-          id: '3ZurlkyhxGG6jYiuzoKB',
-        },
-      ],
-      postedDateTime: 1589216362124,
-      description: 'Tamago',
-      isBumped: false,
-      status: 'pending',
-      updatedDateTime: 1589216362124,
-      title: 'Eggs Supplies',
-      lastActionByUserDateTime: 1589216362124,
-      organization: {
-        address: 'Queenstown MRT',
-        latitude: '1.294835',
-        name: 'name',
-        longitude: '103.805901',
-      },
-    },
-    {
-      updatedDateTime: 1589217667843,
-      title: 'Rice Supplies',
-      lastActionByUserDateTime: 1589216337607,
-      organization: {
-        address: 'Queenstown MRT',
-        latitude: '1.294835',
-        name: 'name',
-        longitude: '103.805901',
-      },
-      expireDateTime: 1591894737607,
-      user: {
-        profileImageUrl: 'https://res.cloudinary.com/giftforgood/image/upload/v1589378414/profile.jpg',
-        userId: '5oBhU2SGiKEKOzNLa2zt',
-        userName: 'hello world',
-      },
-      wishesId: 'AMydcz5OjklcBRMZeN1L',
-      categories: [
-        {
-          name: 'Food',
-          iconUrl: 'food_icon',
-          imageUrl: 'https://res.cloudinary.com/giftforgood/image/upload/v1588842129/food.jpg',
-          id: 'LokORpW2MEKJx1ayG3h6',
-        },
-      ],
-      postedDateTime: 1589216337607,
-      description: 'I need rice',
-      isBumped: false,
-      status: 'pending',
-    },
-  ],
-  [
-    {
-      isBumped: false,
-      status: 'pending',
-      wishesId: 'gjodjpc2oYgQvNJO3Tlp',
-      user: {
-        profileImageUrl: 'https://res.cloudinary.com/giftforgood/image/upload/v1589378414/profile.jpg',
-        userId: '5oBhU2SGiKEKOzNLa2zt',
-        userName: 'hello world',
-      },
-      categories: [
-        {
-          name: 'Furniture',
-          iconUrl: 'fake_url',
-          imageUrl: 'https://res.cloudinary.com/giftforgood/image/upload/v1588842161/furniture.jpg',
-          id: 'svFwKXrxv0KFkPc5oh95',
-        },
-      ],
-      lastActionByUserDateTime: {
-        seconds: 1589299200,
-        nanoseconds: 0,
-      },
-      postedDateTime: {
-        seconds: 1589299200,
-        nanoseconds: 0,
-      },
-      organization: {
-        latitude: '1.2936',
-        name: 'Happiness NGO',
-        longitude: '103.7845',
-        address: 'Kent Ridge',
-      },
-      title: 'Tables',
-      description: 'I need tables',
-      expireDateTime: {
-        seconds: 1589904000,
-        nanoseconds: 0,
-      },
-    },
-  ],
-  [
-    {
-      updatedDateTime: 1589216145488,
-      title: 'Macbook Pro',
-      lastActionByUserDateTime: 1589216145488,
-      organization: {
-        name: 'name',
-        longitude: '103.805901',
-        address: 'Queenstown MRT',
-        latitude: '1.294835',
-      },
-      expireDateTime: 1591894545488,
-      user: {
-        userId: '5oBhU2SGiKEKOzNLa2zt',
-        userName: 'hello world',
-        profileImageUrl: 'https://res.cloudinary.com/giftforgood/image/upload/v1589378414/profile.jpg',
-      },
-      wishesId: 'QmJfzd8LngQrlJfIiQNe',
-      categories: [
-        {
-          name: 'Electronics',
-          iconUrl: 'fake_url',
-          imageUrl: 'https://res.cloudinary.com/giftforgood/image/upload/v1588842147/electronic.jpg',
-          id: 'IwmfcaTjKqrnviMxHQ5G',
-        },
-      ],
-      postedDateTime: 1589216145488,
-      description: 'The new macbook pro 16-inch. 16GB RAM. I need it urgently for my internships, if any one can give me i will put it to good use. I have been trying to save up money to get one but it has been too long.',
-      status: 'pending',
-      isBumped: false,
-    },
-  ],
-];
-
-async function getWishesFromTopCategories(numberOfPosts, numberOfCategories, topNCategoriesId) {
-  let wishes = [];
-  for (let i = 0; i < numberOfCategories; i++) {
-    const response = await api.wishes.getTopNPendingWishes(topNCategoriesId[i], numberOfPosts);
-    const data = [];
-    response.docs.forEach((doc) => {
-      data.push(doc.data());
-    });
-    wishes = [...wishes, data];
-  }
-  return wishes;
-}
-
 const TopCategories = ({ numberOfPosts, numberOfCategories }) => {
-  const topThreeCategoriesId = ['LokORpW2MEKJx1ayG3h6', 'svFwKXrxv0KFkPc5oh95', 'IwmfcaTjKqrnviMxHQ5G'];
-  const topThreeCategoriesName = ['Food', 'Furniture', 'Electronics'];
-  const [wishesOfTopThreeCategories, setWishesOfTopThreeCategories] = useState([]);
+  const [topNCategories, setTopNCategories] = useState([]);
+  const [wishesOfTopNCategories, setWishesOfTopNCategories] = useState([]);
 
   useEffect(() => {
-    // remove this when testing
-    // getWishesFromTopCategories(numberOfPosts, numberOfCategories, topThreeCategoriesId).then((wishes) => {
-    //   setWishesOfTopThreeCategories(wishes);
-    // });
-    // remove this when not testing (actually can't do this since useEffect is done after mount)
-    setWishesOfTopThreeCategories(dummyWishesForTopThreeCategories);
+    if (process.env.NODE_ENV === 'development') {
+      setTopNCategories(dummyCategories.slice(0, numberOfCategories));
+    } else {
+      getTopNCategories(numberOfCategories);
+    }
   }, []);
+
+  useEffect(() => {
+    if (topNCategories.length === 0) {
+      return; // skip if top n categories is not populated yet
+    }
+    if (process.env.NODE_ENV === 'development') {
+      setWishesOfTopNCategories(dummyWishesForTopThreeCategories);
+    } else {
+      getWishesForTopCategories(numberOfPosts, numberOfCategories, topNCategories).then((wishes) => {
+        setWishesOfTopNCategories(wishes);
+      });
+    }
+  }, [topNCategories]); // run once topNCategories is populated
+
+  const getTopNCategories = (numberOfCategories) => {
+    api.categories
+      .getAll()
+      .then((response) => {
+        const data = [];
+        response.docs.slice(0, numberOfCategories).forEach((doc) => data.push(doc.data()));
+        setTopNCategories(data);
+      })
+      .catch((err) => {});
+  };
+
+  async function getWishesForTopCategories(numberOfPosts, numberOfCategories, topNCategories) {
+    console.log(topNCategories);
+    let wishes = [];
+    for (let i = 0; i < numberOfCategories; i++) {
+      const response = await api.wishes.getTopNPendingWishes(topNCategories[i].id, numberOfPosts);
+      const data = [];
+      response.docs.forEach((doc) => {
+        data.push(doc.data());
+      });
+      wishes = [...wishes, data];
+    }
+    return wishes;
+  }
 
   const getTopNCategoryCards = () => {
     const router = useRouter();
-    return wishesOfTopThreeCategories.map((categoryWishes, i) => {
-      const categoryHref = '/category/' + topThreeCategoriesId[i];
+    return wishesOfTopNCategories.map((categoryWishes, i) => {
+      const categoryHref = '/category/' + topNCategories[i].id;
       const handleClick = (event) => {
         event.preventDefault();
         router.push(categoryHref);
       };
       return (
-        <CardWrapper key={topThreeCategoriesId[i]}>
-          <Card header={<CategoryHeader title={topThreeCategoriesName[i]} />}>
+        <CardWrapper key={topNCategories[i].id}>
+          <Card header={<CategoryHeader title={topNCategories[i].name} />}>
             {categoryWishes.map((wish) => {
               const postHref = '/wishes/' + wish.wishesId;
               return (

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
 import Search from '@kiwicom/orbit-components/lib/icons/Search';
 import { InputField, Button } from '@kiwicom/orbit-components/lib';
