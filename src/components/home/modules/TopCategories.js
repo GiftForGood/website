@@ -156,28 +156,28 @@ const TopCategories = ({ numberOfPosts, numberOfCategories }) => {
   }, [topNCategories]); // run once topNCategories is populated
 
   const getTopNCategories = (numberOfCategories) => {
-    api.categories
-      .getAll()
-      .then((response) => {
-        const data = [];
-        response.docs.slice(0, numberOfCategories).forEach((doc) => data.push(doc.data()));
-        setTopNCategories(data);
-      })
-      .catch((err) => {});
+    // api.categories
+    //   .getAll()
+    //   .then((response) => {
+    //     const data = [];
+    //     response.docs.slice(0, numberOfCategories).forEach((doc) => data.push(doc.data()));
+    //     setTopNCategories(data);
+    //   })
+    //   .catch((err) => {});
   };
 
   async function getWishesForTopCategories(numberOfPosts, numberOfCategories, topNCategories) {
-    console.log(topNCategories);
-    let wishes = [];
-    for (let i = 0; i < numberOfCategories; i++) {
-      const response = await api.wishes.getTopNPendingWishes(topNCategories[i].id, numberOfPosts);
-      const data = [];
-      response.docs.forEach((doc) => {
-        data.push(doc.data());
-      });
-      wishes = [...wishes, data];
-    }
-    return wishes;
+    // console.log(topNCategories);
+    // let wishes = [];
+    // for (let i = 0; i < numberOfCategories; i++) {
+    //   const response = await api.wishes.getTopNPendingWishes(topNCategories[i].id, numberOfPosts);
+    //   const data = [];
+    //   response.docs.forEach((doc) => {
+    //     data.push(doc.data());
+    //   });
+    //   wishes = [...wishes, data];
+    // }
+    // return wishes;
   }
 
   const getTopNCategoryCards = () => {
