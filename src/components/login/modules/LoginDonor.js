@@ -14,6 +14,7 @@ import api from '../../../../utils/api';
 import 'isomorphic-unfetch';
 import { useRouter, withRouter } from 'next/router';
 import client from '../../../../utils/axios';
+import AuthError from '../../../../utils/api/error/authError';
 
 const HeadingColor = styled.div`
   color: ${colors.donorBackground};
@@ -41,9 +42,14 @@ const LoginDonor = () => {
   const handleFormSubmission = async (values) => {
     try {
       const [token, user, userDoc] = await api.auth.loginDonorWithEmailAndPassword(values.email, values.password);
+      let userData = userDoc.data()
+      if (!userData.isVerifiedByEmail) {
+        throw new AuthError('unverified-email', "User has not verify their email address");
+      }
       let response = await client.post('/api/sessionLogin', { token });
       if (response.status === 200) {
         //TODO: store inside redux store
+        
         router.push('/');
       } else {
         throw response.error;
@@ -63,6 +69,8 @@ const LoginDonor = () => {
         displayAlert('Error', error.message, 'critical')
       } else if (error.code === "auth/invalid-user") {
         displayAlert('Error', error.message, 'critical')
+      } else if (error.code === "auth/unverified-email") {
+        displayAlert('Unverified', error.message, 'critical')
       }
     }
   };
@@ -70,6 +78,10 @@ const LoginDonor = () => {
   const handleGoogleLogin = async () => {
     try {
       const [token, user, userDoc] = await api.auth.loginDonorWithGoogle();
+      let userData = userDoc.data()
+      if (!userData.isVerifiedByEmail) {
+        throw new AuthError('unverified-email', "User has not verify their email address");
+      }
       let response = await client.post('/api/sessionLogin', { token });
       if (response.status === 200) {
         //TODO: store inside redux store
@@ -83,6 +95,8 @@ const LoginDonor = () => {
         displayAlert('Error', error.message, 'critical')
       } else if (error.code === "auth/invalid-user") {
         displayAlert('Error', error.message, 'critical')
+      } else if (error.code === "auth/unverified-email") {
+        displayAlert('Unverified', error.message, 'critical')
       }
     }
   };
