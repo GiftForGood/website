@@ -34,14 +34,14 @@ const Categories = () => {
   }, []);
 
   const getAllCategories = () => {
-    // api.categories
-    //   .getAll()
-    //   .then((response) => {
-    //     const data = [];
-    //     response.docs.forEach((doc) => data.push(doc.data()));
-    //     setCategories(data);
-    //   })
-    //   .catch((err) => {});
+    api.categories
+      .getAll()
+      .then((response) => {
+        const data = [];
+        response.docs.forEach((doc) => data.push(doc.data()));
+        setCategories(data);
+      })
+      .catch((err) => {});
   };
 
   const RowOfCategories = () => {

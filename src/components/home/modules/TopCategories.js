@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { Stack, Card, CardSection, Button, Text } from '@kiwicom/orbit-components/lib';
 import api from '../../../../utils/api/index';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import Avatar from '../../imageContainers/Avatar';
 import GreySubtleButton from '../../buttons/GreySubtleButton';
 import Desktop from '@kiwicom/orbit-components/lib/Desktop';
@@ -156,27 +156,28 @@ const TopCategories = ({ numberOfPosts, numberOfCategories }) => {
   }, [topNCategories]); // run once topNCategories is populated
 
   const getTopNCategories = (numberOfCategories) => {
-    // api.categories
-    //   .getAll()
-    //   .then((response) => {
-    //     const data = [];
-    //     response.docs.slice(0, numberOfCategories).forEach((doc) => data.push(doc.data()));
-    //     setTopNCategories(data);
-    //   })
-    //   .catch((err) => {});
+    api.categories
+      .getAll()
+      .then((response) => {
+        const data = [];
+        response.docs.slice(0, numberOfCategories).forEach((doc) => data.push(doc.data()));
+        setTopNCategories(data);
+      })
+      .catch((err) => {});
   };
 
   async function getWishesForTopCategories(numberOfPosts, numberOfCategories, topNCategories) {
-    // let wishes = [];
-    // for (let i = 0; i < numberOfCategories; i++) {
-    //   const response = await api.wishes.getTopNPendingWishes(topNCategories[i].id, numberOfPosts);
-    //   const data = [];
-    //   response.docs.forEach((doc) => {
-    //     data.push(doc.data());
-    //   });
-    //   wishes = [...wishes, data];
-    // }
-    // return wishes;
+    console.log(topNCategories);
+    let wishes = [];
+    for (let i = 0; i < numberOfCategories; i++) {
+      const response = await api.wishes.getTopNPendingWishes(topNCategories[i].id, numberOfPosts);
+      const data = [];
+      response.docs.forEach((doc) => {
+        data.push(doc.data());
+      });
+      wishes = [...wishes, data];
+    }
+    return wishes;
   }
 
   const getTopNCategoryCards = () => {
