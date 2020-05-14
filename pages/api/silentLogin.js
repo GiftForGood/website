@@ -12,14 +12,14 @@ async function handler(req, res) {
       // if the user's Firebase session was revoked, user deleted/disabled, etc.
       try {
         let decodedClaims = await admin.auth().verifySessionCookie(sessionCookie, true /** checkRevoked */);
-        let user = await getUser(decodedClaims)
-        console.log('user', user)
+        let user = await getUser(decodedClaims);
+        console.log('user', user);
         res.json({
           user: {
             ...user,
             donor: decodedClaims.donor,
             npo: decodedClaims.npo,
-          }
+          },
         });
       } catch (error) {
         // Session cookie is unavailable or invalid. Force user to login.
@@ -43,14 +43,14 @@ async function getUser(decodedClaims) {
       let doc = await admin.firestore().collection('donors').get(decodedClaims.uid);
       return doc.data();
     } catch (error) {
-      throw new AuthError('user-does-not-exist','User does not exists');
+      throw new AuthError('user-does-not-exist', 'User does not exists');
     }
   } else if (decodedClaims.npos) {
     try {
       let doc = await admin.firestore().collection('npos').get(decodedClaims.uid);
       return doc.data();
     } catch (error) {
-      throw new AuthError('user-does-not-exist','User does not exists');
+      throw new AuthError('user-does-not-exist', 'User does not exists');
     }
   }
 }

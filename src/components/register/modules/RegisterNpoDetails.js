@@ -30,7 +30,7 @@ const RegisterNpoDetails = () => {
 
   const handleFormSubmission = () => {
     dispatch(setNpoDetails(values.name, values.mobileNumber));
-    console.log('handleFormSubmission',values)
+    console.log('handleFormSubmission', values);
     // TODO: API to call Firebase
   };
 
@@ -137,7 +137,7 @@ const RegisterNpoDetails = () => {
         </Stack>
       </form>
 
-      {openTnC ? <TermsAndConditionModal onClose={handleModal} tnc={tnc} onSubmit={handleFormSubmission}/> : null}
+      {openTnC ? <TermsAndConditionModal onClose={handleModal} tnc={tnc} onSubmit={handleFormSubmission} /> : null}
     </div>
   );
 };

@@ -42,35 +42,35 @@ const LoginDonor = () => {
   const handleFormSubmission = async (values) => {
     try {
       const [token, user, userDoc] = await api.auth.loginDonorWithEmailAndPassword(values.email, values.password);
-      let userData = userDoc.data()
+      let userData = userDoc.data();
       if (!userData.isVerifiedByEmail) {
-        throw new AuthError('unverified-email', "User has not verify their email address");
+        throw new AuthError('unverified-email', 'User has not verify their email address');
       }
       let response = await client.post('/api/sessionLogin', { token });
       if (response.status === 200) {
         //TODO: store inside redux store
-        
+
         router.push('/');
       } else {
         throw response.error;
       }
     } catch (error) {
       console.log(error);
-      formik.setSubmitting(false)
-      if (error.code === "auth/user-disabled") {
-        displayAlert('User has been disabled, please contact administrator.', error.message, 'critical')
-      } else if (error.code === "auth/invalid-email") {
-        displayAlert('Invalid Email', error.message, 'critical')
-      } else if (error.code === "auth/user-not-found") {
-        displayAlert('User does not exists', error.message, 'critical')
-      }  else if (error.code === "auth/wrong-password") {
-        displayAlert('Either email or password is wrong', error.message, 'critical')
-      } else if (error.code === "auth/unable-to-create-user") {
-        displayAlert('Error', error.message, 'critical')
-      } else if (error.code === "auth/invalid-user") {
-        displayAlert('Error', error.message, 'critical')
-      } else if (error.code === "auth/unverified-email") {
-        displayAlert('Unverified', error.message, 'critical')
+      formik.setSubmitting(false);
+      if (error.code === 'auth/user-disabled') {
+        displayAlert('User has been disabled, please contact administrator.', error.message, 'critical');
+      } else if (error.code === 'auth/invalid-email') {
+        displayAlert('Invalid Email', error.message, 'critical');
+      } else if (error.code === 'auth/user-not-found') {
+        displayAlert('User does not exists', error.message, 'critical');
+      } else if (error.code === 'auth/wrong-password') {
+        displayAlert('Either email or password is wrong', error.message, 'critical');
+      } else if (error.code === 'auth/unable-to-create-user') {
+        displayAlert('Error', error.message, 'critical');
+      } else if (error.code === 'auth/invalid-user') {
+        displayAlert('Error', error.message, 'critical');
+      } else if (error.code === 'auth/unverified-email') {
+        displayAlert('Unverified', error.message, 'critical');
       }
     }
   };
@@ -78,9 +78,9 @@ const LoginDonor = () => {
   const handleGoogleLogin = async () => {
     try {
       const [token, user, userDoc] = await api.auth.loginDonorWithGoogle();
-      let userData = userDoc.data()
+      let userData = userDoc.data();
       if (!userData.isVerifiedByEmail) {
-        throw new AuthError('unverified-email', "User has not verify their email address");
+        throw new AuthError('unverified-email', 'User has not verify their email address');
       }
       let response = await client.post('/api/sessionLogin', { token });
       if (response.status === 200) {
@@ -91,12 +91,12 @@ const LoginDonor = () => {
       }
     } catch (error) {
       console.log(error);
-      if (error.code === "auth/unable-to-create-user") {
-        displayAlert('Error', error.message, 'critical')
-      } else if (error.code === "auth/invalid-user") {
-        displayAlert('Error', error.message, 'critical')
-      } else if (error.code === "auth/unverified-email") {
-        displayAlert('Unverified', error.message, 'critical')
+      if (error.code === 'auth/unable-to-create-user') {
+        displayAlert('Error', error.message, 'critical');
+      } else if (error.code === 'auth/invalid-user') {
+        displayAlert('Error', error.message, 'critical');
+      } else if (error.code === 'auth/unverified-email') {
+        displayAlert('Unverified', error.message, 'critical');
       }
     }
   };

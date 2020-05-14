@@ -11,13 +11,11 @@ import styled from 'styled-components';
 import { colors } from '../../../../utils/constants/colors';
 import RedButton from '../../button/RedButton';
 import api from '../../../../utils/api';
-import 'isomorphic-unfetch'
-
+import 'isomorphic-unfetch';
 
 const HeadingColor = styled.div`
   color: ${colors.donorBackground};
 `;
-
 
 const RegisterDonor = () => {
   const dispatch = useDispatch();
@@ -35,23 +33,23 @@ const RegisterDonor = () => {
     setAlertTitle(title);
     setAlertDescription(description);
     setAlertType(type);
-  }
+  };
 
   const handleFormSubmission = async (values) => {
     try {
       const [token, user, userDoc] = await api.auth.registerDonorWithEmailAndPassword(values.email, values.password);
       console.log(token);
       await api.auth.sendVerificationEmail();
-      displayAlert('Successfully Registered!', `A verification email has been sent to ${user.email}`, 'success' )
+      displayAlert('Successfully Registered!', `A verification email has been sent to ${user.email}`, 'success');
     } catch (error) {
-      console.log(error)
-      formik.setSubmitting(false)
-      if (error.code === "auth/email-already-in-use") {
-        displayAlert('Email already in use', error.message, 'critical')
-      } else if (error.code === "auth/invalid-email") {
-        displayAlert('Invalid Email', error.message, 'critical')
-      } else if (error.code === "auth/unable-to-create-user") {
-        displayAlert('Error', error.message, 'critical')
+      console.log(error);
+      formik.setSubmitting(false);
+      if (error.code === 'auth/email-already-in-use') {
+        displayAlert('Email already in use', error.message, 'critical');
+      } else if (error.code === 'auth/invalid-email') {
+        displayAlert('Invalid Email', error.message, 'critical');
+      } else if (error.code === 'auth/unable-to-create-user') {
+        displayAlert('Error', error.message, 'critical');
       }
     }
   };
@@ -61,11 +59,11 @@ const RegisterDonor = () => {
       const [token, user, userDoc] = await api.auth.registerDonorWithGoogle();
       console.log(token);
       await api.auth.sendVerificationEmail();
-      displayAlert('Successfully Registered!', `A verification email has been sent to ${user.email}`, 'success' )
+      displayAlert('Successfully Registered!', `A verification email has been sent to ${user.email}`, 'success');
     } catch (error) {
       console.log(error);
-      if (error.code === "auth/unable-to-create-user") {
-        displayAlert('Error', error.message, 'critical')
+      if (error.code === 'auth/unable-to-create-user') {
+        displayAlert('Error', error.message, 'critical');
       }
     }
   };
