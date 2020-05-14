@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Text } from '@kiwicom/orbit-components/lib';
-import CalendarModal from '../src/components/chat/modules/CalendarModal';
+import CalendarModal from '../src/components/calendar/modules/CalendarModal';
 
 const ChatPage = () => {
   const [showModal, setShowModal] = useState(false);
