@@ -81,6 +81,7 @@ class AuthAPI {
     proofImage,
     activities
   ) {
+    this._validateNPOData(registeredRegistrar, proofImage);
     await firebaseAuth.createUserWithEmailAndPassword(email, password);
     const token = await firebaseAuth.currentUser.getIdToken();
     const userProfile = firebaseAuth.currentUser;
@@ -240,6 +241,32 @@ class AuthAPI {
     }
 
     return true;
+  }
+
+  _validateNPOData(registeredRegistrar, proofImage) {
+    this._validateRegistrar(registeredRegistrar);
+    this._validateProofImage(proofImage);
+  }
+
+  _validateRegistrar(registeredRegistrar) {
+    const validRegistrar = [
+      NPORegisteredRegistrar.AFFILIATED_NATIONAL_COUNCIL_OF_SOCIAL_SERVICE,
+      NPORegisteredRegistrar.REGISTRY_OF_SOCIETY,
+      NPORegisteredRegistrar.COMMISSIONER_OF_CHARITIES,
+    ];
+
+    if (!validRegistrar.includes(registeredRegistrar)) {
+      throw new AuthError('invalid-arguments', registeredRegistrar + ' is not a valid registrar');
+    }
+  }
+
+  _validateProofImage(proofImage) {
+    const validExtensions = ['.pdf'];
+    const imageExt = path.extname(proofImage.name);
+
+    if (!validExtensions.includes(imageExt)) {
+      throw new AuthError('invalid-arguments', imageExt + ' is not a valid file ext');
+    }
   }
 
   async _createNPO(userProfile, name, contact, organizationName) {
