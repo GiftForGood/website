@@ -2,15 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { Stack, Card, CardSection, Button, Text } from '@kiwicom/orbit-components/lib';
 import api from '../../../../utils/api/index';
-import styled from 'styled-components';
-import Avatar from '../../ImageHolder/Avatar';
-import GreySubtleButton from '../../Button/Button';
+import styled, { css } from 'styled-components';
+import Avatar from '../../imageContainers/Avatar';
+import GreySubtleButton from '../../buttons/GreySubtleButton';
 import Desktop from '@kiwicom/orbit-components/lib/Desktop';
 import Mobile from '@kiwicom/orbit-components/lib/Mobile';
+import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 
 const TopCategoriesContainer = styled.div`
   text-align: center;
-  width: 90%;
+  width: 80%;
   margin: 0 auto;
   margin-bottom: 2vh;
 `;
