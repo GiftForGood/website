@@ -259,37 +259,36 @@ const dummyWishesForTopThreeCategories = [
   ],
 ];
 
+async function getWishesFromTopCategories(numberOfPosts, numberOfCategories, topNCategoriesId) {
+  let wishes = [];
+  for (let i = 0; i < numberOfCategories; i++) {
+    const response = await api.wishes.getTopNPendingWishes(topNCategoriesId[i], numberOfPosts);
+    const data = [];
+    response.docs.forEach((doc) => {
+      data.push(doc.data());
+    });
+    wishes = [...wishes, data];
+  }
+  return wishes;
+}
+
 const TopCategories = ({ numberOfPosts, numberOfCategories }) => {
   const topThreeCategoriesId = ['LokORpW2MEKJx1ayG3h6', 'svFwKXrxv0KFkPc5oh95', 'IwmfcaTjKqrnviMxHQ5G'];
   const topThreeCategoriesName = ['Food', 'Furniture', 'Electronics'];
   const [wishesOfTopThreeCategories, setWishesOfTopThreeCategories] = useState([]);
 
-  // remove this when testing
-  // useEffect(() => {
-  //   for (let i = 0; i < numberOfCategories; i++) {
-  //     api.wishes
-  //       .getTopNPendingWishes(topThreeCategoriesId[i], numberOfPosts)
-  //       .then((response) => {
-  //         const data = [];
-  //         response.docs.forEach((doc) => {
-  //           data.push(doc.data());
-  //           console.log(`doc data: ${doc.data()}`);
-  //         });
-  //         console.log(`data: ${data}`);
-  //         console.log([...wishesOfTopThreeCategories, data]);
-  //         wishesOfTopThreeCategories = [...wishesOfTopThreeCategories, data];
-  //         console.log(`wishes of top 3: ${wishesOfTopThreeCategories}`);
-  //       })
-  //       .catch((err) => console.log(err));
-  //   }
-  // }, []);
-
-  // remove this when not testing (actually can't do this since useEffect is done after mount)
-  // setWishesOfTopThreeCategories(dummyWishesForTopThreeCategories);
+  useEffect(() => {
+    // remove this when testing
+    // getWishesFromTopCategories(numberOfPosts, numberOfCategories, topThreeCategoriesId).then((wishes) => {
+    //   setWishesOfTopThreeCategories(wishes);
+    // });
+    // remove this when not testing (actually can't do this since useEffect is done after mount)
+    setWishesOfTopThreeCategories(dummyWishesForTopThreeCategories);
+  }, []);
 
   const getTopNCategoryCards = () => {
     const router = useRouter();
-    return dummyWishesForTopThreeCategories.map((categoryWishes, i) => {
+    return wishesOfTopThreeCategories.map((categoryWishes, i) => {
       const categoryHref = '/category/' + topThreeCategoriesId[i];
       const handleClick = (event) => {
         event.preventDefault();

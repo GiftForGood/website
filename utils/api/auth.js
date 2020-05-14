@@ -1,4 +1,4 @@
-import { db, firebaseAuth, firebase } from '../firebase';
+import { db, firebaseAuth } from '../firebase';
 import firebase from 'firebase/app';
 
 const donorsCollection = db.collection('donors');

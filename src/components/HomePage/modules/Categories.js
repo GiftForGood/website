@@ -98,27 +98,29 @@ const dummyCategoriesData = [
 
 const Categories = () => {
   const [categories, setCategories] = useState([]);
-  // when testing, remove this
-  // useEffect(() => {
-  //   api.categories
-  //     .getAll()
-  //     .then((response) => {
-  //       const data = [];
-  //       response.docs.forEach((doc) => {
-  //         data.push(doc.data());
-  //       });
-  //       setCategories(data);
-  //       console.log(data);
-  //     })
-  //     .catch((err) => {})
-  // }, []);
+  useEffect(() => {
+    // when testing, remove this as we can just use our dummy data
+    // api.categories
+    //   .getAll()
+    //   .then((response) => {
+    //     const data = [];
+    //     response.docs.forEach((doc) => {
+    //       data.push(doc.data());
+    //     });
+    //     setCategories(data);
+    //     console.log(data);
+    //   })
+    //   .catch((err) => {})
+
+    // when not testing, remove this
+    setCategories(dummyCategoriesData);
+  }, []);
 
   const RowOfCategories = () => {
     const router = useRouter();
     return (
       <Stack direction="row" align="center">
-        {/* when testing, use dummyCategoriesData instead categories */}
-        {dummyCategoriesData.map((category) => {
+        {categories.map((category) => {
           const href = `/category/${category.id}`;
           const handleClick = (event) => {
             event.preventDefault();
