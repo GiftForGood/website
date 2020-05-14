@@ -24,7 +24,7 @@ const CardWrapper = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  border-radius: 3px;
+  border-radius: 10px;
   box-shadow: 0px 0px 10px 0px rgba(37, 42, 49, 0.16), 0px 2px 8px 0px rgba(37, 42, 49, 0.12);
   width: 100%;
 `;
@@ -46,6 +46,18 @@ const ClickableDiv = styled.a`
   top: 0;
   left: 0;
   z-index: 1;
+`;
+
+const TwoLineTextContainer = styled.div`
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  line-height: 1.5em;
+  max-height: 3em;
+  font-size: 14px;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  text-align: start;
 `;
 
 const AvatarDetails = ({ name, distance }) => {
@@ -85,14 +97,14 @@ const CardDescription = ({ title, description }) => {
       <Text size="normal" weight="bold">
         {title}
       </Text>
-      <Text as="small">{description}</Text>
+      <TwoLineTextContainer>{description}</TwoLineTextContainer>
     </Stack>
   );
 };
 
 const CardContent = ({ title, description, name, imageUrl }) => {
   return (
-    <div style={{ width: '100%' }}>
+    <div style={{ width: '100%', height: '100px' }}>
       <CardHeader name={name} imageUrl={imageUrl} />
       <CardDescription title={title} description={description} />
     </div>
@@ -101,8 +113,8 @@ const CardContent = ({ title, description, name, imageUrl }) => {
 
 const CategoryHeader = ({ title }) => {
   return (
-    <div style={{ width: '100%' }}>
-      <Desktop>
+    <div style={{ width: '100%', height: 'fit-content' }}>
+      <Desktop> 
         <Text size="large" align="center" weight="bold">
           {title}
         </Text>
@@ -252,7 +264,7 @@ const dummyWishesForTopThreeCategories = [
         },
       ],
       postedDateTime: 1589216145488,
-      description: 'The new macbook pro 16-inch. 16GB RAM',
+      description: 'The new macbook pro 16-inch. 16GB RAM. I need it urgently for my internships, if any one can give me i will put it to good use. I have been trying to save up money to get one but it has been too long.',
       status: 'pending',
       isBumped: false,
     },

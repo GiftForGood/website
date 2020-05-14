@@ -29,6 +29,7 @@ const BannerImageContainer = styled.div`
   position: relative;
   background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${(props) => props.src});
   background-size: cover;
+  background-position: 50% 50%;
 `;
 
 const title = 'GiftForGood.sg';
