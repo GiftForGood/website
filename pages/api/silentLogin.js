@@ -1,6 +1,6 @@
 import admin from '../../utils/admin-firebase';
 import cookie from 'cookie';
-import AuthError from '../../utils/api/error';
+import AuthError from '../../utils/api/error/authError';
 
 async function handler(req, res) {
   const { method } = req;
