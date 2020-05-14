@@ -21,11 +21,13 @@ const ResizableTitle = styled.div`
   margin-bottom: 10px;
 `;
 
+// need the padding so that hovering each category will be able to zoom out
 const ScrollableRow = styled.div`
   width: fit-content;
   max-width: 95vw;
   overflow-x: hidden;
   scroll-behavior: smooth;
+  padding: 10px; 
 `;
 
 const CarouselButton = styled.div`
@@ -48,7 +50,7 @@ const CarouselButton = styled.div`
 `;
 
 const CarouselArrow = styled.div`
-  ${(props) => props.direction === "left" ? "left: -10px" : "right: -10px"};
+  ${(props) => props.direction === "left" ? "left: -5px" : "right: -5px"};
   position: absolute;
   top: 50%;
   z-index: 10;
