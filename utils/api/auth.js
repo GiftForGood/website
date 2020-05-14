@@ -3,6 +3,8 @@ import firebase from 'firebase/app';
 import * as moment from 'moment';
 import * as path from 'path';
 import * as NPORegisteredRegistrar from '../constants/npoRegisteredRegistrar.js';
+import AuthError from './error/authError';
+import * as SiteUrlConstant from '../constants/siteUrl';
 
 const donorsCollection = db.collection('donors');
 const nposCollection = db.collection('npos');
@@ -10,7 +12,8 @@ const nposCollection = db.collection('npos');
 class AuthAPI {
   /**
    * Register a donor with Google
-   * @throws
+   * @throws {FirebaseError}
+   * @throws {AuthError}
    * @return {array} [token, userProfile, userDoc]
    *  token: JWT
    *  userProfile: The user profile
@@ -29,7 +32,8 @@ class AuthAPI {
    * Register a donor with email and password
    * @param {string} email
    * @param {string} password
-   * @throws
+   * @throws {FirebaseError}
+   * @throws {AuthError}
    * @return {array} [token, userProfile, userDoc]
    *  token: JWT
    *  userProfile: The user profile
@@ -100,7 +104,8 @@ class AuthAPI {
 
   /**
    * Sign in a donor with Google
-   * @throws
+   * @throws {FirebaseError}
+   * @throws {AuthError}
    * @return {array} [token, userProfile, userDoc]
    *  token: JWT
    *  userProfile: The user profile
@@ -119,7 +124,8 @@ class AuthAPI {
    * Sign in a donor with email and password
    * @param {string} email
    * @param {string} password
-   * @throws
+   * @throws {FirebaseError}
+   * @throws {AuthError}
    * @return {array} [token, userProfile, userDoc]
    *  token: JWT
    *  userProfile: The user profile
@@ -153,21 +159,20 @@ class AuthAPI {
   }
 
   /**
-   * Login through session
-   * @param {string} token The firebase token
-   * @throws
-   */
-  async silentLogin(token) {
-    let decodedToken = await firebaseAuth.verifyIdToken(token);
-    return decodedToken;
-  }
-
-  /**
    * Send a verification email to the currently logged in user
    */
   async sendVerificationEmail() {
+    let url = SiteUrlConstant.PRODUCTION_URL + '/login';
+    if (process.env.NODE_ENV === 'development') {
+      url = SiteUrlConstant.DEV_URL + '/login';
+    }
+
+    const actionCodeSettings = {
+      url: url,
+    };
+
     const user = firebaseAuth.currentUser;
-    return user.sendEmailVerification();
+    return user.sendEmailVerification(actionCodeSettings);
   }
 
   /**
@@ -184,11 +189,11 @@ class AuthAPI {
 
   async _createDonor(userInfo) {
     if (userInfo == null) {
-      throw Error('No user profile created');
+      throw new AuthError('unable-to-create-user', 'No user profile');
     }
 
     if (await this._doesDonorExist(userInfo.uid)) {
-      throw Error('Donor account already exists');
+      throw new AuthError('unable-to-create-user', 'Donor account already exists');
     }
 
     let name = userInfo.displayName;
@@ -201,7 +206,7 @@ class AuthAPI {
       profileImageUrl = '';
     }
 
-    const newDonor = donorsCollection.doc();
+    const newDonor = donorsCollection.doc(userInfo.uid);
     const timeNow = Date.now();
     const data = {
       userId: userInfo.uid,
@@ -221,9 +226,8 @@ class AuthAPI {
 
   async _getDonorDoc(id) {
     const snapshot = await donorsCollection.where('userId', '==', id).get();
-
     if (snapshot.empty) {
-      throw Error('No such donor account');
+      throw new AuthError('invalid-user', 'No such donor account');
     }
 
     return snapshot.docs[0];
@@ -231,7 +235,6 @@ class AuthAPI {
 
   async _doesDonorExist(id) {
     let snapshot = await donorsCollection.where('userId', '==', id).get();
-
     if (snapshot.empty) {
       return false;
     }
@@ -306,7 +309,7 @@ class AuthAPI {
     const snapshot = await nposCollection.where('userId', '==', id).get();
 
     if (snapshot.empty) {
-      throw Error('No such NPO account');
+      throw new AuthError('invalid-user', 'No such NPO account');
     }
 
     return snapshot.docs[0];
