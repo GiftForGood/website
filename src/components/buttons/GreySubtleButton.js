@@ -4,24 +4,17 @@ const GreySubtleButton = styled.button`
   border: 0.5px solid #707070;
   border-radius: 25px;
   font-size: 10px;
+  font-weight: normal;
   background: Transparent;
   text-align: center;
   margin: 0.5vh auto;
-
-  :active {
-    border-color: 1px solid #707070;
-    background: Transparent;
-    color: #707070;
-  }
-
+  transition: transform 0.2s;
+  
   :hover {
-    border-color: 1px solid #707070;
+    border: 1.5px solid #707070;
     background: Transparent;
-    color: #707070;
-  }
-
-  :focus {
-    box-shadow: 0 0 0 3px #707070;
+    transform: scale(1.05);
+    box-shadow: 0 1px 1px 1px lightgray;
   }
 `;
 

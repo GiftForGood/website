@@ -35,8 +35,24 @@ const GreyText = styled.div`
   color: #707070;
 `;
 
+const BlackText = styled.div`
+  color: black;
+  font-size: ${(props) => {
+    if (props.size === "small") {
+      return '12px';
+    } 
+    if (props.size === "medium") {
+      return '14px';
+    }
+    if (props.size === 'large') {
+      return '18px';
+    }
+  }};
+`;
+
 const CardHeaderContainer = styled.div`
-  display: inline-block;
+  display: flex;
+  align-items: center;
   width: 100%;
   margin-bottom: 1vh;
 `;
@@ -60,14 +76,15 @@ const TwoLineTextContainer = styled.div`
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   text-align: start;
+  color: black;
 `;
 
 const AvatarDetails = ({ name, distance }) => {
   return (
     <div style={{ width: 'fit-content', float: 'left', margin: '0 auto', marginLeft: '5px' }}>
       <Stack direction="column" spacing="extraTight">
-        <Text size="small">{name}</Text>
-        <Text size="small">{distance}km away</Text>
+        <BlackText size="small">{name}</BlackText>
+        <BlackText size="small">{distance}km away</BlackText>
       </Stack>
     </div>
   );
@@ -76,7 +93,7 @@ const AvatarDetails = ({ name, distance }) => {
 const TimePosted = ({ numberOfHoursAgo }) => {
   return (
     <div style={{ float: 'right' }}>
-      <Text size="small">{numberOfHoursAgo} hour(s) ago</Text>
+      <BlackText size="small">{numberOfHoursAgo}hour(s) ago</BlackText>
     </div>
   );
 };
@@ -209,7 +226,7 @@ const TopCategories = ({ numberOfPosts, numberOfCategories }) => {
               );
             })}
             <Button size="small" asComponent={GreySubtleButton} onClick={handleClick}>
-              <GreyText>View all</GreyText>
+              <BlackText size="small">View all</BlackText>
             </Button>
           </Card>
         </CardWrapper>

@@ -104,9 +104,9 @@ const Categories = () => {
 
   const getScrollableWidth = () => document.getElementById('scrollableCategory').clientWidth;
 
-  const scrollLeft = () => (document.getElementById('scrollableCategory').scrollLeft -= getScrollableWidth());
+  const handleScrollLeft = () => (document.getElementById('scrollableCategory').scrollLeft -= getScrollableWidth());
 
-  const scrollRight = () => (document.getElementById('scrollableCategory').scrollLeft += getScrollableWidth());
+  const handleScrollRight = () => (document.getElementById('scrollableCategory').scrollLeft += getScrollableWidth());
 
   return (
     <Container>
@@ -117,7 +117,7 @@ const Categories = () => {
             circled
             iconLeft={<ChevronLeft />}
             asComponent={CarouselButton}
-            onClick={scrollLeft}
+            onClick={handleScrollLeft}
             type="white"
             size="small"
           />
@@ -130,7 +130,7 @@ const Categories = () => {
             circled
             iconLeft={<ChevronRight />}
             asComponent={CarouselButton}
-            onClick={scrollRight}
+            onClick={handleScrollRight}
             type="white"
             size="small"
           />
