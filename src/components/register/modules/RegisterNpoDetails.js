@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { withRouter } from 'next/router';
-import { Button, InputField, Stack, Checkbox, Text, TextLink } from '@kiwicom/orbit-components/lib';
+import { Button, InputField, Stack } from '@kiwicom/orbit-components/lib';
 import ChevronLeft from '@kiwicom/orbit-components/lib/icons/ChevronLeft';
 
 import { useDispatch } from 'react-redux';
@@ -9,17 +9,37 @@ import * as Yup from 'yup';
 
 import { setIsBackToNpoRegister, setNpoDetails } from '../actions';
 import BlueButton from '../../button/BlueButton';
+import TermsAndConditionModal from './TermsAndConditionModal';
+import api from '../../../../utils/api';
 
 const RegisterNpoDetails = () => {
   const dispatch = useDispatch();
+  const [openTnC, setOpenTnC] = useState(false);
+  const [tnc, setTnC] = useState('');
+  const [values, setValues] = useState({});
+
+  useEffect(() => {
+    api.termsandconditions.get().then((doc) => {
+      setTnC(doc.data().content);
+    });
+  }, []);
 
   const handleBackToNpoRegisterOnClick = () => {
     dispatch(setIsBackToNpoRegister());
   };
 
-  const handleFormSubmission = (values) => {
+  const handleFormSubmission = () => {
     dispatch(setNpoDetails(values.name, values.mobileNumber));
+    console.log('handleFormSubmission',values)
     // TODO: API to call Firebase
+  };
+
+  const handleModal = () => {
+    if (openTnC) {
+      setOpenTnC(false);
+    } else {
+      setOpenTnC(true);
+    }
   };
 
   const validationSchema = Yup.object().shape({
@@ -35,7 +55,6 @@ const RegisterNpoDetails = () => {
         'Please create a password with at least 12 characters, comprimising a mix of uppercase and lowercase letters, numbers and symbols'
       ),
     passwordConfirmation: Yup.string().oneOf([Yup.ref('password'), null], 'Passwords must match'),
-    termsAndCondition: Yup.boolean().required('Required').oneOf([true], 'You must accept the terms and conditions'),
   });
 
   const formik = useFormik({
@@ -45,11 +64,11 @@ const RegisterNpoDetails = () => {
       email: '',
       password: '',
       passwordConfirmation: '',
-      termsAndCondition: false,
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      handleFormSubmission(values);
+      handleModal();
+      setValues(values);
     },
   });
 
@@ -112,28 +131,13 @@ const RegisterNpoDetails = () => {
             {...formik.getFieldProps('passwordConfirmation')}
           />
 
-          <Checkbox
-            checked={formik.values.termsAndCondition}
-            label={
-              <Text>
-                I agree to the{' '}
-                <TextLink external href="https://www.google.com" stopPropagation>
-                  Terms and Conditions
-                </TextLink>
-                .
-              </Text>
-            }
-            {...formik.getFieldProps('termsAndCondition')}
-            hasError={
-              formik.touched.termsAndCondition && formik.errors.termsAndCondition ? formik.errors.termsAndCondition : ''
-            }
-          />
-
           <Button submit fullWidth={true} asComponent={BlueButton}>
             Register
           </Button>
         </Stack>
       </form>
+
+      {openTnC ? <TermsAndConditionModal onClose={handleModal} tnc={tnc} onSubmit={handleFormSubmission}/> : null}
     </div>
   );
 };
