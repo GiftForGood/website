@@ -19,13 +19,20 @@ const CategoriesContainer = styled.div`
   margin: 0 auto;
 `;
 
+const styles = {
+  gridContainer: {
+    height: '100%',
+    width: '100vw',
+  },
+};
+
 const numberOfPostsPerCategory = 3;
 const numberOfCategories = 3;
 
 const HomePage = () => {
   return (
     <HomePageContainer>
-      <Grid rows="3fr 1fr auto" rowGap="1vh" columns="1fr">
+      <Grid style={styles.gridContainer} rows="3fr 1fr auto" rowGap="1vh" columns="1fr">
         <Banner />
         <CategoriesContainer>
           <ResizableTitle>Explore GiftForGood</ResizableTitle>
