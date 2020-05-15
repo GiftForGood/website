@@ -38,10 +38,10 @@ const GreyText = styled.div`
 const BlackText = styled.div`
   color: black;
   font-size: ${(props) => {
-    if (props.size === "small") {
+    if (props.size === 'small') {
       return '12px';
-    } 
-    if (props.size === "medium") {
+    }
+    if (props.size === 'medium') {
       return '14px';
     }
     if (props.size === 'large') {
