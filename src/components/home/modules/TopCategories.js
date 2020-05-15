@@ -7,8 +7,7 @@ import Avatar from '../../imageContainers/Avatar';
 import GreySubtleButton from '../../buttons/GreySubtleButton';
 import Desktop from '@kiwicom/orbit-components/lib/Desktop';
 import Mobile from '@kiwicom/orbit-components/lib/Mobile';
-import { dummyWishesForTopThreeCategories } from '../../../../utils/dummyData/wishes';
-import { dummyCategories } from '../../../../utils/dummyData/categories';
+import { dummyTopCategoriesAndTheirWishes } from '../../../../utils/dummyData/topCategoriesAndTheirWishes';
 
 const TopCategoriesContainer = styled.div`
   text-align: center;
@@ -29,10 +28,6 @@ const CardWrapper = styled.div`
   border-radius: 10px;
   box-shadow: 0px 0px 10px 0px rgba(37, 42, 49, 0.16), 0px 2px 8px 0px rgba(37, 42, 49, 0.12);
   width: 100%;
-`;
-
-const GreyText = styled.div`
-  color: #707070;
 `;
 
 const BlackText = styled.div`
@@ -148,66 +143,57 @@ const CategoryHeader = ({ title }) => {
 };
 
 const TopCategories = ({ numberOfPosts, numberOfCategories }) => {
-  const [topNCategories, setTopNCategories] = useState([]);
-  const [wishesOfTopNCategories, setWishesOfTopNCategories] = useState([]);
+  const [topCategoriesAndTheirWishes, setTopCategoriesAndTheirWishes] = useState([]);
 
   useEffect(() => {
     if (process.env.NODE_ENV === 'development') {
-      setTopNCategories(dummyCategories.slice(0, numberOfCategories));
+      setTopCategoriesAndTheirWishes(dummyTopCategoriesAndTheirWishes);
     } else {
-      getTopNCategories(numberOfCategories);
+      getTopCategoriesAndTheirWishes(numberOfPosts, numberOfCategories);
     }
   }, []);
 
-  useEffect(() => {
-    if (topNCategories.length === 0) {
-      return; // skip if top n categories is not populated yet
-    }
-    if (process.env.NODE_ENV === 'development') {
-      setWishesOfTopNCategories(dummyWishesForTopThreeCategories);
-    } else {
-      getWishesForTopCategories(numberOfPosts, numberOfCategories, topNCategories).then((wishes) => {
-        setWishesOfTopNCategories(wishes);
-      });
-    }
-  }, [topNCategories]); // run once topNCategories is populated
-
-  const getTopNCategories = (numberOfCategories) => {
+  const getTopCategoriesAndTheirWishes = (numberOfCategories, numberOfPosts) => {
     api.categories
       .getAll()
       .then((response) => {
-        const data = [];
-        response.docs.slice(0, numberOfCategories).forEach((doc) => data.push(doc.data()));
-        setTopNCategories(data);
+        // get top {@numberOfCategories} categories
+        const categories = [];
+        response.docs.slice(0, numberOfCategories).forEach((doc) => categories.push(doc.data()));
+        return categories;
+      })
+      .then((categories) => {
+        // get {@numberOfPosts} wishes for each top categories
+        getWishesForTopCategories(categories, numberOfPosts)
+          .then((topCategoriesAndTheirWishes) => setTopCategoriesAndTheirWishes(topCategoriesAndTheirWishes));
       })
       .catch((err) => {});
-  };
+  }
 
-  async function getWishesForTopCategories(numberOfPosts, numberOfCategories, topNCategories) {
-    let wishes = [];
-    for (let i = 0; i < numberOfCategories; i++) {
-      const response = await api.wishes.getTopNPendingWishes(topNCategories[i].id, numberOfPosts);
-      const data = [];
-      response.docs.forEach((doc) => {
-        data.push(doc.data());
-      });
-      wishes = [...wishes, data];
+  async function getWishesForTopCategories(categories, numberOfPosts) {
+    let topCategoriesAndTheirWishes = [];
+    for (let i = 0; i < categories.length; i++) {
+      const response = await api.wishes.getTopNPendingWishes(categories[i].id, numberOfPosts);
+      const category = categories[i];
+      category.wishes = [];
+      response.docs.forEach((doc) => category.wishes.push(doc.data()));
+      topCategoriesAndTheirWishes = [...topCategoriesAndTheirWishes, category];
     }
-    return wishes;
+    return topCategoriesAndTheirWishes;
   }
 
   const getTopNCategoryCards = () => {
     const router = useRouter();
-    return wishesOfTopNCategories.map((categoryWishes, i) => {
-      const categoryHref = '/category/' + topNCategories[i].id;
+    return topCategoriesAndTheirWishes.map((categoryWishes) => {
+      const categoryHref = '/category/' + categoryWishes.id;
       const handleClick = (event) => {
         event.preventDefault();
         router.push(categoryHref);
       };
       return (
-        <CardWrapper key={topNCategories[i].id}>
-          <Card header={<CategoryHeader title={topNCategories[i].name} />}>
-            {categoryWishes.map((wish) => {
+        <CardWrapper key={categoryWishes.id}>
+          <Card header={<CategoryHeader title={categoryWishes.name} />}>
+            {categoryWishes.wishes.map((wish) => {
               const postHref = '/wishes/' + wish.wishesId;
               return (
                 <CardSection
@@ -233,6 +219,7 @@ const TopCategories = ({ numberOfPosts, numberOfCategories }) => {
       );
     });
   };
+
 
   return (
     <TopCategoriesContainer>
