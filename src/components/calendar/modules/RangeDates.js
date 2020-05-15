@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
-import Week from './Week';
+import DateTimeslot from './DateTimeslot';
 import RangeButtonComponent from './RangeButtonComponent';
 import { getMomentDateFromCalendarJSDate } from '../util/helpers';
+import { Stack } from '@kiwicom/orbit-components/lib';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 
 const getWeekIndex = (currentDate, weeks) => {
+  const startOfDate = currentDate.startOf('day'); // reset to 12:00 am of currentDate
   let weekIndex = 0;
   weeks.some((week, index) => {
     let weekContainsDate = week.some((day) => {
       const momentDate = getMomentDateFromCalendarJSDate(day);
-      return momentDate.format() === currentDate.format();
+      return momentDate.format() === startOfDate.format();
     });
 
     if (weekContainsDate) {
@@ -22,15 +24,14 @@ const getWeekIndex = (currentDate, weeks) => {
 
 const RangeDates = ({ ...props }) => {
   const { isTablet } = useMediaQuery();
+  const { currentDate, currentDateTime, weeks, updateCurrentDate, timeslots, renderDays } = props;
 
-  const { currentDate, initialDate, weeks, updateCurrentDate, timeslots, renderDays } = props;
-  const [currentWeekIndex, setCurrentWeekIndex] = useState(getWeekIndex(currentDate, weeks));
-
-  const RenderWeekTitleDesktop = () => {
+  const RenderDateDesktop = () => {
+    const [currentWeekIndex, setCurrentWeekIndex] = useState(getWeekIndex(currentDate, weeks));
     const currentWeek = weeks[currentWeekIndex];
     const startDateOfWeek = getMomentDateFromCalendarJSDate(currentWeek[0]);
     const endDateOfWeek = getMomentDateFromCalendarJSDate(currentWeek[currentWeek.length - 1]);
-    const currentWeekTitle = `${startDateOfWeek.format('D MMM')} - ${endDateOfWeek.format('D MMM')}`;
+    const currentRangeTitle = `${startDateOfWeek.format('D MMM')} - ${endDateOfWeek.format('D MMM')}`;
 
     const handlePrevWeekClick = () => {
       if (currentWeekIndex - 1 > 0) {
@@ -57,67 +58,65 @@ const RangeDates = ({ ...props }) => {
     };
 
     return (
-      <RangeButtonComponent
-        title={currentWeekTitle}
-        handlePrevClick={handlePrevWeekClick}
-        handleNextClick={handleNextWeekClick}
-      />
+      <div>
+        <RangeButtonComponent
+          title={currentRangeTitle}
+          handlePrevClick={handlePrevWeekClick}
+          handleNextClick={handleNextWeekClick}
+        />
+        <Stack direction="row" spaceAfter="medium">
+          <DateTimeslot
+            dayToRender={weeks[currentWeekIndex]}
+            currentDateTime={currentDateTime}
+            timeslots={timeslots}
+            renderDays={renderDays}
+            onTimeslotClick={props.onTimeslotClick}
+            selectedTimeslots={props.selectedTimeslots}
+          />
+        </Stack>
+      </div>
     );
   };
 
-  const RenderWeekDesktop = () => {
-    return (
-      <Week
-        daysToRender={weeks[currentWeekIndex]}
-        initialDate={initialDate}
-        timeslots={timeslots}
-        renderDays={renderDays}
-        onTimeslotClick={props.onTimeslotClick}
-        selectedTimeslots={props.selectedTimeslots}
-      />
-    );
-  };
+  const RenderDateMobile = () => {
+    const lastTimeslotDay = currentDate.clone().add(timeslots[timeslots.length - 1][1], 'h');
+    if (lastTimeslotDay.isBefore(currentDateTime, 'minutes')) {
+      updateCurrentDate(currentDate.clone().add(1, 'days'));
+    }
 
-  const RenderDayTitleMobile = () => {
-    const currentDayTitle = `${currentDate.format('D MMM (ddd)')}`;
+    const currentDateTitle = `${currentDate.format('D MMM (ddd)')}`;
+    const day = [{ year: currentDate.format('YYYY'), month: currentDate.format('MM'), date: currentDate.format('DD') }];
 
-    const handlePrevDayClick = () => {
+    const handlePrevDateClick = () => {
       updateCurrentDate(currentDate.clone().subtract(1, 'days'));
     };
 
-    const handleNextDayClick = () => {
+    const handleNextDateClick = () => {
       updateCurrentDate(currentDate.clone().add(1, 'days'));
     };
 
     return (
-      <RangeButtonComponent
-        title={currentDayTitle}
-        handlePrevClick={handlePrevDayClick}
-        handleNextClick={handleNextDayClick}
-      />
+      <div>
+        <RangeButtonComponent
+          title={currentDateTitle}
+          handlePrevClick={handlePrevDateClick}
+          handleNextClick={handleNextDateClick}
+        />
+        <Stack direction="column" spaceAfter="medium">
+          <DateTimeslot
+            dayToRender={day}
+            currentDateTime={currentDateTime}
+            timeslots={timeslots}
+            renderDays={renderDays}
+            onTimeslotClick={props.onTimeslotClick}
+            selectedTimeslots={props.selectedTimeslots}
+          />
+        </Stack>
+      </div>
     );
   };
 
-  const RenderDayMobile = () => {
-    const day = [{ year: currentDate.format('YYYY'), month: currentDate.format('MM'), date: currentDate.format('DD') }];
-    return (
-      <Week
-        daysToRender={day}
-        initialDate={initialDate}
-        timeslots={timeslots}
-        renderDays={renderDays}
-        onTimeslotClick={props.onTimeslotClick}
-        selectedTimeslots={props.selectedTimeslots}
-      />
-    );
-  };
-
-  return (
-    <div>
-      {isTablet ? <RenderWeekTitleDesktop /> : <RenderDayTitleMobile />}
-      {isTablet ? <RenderWeekDesktop /> : <RenderDayMobile />}
-    </div>
-  );
+  return <div>{isTablet ? <RenderDateDesktop /> : <RenderDateMobile />}</div>;
 };
 
 export default RangeDates;

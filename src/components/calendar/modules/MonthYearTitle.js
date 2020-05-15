@@ -3,17 +3,17 @@ import RangeButtonComponent from './RangeButtonComponent';
 
 const MonthYearTitle = ({ ...props }) => {
   const monthYearFormat = 'MMMM - YYYY';
-  const { initialDate, currentDate, updateCurrentDate } = props;
+  const { currentDateTime, currentDate, updateCurrentDate } = props;
   const currentMonthYear = `${currentDate.format(monthYearFormat)}`;
 
   const handlePrevMonthClick = () => {
     let prevMonth = currentDate.clone().startOf('month').subtract(1, 'months');
 
-    if (prevMonth.isSame(initialDate, 'month')) {
-      updateCurrentDate(initialDate);
+    if (prevMonth.isSame(currentDateTime, 'month')) {
+      updateCurrentDate(currentDateTime);
     }
 
-    if (prevMonth.isBefore(initialDate)) {
+    if (prevMonth.isBefore(currentDateTime)) {
       return;
     }
 
@@ -25,17 +25,13 @@ const MonthYearTitle = ({ ...props }) => {
     updateCurrentDate(nextMonth);
   };
 
-  const RenderMonthYearTitle = () => {
-    return (
-      <RangeButtonComponent
-        title={currentMonthYear}
-        handlePrevClick={handlePrevMonthClick}
-        handleNextClick={handleNextMonthClick}
-      />
-    );
-  };
-
-  return <RenderMonthYearTitle />;
+  return (
+    <RangeButtonComponent
+      title={currentMonthYear}
+      handlePrevClick={handlePrevMonthClick}
+      handleNextClick={handleNextMonthClick}
+    />
+  );
 };
 
 export default MonthYearTitle;

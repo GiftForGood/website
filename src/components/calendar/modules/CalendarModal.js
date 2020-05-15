@@ -1,8 +1,8 @@
 import React from 'react';
-import { Button, Heading, Stack, Text } from '@kiwicom/orbit-components/lib';
-import Modal, { ModalSection, ModalFooter } from '@kiwicom/orbit-components/lib/Modal';
 import Calendar from './Calendar';
 import styled from 'styled-components';
+import { Button, Heading, Stack } from '@kiwicom/orbit-components/lib';
+import Modal, { ModalSection, ModalFooter } from '@kiwicom/orbit-components/lib/Modal';
 
 const okButton = styled.button`
   background: #4db6ac;
@@ -32,13 +32,8 @@ const CalendarModal = ({ ...props }) => {
           <Heading type="title2">{title}</Heading>
           <Heading type="title5">{description}</Heading>
         </Stack>
-
         <Stack>
-          <Calendar
-            timeslot={{ startTime: 9, endTime: 18, interval: 1 }}
-            maxSlots={DATE}
-            // renderDays={{ }}
-          />
+          <Calendar timeslot={{ startTime: 9, endTime: 18, interval: 1 }} maxSlots={DATE} renderDays={{}} />
         </Stack>
       </ModalSection>
       <ModalFooter>

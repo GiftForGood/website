@@ -1,13 +1,10 @@
 import React, { useState } from 'react';
 import CalendarJS from 'calendarjs';
 import moment from 'moment';
-
 import MonthYearTitle from './MonthYearTitle';
 import RangeDates from './RangeDates';
-import DisplaySelectedDates from './DisplaySelectedDates';
 import { RENDER_DAYS } from '../constants/week';
-
-import { Text, Stack } from '@kiwicom/orbit-components/lib';
+import { Stack, Tag, Text } from '@kiwicom/orbit-components/lib';
 
 const updateRenderDays = (renderDays) => {
   renderDays = Object.assign({}, RENDER_DAYS, renderDays);
@@ -25,14 +22,14 @@ const generateTimeslots = (startTime, endTime, interval) => {
 
 const Calendar = ({ ...props }) => {
   props.renderDays = updateRenderDays(props.renderDays);
-  const timeslot = generateTimeslots(props.timeslot.startTime, props.timeslot.endTime, props.timeslot.interval);
+  const timeslots = generateTimeslots(props.timeslot.startTime, props.timeslot.endTime, props.timeslot.interval);
 
-  const initialDate = moment();
+  const currentDateTime = moment();
   const [currentDate, setCurrentDate] = useState(moment().startOf('day'));
   const [selectedTimeslots, setSelectedTimeslots] = useState([]);
 
-  const updateCurrentDate = (currentDate) => {
-    setCurrentDate(currentDate);
+  const updateCurrentDate = (date) => {
+    setCurrentDate(date);
   };
 
   const RenderRangeDates = () => {
@@ -42,18 +39,18 @@ const Calendar = ({ ...props }) => {
     return (
       <RangeDates
         currentDate={currentDate}
-        initialDate={initialDate}
+        currentDateTime={currentDateTime}
         weeks={weeks}
         updateCurrentDate={updateCurrentDate}
-        timeslots={timeslot}
-        onTimeslotClick={handleTimeslotSelect}
+        timeslots={timeslots}
+        onTimeslotClick={handleTimeslotClick}
         selectedTimeslots={selectedTimeslots}
         renderDays={props.renderDays}
       />
     );
   };
 
-  const handleTimeslotSelect = (newTimeslot) => {
+  const handleTimeslotClick = (newTimeslot) => {
     const newSelectedTimeslots = selectedTimeslots.slice();
     let timeslotIndex = -1;
     const isTimeslotExists = newSelectedTimeslots.some((timeslot, index) => {
@@ -63,7 +60,7 @@ const Calendar = ({ ...props }) => {
 
     if (isTimeslotExists) {
       newSelectedTimeslots.splice(timeslotIndex, 1);
-    } else if (selectedTimeslots.length + 1 <= props.maxSlots && newTimeslot.startDate.isAfter(initialDate)) {
+    } else if (selectedTimeslots.length + 1 <= props.maxSlots && newTimeslot.startDate.isAfter(currentDateTime)) {
       newSelectedTimeslots.push(newTimeslot);
     } else {
       return;
@@ -79,31 +76,32 @@ const Calendar = ({ ...props }) => {
     setSelectedTimeslots(newSelectedTimeslots);
   };
 
-  const RenderDisplaySlot = () => {
-    return selectedTimeslots.map((slot, index) => {
-      const displayTimeslot = slot.startDate.format('D MMM h A') + ' - ' + slot.endDate.format('h A');
+  const DisplaySelectedSlot = () => {
+    return selectedTimeslots.map((timeslot, index) => {
+      const timeslotDescription = timeslot.startDate.format('D MMM h A') + ' - ' + timeslot.endDate.format('h A');
       return (
-        <DisplaySelectedDates key={index} slot={displayTimeslot} handleClick={removeKeyByIndex.bind(this, index)} />
+        <Tag key={index} selected={true} onRemove={removeKeyByIndex.bind(this, index)} size="small">
+          {timeslotDescription}
+        </Tag>
       );
     });
   };
 
   return (
     <div>
-      <MonthYearTitle initialDate={initialDate} currentDate={currentDate} updateCurrentDate={updateCurrentDate} />
+      <MonthYearTitle
+        currentDateTime={currentDateTime}
+        currentDate={currentDate}
+        updateCurrentDate={updateCurrentDate}
+      />
       <RenderRangeDates />
       <Stack spaceAfter="small">
         <Text weight="bold" size="large">
           My Selected Timeslots:
         </Text>
       </Stack>
-      <Stack
-        desktop={{ direction: 'row' }}
-        tablet={{ direction: 'row', align: 'center' }}
-        direction="column"
-        align="center"
-      >
-        <RenderDisplaySlot />
+      <Stack desktop={{ direction: 'row' }} tablet={{ direction: 'row' }} direction="column" align="center">
+        <DisplaySelectedSlot />
       </Stack>
     </div>
   );
