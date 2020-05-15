@@ -48,8 +48,6 @@ const LoginDonor = () => {
       }
       let response = await client.post('/api/sessionLogin', { token });
       if (response.status === 200) {
-        //TODO: store inside redux store
-
         router.push('/');
       } else {
         throw response.error;
@@ -84,7 +82,6 @@ const LoginDonor = () => {
       }
       let response = await client.post('/api/sessionLogin', { token });
       if (response.status === 200) {
-        //TODO: store inside redux store
         router.push('/');
       } else {
         throw response.error;
