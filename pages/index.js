@@ -1,5 +1,18 @@
-function HomePage() {
-  return <div>Welcome to Next.js!</div>;
-}
+import React from 'react';
+import HomePage from '../src/components/home/pages/HomePage';
 
-export default HomePage;
+const Home = () => {
+  return (
+    <div>
+      <style jsx global>{`
+        body {
+          margin: 0;
+          font-family: 'Trebuchet MS';
+        }
+      `}</style>
+      <HomePage />
+    </div>
+  );
+};
+
+export default Home;
