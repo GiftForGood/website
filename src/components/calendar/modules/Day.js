@@ -3,8 +3,10 @@ import moment from 'moment';
 import Timeslot from './Timeslot';
 
 import { Stack, Text } from '@kiwicom/orbit-components/lib';
+import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 
 const Day = ({ ...props }) => {
+  const { isTablet } = useMediaQuery();
   const RenderWeekdayTitle = () => {
     return (
       <Text align="center" size="large">
@@ -52,10 +54,6 @@ const Day = ({ ...props }) => {
   };
 
   const onSelect = (index) => {
-    const startDateTime = props.date.clone().add(props.timeslots[index][0], 'h');
-    const endDateTime = props.date.clone().add(props.timeslots[index][1], 'h');
-    const selectedTimeslot = startDateTime.format('D MMM h A') + ' - ' + endDateTime.format('h A');
-
     const timeslot = {
       startDate: props.date.clone().add(props.timeslots[index][0], 'h'),
       endDate: props.date.clone().add(props.timeslots[index][1], 'h'),
@@ -66,7 +64,7 @@ const Day = ({ ...props }) => {
 
   return (
     <Stack direction="column" align="center" shrink="true">
-      <RenderWeekdayTitle />
+      {isTablet ? <RenderWeekdayTitle /> : <div></div>}
       <RenderTimeslots />
     </Stack>
   );

@@ -44,12 +44,10 @@ const Calendar = ({ ...props }) => {
         currentDate={currentDate}
         initialDate={initialDate}
         weeks={weeks}
-        onWeekOutOfMonth={updateCurrentDate}
+        updateCurrentDate={updateCurrentDate}
         timeslots={timeslot}
         onTimeslotClick={handleTimeslotSelect}
         selectedTimeslots={selectedTimeslots}
-        // timeslotProps = { this.timeslotProps }
-        // disabledTimeslots = { this._formatDisabledTimeslots() }
         renderDays={props.renderDays}
       />
     );

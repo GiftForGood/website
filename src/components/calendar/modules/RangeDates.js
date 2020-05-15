@@ -1,33 +1,15 @@
 import React, { useState } from 'react';
-import styled from 'styled-components';
 import Week from './Week';
-
+import RangeButtonComponent from './RangeButtonComponent';
 import { getMomentDateFromCalendarJSDate } from '../util/helpers';
-import { Button, Stack, Text } from '@kiwicom/orbit-components/lib';
-import { ChevronLeft, ChevronRight } from '@kiwicom/orbit-components/lib/icons';
-
-const circleButton = styled.button`
-  background: white;
-
-  box-shadow: 1px 1px 2px 2px #e7e7e7;
-
-  :hover {
-    background: #e7e7e7;
-  }
-
-  :focus {
-    box-shadow: 1px 1px 2px 2px #e7e7e7;
-  }
-`;
+import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 
 const getWeekIndex = (currentDate, weeks) => {
-  const startOfDate = currentDate.startOf('day'); // reset to 12:00 am of currentDate
-
   let weekIndex = 0;
   weeks.some((week, index) => {
     let weekContainsDate = week.some((day) => {
-      const momentDay = getMomentDateFromCalendarJSDate(day);
-      return momentDay.format() === startOfDate.format();
+      const momentDate = getMomentDateFromCalendarJSDate(day);
+      return momentDate.format() === currentDate.format();
     });
 
     if (weekContainsDate) {
@@ -39,10 +21,12 @@ const getWeekIndex = (currentDate, weeks) => {
 };
 
 const RangeDates = ({ ...props }) => {
-  const { currentDate, initialDate, weeks, onWeekOutOfMonth, timeslots, renderDays } = props;
+  const { isTablet } = useMediaQuery();
+
+  const { currentDate, initialDate, weeks, updateCurrentDate, timeslots, renderDays } = props;
   const [currentWeekIndex, setCurrentWeekIndex] = useState(getWeekIndex(currentDate, weeks));
 
-  const RenderWeekTitle = () => {
+  const RenderWeekTitleDesktop = () => {
     const currentWeek = weeks[currentWeekIndex];
     const startDateOfWeek = getMomentDateFromCalendarJSDate(currentWeek[0]);
     const endDateOfWeek = getMomentDateFromCalendarJSDate(currentWeek[currentWeek.length - 1]);
@@ -53,10 +37,10 @@ const RangeDates = ({ ...props }) => {
         setCurrentWeekIndex(currentWeekIndex - 1);
       } else if (currentWeekIndex - 1 == 0) {
         const firstDayOfPrevWeek = getMomentDateFromCalendarJSDate(weeks[0][0]);
-        onWeekOutOfMonth(firstDayOfPrevWeek);
+        updateCurrentDate(firstDayOfPrevWeek);
       } else {
         const firstDayOfPrevWeek = getMomentDateFromCalendarJSDate(weeks[0][0]).clone().subtract(1, 'days');
-        onWeekOutOfMonth(firstDayOfPrevWeek);
+        updateCurrentDate(firstDayOfPrevWeek);
       }
     };
 
@@ -68,54 +52,70 @@ const RangeDates = ({ ...props }) => {
         const firstDayOfNextWeek = getMomentDateFromCalendarJSDate(weeks[currentWeekIndex][lastDay])
           .clone()
           .add(7, 'days');
-        onWeekOutOfMonth(firstDayOfNextWeek);
+        updateCurrentDate(firstDayOfNextWeek);
       }
     };
 
     return (
-      <Stack direction="row" align="center" spacing="loose" justify="center" spaceAfter="normal">
-        <Button
-          circled
-          iconLeft={<ChevronLeft />}
-          size="small"
-          title="Button"
-          type="white"
-          onClick={handlePrevWeekClick}
-          asComponent={circleButton}
-        />
-        <Text size="large">{currentWeekTitle}</Text>
-        <Button
-          circled
-          iconLeft={<ChevronRight />}
-          size="small"
-          title="Button"
-          type="white"
-          onClick={handleNextWeekClick}
-          asComponent={circleButton}
-        />
-      </Stack>
+      <RangeButtonComponent
+        title={currentWeekTitle}
+        handlePrevClick={handlePrevWeekClick}
+        handleNextClick={handleNextWeekClick}
+      />
     );
   };
 
-  const RenderWeek = () => {
+  const RenderWeekDesktop = () => {
     return (
       <Week
-        weekToRender={weeks[currentWeekIndex]}
+        daysToRender={weeks[currentWeekIndex]}
         initialDate={initialDate}
         timeslots={timeslots}
         renderDays={renderDays}
         onTimeslotClick={props.onTimeslotClick}
         selectedTimeslots={props.selectedTimeslots}
-        // timeslotProps={timeslotProps}
-        // disabledTimeslots={disabledTimeslots}
+      />
+    );
+  };
+
+  const RenderDayTitleMobile = () => {
+    const currentDayTitle = `${currentDate.format('D MMM (ddd)')}`;
+
+    const handlePrevDayClick = () => {
+      updateCurrentDate(currentDate.clone().subtract(1, 'days'));
+    };
+
+    const handleNextDayClick = () => {
+      updateCurrentDate(currentDate.clone().add(1, 'days'));
+    };
+
+    return (
+      <RangeButtonComponent
+        title={currentDayTitle}
+        handlePrevClick={handlePrevDayClick}
+        handleNextClick={handleNextDayClick}
+      />
+    );
+  };
+
+  const RenderDayMobile = () => {
+    const day = [{ year: currentDate.format('YYYY'), month: currentDate.format('MM'), date: currentDate.format('DD') }];
+    return (
+      <Week
+        daysToRender={day}
+        initialDate={initialDate}
+        timeslots={timeslots}
+        renderDays={renderDays}
+        onTimeslotClick={props.onTimeslotClick}
+        selectedTimeslots={props.selectedTimeslots}
       />
     );
   };
 
   return (
     <div>
-      <RenderWeekTitle />
-      <RenderWeek />
+      {isTablet ? <RenderWeekTitleDesktop /> : <RenderDayTitleMobile />}
+      {isTablet ? <RenderWeekDesktop /> : <RenderDayMobile />}
     </div>
   );
 };

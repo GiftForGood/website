@@ -26,7 +26,7 @@ const CalendarModal = ({ ...props }) => {
   }
 
   return (
-    <Modal size="large">
+    <Modal size="large" isMobileFullPage="true">
       <ModalSection>
         <Stack spacing="none" spaceAfter="normal">
           <Heading type="title2">{title}</Heading>
