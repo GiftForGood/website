@@ -7,7 +7,6 @@ const GreySubtleButton = styled.button`
   font-weight: normal;
   background: Transparent;
   text-align: center;
-  margin: 0.5vh auto;
   transition: transform 0.2s;
 
   :hover {

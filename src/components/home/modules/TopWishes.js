@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { Stack, Card, CardSection, Button, Text } from '@kiwicom/orbit-components/lib';
+import { Stack, CardSection, Button, Text } from '@kiwicom/orbit-components/lib';
 import api from '../../../../utils/api/index';
 import styled from 'styled-components';
 import BlackText from '../../text/BlackText';
@@ -11,7 +11,7 @@ import Mobile from '@kiwicom/orbit-components/lib/Mobile';
 import { dummyTopCategoriesAndTheirWishes } from '../../../../utils/dummyData/topCategoriesAndTheirWishes';
 import { getTimeDifferenceFromNow } from '../../../../utils/api/time';
 
-const TopCategoriesContainer = styled.div`
+const TopWishesContainer = styled.div`
   text-align: center;
   width: 90%;
   margin: 0 auto;
@@ -23,7 +23,7 @@ const ResizableTitle = styled.div`
   font-weight: bold;
 `;
 
-const CardWrapper = styled.div`
+const WishesCardWrapper = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -54,6 +54,16 @@ const TwoLineTextContainer = styled.div`
   color: black;
 `;
 
+const CategoryHeaderContainer = styled.div`
+  height: fit-content;
+  margin: 10px;
+`;
+
+const CardContentContainer = styled.div`
+  width: 100%;
+  height: 100px;
+`;
+
 const CardDescription = ({ title, description }) => {
   return (
     <Stack direction="column" spacing="tight">
@@ -71,16 +81,16 @@ const CardDescription = ({ title, description }) => {
 const CardContent = ({ title, description, name, imageUrl, postedDateTime }) => {
   const timeAgo = getTimeDifferenceFromNow(postedDateTime);
   return (
-    <div style={{ width: '100%', height: '100px' }}>
+    <CardContentContainer>
       <CardHeader name={name} imageUrl={imageUrl} timeAgo={timeAgo} />
       <CardDescription title={title} description={description} />
-    </div>
+    </CardContentContainer>
   );
 };
 
 const CategoryHeader = ({ title }) => {
   return (
-    <div style={{ width: '100%', height: 'fit-content' }}>
+    <CategoryHeaderContainer>
       <Desktop>
         <Text size="large" align="center" weight="bold">
           {title}
@@ -91,11 +101,11 @@ const CategoryHeader = ({ title }) => {
           {title}
         </Text>
       </Mobile>
-    </div>
+    </CategoryHeaderContainer>
   );
 };
 
-const TopCategories = ({ numberOfPosts, numberOfCategories }) => {
+const TopWishes = ({ numberOfPosts, numberOfCategories }) => {
   const [topCategoriesAndTheirWishes, setTopCategoriesAndTheirWishes] = useState([]);
 
   useEffect(() => {
@@ -136,7 +146,7 @@ const TopCategories = ({ numberOfPosts, numberOfCategories }) => {
     return topCategoriesAndTheirWishes;
   }
 
-  const getTopNCategoryCards = () => {
+  const AllCards = () => {
     const router = useRouter();
     return topCategoriesAndTheirWishes.map((categoryWishes) => {
       const categoryHref = '/category/' + categoryWishes.id;
@@ -145,44 +155,45 @@ const TopCategories = ({ numberOfPosts, numberOfCategories }) => {
         router.push(categoryHref);
       };
       return (
-        <CardWrapper key={categoryWishes.id}>
-          <Card header={<CategoryHeader title={categoryWishes.name} />}>
-            {categoryWishes.wishes.map((wish) => {
-              const postHref = '/wishes/' + wish.wishesId;
-              return (
-                <CardSection
-                  key={wish.wishesId}
-                  header={
-                    <CardContent
-                      name={wish.organization.name}
-                      title={wish.title}
-                      description={wish.description}
-                      imageUrl={wish.user.profileImageUrl}
-                      postedDateTime={wish.postedDateTime}
-                    />
-                  }
-                >
-                  <ClickableDiv href={postHref} />
-                </CardSection>
-              );
-            })}
+        <WishesCardWrapper key={categoryWishes.id}>
+          <CategoryHeader title={categoryWishes.name}></CategoryHeader>
+          {categoryWishes.wishes.map((wish) => {
+            const postHref = '/wishes/' + wish.wishesId;
+            return (
+              <CardSection
+                key={wish.wishesId}
+                header={
+                  <CardContent
+                    name={wish.organization.name}
+                    title={wish.title}
+                    description={wish.description}
+                    imageUrl={wish.user.profileImageUrl}
+                    postedDateTime={wish.postedDateTime}
+                  />
+                }
+              >
+                <ClickableDiv href={postHref} />
+              </CardSection>
+            );
+          })}
+          <div style={{ margin: '0.5vh auto' }}>
             <Button size="small" asComponent={GreySubtleButton} onClick={handleViewAllButton}>
               <BlackText size="small">View all</BlackText>
             </Button>
-          </Card>
-        </CardWrapper>
+          </div>
+        </WishesCardWrapper>
       );
     });
   };
 
   return (
-    <TopCategoriesContainer>
+    <TopWishesContainer>
       <ResizableTitle style={{ marginBottom: '1vh' }}>Top Categories</ResizableTitle>
       <Stack desktop={{ direction: 'row' }} direction="column" align="start" spacing="extraLoose">
-        {getTopNCategoryCards()}
+        {AllCards()}
       </Stack>
-    </TopCategoriesContainer>
+    </TopWishesContainer>
   );
 };
 
-export default TopCategories;
+export default TopWishes;

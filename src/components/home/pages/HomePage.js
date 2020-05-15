@@ -1,8 +1,7 @@
 import React from 'react';
-
 import Banner from '../modules/Banner';
 import Categories from '../modules/Categories';
-import TopCategories from '../modules/TopCategories';
+import TopWishes from '../modules/TopWishes';
 import { Grid } from '@kiwicom/orbit-components/lib';
 import styled from 'styled-components';
 
@@ -38,7 +37,7 @@ const HomePage = () => {
           <ResizableTitle>Explore GiftForGood</ResizableTitle>
           <Categories />
         </CategoriesContainer>
-        <TopCategories numberOfPosts={numberOfPostsPerCategory} numberOfCategories={numberOfCategories} />
+        <TopWishes numberOfPosts={numberOfPostsPerCategory} numberOfCategories={numberOfCategories} />
       </Grid>
     </HomePageContainer>
   );
