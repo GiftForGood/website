@@ -13,7 +13,6 @@ async function handler(req, res) {
       try {
         let decodedClaims = await admin.auth().verifySessionCookie(sessionCookie, true /** checkRevoked */);
         let user = await getUser(decodedClaims);
-        console.log('user', user);
         res.json({
           user: {
             ...user,
@@ -38,16 +37,16 @@ async function handler(req, res) {
 }
 
 async function getUser(decodedClaims) {
-  if (decodedClaims.donors) {
+  if (decodedClaims.donor) {
     try {
-      let doc = await admin.firestore().collection('donors').get(decodedClaims.uid);
+      let doc = await admin.firestore().collection('donors').doc(decodedClaims.uid).get();
       return doc.data();
     } catch (error) {
       throw new AuthError('user-does-not-exist', 'User does not exists');
     }
-  } else if (decodedClaims.npos) {
+  } else if (decodedClaims.npo) {
     try {
-      let doc = await admin.firestore().collection('npos').get(decodedClaims.uid);
+      let doc = await admin.firestore().collection('npos').doc(decodedClaims.uid).get();
       return doc.data();
     } catch (error) {
       throw new AuthError('user-does-not-exist', 'User does not exists');
