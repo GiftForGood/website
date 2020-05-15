@@ -22,7 +22,7 @@ export const dummyTopCategoriesAndTheirWishes = [
           latitude: '1.294835',
           address: 'Queenstown MRT',
           longitude: '103.805901',
-          name: 'name',
+          name: 'Big Hearts',
         },
         status: 'pending',
         postedDateTime: 1589385600000,
@@ -38,7 +38,7 @@ export const dummyTopCategoriesAndTheirWishes = [
       {
         lastActionByUserDateTime: 1589216362124,
         organization: {
-          name: 'name',
+          name: 'Small Cat Rescue',
           latitude: '1.294835',
           address: 'Queenstown MRT',
           longitude: '103.805901',
@@ -74,7 +74,7 @@ export const dummyTopCategoriesAndTheirWishes = [
       {
         lastActionByUserDateTime: 1589216362124,
         organization: {
-          name: 'name',
+          name: 'Warm Arms',
           latitude: '1.294835',
           address: 'Queenstown MRT',
           longitude: '103.805901',
@@ -120,7 +120,7 @@ export const dummyTopCategoriesAndTheirWishes = [
         isBumped: false,
         lastActionByUserDateTime: 1589385600000,
         organization: {
-          name: 'name',
+          name: 'Fu Pte Ltd',
           latitude: '1.294835',
           address: 'Queenstown MRT',
           longitude: '103.805901',

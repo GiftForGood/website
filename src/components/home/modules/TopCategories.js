@@ -65,6 +65,9 @@ const CardDescription = ({ title, description }) => {
   );
 };
 
+/**
+ * TODO: implement and pass the distance between NPO and Donor
+ */
 const CardContent = ({ title, description, name, imageUrl, postedDateTime }) => {
   const timeAgo = getTimeDifferenceFromNow(postedDateTime);
   return (
@@ -137,7 +140,7 @@ const TopCategories = ({ numberOfPosts, numberOfCategories }) => {
     const router = useRouter();
     return topCategoriesAndTheirWishes.map((categoryWishes) => {
       const categoryHref = '/category/' + categoryWishes.id;
-      const handleClick = (event) => {
+      const handleViewAllButton = (event) => {
         event.preventDefault();
         router.push(categoryHref);
       };
@@ -159,11 +162,11 @@ const TopCategories = ({ numberOfPosts, numberOfCategories }) => {
                     />
                   }
                 >
-                  <ClickableDiv href={postHref} onClick={handleClick} />
+                  <ClickableDiv href={postHref} />
                 </CardSection>
               );
             })}
-            <Button size="small" asComponent={GreySubtleButton} onClick={handleClick}>
+            <Button size="small" asComponent={GreySubtleButton} onClick={handleViewAllButton}>
               <BlackText size="small">View all</BlackText>
             </Button>
           </Card>
