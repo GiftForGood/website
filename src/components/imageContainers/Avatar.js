@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { defaultAvatarPath } from '../../../utils/constants/imagePaths';
 
 const CircularImage = styled.img`
   width: 40px;
@@ -8,7 +9,7 @@ const CircularImage = styled.img`
 `;
 
 const Avatar = ({ imageUrl }) => {
-  return <CircularImage src={imageUrl} />;
+  return <CircularImage src={imageUrl || defaultAvatarPath} />;
 };
 
 export default Avatar;

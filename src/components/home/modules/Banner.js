@@ -3,6 +3,7 @@ import React from 'react';
 import { Stack } from '@kiwicom/orbit-components/lib';
 import SearchBar from './SearchBar';
 import styled from 'styled-components';
+import { bannerImagePath } from '../../../../utils/constants/imagePaths';
 
 const TitleArea = styled.div`
   position: absolute;
@@ -43,7 +44,6 @@ const SearchBarContainer = styled.div`
 
 const title = 'GiftForGood.sg';
 const subTitle = 'Giving back to the society that needs your help';
-const bannerImageUrl = '/assets/wishes-banner.jpg';
 
 const BannerText = () => {
   return (
@@ -56,7 +56,7 @@ const BannerText = () => {
 
 const Banner = () => {
   return (
-    <BannerImageContainer src={bannerImageUrl}>
+    <BannerImageContainer src={bannerImagePath}>
       <Stack align="center">
         <BannerText />
         <SearchBarContainer>

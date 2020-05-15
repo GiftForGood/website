@@ -3,7 +3,8 @@ import { useRouter } from 'next/router';
 import { Stack, Card, CardSection, Button, Text } from '@kiwicom/orbit-components/lib';
 import api from '../../../../utils/api/index';
 import styled from 'styled-components';
-import Avatar from '../../imageContainers/Avatar';
+import BlackText from '../../text/BlackText';
+import CardHeader from '../../card/CardHeader';
 import GreySubtleButton from '../../buttons/GreySubtleButton';
 import Desktop from '@kiwicom/orbit-components/lib/Desktop';
 import Mobile from '@kiwicom/orbit-components/lib/Mobile';
@@ -30,28 +31,6 @@ const CardWrapper = styled.div`
   width: 100%;
 `;
 
-const BlackText = styled.div`
-  color: black;
-  font-size: ${(props) => {
-    if (props.size === 'small') {
-      return '12px';
-    }
-    if (props.size === 'medium') {
-      return '14px';
-    }
-    if (props.size === 'large') {
-      return '18px';
-    }
-  }};
-`;
-
-const CardHeaderContainer = styled.div`
-  display: flex;
-  align-items: center;
-  width: 100%;
-  margin-bottom: 1vh;
-`;
-
 const ClickableDiv = styled.a`
   position: absolute;
   width: 100%;
@@ -74,37 +53,6 @@ const TwoLineTextContainer = styled.div`
   color: black;
 `;
 
-const AvatarDetails = ({ name, distance }) => {
-  return (
-    <div style={{ width: 'fit-content', float: 'left', margin: '0 auto', marginLeft: '5px' }}>
-      <Stack direction="column" spacing="extraTight">
-        <BlackText size="small">{name}</BlackText>
-        <BlackText size="small">{distance}km away</BlackText>
-      </Stack>
-    </div>
-  );
-};
-
-const TimePosted = ({ numberOfHoursAgo }) => {
-  return (
-    <div style={{ float: 'right' }}>
-      <BlackText size="small">{numberOfHoursAgo}hour(s) ago</BlackText>
-    </div>
-  );
-};
-
-const CardHeader = ({ name, imageUrl }) => {
-  return (
-    <CardHeaderContainer>
-      <div style={{ float: 'left' }}>
-        <Avatar imageUrl={imageUrl} />
-      </div>
-      <AvatarDetails name={name} distance="2.5" />
-      <TimePosted numberOfHoursAgo="1" />
-    </CardHeaderContainer>
-  );
-};
-
 const CardDescription = ({ title, description }) => {
   return (
     <Stack direction="column" spacing="tight">
@@ -119,7 +67,7 @@ const CardDescription = ({ title, description }) => {
 const CardContent = ({ title, description, name, imageUrl }) => {
   return (
     <div style={{ width: '100%', height: '100px' }}>
-      <CardHeader name={name} imageUrl={imageUrl} />
+      <CardHeader name={name} imageUrl={imageUrl} timeAgo="1hr" />
       <CardDescription title={title} description={description} />
     </div>
   );
@@ -164,11 +112,12 @@ const TopCategories = ({ numberOfPosts, numberOfCategories }) => {
       })
       .then((categories) => {
         // get {@numberOfPosts} wishes for each top categories
-        getWishesForTopCategories(categories, numberOfPosts)
-          .then((topCategoriesAndTheirWishes) => setTopCategoriesAndTheirWishes(topCategoriesAndTheirWishes));
+        getWishesForTopCategories(categories, numberOfPosts).then((topCategoriesAndTheirWishes) =>
+          setTopCategoriesAndTheirWishes(topCategoriesAndTheirWishes)
+        );
       })
       .catch((err) => {});
-  }
+  };
 
   async function getWishesForTopCategories(categories, numberOfPosts) {
     let topCategoriesAndTheirWishes = [];
@@ -219,7 +168,6 @@ const TopCategories = ({ numberOfPosts, numberOfCategories }) => {
       );
     });
   };
-
 
   return (
     <TopCategoriesContainer>
