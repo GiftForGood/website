@@ -13,20 +13,11 @@ export const dummyTopCategoriesAndTheirWishes = [
           profileImageUrl: 'https://res.cloudinary.com/giftforgood/image/upload/v1589378414/profile.jpg',
           userName: 'jamessspanggg',
         },
-        updatedDateTime: {
-          seconds: 1589385600,
-          nanoseconds: 0,
-        },
+        updatedDateTime: 1589385600000,
         wishesId: 'pbLFnOBA7gi8ZhTo7T3l',
         isBumped: false,
-        expireDateTime: {
-          seconds: 1589990400,
-          nanoseconds: 0,
-        },
-        lastActionByUserDateTime: {
-          seconds: 1589385600,
-          nanoseconds: 0,
-        },
+        expireDateTime: 1589990400000,
+        lastActionByUserDateTime: 1589385600000,
         organization: {
           latitude: '1.294835',
           address: 'Queenstown MRT',
@@ -34,10 +25,7 @@ export const dummyTopCategoriesAndTheirWishes = [
           name: 'name',
         },
         status: 'pending',
-        postedDateTime: {
-          seconds: 1589385600,
-          nanoseconds: 0,
-        },
+        postedDateTime: 1589385600000,
         categories: [
           {
             imageUrl: 'https://res.cloudinary.com/giftforgood/image/upload/v1588842156/dailynecessities.jpg',
@@ -128,25 +116,16 @@ export const dummyTopCategoriesAndTheirWishes = [
     id: '49yM4ELhrrFWr6phmP8d',
     wishes: [
       {
-        expireDateTime: {
-          seconds: 1589990400,
-          nanoseconds: 0,
-        },
+        expireDateTime: 1589990400000,
         isBumped: false,
-        lastActionByUserDateTime: {
-          seconds: 1589385600,
-          nanoseconds: 0,
-        },
+        lastActionByUserDateTime: 1589385600000,
         organization: {
           name: 'name',
           latitude: '1.294835',
           address: 'Queenstown MRT',
           longitude: '103.805901',
         },
-        postedDateTime: {
-          seconds: 1589385600,
-          nanoseconds: 0,
-        },
+        postedDateTime: 1589385600000,
         status: 'pending',
         categories: [
           {
@@ -164,32 +143,20 @@ export const dummyTopCategoriesAndTheirWishes = [
           userId: 'MjLPFPmRhaH5WKYRloTr',
           profileImageUrl: 'https://res.cloudinary.com/giftforgood/image/upload/v1589378414/profile.jpg',
         },
-        updatedDateTime: {
-          seconds: 1589385600,
-          nanoseconds: 0,
-        },
+        updatedDateTime: 1589385600000,
         wishesId: 'tOrHeSKzxYSGDFiNEuZf',
       },
       {
-        expireDateTime: {
-          seconds: 1589990400,
-          nanoseconds: 0,
-        },
+        expireDateTime: 1589990400000,
         isBumped: false,
-        lastActionByUserDateTime: {
-          seconds: 1589385600,
-          nanoseconds: 0,
-        },
+        lastActionByUserDateTime: 1589385600000,
         organization: {
           name: 'Big Cat Rescue',
           latitude: '1.294835',
           address: 'Queenstown MRT',
           longitude: '103.805901',
         },
-        postedDateTime: {
-          seconds: 1589385600,
-          nanoseconds: 0,
-        },
+        postedDateTime: 1589385600000,
         status: 'pending',
         categories: [
           {
@@ -206,10 +173,7 @@ export const dummyTopCategoriesAndTheirWishes = [
           userId: 'MjLPFPmRhaH5WKYRloTr',
           profileImageUrl: 'https://res.cloudinary.com/giftforgood/image/upload/v1589378414/profile.jpg',
         },
-        updatedDateTime: {
-          seconds: 1589385600,
-          nanoseconds: 0,
-        },
+        updatedDateTime: 1589385600000,
         wishesId: 'tOrHeSKzxYSGDFiNEuZf',
       },
     ],
@@ -221,25 +185,16 @@ export const dummyTopCategoriesAndTheirWishes = [
     id: 'GYYRGfzyq67KIj17gVwZ',
     wishes: [
       {
-        expireDateTime: {
-          seconds: 1589990400,
-          nanoseconds: 0,
-        },
+        expireDateTime: 1589990400000,
         isBumped: false,
-        lastActionByUserDateTime: {
-          seconds: 1589385600,
-          nanoseconds: 0,
-        },
+        lastActionByUserDateTime: 1589385600000,
         organization: {
           name: 'Joe Exotic Zoo',
           latitude: '1.294835',
           address: 'Queenstown MRT',
           longitude: '103.805901',
         },
-        postedDateTime: {
-          seconds: 1589385600,
-          nanoseconds: 0,
-        },
+        postedDateTime: 1589385600000,
         status: 'pending',
         categories: [
           {
@@ -256,32 +211,20 @@ export const dummyTopCategoriesAndTheirWishes = [
           userId: 'MjLPFPmRhaH5WKYRloTr',
           profileImageUrl: 'https://res.cloudinary.com/giftforgood/image/upload/v1589378414/profile.jpg',
         },
-        updatedDateTime: {
-          seconds: 1589385600,
-          nanoseconds: 0,
-        },
+        updatedDateTime: 1589385600000,
         wishesId: 'tOrHeSKzxYSGDFiNEuZf',
       },
       {
-        expireDateTime: {
-          seconds: 1589990400,
-          nanoseconds: 0,
-        },
+        expireDateTime: 1589990400000,
         isBumped: false,
-        lastActionByUserDateTime: {
-          seconds: 1589385600,
-          nanoseconds: 0,
-        },
+        lastActionByUserDateTime: 1589385600000,
         organization: {
           name: 'DSC NUS',
           latitude: '1.294835',
           address: 'Queenstown MRT',
           longitude: '103.805901',
         },
-        postedDateTime: {
-          seconds: 1589385600,
-          nanoseconds: 0,
-        },
+        postedDateTime: 1589385600000,
         status: 'pending',
         categories: [
           {
@@ -298,32 +241,20 @@ export const dummyTopCategoriesAndTheirWishes = [
           userId: 'MjLPFPmRhaH5WKYRloTr',
           profileImageUrl: '',
         },
-        updatedDateTime: {
-          seconds: 1589385600,
-          nanoseconds: 0,
-        },
+        updatedDateTime: 1589385600000,
         wishesId: 'tOrHeSKzxYSGDFiNEuZf',
       },
       {
-        expireDateTime: {
-          seconds: 1589990400,
-          nanoseconds: 0,
-        },
+        expireDateTime: 1589990400000,
         isBumped: false,
-        lastActionByUserDateTime: {
-          seconds: 1589385600,
-          nanoseconds: 0,
-        },
+        lastActionByUserDateTime: 1589385600000,
         organization: {
           name: 'Hand Helpers',
           latitude: '1.294835',
           address: 'Queenstown MRT',
           longitude: '103.805901',
         },
-        postedDateTime: {
-          seconds: 1589385600,
-          nanoseconds: 0,
-        },
+        postedDateTime: 1589385600000,
         status: 'pending',
         categories: [
           {
@@ -340,10 +271,7 @@ export const dummyTopCategoriesAndTheirWishes = [
           userId: 'MjLPFPmRhaH5WKYRloTr',
           profileImageUrl: 'https://res.cloudinary.com/giftforgood/image/upload/v1589378414/profile.jpg',
         },
-        updatedDateTime: {
-          seconds: 1589385600,
-          nanoseconds: 0,
-        },
+        updatedDateTime: 1589385600000,
         wishesId: 'tOrHeSKzxYSGDFiNEuZf',
       },
     ],

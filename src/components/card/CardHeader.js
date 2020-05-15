@@ -14,7 +14,7 @@ const CardHeaderContainer = styled.div`
 const TimePosted = ({ timeAgo }) => {
   return (
     <div style={{ float: 'right' }}>
-      <BlackText size="small">{timeAgo} ago</BlackText>
+      <BlackText size="small">{timeAgo}</BlackText>
     </div>
   );
 };

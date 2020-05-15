@@ -9,6 +9,7 @@ import GreySubtleButton from '../../buttons/GreySubtleButton';
 import Desktop from '@kiwicom/orbit-components/lib/Desktop';
 import Mobile from '@kiwicom/orbit-components/lib/Mobile';
 import { dummyTopCategoriesAndTheirWishes } from '../../../../utils/dummyData/topCategoriesAndTheirWishes';
+import { getTimeDifferenceFromNow } from '../../../../utils/api/time';
 
 const TopCategoriesContainer = styled.div`
   text-align: center;
@@ -64,10 +65,11 @@ const CardDescription = ({ title, description }) => {
   );
 };
 
-const CardContent = ({ title, description, name, imageUrl }) => {
+const CardContent = ({ title, description, name, imageUrl, postedDateTime }) => {
+  const timeAgo = getTimeDifferenceFromNow(postedDateTime);
   return (
     <div style={{ width: '100%', height: '100px' }}>
-      <CardHeader name={name} imageUrl={imageUrl} timeAgo="1hr" />
+      <CardHeader name={name} imageUrl={imageUrl} timeAgo={timeAgo} />
       <CardDescription title={title} description={description} />
     </div>
   );
@@ -153,6 +155,7 @@ const TopCategories = ({ numberOfPosts, numberOfCategories }) => {
                       title={wish.title}
                       description={wish.description}
                       imageUrl={wish.user.profileImageUrl}
+                      postedDateTime={wish.postedDateTime}
                     />
                   }
                 >
