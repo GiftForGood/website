@@ -32,6 +32,15 @@ const BannerImageContainer = styled.div`
   background-position: 50% 50%;
 `;
 
+const SearchBarContainer = styled.div`
+  position: absolute;
+  top: 60%;
+  left: 50%;
+  width: 50%;
+  min-width: 15rem;
+  transform: translate(-50%, -50%);
+`;
+
 const title = 'GiftForGood.sg';
 const subTitle = 'Giving back to the society that needs your help';
 const bannerImageUrl = '/assets/wishes-banner.jpg';
@@ -50,7 +59,9 @@ const Banner = () => {
     <BannerImageContainer src={bannerImageUrl}>
       <Stack align="center">
         <BannerText />
-        <SearchBar />
+        <SearchBarContainer>
+          <SearchBar />
+        </SearchBarContainer>
       </Stack>
     </BannerImageContainer>
   );

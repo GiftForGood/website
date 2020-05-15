@@ -7,18 +7,8 @@ import SquareImageBox from '../../imageContainers/SquareImageBox';
 import styled from 'styled-components';
 import { ChevronRight, ChevronLeft } from '@kiwicom/orbit-components/lib/icons';
 
-const Container = styled.div`
-  margin: 0 auto;
-`;
-
 const CarouselContainer = styled.div`
   position: relative;
-`;
-
-const ResizableTitle = styled.div`
-  font-size: calc(10px + 0.5vw);
-  font-weight: bold;
-  margin-bottom: 10px;
 `;
 
 // need the padding so that hovering each category will be able to zoom out
@@ -109,34 +99,31 @@ const Categories = () => {
   const handleScrollRight = () => (document.getElementById('scrollableCategory').scrollLeft += getScrollableWidth());
 
   return (
-    <Container>
-      <ResizableTitle>Explore GiftForGood</ResizableTitle>
-      <CarouselContainer>
-        <CarouselArrow direction="left">
-          <Button
-            circled
-            iconLeft={<ChevronLeft />}
-            asComponent={CarouselButton}
-            onClick={handleScrollLeft}
-            type="white"
-            size="small"
-          />
-        </CarouselArrow>
-        <ScrollableRow id="scrollableCategory">
-          <RowOfCategories />
-        </ScrollableRow>
-        <CarouselArrow direction="right">
-          <Button
-            circled
-            iconLeft={<ChevronRight />}
-            asComponent={CarouselButton}
-            onClick={handleScrollRight}
-            type="white"
-            size="small"
-          />
-        </CarouselArrow>
-      </CarouselContainer>
-    </Container>
+    <CarouselContainer>
+      <CarouselArrow direction="left">
+        <Button
+          circled
+          iconLeft={<ChevronLeft />}
+          asComponent={CarouselButton}
+          onClick={handleScrollLeft}
+          type="white"
+          size="small"
+        />
+      </CarouselArrow>
+      <ScrollableRow id="scrollableCategory">
+        <RowOfCategories />
+      </ScrollableRow>
+      <CarouselArrow direction="right">
+        <Button
+          circled
+          iconLeft={<ChevronRight />}
+          asComponent={CarouselButton}
+          onClick={handleScrollRight}
+          type="white"
+          size="small"
+        />
+      </CarouselArrow>
+    </CarouselContainer>
   );
 };
 export default Categories;
