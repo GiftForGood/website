@@ -1,6 +1,5 @@
 import React from 'react';
 
-import { Stack } from '@kiwicom/orbit-components/lib';
 import SearchBar from './SearchBar';
 import styled from 'styled-components';
 import { wishesBannerImagePath, donationsBannerImagePath } from '../../../../utils/constants/imagePaths';
@@ -11,6 +10,7 @@ const TitleArea = styled.div`
   top: 35%;
   left: 50%;
   width: 50%;
+  max-width: 1920px;
   transform: translate(-50%, -50%);
 `;
 
@@ -22,6 +22,14 @@ const Title = styled.div`
 const SubTitle = styled.div`
   font-size: calc(14px + 0.5vw);
   margin-top: 10px;
+`;
+
+const BannerContentContainer = styled.div`
+  max-width: 1920px;
+  position: relative;
+  height: 100%;
+  width: 100%;
+  margin: 0 auto;
 `;
 
 const BannerImageContainer = styled.div`
@@ -38,6 +46,7 @@ const SearchBarContainer = styled.div`
   top: 60%;
   left: 50%;
   width: 50%;
+  max-width: 1920px;
   min-width: 15rem;
   transform: translate(-50%, -50%);
 `;
@@ -63,12 +72,12 @@ const BannerText = ({ ...props }) => {
 const Banner = ({ type }) => {
   return (
     <BannerImageContainer src={type === 'donation' ? donationsBannerImagePath : wishesBannerImagePath}>
-      <Stack align="center">
+      <BannerContentContainer>
         <BannerText title={type === 'donation' ? donationsHomePageTitle : wishesHomePageTitle} subTitle={subTitle} />
         <SearchBarContainer>
           <SearchBar />
         </SearchBarContainer>
-      </Stack>
+      </BannerContentContainer>
     </BannerImageContainer>
   );
 };

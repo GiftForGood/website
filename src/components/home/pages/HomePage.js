@@ -18,6 +18,8 @@ const ResponsiveTitle = styled.div`
 
 const CategoriesContainer = styled.div`
   margin: 0 auto;
+  max-width: 1920px;
+  overflow-x: hidden;
 `;
 
 const styles = {
@@ -30,6 +32,7 @@ const styles = {
 const TopCategoriesContainer = styled.div`
   text-align: center;
   width: 90%;
+  max-width: 1920px;
   margin: 0 auto;
   margin-bottom: 2vh;
 `;
