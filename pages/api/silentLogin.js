@@ -18,7 +18,7 @@ async function handler(req, res) {
             ...user,
             donor: decodedClaims.donor,
             npo: decodedClaims.npo,
-            emailVerified: decodedClaims.emailVerified
+            emailVerified: decodedClaims.email_verified
           },
         });
       } catch (error) {
