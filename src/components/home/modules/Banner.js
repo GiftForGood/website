@@ -15,12 +15,12 @@ const TitleArea = styled.div`
 `;
 
 const Title = styled.div`
-  font-size: calc(10px + 1vw);
+  font-size: calc(14px + 1vw);
   font-weight: bold;
 `;
 
 const SubTitle = styled.div`
-  font-size: calc(10px + 0.5vw);
+  font-size: calc(14px + 0.5vw);
   margin-top: 10px;
 `;
 
@@ -42,11 +42,12 @@ const SearchBarContainer = styled.div`
   transform: translate(-50%, -50%);
 `;
 
-const wishesHomePageTitle = 'GiftForGood.sg';
+const wishesHomePageTitle = 'GiftForGood.io';
 const donationsHomePageTitle = 'Donations';
 const subTitle = 'Giving back to the society that needs your help';
 
-const BannerText = ({ title, subTitle }) => {
+const BannerText = ({ ...props }) => {
+  const { title, subTitle } = props;
   return (
     <TitleArea>
       <Title>{title}</Title>

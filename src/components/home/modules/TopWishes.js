@@ -103,7 +103,7 @@ const TopWishes = ({ numberOfPosts, numberOfCategories }) => {
                 description={wish.description}
                 imageUrl={wish.user.profileImageUrl}
                 postedDateTime={wish.postedDateTime}
-                href={wishPostHref}
+                postHref={wishPostHref}
               />
             );
           })}

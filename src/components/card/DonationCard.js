@@ -5,6 +5,7 @@ import GreyText from '../text/GreyText';
 import styled from 'styled-components';
 import { defaultPostImagePath } from '../../../utils/constants/imagePaths';
 import { useRouter } from 'next/router';
+import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 
 const CardContainer = styled.div`
   display: flex;
@@ -12,11 +13,17 @@ const CardContainer = styled.div`
   justify-content: space-between;
   border-radius: 5px;
   box-shadow: 0px 0px 10px 0px rgba(37, 42, 49, 0.16), 0px 2px 8px 0px rgba(37, 42, 49, 0.12);
-  width: 350px;
-  height: 450px;
-  min-width: 350px;
-  min-height: 450px;
+  width: 300px;
+  height: 400px;
+  min-width: 300px;
+  min-height: 400px;
+  ${(props) => {
+    if (props.isDesktop === true) {
+      return 'width: 350px; height: 450px; min-width: 350px; min-height: 450px;';
+    }
+  }}
   position: relative;
+  scroll-snap-align: center;
 `;
 
 const CardHeaderContainer = styled.div`
@@ -28,9 +35,9 @@ const ThreeLineTextContainer = styled.div`
   text-overflow: ellipsis;
   display: -webkit-box;
   line-height: 1.5em;
-  max-height: 4.5em;
+  max-height: 3em;
   font-size: 14px;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   text-align: start;
   color: black;
@@ -59,7 +66,8 @@ const ClickableDiv = styled.a`
   z-index: 1;
 `;
 
-const CardDescription = ({ title, description }) => {
+const CardDescription = ({ ...props }) => {
+  const { title, description } = props;
   return (
     <Stack direction="column" spacing="tight">
       <Text size="normal" weight="bold">
@@ -70,9 +78,10 @@ const CardDescription = ({ title, description }) => {
   );
 };
 
-const CardDescriptionFooter = ({ validPeriod, location }) => {
+const CardDescriptionFooter = ({ ...props }) => {
+  const { validPeriod, location } = props;
   return (
-    <div style={{ bottom: 0 }}>
+    <div style={{ bottom: 0, textAlign: 'start' }}>
       <GreyText size="small">Valid period: {validPeriod}</GreyText>
       <GreyText size="small">Location: {location}</GreyText>
     </div>
@@ -90,36 +99,30 @@ const CardDescriptionFooter = ({ validPeriod, location }) => {
  * @param {string} postHref is the link url to direct users to after clicking the donation card
  */
 
-const DonationCard = ({
-  name,
-  title,
-  description,
-  profileImageUrl,
-  postedDateTime,
-  coverImageUrl,
-  validPeriod,
-  location,
-  postHref,
-}) => {
-  const timeAgo = getTimeDifferenceFromNow(postedDateTime);
+const DonationCard = ({ ...props }) => {
+  const timeAgo = getTimeDifferenceFromNow(props.postedDateTime);
   const router = useRouter();
-  const handleClickOnDonationPost = (event) => {
+  const handleDonationPostOnClick = (event) => {
     event.preventDefault();
-    router.push(postHref);
+    router.push(props.postHref);
   };
+  const { isDesktop } = useMediaQuery();
   return (
-    <CardContainer>
+    <CardContainer isDesktop={isDesktop}>
       <Grid style={{ height: '100%' }} rows="1fr 3fr 2fr" cols="1fr">
         <CardHeaderContainer>
-          <CardHeader name={name} imageUrl={profileImageUrl} timeAgo={timeAgo} />
+          <CardHeader name={props.name} imageUrl={props.profileImageUrl} timeAgo={timeAgo} />
         </CardHeaderContainer>
-        <CardImage imageUrl={coverImageUrl || defaultPostImagePath} />
+        <CardImage imageUrl={props.coverImageUrl || defaultPostImagePath} />
         <CardDescriptionContainer>
-          <CardDescription title={title} description={description} />
-          <CardDescriptionFooter validPeriod={validPeriod || '10/05/2020 - 10/05/2021'} location={location} />
+          <CardDescription title={props.title} description={props.description} />
+          <CardDescriptionFooter
+            validPeriod={props.validPeriod || '10/05/2020 - 10/05/2021'}
+            location={props.location}
+          />
         </CardDescriptionContainer>
       </Grid>
-      <ClickableDiv href={postHref} onClick={handleClickOnDonationPost} />
+      <ClickableDiv href={props.postHref} onClick={handleDonationPostOnClick} />
     </CardContainer>
   );
 };

@@ -105,7 +105,7 @@ const TopDonations = ({ numberOfPosts, numberOfCategories }) => {
             <DonationsRow id={categoryDonations.id}>
               <Stack direction="row" align="start" spacing="extraLoose">
                 {categoryDonations.donations.map((donation) => {
-                  const donationPostHref = `/donations/${donation.id}`;
+                  const donationPostHref = `/donations/${donation.donationId}`;
                   return (
                     <DonationCard
                       name={donation.user.userName}

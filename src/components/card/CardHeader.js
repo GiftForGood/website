@@ -18,7 +18,8 @@ const TimePosted = ({ timeAgo }) => {
   );
 };
 
-const AvatarDetails = ({ name, distance }) => {
+const AvatarDetails = ({ ...props }) => {
+  const { name, distance } = props;
   return (
     <div style={{ width: 'fit-content', float: 'left', margin: '0 auto', marginLeft: '5px' }}>
       <Stack direction="column" spacing="extraTight">
@@ -29,14 +30,8 @@ const AvatarDetails = ({ name, distance }) => {
   );
 };
 
-/**
- *
- * @param {string} name
- * @param {string} imageUrl
- * @param {string} distance
- * @param {string} timeAgo
- */
-const CardHeader = ({ name, imageUrl, distance, timeAgo }) => {
+const CardHeader = ({ ...props }) => {
+  const { imageUrl, name, distance, timeAgo } = props;
   return (
     <CardHeaderContainer>
       <div style={{ float: 'left' }}>

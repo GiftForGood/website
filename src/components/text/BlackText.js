@@ -3,6 +3,12 @@ import styled from 'styled-components';
 const BlackText = styled.div`
   color: black;
   font-size: ${(props) => {
+    if (props.size === 'extraTiny') {
+      return '8px';
+    }
+    if (props.size === 'tiny') {
+      return '10px';
+    }
     if (props.size === 'small') {
       return '12px';
     }

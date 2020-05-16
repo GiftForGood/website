@@ -31,7 +31,8 @@ const CardContentContainer = styled.div`
   height: 100px;
 `;
 
-const CardDescription = ({ title, description }) => {
+const CardDescription = ({ ...props }) => {
+  const { title, description } = props;
   return (
     <Stack direction="column" spacing="tight">
       <Text size="normal" weight="bold">
@@ -45,7 +46,8 @@ const CardDescription = ({ title, description }) => {
 /**
  * TODO: implement and pass the distance between NPO and Donor
  */
-const CardContent = ({ title, description, name, imageUrl, postedDateTime }) => {
+const CardContent = ({ ...props }) => {
+  const { name, imageUrl, title, description, postedDateTime } = props;
   const timeAgo = getTimeDifferenceFromNow(postedDateTime);
   return (
     <CardContentContainer>
@@ -67,9 +69,10 @@ const CardContent = ({ title, description, name, imageUrl, postedDateTime }) => 
  * @param {string} postedDateTime is the time posted for wish in milliseconds
  * @param {string} postHref is the link url to direct users to after clicking the wish card
  */
-const HomePageWishCard = ({ name, title, description, imageUrl, postedDateTime, postHref }) => {
+const HomePageWishCard = ({ ...props }) => {
+  const { name, title, description, imageUrl, postedDateTime, postHref } = props;
   const router = useRouter();
-  const handleClickOnWishPost = (event) => {
+  const handleWishPostOnClick = (event) => {
     event.preventDefault();
     router.push(postHref);
   };
@@ -85,7 +88,7 @@ const HomePageWishCard = ({ name, title, description, imageUrl, postedDateTime, 
         />
       }
     >
-      <ClickableDiv href={postHref} onClick={handleClickOnWishPost} />
+      <ClickableDiv href={postHref} onClick={handleWishPostOnClick} />
     </CardSection>
   );
 };

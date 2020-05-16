@@ -37,13 +37,13 @@ const TopCategoriesContainer = styled.div`
 const numberOfPostsPerCategory = 3;
 const numberOfCategories = 3;
 
-const HomePage = () => {
+const HomePage = ({ ...props }) => {
   // TODO: default to wishes home page for now, will modify when the data for logged in user is ready
-  const pageType = 'wishes';
+  const { pageType } = props;
   return (
     <HomePageContainer>
       <Grid style={styles.gridContainer} rows="3fr 1fr auto" rowGap="1vh" columns="1fr">
-        <Banner type={pageType} />
+        <Banner type={pageType || 'wishes'} />
         <CategoriesContainer>
           <ResponsiveTitle>Explore GiftForGood</ResponsiveTitle>
           <Categories />
