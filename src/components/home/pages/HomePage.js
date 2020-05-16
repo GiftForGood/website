@@ -38,7 +38,8 @@ const numberOfPostsPerCategory = 3;
 const numberOfCategories = 3;
 
 const HomePage = () => {
-  const pageType = 'donation'; // default wishes for now
+  // TODO: default to wishes home page for now, will modify when the data for logged in user is ready
+  const pageType = 'wishes';
   return (
     <HomePageContainer>
       <Grid style={styles.gridContainer} rows="3fr 1fr auto" rowGap="1vh" columns="1fr">
