@@ -214,7 +214,6 @@ class AuthAPI {
       name: name,
       profileImageUrl: profileImageUrl,
       reviewRating: 0,
-      isVerifiedByEmail: false,
       hasAcceptedTermsOfService: true,
       isBlocked: false,
       isForcedRefreshRequired: false,
@@ -282,7 +281,6 @@ class AuthAPI {
       profileImageUrl: '',
       organization: organizationInfo,
       reviewRating: 0,
-      isVerifiedByEmail: false,
       isVerifiedByAdmin: false,
       hasAcceptedTermsOfService: true,
       isBlocked: false,
@@ -326,7 +324,7 @@ class AuthAPI {
       name: name,
       contactNumber: contact,
       organization: organization,
-      isVerifiedByEmail: false,
+      isVerifiedByAdmin: false,
     };
     await newVerificationData.set(data);
     return newVerificationData;
