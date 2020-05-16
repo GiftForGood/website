@@ -33,15 +33,24 @@ const RangeDates = ({ ...props }) => {
     const endDateOfWeek = getMomentDateFromCalendarJSDate(currentWeek[currentWeek.length - 1]);
     const currentRangeTitle = `${startDateOfWeek.format('D MMM')} - ${endDateOfWeek.format('D MMM')}`;
 
+    const validatePastDate = (date) => {
+      if (date.isBefore(currentDateTime, 'day')) {
+        updateCurrentDate(currentDateTime);
+      } else {
+        updateCurrentDate(date);
+      }
+    };
+
     const handlePrevWeekClick = () => {
       if (currentWeekIndex - 1 > 0) {
-        setCurrentWeekIndex(currentWeekIndex - 1);
+        const firstDayOfPrevWeek = getMomentDateFromCalendarJSDate(weeks[currentWeekIndex - 1][0]);
+        validatePastDate(firstDayOfPrevWeek);
       } else if (currentWeekIndex - 1 == 0) {
         const firstDayOfPrevWeek = getMomentDateFromCalendarJSDate(weeks[0][0]);
-        updateCurrentDate(firstDayOfPrevWeek);
+        validatePastDate(firstDayOfPrevWeek);
       } else {
         const firstDayOfPrevWeek = getMomentDateFromCalendarJSDate(weeks[0][0]).clone().subtract(1, 'days');
-        updateCurrentDate(firstDayOfPrevWeek);
+        validatePastDate(firstDayOfPrevWeek);
       }
     };
 
