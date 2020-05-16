@@ -345,7 +345,7 @@ class AuthAPI {
   async _uploadNPOProofImage(npoId, proofImage) {
     const ext = path.extname(proofImage.name);
     const storageRef = firebaseStorage.ref();
-    const proofImageRef = storageRef.child('npos/proofs/' + npoId + '_proof' + ext);
+    const proofImageRef = storageRef.child(`npos/${npoId}/proofs/${npoId}_proof_v1${ext}`);
     return await proofImageRef.put(proofImage);
   }
 
