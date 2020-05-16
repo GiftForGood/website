@@ -43,9 +43,6 @@ const LoginDonor = () => {
     try {
       const [token, user, userDoc] = await api.auth.loginDonorWithEmailAndPassword(values.email, values.password);
       let userData = userDoc.data();
-      if (!userData.isVerifiedByEmail) {
-        throw new AuthError('unverified-email', 'User has not verify their email address');
-      }
       let response = await client.post('/api/sessionLogin', { token });
       if (response.status === 200) {
         router.push('/');
@@ -77,9 +74,6 @@ const LoginDonor = () => {
     try {
       const [token, user, userDoc] = await api.auth.loginDonorWithGoogle();
       let userData = userDoc.data();
-      if (!userData.isVerifiedByEmail) {
-        throw new AuthError('unverified-email', 'User has not verify their email address');
-      }
       let response = await client.post('/api/sessionLogin', { token });
       if (response.status === 200) {
         router.push('/');

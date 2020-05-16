@@ -11,7 +11,7 @@ import styled from 'styled-components';
 import { colors } from '../../../../utils/constants/colors';
 import RedButton from '../../button/RedButton';
 import api from '../../../../utils/api';
-import 'isomorphic-unfetch';
+import { useRouter } from 'next/router';
 
 const HeadingColor = styled.div`
   color: ${colors.donorBackground};
@@ -19,6 +19,7 @@ const HeadingColor = styled.div`
 
 const RegisterDonor = () => {
   const dispatch = useDispatch();
+  const router = useRouter();
   const [alertTitle, setAlertTitle] = useState('');
   const [showAlert, setShowAlert] = useState(false);
   const [alertType, setAlertType] = useState('');
@@ -38,9 +39,9 @@ const RegisterDonor = () => {
   const handleFormSubmission = async (values) => {
     try {
       const [token, user, userDoc] = await api.auth.registerDonorWithEmailAndPassword(values.email, values.password);
-      console.log(token);
       await api.auth.sendVerificationEmail();
       displayAlert('Successfully Registered!', `A verification email has been sent to ${user.email}`, 'success');
+      router.push('/');
     } catch (error) {
       console.log(error);
       formik.setSubmitting(false);
@@ -57,9 +58,9 @@ const RegisterDonor = () => {
   const handleGoogleRegister = async () => {
     try {
       const [token, user, userDoc] = await api.auth.registerDonorWithGoogle();
-      console.log(token);
       await api.auth.sendVerificationEmail();
       displayAlert('Successfully Registered!', `A verification email has been sent to ${user.email}`, 'success');
+      router.push('/');
     } catch (error) {
       console.log(error);
       if (error.code === 'auth/unable-to-create-user') {

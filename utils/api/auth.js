@@ -82,10 +82,6 @@ class AuthAPI {
     await this._googleAuth();
     const token = await firebaseAuth.currentUser.getIdToken();
     const userProfile = firebaseAuth.currentUser;
-    console.log('verified', userProfile.emailVerified)
-    if (userProfile.emailVerified) {
-      await this._updateDonorEmailVerified(userProfile.uid);
-    }
     const userDoc = await this._getDonorDoc(userProfile.uid);
 
     return [token, userProfile, userDoc];
@@ -106,10 +102,6 @@ class AuthAPI {
     await firebaseAuth.signInWithEmailAndPassword(email, password);
     const token = await firebaseAuth.currentUser.getIdToken();
     const userProfile = firebaseAuth.currentUser;
-    console.log('verified', userProfile.emailVerified)
-    if (userProfile.emailVerified) {
-      await this._updateDonorEmailVerified(userProfile.uid);
-    }
     const userDoc = await this._getDonorDoc(userProfile.uid);
 
     return [token, userProfile, userDoc];
