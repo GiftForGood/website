@@ -40,13 +40,13 @@ const RegisterDonor = () => {
 
   const handleFormSubmission = async (values) => {
     try {
-      setIsLoading(true)
+      setIsLoading(true);
       const [token, user, userDoc] = await api.auth.registerDonorWithEmailAndPassword(values.email, values.password);
       await api.auth.sendVerificationEmail();
       displayAlert('Successfully Registered!', `A verification email has been sent to ${user.email}`, 'success');
       let response = await client.post('/api/sessionLogin', { token });
       if (response.status === 200) {
-        setIsLoading(false)
+        setIsLoading(false);
         router.push('/');
       } else {
         throw response.error;
