@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { Stack, CardSection, Button, Text } from '@kiwicom/orbit-components/lib';
+import { Stack, Button, Text } from '@kiwicom/orbit-components/lib';
 import api from '../../../../utils/api/index';
 import styled from 'styled-components';
 import BlackText from '../../text/BlackText';
-import CardHeader from '../../card/CardHeader';
+import HomePageWishCard from '../../card/HomePageWishCard';
 import GreySubtleButton from '../../buttons/GreySubtleButton';
 import Desktop from '@kiwicom/orbit-components/lib/Desktop';
 import Mobile from '@kiwicom/orbit-components/lib/Mobile';
 import { dummyTopCategoriesAndTheirWishes } from '../../../../utils/dummyData/topCategoriesAndTheirWishes';
-import { getTimeDifferenceFromNow } from '../../../../utils/api/time';
 
 const TopWishesContainer = styled.div`
   text-align: center;
@@ -18,12 +17,12 @@ const TopWishesContainer = styled.div`
   margin-bottom: 2vh;
 `;
 
-const ResizableTitle = styled.div`
+const ResponsiveTitle = styled.div`
   font-size: calc(10px + 0.5vw);
   font-weight: bold;
 `;
 
-const WishesCardWrapper = styled.div`
+const WishesColumn = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -32,61 +31,10 @@ const WishesCardWrapper = styled.div`
   width: 100%;
 `;
 
-const ClickableDiv = styled.a`
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  z-index: 1;
-`;
-
-const TwoLineTextContainer = styled.div`
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  line-height: 1.5em;
-  max-height: 3em;
-  font-size: 14px;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  text-align: start;
-  color: black;
-`;
-
 const CategoryHeaderContainer = styled.div`
   height: fit-content;
   margin: 10px;
 `;
-
-const CardContentContainer = styled.div`
-  width: 100%;
-  height: 100px;
-`;
-
-const CardDescription = ({ title, description }) => {
-  return (
-    <Stack direction="column" spacing="tight">
-      <Text size="normal" weight="bold">
-        {title}
-      </Text>
-      <TwoLineTextContainer>{description}</TwoLineTextContainer>
-    </Stack>
-  );
-};
-
-/**
- * TODO: implement and pass the distance between NPO and Donor
- */
-const CardContent = ({ title, description, name, imageUrl, postedDateTime }) => {
-  const timeAgo = getTimeDifferenceFromNow(postedDateTime);
-  return (
-    <CardContentContainer>
-      <CardHeader name={name} imageUrl={imageUrl} timeAgo={timeAgo} />
-      <CardDescription title={title} description={description} />
-    </CardContentContainer>
-  );
-};
 
 const CategoryHeader = ({ title }) => {
   return (
@@ -155,25 +103,20 @@ const TopWishes = ({ numberOfPosts, numberOfCategories }) => {
         router.push(categoryHref);
       };
       return (
-        <WishesCardWrapper key={categoryWishes.id}>
+        <WishesColumn key={categoryWishes.id}>
           <CategoryHeader title={categoryWishes.name}></CategoryHeader>
           {categoryWishes.wishes.map((wish) => {
             const postHref = '/wishes/' + wish.wishesId;
             return (
-              <CardSection
+              <HomePageWishCard
                 key={wish.wishesId}
-                header={
-                  <CardContent
-                    name={wish.organization.name}
-                    title={wish.title}
-                    description={wish.description}
-                    imageUrl={wish.user.profileImageUrl}
-                    postedDateTime={wish.postedDateTime}
-                  />
-                }
-              >
-                <ClickableDiv href={postHref} />
-              </CardSection>
+                name={wish.organization.name}
+                title={wish.title}
+                description={wish.description}
+                imageUrl={wish.user.profileImageUrl}
+                postedDateTime={wish.postedDateTime}
+                href={postHref}
+              />
             );
           })}
           <div style={{ margin: '0.5vh auto' }}>
@@ -181,14 +124,14 @@ const TopWishes = ({ numberOfPosts, numberOfCategories }) => {
               <BlackText size="small">View all</BlackText>
             </Button>
           </div>
-        </WishesCardWrapper>
+        </WishesColumn>
       );
     });
   };
 
   return (
     <TopWishesContainer>
-      <ResizableTitle style={{ marginBottom: '1vh' }}>Top Categories</ResizableTitle>
+      <ResponsiveTitle style={{ marginBottom: '1vh' }}>Top Categories</ResponsiveTitle>
       <Stack desktop={{ direction: 'row' }} direction="column" align="start" spacing="extraLoose">
         {AllCards()}
       </Stack>
