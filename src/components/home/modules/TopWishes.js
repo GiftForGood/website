@@ -10,18 +10,6 @@ import Desktop from '@kiwicom/orbit-components/lib/Desktop';
 import Mobile from '@kiwicom/orbit-components/lib/Mobile';
 import { dummyTopCategoriesAndTheirWishes } from '../../../../utils/dummyData/topCategoriesAndTheirWishes';
 
-const TopWishesContainer = styled.div`
-  text-align: center;
-  width: 90%;
-  margin: 0 auto;
-  margin-bottom: 2vh;
-`;
-
-const ResponsiveTitle = styled.div`
-  font-size: calc(10px + 0.5vw);
-  font-weight: bold;
-`;
-
 const WishesColumn = styled.div`
   display: flex;
   flex-direction: column;
@@ -79,7 +67,7 @@ const TopWishes = ({ numberOfPosts, numberOfCategories }) => {
           setTopCategoriesAndTheirWishes(topCategoriesAndTheirWishes)
         );
       })
-      .catch((err) => {});
+      .catch((err) => console.error(err));
   };
 
   async function getWishesForTopCategories(categories, numberOfPosts) {
@@ -94,10 +82,10 @@ const TopWishes = ({ numberOfPosts, numberOfCategories }) => {
     return topCategoriesAndTheirWishes;
   }
 
-  const AllCards = () => {
+  const TopWishCards = () => {
     const router = useRouter();
     return topCategoriesAndTheirWishes.map((categoryWishes) => {
-      const categoryHref = '/category/' + categoryWishes.id;
+      const categoryHref = `/category/${categoryWishes.id}`;
       const handleViewAllButton = (event) => {
         event.preventDefault();
         router.push(categoryHref);
@@ -106,7 +94,7 @@ const TopWishes = ({ numberOfPosts, numberOfCategories }) => {
         <WishesColumn key={categoryWishes.id}>
           <CategoryHeader title={categoryWishes.name}></CategoryHeader>
           {categoryWishes.wishes.map((wish) => {
-            const postHref = '/wishes/' + wish.wishesId;
+            const wishPostHref = `/wishes/${wish.wishesId}`;
             return (
               <HomePageWishCard
                 key={wish.wishesId}
@@ -115,7 +103,7 @@ const TopWishes = ({ numberOfPosts, numberOfCategories }) => {
                 description={wish.description}
                 imageUrl={wish.user.profileImageUrl}
                 postedDateTime={wish.postedDateTime}
-                href={postHref}
+                href={wishPostHref}
               />
             );
           })}
@@ -130,12 +118,9 @@ const TopWishes = ({ numberOfPosts, numberOfCategories }) => {
   };
 
   return (
-    <TopWishesContainer>
-      <ResponsiveTitle style={{ marginBottom: '1vh' }}>Top Categories</ResponsiveTitle>
-      <Stack desktop={{ direction: 'row' }} direction="column" align="start" spacing="extraLoose">
-        {AllCards()}
-      </Stack>
-    </TopWishesContainer>
+    <Stack desktop={{ direction: 'row' }} direction="column" align="start" spacing="extraLoose">
+      {TopWishCards()}
+    </Stack>
   );
 };
 

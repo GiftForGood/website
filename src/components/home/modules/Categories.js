@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { Stack, Button } from '@kiwicom/orbit-components/lib';
+import { Stack } from '@kiwicom/orbit-components/lib';
 import api from '../../../../utils/api/index';
 import { dummyCategories } from '../../../../utils/dummyData/categories';
 import SquareImageBox from '../../imageContainers/SquareImageBox';
 import styled from 'styled-components';
-import { ChevronRight, ChevronLeft } from '@kiwicom/orbit-components/lib/icons';
+import CarouselScrollButton from '../../buttons/CarouselScrollButton';
 
 const CarouselContainer = styled.div`
   position: relative;
@@ -17,37 +17,6 @@ const ScrollableRow = styled.div`
   max-width: 95vw;
   overflow-x: hidden;
   scroll-behavior: smooth;
-  padding: 10px;
-`;
-
-const CarouselButton = styled.div`
-  border: 0.5px solid white;
-  border-radius: 25px;
-  font-size: 10px;
-  background: white;
-  opacity: 50%;
-  text-align: center;
-  margin: 0.5vh auto;
-
-  :hover {
-    border-color: 1px solid white;
-    opacity: 80%;
-  }
-
-  :focus {
-    box-shadow: 0 0 0 3px #707070;
-  }
-`;
-
-const CarouselArrow = styled.div`
-  ${(props) => (props.direction === 'left' ? 'left: -5px' : 'right: -5px')};
-  position: absolute;
-  top: 50%;
-  z-index: 10;
-  width: fit-content;
-  height: fit-content;
-  transform: translate(0, -50%);
-  background-color: 'grey';
 `;
 
 const Categories = () => {
@@ -75,15 +44,15 @@ const Categories = () => {
   const RowOfCategories = () => {
     const router = useRouter();
     return (
-      <Stack direction="row" align="center">
+      <Stack direction="row" align="center" spacing="none">
         {categories.map((category) => {
           const href = `/category/${category.id}`;
-          const handleClick = (event) => {
+          const handleClickOnCategory = (event) => {
             event.preventDefault();
             router.push(href);
           };
           return (
-            <a href={href} onClick={handleClick} key={category.id}>
+            <a href={href} onClick={handleClickOnCategory} key={category.id}>
               <SquareImageBox imageUrl={category.imageUrl} caption={category.name} />
             </a>
           );
@@ -92,37 +61,13 @@ const Categories = () => {
     );
   };
 
-  const getScrollableWidth = () => document.getElementById('scrollableCategory').clientWidth;
-
-  const handleScrollLeft = () => (document.getElementById('scrollableCategory').scrollLeft -= getScrollableWidth());
-
-  const handleScrollRight = () => (document.getElementById('scrollableCategory').scrollLeft += getScrollableWidth());
-
   return (
     <CarouselContainer>
-      <CarouselArrow direction="left">
-        <Button
-          circled
-          iconLeft={<ChevronLeft />}
-          asComponent={CarouselButton}
-          onClick={handleScrollLeft}
-          type="white"
-          size="small"
-        />
-      </CarouselArrow>
+      <CarouselScrollButton size="small" direction="left" scrollableId="scrollableCategory" />
       <ScrollableRow id="scrollableCategory">
         <RowOfCategories />
       </ScrollableRow>
-      <CarouselArrow direction="right">
-        <Button
-          circled
-          iconLeft={<ChevronRight />}
-          asComponent={CarouselButton}
-          onClick={handleScrollRight}
-          type="white"
-          size="small"
-        />
-      </CarouselArrow>
+      <CarouselScrollButton size="small" direction="right" scrollableId="scrollableCategory" />
     </CarouselContainer>
   );
 };

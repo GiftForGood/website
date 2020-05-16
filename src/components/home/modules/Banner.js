@@ -3,7 +3,7 @@ import React from 'react';
 import { Stack } from '@kiwicom/orbit-components/lib';
 import SearchBar from './SearchBar';
 import styled from 'styled-components';
-import { bannerImagePath } from '../../../../utils/constants/imagePaths';
+import { wishesBannerImagePath, donationsBannerImagePath } from '../../../../utils/constants/imagePaths';
 
 const TitleArea = styled.div`
   position: absolute;
@@ -28,7 +28,7 @@ const BannerImageContainer = styled.div`
   width: 100%;
   height: 100%;
   position: relative;
-  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${(props) => props.src});
+  background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url(${(props) => props.src});
   background-size: cover;
   background-position: 50% 50%;
 `;
@@ -42,10 +42,11 @@ const SearchBarContainer = styled.div`
   transform: translate(-50%, -50%);
 `;
 
-const title = 'GiftForGood.sg';
+const wishesHomePageTitle = 'GiftForGood.sg';
+const donationsHomePageTitle = 'Donations';
 const subTitle = 'Giving back to the society that needs your help';
 
-const BannerText = () => {
+const BannerText = ({ title, subTitle }) => {
   return (
     <TitleArea>
       <Title>{title}</Title>
@@ -54,11 +55,15 @@ const BannerText = () => {
   );
 };
 
-const Banner = () => {
+/**
+ *
+ * @param {string} type can be donation or wish type
+ */
+const Banner = ({ type }) => {
   return (
-    <BannerImageContainer src={bannerImagePath}>
+    <BannerImageContainer src={type === 'donation' ? donationsBannerImagePath : wishesBannerImagePath}>
       <Stack align="center">
-        <BannerText />
+        <BannerText title={type === 'donation' ? donationsHomePageTitle : wishesHomePageTitle} subTitle={subTitle} />
         <SearchBarContainer>
           <SearchBar />
         </SearchBarContainer>

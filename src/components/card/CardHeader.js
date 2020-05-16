@@ -8,7 +8,6 @@ const CardHeaderContainer = styled.div`
   display: flex;
   align-items: center;
   width: 100%;
-  margin-bottom: 1vh;
 `;
 
 const TimePosted = ({ timeAgo }) => {

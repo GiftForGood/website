@@ -11,6 +11,7 @@ const SquareBox = styled.div`
   background-size: cover;
   border-radius: 1vw;
   transition: transform 0.5s;
+  margin: 10px;
   :hover {
     transform: scale(1.1);
   }

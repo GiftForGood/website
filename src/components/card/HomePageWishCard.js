@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { Stack, CardSection, Text } from '@kiwicom/orbit-components/lib';
 import { getTimeDifferenceFromNow } from '../../../utils/api/time';
 import CardHeader from './CardHeader';
+import { useRouter } from 'next/router';
 
 const ClickableDiv = styled.a`
   position: absolute;
@@ -48,22 +49,30 @@ const CardContent = ({ title, description, name, imageUrl, postedDateTime }) => 
   const timeAgo = getTimeDifferenceFromNow(postedDateTime);
   return (
     <CardContentContainer>
-      <CardHeader name={name} imageUrl={imageUrl} timeAgo={timeAgo} />
+      <div style={{ marginBottom: '1vh' }}>
+        <CardHeader name={name} imageUrl={imageUrl} timeAgo={timeAgo} />
+      </div>
       <CardDescription title={title} description={description} />
     </CardContentContainer>
   );
 };
 
 /**
- * 
- * @param {string} name is the NPO organization name 
+ *
+ * @param {string} id is the wish post id
+ * @param {string} name is the NPO organization name
  * @param {string} title is the title of the wish
- * @param {string} description is the description of the wish 
- * @param {string} imageUrl is the url to the avatar image of the NPO user 
+ * @param {string} description is the description of the wish
+ * @param {string} imageUrl is the url to the avatar image of the NPO user
  * @param {string} postedDateTime is the time posted for wish in milliseconds
  * @param {string} postHref is the link url to direct users to after clicking the wish card
  */
 const HomePageWishCard = ({ name, title, description, imageUrl, postedDateTime, postHref }) => {
+  const router = useRouter();
+  const handleClickOnWishPost = (event) => {
+    event.preventDefault();
+    router.push(postHref);
+  };
   return (
     <CardSection
       header={
@@ -76,9 +85,9 @@ const HomePageWishCard = ({ name, title, description, imageUrl, postedDateTime, 
         />
       }
     >
-      <ClickableDiv href={postHref} />
+      <ClickableDiv href={postHref} onClick={handleClickOnWishPost} />
     </CardSection>
   );
-}
+};
 
 export default HomePageWishCard;
