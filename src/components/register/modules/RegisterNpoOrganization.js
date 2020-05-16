@@ -23,9 +23,10 @@ import { setIsNpoDetails, setIsBackToLanding, setNpoOrganizationDetails } from '
 import { months } from '../../../../utils/constants/month';
 import styled from 'styled-components';
 import BlueButton from '../../button/BlueButton';
+import { colors } from '../../../../utils/constants/colors';
 
 const HeadingColor = styled.div`
-  color: #065ef5;
+  color: ${colors.npoBackground};
 `;
 
 const NextButtonContainer = styled.div`
