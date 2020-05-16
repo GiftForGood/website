@@ -119,9 +119,9 @@ class AuthAPI {
    * Send a verification email to the currently logged in user
    */
   async sendVerificationEmail() {
-    let url = SiteUrlConstant.PRODUCTION_URL + '/login';
+    let url = SiteUrlConstant.PRODUCTION_URL + '/';
     if (process.env.NODE_ENV === 'development') {
-      url = SiteUrlConstant.DEV_URL + '/login';
+      url = SiteUrlConstant.DEV_URL + '/';
     }
 
     const actionCodeSettings = {
