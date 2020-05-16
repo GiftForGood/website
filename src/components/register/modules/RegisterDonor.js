@@ -12,6 +12,7 @@ import { colors } from '../../../../utils/constants/colors';
 import RedButton from '../../button/RedButton';
 import api from '../../../../utils/api';
 import { useRouter } from 'next/router';
+import client from '../../../../utils/axios';
 
 const HeadingColor = styled.div`
   color: ${colors.donorBackground};
@@ -24,6 +25,7 @@ const RegisterDonor = () => {
   const [showAlert, setShowAlert] = useState(false);
   const [alertType, setAlertType] = useState('');
   const [alertDescription, setAlertDescription] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleBackToLandingOnClick = () => {
     dispatch(setIsBackToLanding());
@@ -38,10 +40,17 @@ const RegisterDonor = () => {
 
   const handleFormSubmission = async (values) => {
     try {
+      setIsLoading(true)
       const [token, user, userDoc] = await api.auth.registerDonorWithEmailAndPassword(values.email, values.password);
       await api.auth.sendVerificationEmail();
       displayAlert('Successfully Registered!', `A verification email has been sent to ${user.email}`, 'success');
-      router.push('/');
+      let response = await client.post('/api/sessionLogin', { token });
+      if (response.status === 200) {
+        setIsLoading(false)
+        router.push('/');
+      } else {
+        throw response.error;
+      }
     } catch (error) {
       console.log(error);
       formik.setSubmitting(false);
@@ -51,6 +60,8 @@ const RegisterDonor = () => {
         displayAlert('Invalid Email', error.message, 'critical');
       } else if (error.code === 'auth/unable-to-create-user') {
         displayAlert('Error', error.message, 'critical');
+      } else {
+        displayAlert('Error', error.message, 'critical');
       }
     }
   };
@@ -58,12 +69,17 @@ const RegisterDonor = () => {
   const handleGoogleRegister = async () => {
     try {
       const [token, user, userDoc] = await api.auth.registerDonorWithGoogle();
-      await api.auth.sendVerificationEmail();
-      displayAlert('Successfully Registered!', `A verification email has been sent to ${user.email}`, 'success');
-      router.push('/');
+      let response = await client.post('/api/sessionLogin', { token });
+      if (response.status === 200) {
+        router.push('/');
+      } else {
+        throw response.error;
+      }
     } catch (error) {
       console.log(error);
       if (error.code === 'auth/unable-to-create-user') {
+        displayAlert('Error', error.message, 'critical');
+      } else {
         displayAlert('Error', error.message, 'critical');
       }
     }
@@ -154,7 +170,7 @@ const RegisterDonor = () => {
             {...formik.getFieldProps('passwordConfirmation')}
           />
 
-          <Button submit fullWidth={true} asComponent={RedButton} disabled={formik.isSubmitting}>
+          <Button submit fullWidth={true} asComponent={RedButton} disabled={formik.isSubmitting} loading={isLoading}>
             Register
           </Button>
         </Stack>
