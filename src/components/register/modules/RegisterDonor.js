@@ -95,7 +95,7 @@ const RegisterDonor = () => {
       .required('Required')
       .matches(
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
-        'Please create a password with at least 12 characters, comprimising a mix of uppercase and lowercase letters, numbers and symbols'
+        'Please create a password with at least 12 characters, comprising a mix of uppercase and lowercase letters, numbers and symbols'
       ),
     passwordConfirmation: Yup.string().oneOf([Yup.ref('password'), null], 'Passwords must match'),
   });

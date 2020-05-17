@@ -185,7 +185,7 @@ const RegisterNpoDetails = () => {
             type="password"
             label="Create a password"
             name="password"
-            help="Please create a password with at least 12 characters, comprimising a mix of uppercase and lowercase letters, numbers and symbols"
+            help="Please create a password with at least 12 characters, comprising a mix of uppercase and lowercase letters, numbers and symbols"
             error={formik.touched.password && formik.errors.password ? formik.errors.password : ''}
             {...formik.getFieldProps('password')}
           />
