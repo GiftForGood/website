@@ -12,6 +12,7 @@ import {
   Textarea,
   Text,
   Heading,
+  Alert
 } from '@kiwicom/orbit-components/lib';
 import ChevronLeft from '@kiwicom/orbit-components/lib/icons/ChevronLeft';
 
@@ -24,6 +25,7 @@ import { months } from '../../../../utils/constants/month';
 import styled from 'styled-components';
 import BlueButton from '../../button/BlueButton';
 import { colors } from '../../../../utils/constants/colors';
+import api from '../../../../utils/api';
 
 const HeadingColor = styled.div`
   color: ${colors.npoBackground};
@@ -54,17 +56,17 @@ const RegisterNpoOrganization = () => {
   };
 
   const getAllOrganizations = () => {
-    // Get all organizations from firebase
-    setOrganizations([
-      {
-        label: 'Zero-th item',
-        value: 0,
-      },
-      {
-        label: 'First item',
-        value: 1,
-      },
-    ]);
+    api.npoOrganization.getAll().then((snapshot) => {
+      let parsedOrganizations = [];
+      snapshot.forEach((doc) => {
+        let obj = {
+          label: doc.data().name,
+          value: doc.data().name,
+        };
+        parsedOrganizations.push(obj);
+      });
+      setOrganizations(parsedOrganizations);
+    });
   };
 
   const validationSchema = Yup.object().shape({
@@ -114,6 +116,7 @@ const RegisterNpoOrganization = () => {
         onClick={handleBackToLandingOnClick}
         spaceAfter="normal"
       />
+      
       <Text align="center" as="div" spaceAfter="largest">
         <Stack direction="column" align="center" justify="center" desktop={{ direction: 'row' }}>
           <Heading size="normal" weight="bold">
@@ -124,6 +127,7 @@ const RegisterNpoOrganization = () => {
           </Heading>
         </Stack>
       </Text>
+      <Alert icon title="Applying for a NPO account will subject to adminstrators approval. This approval can take up to 3 to 5 working days." spaceAfter="normal"/>
       <form onSubmit={formik.handleSubmit}>
         <Stack spacing="loose">
           <Select
@@ -144,18 +148,18 @@ const RegisterNpoOrganization = () => {
           >
             <Radio
               label="Registry of Societies"
-              value="registry_of_societies"
-              checked={'registry_of_societies' === formik.values.registeredUnder}
+              value="Registry of Societies"
+              checked={'Registry of Societies' === formik.values.registeredUnder}
             />
             <Radio
               label="Commissioner of Charities"
-              value="commissioner_of_charities"
-              checked={'commissioner_of_charities' === formik.values.registeredUnder}
+              value="Commissioner of Charities"
+              checked={'Commissioner of Charities' === formik.values.registeredUnder}
             />
             <Radio
               label="Affiliated to the National Council of Social Service"
-              value="affiliated_national_council_of_social_service"
-              checked={'affiliated_national_council_of_social_service' === formik.values.registeredUnder}
+              value="Affiliated to the National Council of Social Service"
+              checked={'Affiliated to the National Council of Social Service' === formik.values.registeredUnder}
             />
           </ChoiceGroup>
           <InputField
@@ -202,13 +206,13 @@ const RegisterNpoOrganization = () => {
 
           <InputFile
             label="Proof of registration"
-            allowedFileTypes={['image/*', '.pdf']}
+            allowedFileTypes={['.pdf']}
             {...formik.getFieldProps('proofImage')}
             error={formik.touched.proofImage && formik.errors.proofImage ? formik.errors.proofImage : ''}
             fileName={formik.values.proofImage ? formik.values.proofImage.name : ''}
             help={
               <div>
-                Supported files: <strong>PNG, JPG, PDF</strong>
+                Supported files: <strong>PDF</strong>
               </div>
             }
             onChange={(event) => {
@@ -229,8 +233,6 @@ const RegisterNpoOrganization = () => {
             </Button>
           </NextButtonContainer>
         </Stack>
-
-        <Text as="div" align="right"></Text>
       </form>
     </div>
   );

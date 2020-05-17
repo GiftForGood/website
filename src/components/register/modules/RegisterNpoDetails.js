@@ -1,22 +1,33 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter } from 'next/router';
-import { Button, InputField, Stack } from '@kiwicom/orbit-components/lib';
+import { Button, InputField, Stack, Alert } from '@kiwicom/orbit-components/lib';
 import ChevronLeft from '@kiwicom/orbit-components/lib/icons/ChevronLeft';
 
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
 import { setIsBackToNpoRegister, setNpoDetails } from '../actions';
+import { getOrganization } from '../selectors';
 import BlueButton from '../../button/BlueButton';
 import TermsAndConditionModal from './TermsAndConditionModal';
 import api from '../../../../utils/api';
+import client from '../../../../utils/axios';
+import { useRouter } from 'next/router';
 
 const RegisterNpoDetails = () => {
   const dispatch = useDispatch();
   const [openTnC, setOpenTnC] = useState(false);
   const [tnc, setTnC] = useState('');
   const [values, setValues] = useState({});
+  const organization = useSelector(getOrganization);
+  const router = useRouter();
+
+  const [alertTitle, setAlertTitle] = useState('');
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertType, setAlertType] = useState('');
+  const [alertDescription, setAlertDescription] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     api.termsandconditions.get().then((doc) => {
@@ -28,10 +39,66 @@ const RegisterNpoDetails = () => {
     dispatch(setIsBackToNpoRegister());
   };
 
-  const handleFormSubmission = () => {
+  const displayAlert = (title, description, type) => {
+    setShowAlert(true);
+    setAlertTitle(title);
+    setAlertDescription(description);
+    setAlertType(type);
+  };
+
+  const handleFormSubmission = async () => {
+    handleModal();
+    setIsLoading(true);
     dispatch(setNpoDetails(values.name, values.mobileNumber));
-    console.log('handleFormSubmission', values);
-    // TODO: API to call Firebase
+    try {
+      let name = values.name;
+      let contact = values.mobileNumber;
+      let email = values.email;
+      let password = values.password;
+      let organizationName = organization.name;
+      let registeredRegistrar = organization.registeredUnder;
+      let registrationNumber = organization.registrationNumber;
+      let dayOfRegistration = organization.dateOfRegistrationDay;
+      let monthOfRegistration = organization.dateOfRegistrationMonth;
+      let yearOfRegistration = organization.dateOfRegistrationYear;
+      let proofImage = organization.proofImage;
+      let activities = organization.activities;
+      const [token, user, userDoc] = await api.auth.registerNPO(
+        name,
+        contact,
+        email,
+        password,
+        organizationName,
+        registeredRegistrar,
+        registrationNumber,
+        dayOfRegistration,
+        monthOfRegistration,
+        yearOfRegistration,
+        proofImage,
+        activities
+      );
+      await api.auth.sendVerificationEmail();
+      displayAlert('Successfully Registered!', `A verification email has been sent to ${user.email}`, 'success');
+      let response = await client.post('/api/sessionLogin', { token });
+      if (response.status === 200) {
+        setIsLoading(false);
+        router.push('/');
+      } else {
+        throw response.error;
+      }
+    } catch (error) {
+      setIsLoading(false);
+      formik.setSubmitting(false);
+      if (error.code === 'auth/email-already-in-use') {
+        displayAlert('Email already in use', error.message, 'critical');
+      } else if (error.code === 'auth/invalid-email') {
+        displayAlert('Invalid Email', error.message, 'critical');
+      } else if (error.code === 'auth/unable-to-create-user') {
+        displayAlert('Error', error.message, 'critical');
+      } else {
+        displayAlert('Error', error.message, 'critical');
+      }
+    }
   };
 
   const handleModal = () => {
@@ -84,6 +151,7 @@ const RegisterNpoDetails = () => {
       <form onSubmit={formik.handleSubmit}>
         <Stack spacing="loose">
           <InputField
+            disabled={formik.isSubmitting}
             label="Name"
             name="name"
             placeholder="Your full name"
@@ -92,6 +160,7 @@ const RegisterNpoDetails = () => {
           />
 
           <InputField
+            disabled={formik.isSubmitting}
             label="Mobile Number"
             name="mobileNumber"
             placeholder="Mobile Number or Your desk number"
@@ -100,6 +169,7 @@ const RegisterNpoDetails = () => {
           />
 
           <InputField
+            disabled={formik.isSubmitting}
             type="email"
             value="name@example.co"
             label="Email"
@@ -111,6 +181,7 @@ const RegisterNpoDetails = () => {
           />
 
           <InputField
+            disabled={formik.isSubmitting}
             type="password"
             label="Create a password"
             name="password"
@@ -120,6 +191,7 @@ const RegisterNpoDetails = () => {
           />
 
           <InputField
+            disabled={formik.isSubmitting}
             type="password"
             label="Confirm password"
             name="passwordConfirm"
@@ -131,13 +203,19 @@ const RegisterNpoDetails = () => {
             {...formik.getFieldProps('passwordConfirmation')}
           />
 
-          <Button submit fullWidth={true} asComponent={BlueButton}>
+          <Button submit fullWidth={true} asComponent={BlueButton} loading={isLoading}>
             Register
           </Button>
         </Stack>
       </form>
 
       {openTnC ? <TermsAndConditionModal onClose={handleModal} tnc={tnc} onSubmit={handleFormSubmission} /> : null}
+
+      {showAlert ? (
+        <Alert icon title={alertTitle} type={alertType}>
+          {alertDescription}
+        </Alert>
+      ) : null}
     </div>
   );
 };
