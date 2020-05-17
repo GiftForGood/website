@@ -53,6 +53,7 @@ const RegisterDonor = () => {
       }
     } catch (error) {
       console.log(error);
+      setIsLoading(false);
       formik.setSubmitting(false);
       if (error.code === 'auth/email-already-in-use') {
         displayAlert('Email already in use', error.message, 'critical');
