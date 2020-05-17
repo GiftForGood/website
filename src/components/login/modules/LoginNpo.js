@@ -1,5 +1,5 @@
-import React from 'react';
-import { Button, InputField, Stack, Text, SocialButton, Heading } from '@kiwicom/orbit-components/lib';
+import React, { useState } from 'react';
+import { Button, InputField, Stack, Text, Heading, Alert } from '@kiwicom/orbit-components/lib';
 import ChevronLeft from '@kiwicom/orbit-components/lib/icons/ChevronLeft';
 
 import { useDispatch } from 'react-redux';
@@ -10,6 +10,9 @@ import { setIsBackToLanding } from '../actions';
 import styled from 'styled-components';
 import { colors } from '../../../../utils/constants/colors';
 import BlueButton from '../../button/BlueButton';
+import api from '../../../../utils/api';
+import client from '../../../../utils/axios';
+import { useRouter } from 'next/router';
 
 const HeadingColor = styled.div`
   color: ${colors.npoBackground};
@@ -17,13 +20,56 @@ const HeadingColor = styled.div`
 
 const LoginNpo = () => {
   const dispatch = useDispatch();
+  const router = useRouter();
+  const [alertTitle, setAlertTitle] = useState('');
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertType, setAlertType] = useState('');
+  const [alertDescription, setAlertDescription] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleBackToLandingOnClick = () => {
     dispatch(setIsBackToLanding());
   };
 
-  const handleFormSubmission = (values) => {
-    // TODO: API to call Firebase
+  const displayAlert = (title, description, type) => {
+    setShowAlert(true);
+    setAlertTitle(title);
+    setAlertDescription(description);
+    setAlertType(type);
+  };
+
+  const handleFormSubmission = async (values) => {
+    try {
+      setIsLoading(true)
+      const [token, user, userDoc] = await api.auth.loginNPO(values.email, values.password);
+      let userData = userDoc.data();
+      let response = await client.post('/api/sessionLogin', { token });
+      if (response.status === 200) {
+        setIsLoading(false);
+        router.push('/');
+      } else {
+        throw response.error;
+      }
+    } catch (error) {
+      console.log(error);
+      setIsLoading(false)
+      formik.setSubmitting(false);
+      if (error.code === 'auth/user-disabled') {
+        displayAlert('User has been disabled, please contact administrator.', error.message, 'critical');
+      } else if (error.code === 'auth/invalid-email') {
+        displayAlert('Invalid Email', error.message, 'critical');
+      } else if (error.code === 'auth/user-not-found') {
+        displayAlert('User does not exists', error.message, 'critical');
+      } else if (error.code === 'auth/wrong-password') {
+        displayAlert('Either email or password is wrong', error.message, 'critical');
+      } else if (error.code === 'auth/unable-to-create-user') {
+        displayAlert('Error', error.message, 'critical');
+      } else if (error.code === 'auth/invalid-user') {
+        displayAlert('Error', error.message, 'critical');
+      } else {
+        displayAlert('Error', error.message, 'critical');
+      }
+    }
   };
 
   const validationSchema = Yup.object().shape({
@@ -81,11 +127,17 @@ const LoginNpo = () => {
             {...formik.getFieldProps('password')}
           />
 
-          <Button submit fullWidth={true} asComponent={BlueButton}>
+          <Button submit fullWidth={true} asComponent={BlueButton} loading={isLoading}>
             Login
           </Button>
         </Stack>
       </form>
+
+      {showAlert ? (
+        <Alert icon title={alertTitle} type={alertType}>
+          {alertDescription}
+        </Alert>
+      ) : null}
     </div>
   );
 };
