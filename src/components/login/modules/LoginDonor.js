@@ -26,6 +26,7 @@ const LoginDonor = () => {
   const [showAlert, setShowAlert] = useState(false);
   const [alertType, setAlertType] = useState('');
   const [alertDescription, setAlertDescription] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   const displayAlert = (title, description, type) => {
@@ -41,16 +42,19 @@ const LoginDonor = () => {
 
   const handleFormSubmission = async (values) => {
     try {
+      setIsLoading(true);
       const [token, user, userDoc] = await api.auth.loginDonorWithEmailAndPassword(values.email, values.password);
       let userData = userDoc.data();
       let response = await client.post('/api/sessionLogin', { token });
       if (response.status === 200) {
+        setIsLoading(false);
         router.push('/');
       } else {
         throw response.error;
       }
     } catch (error) {
       console.log(error);
+      setIsLoading(false);
       formik.setSubmitting(false);
       if (error.code === 'auth/user-disabled') {
         displayAlert('User has been disabled, please contact administrator.', error.message, 'critical');
@@ -64,7 +68,7 @@ const LoginDonor = () => {
         displayAlert('Error', error.message, 'critical');
       } else if (error.code === 'auth/invalid-user') {
         displayAlert('Error', error.message, 'critical');
-      } else if (error.code === 'auth/unverified-email') {
+      } else {
         displayAlert('Unverified', error.message, 'critical');
       }
     }
@@ -86,7 +90,7 @@ const LoginDonor = () => {
         displayAlert('Error', error.message, 'critical');
       } else if (error.code === 'auth/invalid-user') {
         displayAlert('Error', error.message, 'critical');
-      } else if (error.code === 'auth/unverified-email') {
+      } else {
         displayAlert('Unverified', error.message, 'critical');
       }
     }
@@ -152,7 +156,7 @@ const LoginDonor = () => {
             {...formik.getFieldProps('password')}
           />
 
-          <Button submit fullWidth={true} asComponent={RedButton}>
+          <Button submit fullWidth={true} asComponent={RedButton} loading={isLoading}>
             Login
           </Button>
         </Stack>
