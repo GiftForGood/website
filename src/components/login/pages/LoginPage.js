@@ -33,12 +33,17 @@ const Panel = styled.div`
   margin-left: auto;
   padding-left: 12px;
   padding-right: 12px;
-  max-width: 1000px;
   min-width: 400px;
   margin-top: 50px;
+  max-width: 1000px;
 
   ${media.largeMobile(css`
     margin-top: 0px;
+    width: 60%;
+  `)};
+
+  ${media.largeDesktop(css`
+    width: 40%;
   `)};
 `;
 
