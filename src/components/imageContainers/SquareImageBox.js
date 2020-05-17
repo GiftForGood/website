@@ -10,11 +10,6 @@ const SquareBox = styled.div`
   background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${(props) => props.src});
   background-size: cover;
   border-radius: 1vw;
-  transition: transform 0.5s;
-  margin: 10px;
-  :hover {
-    transform: scale(1.1);
-  }
 `;
 
 const CaptionInBox = styled.div`

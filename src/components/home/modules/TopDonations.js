@@ -8,16 +8,16 @@ import GreySubtleButton from '../../buttons/GreySubtleButton';
 import DonationCard from '../../card/DonationCard';
 import { dummyTopCategoriesAndTheirDonations } from '../../../../utils/dummyData/topCategoriesAndTheirDonations';
 import CarouselScrollButton from '../../buttons/CarouselScrollButton';
+import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 
 const CategoryHeader = styled.div`
   align-items: center;
   display: flex;
-  padding: 10px;
 `;
 
 const LeftAnchor = styled.div`
   float: left;
-  margin: 0px auto 0px 5px;
+  margin: 0px auto 0px 0px;
 `;
 
 const RightAnchor = styled.div`
@@ -25,16 +25,19 @@ const RightAnchor = styled.div`
 `;
 
 const DonationsRow = styled.div`
-  width: fit-content;
-  max-width: 90vw;
-  overflow-x: hidden;
+  max-width: 1280px;
+  overflow-x: scroll;
   scroll-behavior: smooth;
   position: relative;
-  padding: 10px;
+  padding: 10px 3px 10px 3px;
 `;
 
 const CarouselContainer = styled.div`
   position: relative;
+`;
+
+const TopDonationCardsContainer = styled.div`
+  width: 100%;
 `;
 
 const TopDonations = ({ numberOfPosts, numberOfCategories }) => {
@@ -44,11 +47,43 @@ const TopDonations = ({ numberOfPosts, numberOfCategories }) => {
     if (process.env.NODE_ENV === 'development') {
       setTopCategoriesAndTheirDonations(dummyTopCategoriesAndTheirDonations);
     } else {
-      getTopCategoriesAndTheirWishes(numberOfPosts, numberOfCategories);
+      getTopCategoriesAndTheirDonations(numberOfPosts, numberOfCategories);
     }
   }, []);
 
-  const getTopCategoriesAndTheirWishes = (numberOfCategories, numberOfPosts) => {
+  // async function getTopCategoriesAndTheirDonations(numberOfCategories, numberOfPosts) {
+  //   const topNCategories = await getTopNCategories(numberOfCategories);
+  //   const donationsForTopCategories = await getDonationsForTopCategories(topNCategories, numberOfPosts);
+  //   return combineCategoriesWithTheirDonations(topNCategories, donationsForTopCategories);
+  // };
+
+  // async function getTopNCategories(numberOfCategories) {
+  //   const rawCategories = await api.categories.getAll();
+  //   return rawCategories.docs.slice(0, numberOfCategories).map((doc) => doc.data());
+  // }
+
+  // async function getDonationsForTopCategories(categories, numberOfPosts) {
+  //   let donationsForTopCategories = [];
+  //   for (let i = 0; i < categories.length; i++) {
+  //     const rawDonations = await api.donations.getTopNPendingDonations(categories[i].id, numberOfPosts);
+  //     const donations = rawDonations.docs.map((doc) => doc.data());
+  //     donationsForTopCategories = [...donationsForTopCategories, donations];
+  //   }
+  //   return donationsForTopCategories;
+  // }
+
+  // const combineCategoriesWithTheirDonations = (categories, donations) => {
+  //   const combined = [];
+  //   categories.forEach((category, i) => {
+  //     const categoryAndDonations = {};
+  //     categoryAndDonations.category = category;
+  //     categoryAndDonations.donations = donations[i];
+  //     combined.push(categoryAndDonations);
+  //   });
+  //   return combined;
+  // }
+
+  const getTopCategoriesAndTheirDonations = (numberOfCategories, numberOfPosts) => {
     api.categories
       .getAll()
       .then((response) => {
@@ -80,6 +115,7 @@ const TopDonations = ({ numberOfPosts, numberOfCategories }) => {
 
   const TopDonationCards = () => {
     const router = useRouter();
+    const { isDesktop } = useMediaQuery();
     return topCategoriesAndTheirDonations.map((categoryDonations) => {
       const categoryHref = `/category/${categoryDonations.id}`;
       const handleViewAllButton = (event) => {
@@ -87,7 +123,7 @@ const TopDonations = ({ numberOfPosts, numberOfCategories }) => {
         router.push(categoryHref);
       };
       return (
-        <div key={categoryDonations.id}>
+        <TopDonationCardsContainer key={categoryDonations.id}>
           <CategoryHeader>
             <LeftAnchor>
               <Text size="normal" weight="bold">
@@ -101,7 +137,7 @@ const TopDonations = ({ numberOfPosts, numberOfCategories }) => {
             </RightAnchor>
           </CategoryHeader>
           <CarouselContainer>
-            <CarouselScrollButton direction="left" size="normal" scrollableId={categoryDonations.id} />
+            {isDesktop && <CarouselScrollButton direction="left" size="normal" scrollableId={categoryDonations.id} />}
             <DonationsRow id={categoryDonations.id}>
               <Stack direction="row" align="start" spacing="extraLoose">
                 {categoryDonations.donations.map((donation) => {
@@ -121,15 +157,15 @@ const TopDonations = ({ numberOfPosts, numberOfCategories }) => {
                 })}
               </Stack>
             </DonationsRow>
-            <CarouselScrollButton direction="right" size="normal" scrollableId={categoryDonations.id} />
+            {isDesktop && <CarouselScrollButton direction="right" size="normal" scrollableId={categoryDonations.id} />}
           </CarouselContainer>
-        </div>
+        </TopDonationCardsContainer>
       );
     });
   };
 
   return (
-    <Stack direction="column" align="start" spacing="extraLoose">
+    <Stack direction="column" align="start" spacing="natural">
       {TopDonationCards()}
     </Stack>
   );

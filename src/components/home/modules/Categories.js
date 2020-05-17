@@ -6,6 +6,7 @@ import { dummyCategories } from '../../../../utils/dummyData/categories';
 import SquareImageBox from '../../imageContainers/SquareImageBox';
 import styled from 'styled-components';
 import CarouselScrollButton from '../../buttons/CarouselScrollButton';
+import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 
 const CarouselContainer = styled.div`
   position: relative;
@@ -14,13 +15,14 @@ const CarouselContainer = styled.div`
 // need the padding so that hovering each category will be able to zoom out
 const ScrollableRow = styled.div`
   width: fit-content;
-  max-width: 95vw;
-  overflow-x: hidden;
+  max-width: 1280px;
+  overflow-x: scroll;
   scroll-behavior: smooth;
 `;
 
 const Categories = () => {
   const [categories, setCategories] = useState([]);
+  const { isDesktop } = useMediaQuery();
   useEffect(() => {
     if (process.env.NODE_ENV === 'development') {
       // use dummy data so that we don't incur a lot of reads while in development
@@ -38,13 +40,13 @@ const Categories = () => {
         response.docs.forEach((doc) => data.push(doc.data()));
         setCategories(data);
       })
-      .catch((err) => {});
+      .catch((err) => console.error(err));
   };
 
   const RowOfCategories = () => {
     const router = useRouter();
     return (
-      <Stack direction="row" align="center" spacing="none">
+      <Stack direction="row" align="center" spacing="natural">
         {categories.map((category) => {
           const href = `/category/${category.id}`;
           const handleClickOnCategory = (event) => {
@@ -63,11 +65,11 @@ const Categories = () => {
 
   return (
     <CarouselContainer>
-      <CarouselScrollButton size="small" direction="left" scrollableId="scrollableCategory" />
+      {isDesktop && <CarouselScrollButton size="small" direction="left" scrollableId="scrollableCategory" />}
       <ScrollableRow id="scrollableCategory">
         <RowOfCategories />
       </ScrollableRow>
-      <CarouselScrollButton size="small" direction="right" scrollableId="scrollableCategory" />
+      {isDesktop && <CarouselScrollButton size="small" direction="right" scrollableId="scrollableCategory" />}
     </CarouselContainer>
   );
 };

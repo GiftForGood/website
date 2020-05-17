@@ -107,7 +107,7 @@ const TopWishes = ({ numberOfPosts, numberOfCategories }) => {
               />
             );
           })}
-          <div style={{ margin: '0.5vh auto' }}>
+          <div style={{ margin: '0.5vh auto', marginBottom: '15px' }}>
             <Button size="small" asComponent={GreySubtleButton} onClick={handleViewAllButton}>
               <BlackText size="small">View all</BlackText>
             </Button>

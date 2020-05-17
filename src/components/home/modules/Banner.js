@@ -2,6 +2,7 @@ import React from 'react';
 import SearchBar from './SearchBar';
 import styled from 'styled-components';
 import { wishesBannerImagePath, donationsBannerImagePath } from '../../../../utils/constants/imagePaths';
+import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 
 const TitleArea = styled.div`
   position: absolute;
@@ -42,9 +43,9 @@ const BannerImageContainer = styled.div`
 
 const SearchBarContainer = styled.div`
   position: absolute;
-  top: 60%;
+  top: ${(props) => (props.isDesktop ? '60%' : '70%')};
   left: 50%;
-  width: 50%;
+  width: ${(props) => (props.isDesktop ? '50%' : '70%')};
   max-width: 1920px;
   min-width: 15rem;
   transform: translate(-50%, -50%);
@@ -69,11 +70,12 @@ const BannerText = ({ ...props }) => {
  * @param {string} type can be donation or wish type
  */
 const Banner = ({ type }) => {
+  const { isDesktop } = useMediaQuery();
   return (
     <BannerImageContainer src={type === 'donation' ? donationsBannerImagePath : wishesBannerImagePath}>
       <BannerContentContainer>
         <BannerText title={type === 'donation' ? donationsHomePageTitle : wishesHomePageTitle} subTitle={subTitle} />
-        <SearchBarContainer>
+        <SearchBarContainer isDesktop={isDesktop}>
           <SearchBar />
         </SearchBarContainer>
       </BannerContentContainer>
