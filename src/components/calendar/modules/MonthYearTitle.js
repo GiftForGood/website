@@ -2,22 +2,21 @@ import React from 'react';
 import RangeButtonComponent from './RangeButtonComponent';
 
 const MonthYearTitle = ({ ...props }) => {
-  const monthYearFormat = 'MMMM - YYYY';
+  const monthYearFormat = 'MMMM YYYY';
   const { currentDateTime, currentDate, updateCurrentDate } = props;
   const currentMonthYear = `${currentDate.format(monthYearFormat)}`;
 
   const handlePrevMonthClick = () => {
     let prevMonth = currentDate.clone().startOf('month').subtract(1, 'months');
 
-    if (prevMonth.isSame(currentDateTime, 'month')) {
-      updateCurrentDate(currentDateTime);
-    }
-
     if (prevMonth.isBefore(currentDateTime)) {
       return;
     }
-
-    updateCurrentDate(prevMonth);
+    if (prevMonth.isSame(currentDateTime, 'month')) {
+      updateCurrentDate(currentDateTime);
+    } else {
+      updateCurrentDate(prevMonth);
+    }
   };
 
   const handleNextMonthClick = () => {
@@ -30,6 +29,7 @@ const MonthYearTitle = ({ ...props }) => {
       title={currentMonthYear}
       handlePrevClick={handlePrevMonthClick}
       handleNextClick={handleNextMonthClick}
+      onHide={true}
     />
   );
 };

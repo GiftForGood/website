@@ -27,6 +27,7 @@ const Calendar = ({ ...props }) => {
   const currentDateTime = moment();
   const [currentDate, setCurrentDate] = useState(moment().startOf('day'));
   const [selectedTimeslots, setSelectedTimeslots] = useState([]);
+  const hasTimeslot = selectedTimeslots.length == 0;
 
   const updateCurrentDate = (date) => {
     setCurrentDate(date);
@@ -78,7 +79,8 @@ const Calendar = ({ ...props }) => {
 
   const DisplaySelectedSlot = () => {
     return selectedTimeslots.map((timeslot, index) => {
-      const timeslotDescription = timeslot.startDate.format('D MMM h A') + ' - ' + timeslot.endDate.format('h A');
+      const timeslotDescription =
+        timeslot.startDate.format('D MMM (ddd), h A') + ' - ' + timeslot.endDate.format('h A');
       return (
         <Tag key={index} selected={true} onRemove={removeKeyByIndex.bind(this, index)} size="small">
           {timeslotDescription}
@@ -99,8 +101,15 @@ const Calendar = ({ ...props }) => {
         <Text weight="bold" size="large">
           My Selected Timeslots:
         </Text>
+        {hasTimeslot ? <Text>Please select a timeslot from the above</Text> : ''}
       </Stack>
-      <Stack desktop={{ direction: 'row' }} tablet={{ direction: 'row' }} direction="column" align="center">
+      <Stack
+        desktop={{ direction: 'row' }}
+        tablet={{ direction: 'row' }}
+        direction="column"
+        align="start"
+        spacing="compact"
+      >
         <DisplaySelectedSlot />
       </Stack>
     </div>

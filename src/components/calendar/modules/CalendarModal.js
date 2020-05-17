@@ -7,6 +7,8 @@ import Modal, { ModalSection, ModalFooter } from '@kiwicom/orbit-components/lib/
 const okButton = styled.button`
   background: #4db6ac;
 
+  width: 80px;
+
   :hover {
     background: #35ada0;
   }
@@ -26,7 +28,7 @@ const CalendarModal = ({ ...props }) => {
   }
 
   return (
-    <Modal size="large" isMobileFullPage="true">
+    <Modal size="large">
       <ModalSection>
         <Stack spacing="none" spaceAfter="normal">
           <Heading type="title2">{title}</Heading>
@@ -37,7 +39,7 @@ const CalendarModal = ({ ...props }) => {
         </Stack>
       </ModalSection>
       <ModalFooter>
-        <Stack direction="row" justify="end">
+        <Stack direction="row" justify="end" align="center">
           <Button type="secondary" onClick={props.onHide}>
             Cancel
           </Button>

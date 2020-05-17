@@ -18,29 +18,37 @@ const circleButton = styled.button`
 `;
 
 const RangeButtonComponent = ({ ...props }) => {
-  return (
-    <Stack direction="row" align="center" spacing="loose" justify="center" spaceAfter="normal">
-      <Button
-        circled
-        iconLeft={<ChevronLeft />}
-        size="small"
-        title="Button"
-        type="white"
-        onClick={props.handlePrevClick}
-        asComponent={circleButton}
-      />
-      <Text size="large">{props.title}</Text>
-      <Button
-        circled
-        iconLeft={<ChevronRight />}
-        size="small"
-        title="Button"
-        type="white"
-        onClick={props.handleNextClick}
-        asComponent={circleButton}
-      />
-    </Stack>
-  );
+  if (props.onHide) {
+    return (
+      <Stack direction="row" align="center" spacing="loose" justify="center" spaceAfter="normal">
+        <Text size="large">{props.title}</Text>
+      </Stack>
+    );
+  } else {
+    return (
+      <Stack direction="row" align="center" spacing="loose" justify="center" spaceAfter="normal">
+        <Button
+          circled
+          iconLeft={<ChevronLeft />}
+          size="small"
+          title="Button"
+          type="white"
+          onClick={props.handlePrevClick}
+          asComponent={circleButton}
+        />
+        <Text size="large">{props.title}</Text>
+        <Button
+          circled
+          iconLeft={<ChevronRight />}
+          size="small"
+          title="Button"
+          type="white"
+          onClick={props.handleNextClick}
+          asComponent={circleButton}
+        />
+      </Stack>
+    );
+  }
 };
 
 export default RangeButtonComponent;
