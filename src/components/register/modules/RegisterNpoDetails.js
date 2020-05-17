@@ -112,14 +112,14 @@ const RegisterNpoDetails = () => {
   const validationSchema = Yup.object().shape({
     name: Yup.string().required('Required'),
     mobileNumber: Yup.string()
-      .required('Required.')
+      .required('Required')
       .matches(/^[6|8|9]\d{7}$/, 'Phone number is not valid'),
-    email: Yup.string().email().required('Required'),
+    email: Yup.string().email("Email must be a valid email").required('Required'),
     password: Yup.string()
       .required('Required')
       .matches(
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
-        'Please create a password with at least 12 characters, comprimising a mix of uppercase and lowercase letters, numbers and symbols'
+        'Please create a password with at least 12 characters, comprising a mix of uppercase and lowercase letters, numbers and symbols'
       ),
     passwordConfirmation: Yup.string().oneOf([Yup.ref('password'), null], 'Passwords must match'),
   });

@@ -90,7 +90,7 @@ const RegisterDonor = () => {
   };
 
   const validationSchema = Yup.object().shape({
-    email: Yup.string().email().required('Required'),
+    email: Yup.string().email("Email must be a valid email").required('Required'),
     password: Yup.string()
       .required('Required')
       .matches(
@@ -161,8 +161,7 @@ const RegisterDonor = () => {
             type="password"
             label="Create a password"
             name="password"
-            spaceAfter={'normal'}
-            help="Please create a password with at least 12 characters, comprimising a mix of uppercase and lowercase letters, numbers and symbols"
+            help="Please create a password with at least 12 characters, comprising a mix of uppercase and lowercase letters, numbers and symbols"
             error={formik.touched.password && formik.errors.password ? formik.errors.password : ''}
             {...formik.getFieldProps('password')}
           />
