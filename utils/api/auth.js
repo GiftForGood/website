@@ -2,7 +2,11 @@ import { db, firebaseAuth, firebaseStorage } from '../firebase';
 import firebase from 'firebase/app';
 import * as moment from 'moment';
 import * as path from 'path';
-import * as NPORegisteredRegistrar from '../constants/npoRegisteredRegistrar.js';
+import {
+  REGISTRY_OF_SOCIETIES,
+  COMMISSIONER_OF_CHARITIES,
+  AFFILIATED_NATIONAL_COUNCIL_OF_SOCIAL_SERVICE,
+} from '../constants/npoRegisteredRegistrar.js';
 import AuthError from './error/authError';
 import * as SiteUrlConstant from '../constants/siteUrl';
 
@@ -249,9 +253,9 @@ class AuthAPI {
 
   _validateRegistrar(registeredRegistrar) {
     const validRegistrar = [
-      NPORegisteredRegistrar.AFFILIATED_NATIONAL_COUNCIL_OF_SOCIAL_SERVICE,
-      NPORegisteredRegistrar.REGISTRY_OF_SOCIETY,
-      NPORegisteredRegistrar.COMMISSIONER_OF_CHARITIES,
+      AFFILIATED_NATIONAL_COUNCIL_OF_SOCIAL_SERVICE,
+      REGISTRY_OF_SOCIETIES,
+      COMMISSIONER_OF_CHARITIES,
     ];
 
     if (!validRegistrar.includes(registeredRegistrar)) {

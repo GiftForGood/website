@@ -127,7 +127,7 @@ const RegisterNpoOrganization = () => {
           </Heading>
         </Stack>
       </Text>
-      <Alert icon title="Applying for a NPO account will subject to adminstrators approval. This approval can take up to 3 to 5 working days." spaceAfter="normal"/>
+      <Alert icon title="Applying for a NPO account will subject to administrators approval. This approval can take up to 3 to 5 working days." spaceAfter="normal"/>
       <form onSubmit={formik.handleSubmit}>
         <Stack spacing="loose">
           <Select
