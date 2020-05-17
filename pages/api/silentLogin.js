@@ -12,7 +12,8 @@ async function handler(req, res) {
       // if the user's Firebase session was revoked, user deleted/disabled, etc.
       try {
         let decodedClaims = await admin.auth().verifySessionCookie(sessionCookie, true /** checkRevoked */);
-        let user = await getUser(decodedClaims);
+        let currentUser = await admin.auth().getUser(decodedClaims.uid);
+        let user = await getUser(currentUser.customClaims, currentUser.uid);
         res.json({
           user: {
             ...user,
@@ -37,18 +38,30 @@ async function handler(req, res) {
   }
 }
 
-async function getUser(decodedClaims) {
+async function getUser(decodedClaims, uid) {
   if (decodedClaims.donor) {
     try {
-      let doc = await admin.firestore().collection('donors').doc(decodedClaims.uid).get();
+      let doc = await admin.firestore().collection('donors').doc(uid).get();
       return doc.data();
     } catch (error) {
       throw new AuthError('user-does-not-exist', 'User does not exists');
     }
   } else if (decodedClaims.npo) {
     try {
-      let doc = await admin.firestore().collection('npos').doc(decodedClaims.uid).get();
+      let doc = await admin.firestore().collection('npos').doc(uid).get();
       return doc.data();
+    } catch (error) {
+      throw new AuthError('user-does-not-exist', 'User does not exists');
+    }
+  } else {
+    try {
+      let doc = await admin.firestore().collection('donors').doc(uid).get();
+      if (doc.exists) {
+        return doc.data();
+      } else {
+        let doc = await admin.firestore().collection('npos').doc(uid).get();
+        return doc.data();
+      }
     } catch (error) {
       throw new AuthError('user-does-not-exist', 'User does not exists');
     }

@@ -26,6 +26,7 @@ const RegisterDonor = () => {
   const [alertType, setAlertType] = useState('');
   const [alertDescription, setAlertDescription] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
 
   const handleBackToLandingOnClick = () => {
     dispatch(setIsBackToLanding());
@@ -69,9 +70,11 @@ const RegisterDonor = () => {
 
   const handleGoogleRegister = async () => {
     try {
+      setGoogleLoading(true);
       const [token, user, userDoc] = await api.auth.registerDonorWithGoogle();
       let response = await client.post('/api/sessionLogin', { token });
       if (response.status === 200) {
+        setGoogleLoading(false);
         router.push('/');
       } else {
         throw response.error;
@@ -128,7 +131,13 @@ const RegisterDonor = () => {
           </Heading>
         </Stack>
       </Text>
-      <SocialButton type="google" fullWidth={true} spaceAfter="normal" onClick={handleGoogleRegister}>
+      <SocialButton
+        type="google"
+        fullWidth={true}
+        spaceAfter="normal"
+        onClick={handleGoogleRegister}
+        loading={googleLoading}
+      >
         Sign in with Google
       </SocialButton>
       <Text align="center" spaceAfter="normal">
