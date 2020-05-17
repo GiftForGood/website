@@ -1,5 +1,4 @@
 import React from 'react';
-
 import SearchBar from './SearchBar';
 import styled from 'styled-components';
 import { wishesBannerImagePath, donationsBannerImagePath } from '../../../../utils/constants/imagePaths';

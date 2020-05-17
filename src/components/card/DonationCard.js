@@ -30,7 +30,7 @@ const CardHeaderContainer = styled.div`
   margin: 10px 10px 0 10px;
 `;
 
-const ThreeLineTextContainer = styled.div`
+const TwoLineTextContainer = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
@@ -73,7 +73,7 @@ const CardDescription = ({ ...props }) => {
       <Text size="normal" weight="bold">
         {title}
       </Text>
-      <ThreeLineTextContainer>{description}</ThreeLineTextContainer>
+      <TwoLineTextContainer>{description}</TwoLineTextContainer>
     </Stack>
   );
 };
@@ -97,32 +97,42 @@ const CardDescriptionFooter = ({ ...props }) => {
  * @param {string} coverImageUrl is the url to the cover image of the donation post
  * @param {string} postedDateTime is the time posted for donation in milliseconds
  * @param {string} postHref is the link url to direct users to after clicking the donation card
+ * @param {string} location is the location of the donation post
+ * @param {string} validPeriod is the validity period of the donation post
  */
 
 const DonationCard = ({ ...props }) => {
-  const timeAgo = getTimeDifferenceFromNow(props.postedDateTime);
+  const {
+    name,
+    title,
+    description,
+    profileImageUrl,
+    coverImageUrl,
+    postedDateTime,
+    postHref,
+    location,
+    validPeriod,
+  } = props;
+  const timeAgo = getTimeDifferenceFromNow(postedDateTime);
   const router = useRouter();
   const handleDonationPostOnClick = (event) => {
     event.preventDefault();
-    router.push(props.postHref);
+    router.push(postHref);
   };
   const { isDesktop } = useMediaQuery();
   return (
     <CardContainer isDesktop={isDesktop}>
       <Grid style={{ height: '100%' }} rows="1fr 3fr 2fr" cols="1fr">
         <CardHeaderContainer>
-          <CardHeader name={props.name} imageUrl={props.profileImageUrl} timeAgo={timeAgo} />
+          <CardHeader name={name} imageUrl={profileImageUrl} timeAgo={timeAgo} />
         </CardHeaderContainer>
-        <CardImage imageUrl={props.coverImageUrl || defaultPostImagePath} />
+        <CardImage imageUrl={coverImageUrl || defaultPostImagePath} />
         <CardDescriptionContainer>
-          <CardDescription title={props.title} description={props.description} />
-          <CardDescriptionFooter
-            validPeriod={props.validPeriod || '10/05/2020 - 10/05/2021'}
-            location={props.location}
-          />
+          <CardDescription title={title} description={description} />
+          <CardDescriptionFooter validPeriod={validPeriod || '10/05/2020 - 10/05/2021'} location={location} />
         </CardDescriptionContainer>
       </Grid>
-      <ClickableDiv href={props.postHref} onClick={handleDonationPostOnClick} />
+      <ClickableDiv href={postHref} onClick={handleDonationPostOnClick} />
     </CardContainer>
   );
 };

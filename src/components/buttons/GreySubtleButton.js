@@ -1,7 +1,8 @@
 import styled from 'styled-components';
+import { colors } from '../../../utils/constants/colors';
 
 const GreySubtleButton = styled.button`
-  border: 0.5px solid #707070;
+  border: 0.5px solid ${colors.subtleGrey};
   border-radius: 25px;
   font-size: 10px;
   font-weight: normal;
@@ -10,10 +11,10 @@ const GreySubtleButton = styled.button`
   transition: transform 0.2s;
 
   :hover {
-    border: 1.5px solid #707070;
+    border: 1.5px solid ${colors.subtleGrey};
     background: Transparent;
     transform: scale(1.05);
-    box-shadow: 0 1px 1px 1px lightgray;
+    box-shadow: 0px 0px 10px 0px rgba(37, 42, 49, 0.16), 0px 2px 8px 0px rgba(37, 42, 49, 0.12);
   }
 `;
 

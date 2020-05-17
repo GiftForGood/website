@@ -81,7 +81,7 @@ const TopDonations = ({ numberOfPosts, numberOfCategories }) => {
   const TopDonationCards = () => {
     const router = useRouter();
     return topCategoriesAndTheirDonations.map((categoryDonations) => {
-      const categoryHref = '/category/' + categoryDonations.id;
+      const categoryHref = `/category/${categoryDonations.id}`;
       const handleViewAllButton = (event) => {
         event.preventDefault();
         router.push(categoryHref);

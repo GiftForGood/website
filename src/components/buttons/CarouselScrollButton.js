@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { Button } from '@kiwicom/orbit-components/lib';
 import { ChevronRight, ChevronLeft } from '@kiwicom/orbit-components/lib/icons';
+import { colors } from '../../../utils/constants/colors';
 
 const CarouselButton = styled.div`
   border: 0.5px solid white;
@@ -12,12 +13,12 @@ const CarouselButton = styled.div`
   margin: 0.5vh auto;
 
   :hover {
-    border-color: 1px solid white;
+    border-color: 1px solid ${colors.subtleGrey};
     opacity: 90%;
   }
 
   :focus {
-    box-shadow: 0 0 0 3px #707070;
+    box-shadow: 0 0 0 3px ${colors.subtleGrey};
   }
 `;
 
@@ -40,6 +41,7 @@ const CarouselArrow = styled.div`
  */
 const CarouselScrollButton = ({ ...props }) => {
   const { size, direction, scrollableId } = props;
+  // current it scrolls based on the scrollable's client width
   const getScrollableWidth = () => document.getElementById(scrollableId).clientWidth;
   const handleScrollLeft = () => (document.getElementById(scrollableId).scrollLeft -= getScrollableWidth());
   const handleScrollRight = () => (document.getElementById(scrollableId).scrollLeft += getScrollableWidth());

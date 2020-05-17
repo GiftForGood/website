@@ -1,7 +1,8 @@
 import styled from 'styled-components';
+import { colors } from '../../../utils/constants/colors';
 
 const GreyText = styled.div`
-  color: #707070;
+  color: ${colors.subtleGrey};
   font-size: ${(props) => {
     if (props.size === 'extraTiny') {
       return '8px';

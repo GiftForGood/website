@@ -10,23 +10,38 @@ const CardHeaderContainer = styled.div`
   width: 100%;
 `;
 
+const RightAnchor = styled.div`
+  float: right;
+`;
+
+const LeftAnchor = styled.div`
+  float: left;
+`;
+
+const AvatarDetailsContainer = styled.div`
+  width: fit-content;
+  float: left;
+  margin: 0 auto;
+  margin-left: 5px;
+`;
+
 const TimePosted = ({ timeAgo }) => {
   return (
-    <div style={{ float: 'right' }}>
+    <RightAnchor>
       <BlackText size="small">{timeAgo}</BlackText>
-    </div>
+    </RightAnchor>
   );
 };
 
 const AvatarDetails = ({ ...props }) => {
   const { name, distance } = props;
   return (
-    <div style={{ width: 'fit-content', float: 'left', margin: '0 auto', marginLeft: '5px' }}>
+    <AvatarDetailsContainer>
       <Stack direction="column" spacing="extraTight">
         <BlackText size="small">{name}</BlackText>
         <BlackText size="small">{distance} away</BlackText>
       </Stack>
-    </div>
+    </AvatarDetailsContainer>
   );
 };
 
@@ -34,9 +49,9 @@ const CardHeader = ({ ...props }) => {
   const { imageUrl, name, distance, timeAgo } = props;
   return (
     <CardHeaderContainer>
-      <div style={{ float: 'left' }}>
+      <LeftAnchor>
         <Avatar imageUrl={imageUrl || defaultAvatarPath} />
-      </div>
+      </LeftAnchor>
       <AvatarDetails name={name} distance={distance || '2.5km'} />
       <TimePosted timeAgo={timeAgo} />
     </CardHeaderContainer>
