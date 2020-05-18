@@ -5,6 +5,12 @@ export function setNpoOrganizationDetails(organization) {
   };
 }
 
+export function clearNpoOrganizationDetails() {
+  return {
+    type: 'register/CLEAR_NPO_ORG_DETAILS',
+  };
+}
+
 export function setNpoDetails(name, contactNumber) {
   return {
     type: 'register/SET_NPO_REGISTER_DETAILS',

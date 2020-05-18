@@ -14,6 +14,12 @@ const registerReducer = (state = initialState, action) => {
         organization: action.organization,
       };
 
+    case 'register/CLEAR_NPO_ORG_DETAILS':
+      return {
+        ...state,
+        organization: null,
+      };
+
     case 'register/SET_NPO_REGISTER_DETAILS':
       return {
         ...state,

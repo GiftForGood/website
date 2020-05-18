@@ -16,11 +16,12 @@ import {
 } from '@kiwicom/orbit-components/lib';
 import ChevronLeft from '@kiwicom/orbit-components/lib/icons/ChevronLeft';
 
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
-import { setIsNpoDetails, setIsBackToLanding, setNpoOrganizationDetails } from '../actions';
+import { setIsNpoDetails, setIsBackToLanding, setNpoOrganizationDetails, clearNpoOrganizationDetails } from '../actions';
+import { getOrganization } from '../selectors'
 import { months } from '../../../../utils/constants/month';
 import styled from 'styled-components';
 import BlueButton from '../../button/BlueButton';
@@ -41,6 +42,7 @@ const RegisterNpoOrganization = () => {
   // TODO: Restore state when user comes back to this page
   const dispatch = useDispatch();
   const [organizations, setOrganizations] = useState([]);
+  const submittedForm = useSelector(getOrganization);
 
   useEffect(() => {
     getAllOrganizations();
@@ -48,6 +50,7 @@ const RegisterNpoOrganization = () => {
 
   const handleBackToLandingOnClick = () => {
     dispatch(setIsBackToLanding());
+    dispatch(clearNpoOrganizationDetails())
   };
 
   const handleFormSubmission = (values) => {
@@ -92,7 +95,7 @@ const RegisterNpoOrganization = () => {
   });
 
   const formik = useFormik({
-    initialValues: {
+    initialValues: submittedForm || {
       name: '',
       registeredUnder: '',
       registrationNumber: '',
@@ -102,6 +105,7 @@ const RegisterNpoOrganization = () => {
       proofImage: null,
       activities: '',
     },
+    enableReinitialize: true,
     validationSchema: validationSchema,
     onSubmit: (values) => {
       handleFormSubmission(values);
