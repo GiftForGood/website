@@ -8,6 +8,11 @@ const GlobalStyle = createGlobalStyle`
     margin: 0 auto;
     font-family: 'Trebuchet MS';
   }
+
+  .default-avatar {
+    width: 40px;
+    height: 40px;
+  }
 `;
 
 const tokens = getTokens();
