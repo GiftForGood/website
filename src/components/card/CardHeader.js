@@ -50,7 +50,7 @@ const CardHeader = ({ ...props }) => {
   return (
     <CardHeaderContainer>
       <LeftAnchor>
-        <Avatar imageUrl={imageUrl || defaultAvatarPath} />
+        <Avatar imageUrl={imageUrl} />
       </LeftAnchor>
       <AvatarDetails name={name} distance={distance || '2.5km'} />
       <TimePosted timeAgo={timeAgo} />

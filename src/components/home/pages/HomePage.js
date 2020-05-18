@@ -13,7 +13,7 @@ const HomePageContainer = styled.div`
 const ResponsiveTitle = styled.div`
   font-size: calc(14px + 0.5vw);
   font-weight: bold;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 `;
 
 const CategoriesContainer = styled.div`

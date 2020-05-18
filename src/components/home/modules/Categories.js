@@ -10,6 +10,7 @@ import Desktop from '@kiwicom/orbit-components/lib/Desktop';
 
 const CarouselContainer = styled.div`
   position: relative;
+  display: flex;
 `;
 
 // need the padding so that hovering each category will be able to zoom out
