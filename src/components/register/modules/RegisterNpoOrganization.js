@@ -12,7 +12,7 @@ import {
   Textarea,
   Text,
   Heading,
-  Alert
+  Alert,
 } from '@kiwicom/orbit-components/lib';
 import ChevronLeft from '@kiwicom/orbit-components/lib/icons/ChevronLeft';
 
@@ -20,13 +20,19 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
-import { setIsNpoDetails, setIsBackToLanding, setNpoOrganizationDetails, clearNpoOrganizationDetails } from '../actions';
-import { getOrganization } from '../selectors'
+import {
+  setIsNpoDetails,
+  setIsBackToLanding,
+  setNpoOrganizationDetails,
+  clearNpoOrganizationDetails,
+} from '../actions';
+import { getOrganization } from '../selectors';
 import { months } from '../../../../utils/constants/month';
 import styled from 'styled-components';
 import BlueButton from '../../button/BlueButton';
 import { colors } from '../../../../utils/constants/colors';
 import api from '../../../../utils/api';
+import moment from 'moment';
 
 const HeadingColor = styled.div`
   color: ${colors.npoBackground};
@@ -39,7 +45,6 @@ const NextButtonContainer = styled.div`
 `;
 
 const RegisterNpoOrganization = () => {
-  // TODO: Restore state when user comes back to this page
   const dispatch = useDispatch();
   const [organizations, setOrganizations] = useState([]);
   const submittedForm = useSelector(getOrganization);
@@ -50,7 +55,7 @@ const RegisterNpoOrganization = () => {
 
   const handleBackToLandingOnClick = () => {
     dispatch(setIsBackToLanding());
-    dispatch(clearNpoOrganizationDetails())
+    dispatch(clearNpoOrganizationDetails());
   };
 
   const handleFormSubmission = (values) => {
@@ -92,6 +97,20 @@ const RegisterNpoOrganization = () => {
       .min(1, 'Please fill in something about your organization')
       .max(2000, 'You have reached the limit of 2000 characters')
       .required('Required'),
+    customDateValidation: Yup.boolean().test('Date Checker', 'Invalid Date', function (val) {
+      const { dateOfRegistrationDay, dateOfRegistrationMonth, dateOfRegistrationYear } = this.parent;
+      if (
+        dateOfRegistrationDay === undefined ||
+        dateOfRegistrationMonth === undefined ||
+        dateOfRegistrationYear === undefined
+      ) {
+        return true;
+      }
+      let combineDate = dateOfRegistrationDay  + '-' + dateOfRegistrationMonth + '-' + dateOfRegistrationYear;
+      var date = moment(combineDate, 'D-MM-YYYY', true);
+      let valid = date.isValid();
+      return valid;
+    }),
   });
 
   const formik = useFormik({
@@ -120,7 +139,7 @@ const RegisterNpoOrganization = () => {
         onClick={handleBackToLandingOnClick}
         spaceAfter="normal"
       />
-      
+
       <Text align="center" as="div" spaceAfter="largest">
         <Stack direction="column" align="center" justify="center" desktop={{ direction: 'row' }}>
           <Heading size="normal" weight="bold">
@@ -131,7 +150,11 @@ const RegisterNpoOrganization = () => {
           </Heading>
         </Stack>
       </Text>
-      <Alert icon title="Applying for a NPO account will subject to administrators approval. This approval can take up to 3 to 5 working days." spaceAfter="normal"/>
+      <Alert
+        icon
+        title="Applying for a NPO account will subject to administrators approval. This approval can take up to 3 to 5 working days."
+        spaceAfter="normal"
+      />
       <form onSubmit={formik.handleSubmit}>
         <Stack spacing="loose">
           <Select
@@ -186,7 +209,8 @@ const RegisterNpoOrganization = () => {
               formik.touched.dateOfRegistrationYear
                 ? formik.errors.dateOfRegistrationDay ||
                   formik.errors.dateOfRegistrationMonth ||
-                  formik.errors.dateOfRegistrationYear
+                  formik.errors.dateOfRegistrationYear || 
+                  formik.errors.customDateValidation
                 : ''
             }
             required
