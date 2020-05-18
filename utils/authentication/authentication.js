@@ -1,7 +1,11 @@
 import client from '../axios';
 import cookie from 'cookie';
 
-// called in getServerSideProps
+/**
+ * Checks if a user is authenticated or not.
+ *  req: The request from getServerSideProps
+ *  res: The response from getServerSideProps
+ */
 export async function isAuthenticated(req, res) {
   try {
     const response = await client.get('/api/silentLogin', {
@@ -15,6 +19,11 @@ export async function isAuthenticated(req, res) {
   }
 }
 
+/**
+ * Checks if a user is authenticated or not. If not, route them back to login page.
+ *  req: The request from getServerSideProps
+ *  res: The response from getServerSideProps
+ */
 export async function isAuthenticatedFailureRouteBackToLogin(req, res) {
   try {
     const response = await client.get('/api/silentLogin', {
