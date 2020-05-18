@@ -45,14 +45,14 @@ const TopWishes = ({ numberOfPosts, numberOfCategories }) => {
   const [topCategoriesAndTheirWishes, setTopCategoriesAndTheirWishes] = useState([]);
 
   useEffect(() => {
-    if (process.env.NODE_ENV === 'development') {
-      setTopCategoriesAndTheirWishes(dummyTopCategoriesAndTheirWishes);
-    } else {
-      getTopCategoriesAndTheirWishes(numberOfPosts, numberOfCategories);
-    }
+    // if (process.env.NODE_ENV === 'development') {
+    setTopCategoriesAndTheirWishes(dummyTopCategoriesAndTheirWishes);
+    // } else {
+    //   getTopCategoriesAndTheirWishes(numberOfPosts, numberOfCategories);
+    // }
   }, []);
 
-  const getTopCategoriesAndTheirWishes = (numberOfCategories, numberOfPosts) => {
+  const getTopCategoriesAndTheirWishes = (numberOfPosts, numberOfCategories) => {
     api.categories
       .getAll()
       .then((response) => {

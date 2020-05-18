@@ -43,6 +43,8 @@
     ]
   },
   "devDependencies": {
+    "@kiwicom/babel-plugin-orbit-components": "^1.6.0",
+    "babel-plugin-styled-components": "^1.10.7",
     "prettier": "2.0.5"
   }
 }

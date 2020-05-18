@@ -6,7 +6,7 @@ import { dummyCategories } from '../../../../utils/dummyData/categories';
 import SquareImageBox from '../../imageContainers/SquareImageBox';
 import styled from 'styled-components';
 import CarouselScrollButton from '../../buttons/CarouselScrollButton';
-import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
+import Desktop from '@kiwicom/orbit-components/lib/Desktop';
 
 const CarouselContainer = styled.div`
   position: relative;
@@ -14,7 +14,7 @@ const CarouselContainer = styled.div`
 
 // need the padding so that hovering each category will be able to zoom out
 const ScrollableRow = styled.div`
-  width: fit-content;
+  width: 90vw;
   max-width: 1280px;
   overflow-x: scroll;
   scroll-behavior: smooth;
@@ -22,14 +22,13 @@ const ScrollableRow = styled.div`
 
 const Categories = () => {
   const [categories, setCategories] = useState([]);
-  const { isDesktop } = useMediaQuery();
   useEffect(() => {
-    if (process.env.NODE_ENV === 'development') {
-      // use dummy data so that we don't incur a lot of reads while in development
-      setCategories(dummyCategories);
-    } else {
-      getAllCategories();
-    }
+    // if (process.env.NODE_ENV === 'development') {
+    // use dummy data so that we don't incur a lot of reads while in development
+    setCategories(dummyCategories);
+    // } else {
+    //   getAllCategories();
+    // }
   }, []);
 
   const getAllCategories = () => {
@@ -65,11 +64,15 @@ const Categories = () => {
 
   return (
     <CarouselContainer>
-      {isDesktop && <CarouselScrollButton size="small" direction="left" scrollableId="scrollableCategory" />}
+      <Desktop>
+        <CarouselScrollButton size="small" direction="left" scrollableId="scrollableCategory" />
+      </Desktop>
       <ScrollableRow id="scrollableCategory">
         <RowOfCategories />
       </ScrollableRow>
-      {isDesktop && <CarouselScrollButton size="small" direction="right" scrollableId="scrollableCategory" />}
+      <Desktop>
+        <CarouselScrollButton size="small" direction="right" scrollableId="scrollableCategory" />
+      </Desktop>
     </CarouselContainer>
   );
 };

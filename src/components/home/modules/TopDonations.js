@@ -8,7 +8,7 @@ import GreySubtleButton from '../../buttons/GreySubtleButton';
 import DonationCard from '../../card/DonationCard';
 import { dummyTopCategoriesAndTheirDonations } from '../../../../utils/dummyData/topCategoriesAndTheirDonations';
 import CarouselScrollButton from '../../buttons/CarouselScrollButton';
-import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
+import Desktop from '@kiwicom/orbit-components/lib/Desktop';
 
 const CategoryHeader = styled.div`
   align-items: center;
@@ -34,6 +34,7 @@ const DonationsRow = styled.div`
 
 const CarouselContainer = styled.div`
   position: relative;
+  display: flex;
 `;
 
 const TopDonationCardsContainer = styled.div`
@@ -44,11 +45,11 @@ const TopDonations = ({ numberOfPosts, numberOfCategories }) => {
   const [topCategoriesAndTheirDonations, setTopCategoriesAndTheirDonations] = useState([]);
 
   useEffect(() => {
-    if (process.env.NODE_ENV === 'development') {
-      setTopCategoriesAndTheirDonations(dummyTopCategoriesAndTheirDonations);
-    } else {
-      getTopCategoriesAndTheirDonations(numberOfPosts, numberOfCategories);
-    }
+    // if (process.env.NODE_ENV === 'development') {
+    setTopCategoriesAndTheirDonations(dummyTopCategoriesAndTheirDonations);
+    // } else {
+    //   getTopCategoriesAndTheirDonations(numberOfPosts, numberOfCategories);
+    // }
   }, []);
 
   // async function getTopCategoriesAndTheirDonations(numberOfCategories, numberOfPosts) {
@@ -115,7 +116,6 @@ const TopDonations = ({ numberOfPosts, numberOfCategories }) => {
 
   const TopDonationCards = () => {
     const router = useRouter();
-    const { isDesktop } = useMediaQuery();
     return topCategoriesAndTheirDonations.map((categoryDonations) => {
       const categoryHref = `/category/${categoryDonations.id}`;
       const handleViewAllButton = (event) => {
@@ -137,13 +137,16 @@ const TopDonations = ({ numberOfPosts, numberOfCategories }) => {
             </RightAnchor>
           </CategoryHeader>
           <CarouselContainer>
-            {isDesktop && <CarouselScrollButton direction="left" size="normal" scrollableId={categoryDonations.id} />}
+            <Desktop>
+              <CarouselScrollButton direction="left" size="normal" scrollableId={categoryDonations.id} />
+            </Desktop>
             <DonationsRow id={categoryDonations.id}>
               <Stack direction="row" align="start" spacing="extraLoose">
                 {categoryDonations.donations.map((donation) => {
                   const donationPostHref = `/donations/${donation.donationId}`;
                   return (
                     <DonationCard
+                      key={donation.donationId}
                       name={donation.user.userName}
                       title={donation.title}
                       description={donation.description}
@@ -157,7 +160,9 @@ const TopDonations = ({ numberOfPosts, numberOfCategories }) => {
                 })}
               </Stack>
             </DonationsRow>
-            {isDesktop && <CarouselScrollButton direction="right" size="normal" scrollableId={categoryDonations.id} />}
+            <Desktop>
+              <CarouselScrollButton direction="right" size="normal" scrollableId={categoryDonations.id} />
+            </Desktop>
           </CarouselContainer>
         </TopDonationCardsContainer>
       );

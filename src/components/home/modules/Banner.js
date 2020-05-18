@@ -1,13 +1,13 @@
 import React from 'react';
 import SearchBar from './SearchBar';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { wishesBannerImagePath, donationsBannerImagePath } from '../../../../utils/constants/imagePaths';
-import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
+import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 
 const TitleArea = styled.div`
   position: absolute;
   color: white;
-  top: 35%;
+  top: 40%;
   left: 50%;
   width: 50%;
   max-width: 1920px;
@@ -43,10 +43,14 @@ const BannerImageContainer = styled.div`
 
 const SearchBarContainer = styled.div`
   position: absolute;
-  top: ${(props) => (props.isDesktop ? '60%' : '70%')};
+  top: 70%;
+  width: 70%;
+  ${media.desktop(css`
+    top: 65%;
+    width: 50%;
+  `)};
   left: 50%;
-  width: ${(props) => (props.isDesktop ? '50%' : '70%')};
-  max-width: 1920px;
+  max-width: 960px;
   min-width: 15rem;
   transform: translate(-50%, -50%);
 `;
@@ -70,12 +74,11 @@ const BannerText = ({ ...props }) => {
  * @param {string} type can be donation or wish type
  */
 const Banner = ({ type }) => {
-  const { isDesktop } = useMediaQuery();
   return (
     <BannerImageContainer src={type === 'donation' ? donationsBannerImagePath : wishesBannerImagePath}>
       <BannerContentContainer>
         <BannerText title={type === 'donation' ? donationsHomePageTitle : wishesHomePageTitle} subTitle={subTitle} />
-        <SearchBarContainer isDesktop={isDesktop}>
+        <SearchBarContainer>
           <SearchBar />
         </SearchBarContainer>
       </BannerContentContainer>
