@@ -7,9 +7,13 @@ import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 const TitleArea = styled.div`
   position: absolute;
   color: white;
-  top: 40%;
   left: 50%;
-  width: 50%;
+  top: 35%;
+  width: 70%;
+  ${media.desktop(css`
+    top: 40%;
+    width: 50%;
+  `)};
   transform: translate(-50%, -50%);
 `;
 

@@ -4,8 +4,8 @@ import { ChevronRight, ChevronLeft } from '@kiwicom/orbit-components/lib/icons';
 import { colors } from '../../../utils/constants/colors';
 
 const CarouselButton = styled.div`
-  border: 0.5px solid white;
-  background: white;
+  border: 0.5px solid Gainsboro;
+  background: Gainsboro;
   opacity: 60%;
 
   :hover {

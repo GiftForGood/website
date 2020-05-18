@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { Stack } from '@kiwicom/orbit-components/lib';
 import api from '../../../../utils/api/index';
-import { dummyCategories } from '../../../../utils/dummyData/categories';
 import SquareImageBox from '../../imageContainers/SquareImageBox';
 import styled from 'styled-components';
 import CarouselScrollButton from '../../buttons/CarouselScrollButton';
@@ -24,23 +23,16 @@ const ScrollableRow = styled.div`
 const Categories = () => {
   const [categories, setCategories] = useState([]);
   useEffect(() => {
-    // if (process.env.NODE_ENV === 'development') {
-    // use dummy data so that we don't incur a lot of reads while in development
-    setCategories(dummyCategories);
-    // } else {
-    //   getAllCategories();
-    // }
+    getAllCategories().then((categories) => setCategories(categories));
   }, []);
 
-  const getAllCategories = () => {
-    api.categories
-      .getAll()
-      .then((response) => {
-        const data = [];
-        response.docs.forEach((doc) => data.push(doc.data()));
-        setCategories(data);
-      })
-      .catch((err) => console.error(err));
+  const getAllCategories = async () => {
+    try {
+      const rawCategories = await api.categories.getAll();
+      return rawCategories.docs.map((doc) => doc.data());
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const RowOfCategories = () => {

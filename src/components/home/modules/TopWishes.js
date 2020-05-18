@@ -2,12 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { Stack, Button, Text } from '@kiwicom/orbit-components/lib';
 import api from '../../../../utils/api/index';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import BlackText from '../../text/BlackText';
 import HomePageWishCard from '../../card/HomePageWishCard';
 import GreySubtleButton from '../../buttons/GreySubtleButton';
 import Desktop from '@kiwicom/orbit-components/lib/Desktop';
 import Mobile from '@kiwicom/orbit-components/lib/Mobile';
+import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import { dummyTopCategoriesAndTheirWishes } from '../../../../utils/dummyData/topCategoriesAndTheirWishes';
 
 const WishesColumn = styled.div`
@@ -22,6 +23,14 @@ const WishesColumn = styled.div`
 const CategoryHeaderContainer = styled.div`
   height: fit-content;
   margin: 10px;
+`;
+
+const ViewAllButtonContainer = styled.div`
+  margin: 0.5vh auto;
+  margin-bottom: 15px;
+  ${media.desktop(css`
+    margin-bottom: 25px;
+  `)};
 `;
 
 const CategoryHeader = ({ title }) => {
@@ -45,55 +54,63 @@ const TopWishes = ({ numberOfPosts, numberOfCategories }) => {
   const [topCategoriesAndTheirWishes, setTopCategoriesAndTheirWishes] = useState([]);
 
   useEffect(() => {
-    // if (process.env.NODE_ENV === 'development') {
-    setTopCategoriesAndTheirWishes(dummyTopCategoriesAndTheirWishes);
-    // } else {
-    //   getTopCategoriesAndTheirWishes(numberOfPosts, numberOfCategories);
-    // }
+    if (process.env.NODE_ENV === 'development') {
+      setTopCategoriesAndTheirWishes(dummyTopCategoriesAndTheirWishes);
+    } else {
+      getTopCategoriesAndTheirWishes(numberOfPosts, numberOfCategories).then((result) =>
+        setTopCategoriesAndTheirWishes(result)
+      );
+    }
   }, []);
 
-  const getTopCategoriesAndTheirWishes = (numberOfPosts, numberOfCategories) => {
-    api.categories
-      .getAll()
-      .then((response) => {
-        // get top {@numberOfCategories} categories
-        const categories = [];
-        response.docs.slice(0, numberOfCategories).forEach((doc) => categories.push(doc.data()));
-        return categories;
-      })
-      .then((categories) => {
-        // get {@numberOfPosts} wishes for each top categories
-        getWishesForTopCategories(categories, numberOfPosts).then((topCategoriesAndTheirWishes) =>
-          setTopCategoriesAndTheirWishes(topCategoriesAndTheirWishes)
-        );
-      })
-      .catch((err) => console.error(err));
+  const getTopCategoriesAndTheirWishes = async (numberOfPosts, numberOfCategories) => {
+    const topCategories = await getTopCategories(numberOfCategories);
+    const topWishes = await getTopWishesForCategories(topCategories, numberOfPosts);
+    return mergeCategoriesAndWishes(topCategories, topWishes);
   };
 
-  async function getWishesForTopCategories(categories, numberOfPosts) {
-    let topCategoriesAndTheirWishes = [];
-    for (let i = 0; i < categories.length; i++) {
-      const response = await api.wishes.getTopNPendingWishes(categories[i].id, numberOfPosts);
-      const category = categories[i];
-      category.wishes = [];
-      response.docs.forEach((doc) => category.wishes.push(doc.data()));
-      topCategoriesAndTheirWishes = [...topCategoriesAndTheirWishes, category];
+  const getTopCategories = async (numberOfCategories) => {
+    try {
+      const rawCategories = await api.categories.getAll();
+      return rawCategories.docs.slice(0, numberOfCategories).map((doc) => doc.data());
+    } catch (err) {
+      console.error(err);
     }
-    return topCategoriesAndTheirWishes;
-  }
+  };
+
+  const getTopWishesForCategories = async (categories, numberOfPosts) => {
+    try {
+      let wishes = [];
+      for (let i = 0; i < categories.length; i++) {
+        const rawWishes = await api.wishes.getTopNPendingWishes(categories[i].id, numberOfPosts);
+        wishes = [...wishes, rawWishes.docs.map((doc) => doc.data())];
+      }
+      return wishes;
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const mergeCategoriesAndWishes = (categories, wishes) => {
+    const merged = [];
+    categories.forEach((category, i) => {
+      merged.push({ category: category, wishes: wishes[i] });
+    });
+    return merged;
+  };
 
   const TopWishCards = () => {
     const router = useRouter();
-    return topCategoriesAndTheirWishes.map((categoryWishes) => {
-      const categoryHref = `/category/${categoryWishes.id}`;
+    return topCategoriesAndTheirWishes.map((obj) => {
+      const categoryHref = `/category/${obj.id}`;
       const handleViewAllButton = (event) => {
         event.preventDefault();
         router.push(categoryHref);
       };
       return (
-        <WishesColumn key={categoryWishes.id}>
-          <CategoryHeader title={categoryWishes.name}></CategoryHeader>
-          {categoryWishes.wishes.map((wish) => {
+        <WishesColumn key={obj.id}>
+          <CategoryHeader title={obj.name}></CategoryHeader>
+          {obj.wishes.map((wish) => {
             const wishPostHref = `/wishes/${wish.wishesId}`;
             return (
               <HomePageWishCard
@@ -107,11 +124,11 @@ const TopWishes = ({ numberOfPosts, numberOfCategories }) => {
               />
             );
           })}
-          <div style={{ margin: '0.5vh auto', marginBottom: '15px' }}>
-            <Button size="small" asComponent={GreySubtleButton} onClick={handleViewAllButton}>
+          <ViewAllButtonContainer>
+            <Button className="hello" size="small" asComponent={GreySubtleButton} onClick={handleViewAllButton}>
               <BlackText size="small">View all</BlackText>
             </Button>
-          </div>
+          </ViewAllButtonContainer>
         </WishesColumn>
       );
     });

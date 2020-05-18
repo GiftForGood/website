@@ -10,10 +10,8 @@ const GreySubtleButton = styled.button`
   transition: transform 0.2s;
 
   :hover {
-    border: 1.5px solid ${colors.subtleGrey};
     background: Transparent;
-    transform: scale(1.05);
-    box-shadow: 0px 0px 10px 0px rgba(37, 42, 49, 0.16), 0px 2px 8px 0px rgba(37, 42, 49, 0.12);
+    box-shadow: 0px 0px 5px 0px rgba(37, 42, 49, 0.16), 0px 2px 8px 0px rgba(37, 42, 49, 0.12);
   }
 `;
 

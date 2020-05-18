@@ -45,74 +45,50 @@ const TopDonations = ({ numberOfPosts, numberOfCategories }) => {
   const [topCategoriesAndTheirDonations, setTopCategoriesAndTheirDonations] = useState([]);
 
   useEffect(() => {
-    // if (process.env.NODE_ENV === 'development') {
-    setTopCategoriesAndTheirDonations(dummyTopCategoriesAndTheirDonations);
-    // } else {
-    //   getTopCategoriesAndTheirDonations(numberOfPosts, numberOfCategories);
-    // }
+    if (process.env.NODE_ENV === 'development') {
+      setTopCategoriesAndTheirDonations(dummyTopCategoriesAndTheirDonations);
+    } else {
+      getTopCategoriesAndTheirDonations(numberOfPosts, numberOfCategories).then((result) =>
+        setTopCategoriesAndTheirDonations(result)
+      );
+    }
   }, []);
 
-  // async function getTopCategoriesAndTheirDonations(numberOfCategories, numberOfPosts) {
-  //   const topNCategories = await getTopNCategories(numberOfCategories);
-  //   const donationsForTopCategories = await getDonationsForTopCategories(topNCategories, numberOfPosts);
-  //   return combineCategoriesWithTheirDonations(topNCategories, donationsForTopCategories);
-  // };
-
-  // async function getTopNCategories(numberOfCategories) {
-  //   const rawCategories = await api.categories.getAll();
-  //   return rawCategories.docs.slice(0, numberOfCategories).map((doc) => doc.data());
-  // }
-
-  // async function getDonationsForTopCategories(categories, numberOfPosts) {
-  //   let donationsForTopCategories = [];
-  //   for (let i = 0; i < categories.length; i++) {
-  //     const rawDonations = await api.donations.getTopNPendingDonations(categories[i].id, numberOfPosts);
-  //     const donations = rawDonations.docs.map((doc) => doc.data());
-  //     donationsForTopCategories = [...donationsForTopCategories, donations];
-  //   }
-  //   return donationsForTopCategories;
-  // }
-
-  // const combineCategoriesWithTheirDonations = (categories, donations) => {
-  //   const combined = [];
-  //   categories.forEach((category, i) => {
-  //     const categoryAndDonations = {};
-  //     categoryAndDonations.category = category;
-  //     categoryAndDonations.donations = donations[i];
-  //     combined.push(categoryAndDonations);
-  //   });
-  //   return combined;
-  // }
-
-  const getTopCategoriesAndTheirDonations = (numberOfCategories, numberOfPosts) => {
-    api.categories
-      .getAll()
-      .then((response) => {
-        // get top {@numberOfCategories} categories
-        const categories = [];
-        response.docs.slice(0, numberOfCategories).forEach((doc) => categories.push(doc.data()));
-        return categories;
-      })
-      .then((categories) => {
-        // get {@numberOfPosts} donations for each top categories
-        getDonationsForTopCategories(categories, numberOfPosts).then((topCategoriesAndTheirWishes) =>
-          setTopCategoriesAndTheirDonations(topCategoriesAndTheirWishes)
-        );
-      })
-      .catch((err) => console.error(err));
+  const getTopCategoriesAndTheirDonations = async (numberOfPosts, numberOfCategories) => {
+    const topNCategories = await getTopNCategories(numberOfCategories);
+    const donationsForTopCategories = await getDonationsForTopCategories(topNCategories, numberOfPosts);
+    return mergeCategoriesAndDonations(topNCategories, donationsForTopCategories);
   };
 
-  async function getDonationsForTopCategories(categories, numberOfPosts) {
-    let topCategoriesAndTheirDonations = [];
-    for (let i = 0; i < categories.length; i++) {
-      const response = await api.donations.getTopNPendingDonations(categories[i].id, numberOfPosts);
-      const category = categories[i];
-      category.donations = [];
-      response.docs.forEach((doc) => category.wishes.push(doc.data()));
-      topCategoriesAndTheirDonations = [...topCategoriesAndTheirDonations, category];
+  const getTopNCategories = async (numberOfCategories) => {
+    try {
+      const rawCategories = await api.categories.getAll();
+      return rawCategories.docs.slice(0, numberOfCategories).map((doc) => doc.data());
+    } catch (err) {
+      console.error(err);
     }
-    return topCategoriesAndTheirDonations;
-  }
+  };
+
+  const getDonationsForTopCategories = async (categories, numberOfPosts) => {
+    try {
+      let donationsForTopCategories = [];
+      for (let i = 0; i < categories.length; i++) {
+        const rawDonations = await api.donations.getTopNPendingDonations(categories[i].id, numberOfPosts);
+        donationsForTopCategories = [...donationsForTopCategories, rawDonations.docs.map((doc) => doc.data())];
+      }
+      return donationsForTopCategories;
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const mergeCategoriesAndDonations = (categories, donations) => {
+    const merged = [];
+    categories.forEach((category, i) => {
+      merged.push({ category: category, donations: donations[i] });
+    });
+    return merged;
+  };
 
   const TopDonationCards = () => {
     const router = useRouter();
@@ -140,7 +116,7 @@ const TopDonations = ({ numberOfPosts, numberOfCategories }) => {
             <Desktop>
               <CarouselScrollButton direction="left" size="normal" scrollableId={categoryDonations.id} />
             </Desktop>
-            <DonationsRow id={categoryDonations.id}>
+            <DonationsRow id={categoryDonations.id} className="scrollableDonation">
               <Stack direction="row" align="start" spacing="extraLoose">
                 {categoryDonations.donations.map((donation) => {
                   const donationPostHref = `/donations/${donation.donationId}`;

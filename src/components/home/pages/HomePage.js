@@ -13,7 +13,7 @@ const HomePageContainer = styled.div`
 const ResponsiveTitle = styled.div`
   font-size: calc(14px + 0.5vw);
   font-weight: bold;
-  margin-bottom: 20px;
+  margin-bottom: ${(props) => (props.type === 'donation' ? '20px' : '27.5px')};
 `;
 
 const CategoriesContainer = styled.div`
@@ -38,12 +38,11 @@ const TopDonationsContainer = styled.div`
 `;
 
 const TopWishesContainer = styled.div`
-  text-align: center;
   width: 90vw;
   max-width: 1280px;
   margin: 0 auto;
   margin-top: 10px;
-  margin-bottom: 30px;
+  margin-bottom: 40px;
 `;
 
 const numberOfPostsPerCategory = 3;
@@ -54,7 +53,7 @@ const topCategoriesTitle = 'Top Categories';
 const HomePage = ({ ...props }) => {
   // TODO: default to wishes home page for now, will modify when the data for logged in user is ready
   let { pageType } = props;
-  pageType = pageType || 'wishes';
+  pageType = pageType || 'donation';
   return (
     <HomePageContainer>
       <Grid
@@ -74,12 +73,12 @@ const HomePage = ({ ...props }) => {
         </CategoriesContainer>
         {pageType === 'donation' ? (
           <TopDonationsContainer>
-            <ResponsiveTitle>{topCategoriesTitle}</ResponsiveTitle>
+            <ResponsiveTitle type={pageType}>{topCategoriesTitle}</ResponsiveTitle>
             <TopDonations numberOfPosts={numberOfPostsPerCategory} numberOfCategories={numberOfCategories} />
           </TopDonationsContainer>
         ) : (
           <TopWishesContainer>
-            <ResponsiveTitle>{topCategoriesTitle}</ResponsiveTitle>
+            <ResponsiveTitle type={pageType}>{topCategoriesTitle}</ResponsiveTitle>
             <TopWishes numberOfPosts={numberOfPostsPerCategory} numberOfCategories={numberOfCategories} />
           </TopWishesContainer>
         )}

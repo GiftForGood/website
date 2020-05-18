@@ -13,6 +13,10 @@ const GlobalStyle = createGlobalStyle`
     width: 40px;
     height: 40px;
   }
+
+  #scrollableCategory::-webkit-scrollbar, .scrollableDonation::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 const tokens = getTokens();
