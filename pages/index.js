@@ -1,7 +1,7 @@
 import React from 'react';
 import SessionProvider from '../src/components/session/modules/SessionProvider';
 import useUser from '../src/components/session/modules/useUser';
-import { isAuthenticated } from '../utils/authentication';
+import { isAuthenticated } from '../utils/authentication/authentication';
 import { withRedux } from '../utils/withRedux';
 import Verified from '../src/components/session/modules/Verified';
 
