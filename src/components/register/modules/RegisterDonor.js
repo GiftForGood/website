@@ -13,6 +13,7 @@ import RedButton from '../../button/RedButton';
 import api from '../../../../utils/api';
 import { useRouter } from 'next/router';
 import client from '../../../../utils/axios';
+import Field from '../../inputfield';
 
 const HeadingColor = styled.div`
   color: ${colors.donorBackground};
@@ -156,7 +157,7 @@ const RegisterDonor = () => {
             {...formik.getFieldProps('email')}
           />
 
-          <InputField
+          <Field
             disabled={formik.isSubmitting}
             type="password"
             label="Create a password"

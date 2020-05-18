@@ -14,6 +14,7 @@ import TermsAndConditionModal from './TermsAndConditionModal';
 import api from '../../../../utils/api';
 import client from '../../../../utils/axios';
 import { useRouter } from 'next/router';
+import Field from '../../inputfield';
 
 const RegisterNpoDetails = () => {
   const dispatch = useDispatch();
@@ -180,7 +181,7 @@ const RegisterNpoDetails = () => {
             {...formik.getFieldProps('email')}
           />
 
-          <InputField
+          <Field
             disabled={formik.isSubmitting}
             type="password"
             label="Create a password"
