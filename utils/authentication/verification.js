@@ -3,8 +3,8 @@
  *  user: A user from isAuthenticated
  *  res: The response from getServerSideProps
  *  destination: An object containing "Location" [Optional]
- * 
- * Eg: 
+ *
+ * Eg:
  *   let isVerifiedUser = isVerified(user, res, { Location: '/register'});
  *   let isVerifiedUser = isVerified(user, res);
  */
