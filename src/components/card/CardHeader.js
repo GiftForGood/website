@@ -2,7 +2,6 @@ import styled from 'styled-components';
 import BlackText from '../text/BlackText';
 import Avatar from '../imageContainers/Avatar';
 import { Stack } from '@kiwicom/orbit-components/lib';
-import { defaultAvatarPath } from '../../../utils/constants/imagePaths';
 
 const CardHeaderContainer = styled.div`
   display: flex;
@@ -10,27 +9,24 @@ const CardHeaderContainer = styled.div`
   width: 100%;
 `;
 
-const RightAnchor = styled.div`
+const TimePostedContainer = styled.div`
   float: right;
 `;
 
-const LeftAnchor = styled.div`
+const AvatarContainer = styled.div`
   float: left;
+  display: flex;
 `;
 
 const AvatarDetailsContainer = styled.div`
   width: fit-content;
   float: left;
-  margin: 0 auto;
   margin-left: 5px;
+  margin-right: auto;
 `;
 
 const TimePosted = ({ timeAgo }) => {
-  return (
-    <RightAnchor>
-      <BlackText size="small">{timeAgo}</BlackText>
-    </RightAnchor>
-  );
+  return <BlackText size="small">{timeAgo}</BlackText>;
 };
 
 const AvatarDetails = ({ ...props }) => {
@@ -49,11 +45,13 @@ const CardHeader = ({ ...props }) => {
   const { imageUrl, name, distance, timeAgo } = props;
   return (
     <CardHeaderContainer>
-      <LeftAnchor>
+      <AvatarContainer>
         <Avatar imageUrl={imageUrl} />
-      </LeftAnchor>
+      </AvatarContainer>
       <AvatarDetails name={name} distance={distance || '2.5km'} />
-      <TimePosted timeAgo={timeAgo} />
+      <TimePostedContainer>
+        <TimePosted timeAgo={timeAgo} />
+      </TimePostedContainer>
     </CardHeaderContainer>
   );
 };

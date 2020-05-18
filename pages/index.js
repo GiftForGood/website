@@ -4,7 +4,7 @@ import HomePage from '../src/components/home/pages/HomePage';
 const Home = () => {
   return (
     <>
-      <HomePage pageType="donation" />
+      <HomePage />
     </>
   );
 };

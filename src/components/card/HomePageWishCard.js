@@ -23,7 +23,6 @@ const TwoLineTextContainer = styled.div`
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   text-align: start;
-  color: black;
 `;
 
 const CardContentContainer = styled.div`

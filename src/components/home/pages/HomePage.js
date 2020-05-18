@@ -53,7 +53,8 @@ const topCategoriesTitle = 'Top Categories';
 
 const HomePage = ({ ...props }) => {
   // TODO: default to wishes home page for now, will modify when the data for logged in user is ready
-  const { pageType } = props;
+  let { pageType } = props;
+  pageType = pageType || 'wishes';
   return (
     <HomePageContainer>
       <Grid
@@ -66,7 +67,7 @@ const HomePage = ({ ...props }) => {
           rowGap: '30px',
         }}
       >
-        <Banner type={pageType || 'wishes'} />
+        <Banner type={pageType} />
         <CategoriesContainer>
           <ResponsiveTitle>{categoriesTitle}</ResponsiveTitle>
           <Categories />

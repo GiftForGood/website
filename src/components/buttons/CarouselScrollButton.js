@@ -5,12 +5,8 @@ import { colors } from '../../../utils/constants/colors';
 
 const CarouselButton = styled.div`
   border: 0.5px solid white;
-  border-radius: 25px;
-  font-size: 10px;
   background: white;
   opacity: 60%;
-  text-align: center;
-  margin: 0.5vh auto;
 
   :hover {
     border-color: 1px solid ${colors.subtleGrey};
@@ -27,8 +23,6 @@ const CarouselArrow = styled.div`
   position: absolute;
   top: 50%;
   z-index: 10;
-  width: fit-content;
-  height: fit-content;
   transform: translate(0, -50%);
   background-color: 'grey';
 `;

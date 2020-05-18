@@ -2,10 +2,10 @@ import CardHeader from '../card/CardHeader';
 import { Stack, Text, Grid } from '@kiwicom/orbit-components/lib';
 import { getTimeDifferenceFromNow } from '../../../utils/api/time';
 import GreyText from '../text/GreyText';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { defaultPostImagePath } from '../../../utils/constants/imagePaths';
 import { useRouter } from 'next/router';
-import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
+import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 
 const CardContainer = styled.div`
   display: flex;
@@ -17,17 +17,18 @@ const CardContainer = styled.div`
   height: 400px;
   min-width: 300px;
   min-height: 400px;
-  ${(props) => {
-    if (props.isDesktop === true) {
-      return 'width: 350px; height: 450px; min-width: 350px; min-height: 450px;';
-    }
-  }}
+  ${media.desktop(css`
+    width: 350px;
+    height: 450px;
+    min-width: 350px;
+    min-height: 450px;
+  `)}
   position: relative;
-  scroll-snap-align: center;
 `;
 
 const CardHeaderContainer = styled.div`
-  margin: 10px 10px 0 10px;
+  padding: 10px;
+  display: flex;
 `;
 
 const TwoLineTextContainer = styled.div`
@@ -39,22 +40,25 @@ const TwoLineTextContainer = styled.div`
   font-size: 14px;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
-  text-align: start;
-  color: black;
 `;
 
 const CardImage = styled.div`
   background-image: url(${(props) => props.imageUrl});
   background-size: cover;
+  background-position: center;
   height: 100%;
   width: 100%;
-  background-position: center;
 `;
 
 const CardDescriptionContainer = styled.div`
   margin: 10px;
   display: flex;
   flex-direction: column;
+`;
+
+const CardDescriptionFooterContainer = styled.div`
+  bottom: 0;
+  text-align: start;
 `;
 
 const ClickableDiv = styled.a`
@@ -81,10 +85,10 @@ const CardDescription = ({ ...props }) => {
 const CardDescriptionFooter = ({ ...props }) => {
   const { validPeriod, location } = props;
   return (
-    <div style={{ bottom: 0, textAlign: 'start' }}>
-      <GreyText size="small">Valid period: {validPeriod}</GreyText>
+    <>
+      <GreyText size="small">Valid period: {validPeriod || '10/05/2020 - 10/05/2021'}</GreyText>
       <GreyText size="small">Location: {location}</GreyText>
-    </div>
+    </>
   );
 };
 
@@ -100,7 +104,6 @@ const CardDescriptionFooter = ({ ...props }) => {
  * @param {string} location is the location of the donation post
  * @param {string} validPeriod is the validity period of the donation post
  */
-
 const DonationCard = ({ ...props }) => {
   const {
     name,
@@ -119,9 +122,8 @@ const DonationCard = ({ ...props }) => {
     event.preventDefault();
     router.push(postHref);
   };
-  const { isDesktop } = useMediaQuery();
   return (
-    <CardContainer isDesktop={isDesktop}>
+    <CardContainer>
       <Grid style={{ height: '100%' }} rows="1fr 3fr 2fr" cols="1fr">
         <CardHeaderContainer>
           <CardHeader name={name} imageUrl={profileImageUrl} timeAgo={timeAgo} />
@@ -129,7 +131,9 @@ const DonationCard = ({ ...props }) => {
         <CardImage imageUrl={coverImageUrl || defaultPostImagePath} />
         <CardDescriptionContainer>
           <CardDescription title={title} description={description} />
-          <CardDescriptionFooter validPeriod={validPeriod || '10/05/2020 - 10/05/2021'} location={location} />
+          <CardDescriptionFooterContainer>
+            <CardDescriptionFooter validPeriod={validPeriod} location={location} />
+          </CardDescriptionFooterContainer>
         </CardDescriptionContainer>
       </Grid>
       <ClickableDiv href={postHref} onClick={handleDonationPostOnClick} />

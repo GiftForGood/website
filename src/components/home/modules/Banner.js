@@ -10,7 +10,6 @@ const TitleArea = styled.div`
   top: 40%;
   left: 50%;
   width: 50%;
-  max-width: 1920px;
   transform: translate(-50%, -50%);
 `;
 
@@ -25,7 +24,6 @@ const SubTitle = styled.div`
 `;
 
 const BannerContentContainer = styled.div`
-  max-width: 1920px;
   position: relative;
   height: 100%;
   width: 100%;
@@ -38,7 +36,7 @@ const BannerImageContainer = styled.div`
   position: relative;
   background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url(${(props) => props.src});
   background-size: cover;
-  background-position: 50% 50%;
+  background-position: center;
 `;
 
 const SearchBarContainer = styled.div`
@@ -70,7 +68,6 @@ const BannerText = ({ ...props }) => {
 };
 
 /**
- *
  * @param {string} type can be donation or wish type
  */
 const Banner = ({ type }) => {
