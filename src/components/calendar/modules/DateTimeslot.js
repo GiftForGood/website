@@ -88,7 +88,7 @@ const DateTimeslot = ({ ...props }) => {
 
       return (
         <Stack key={index} direction="column" align="center" shrink="true">
-          {isTablet ? <RenderDateTitle /> : ''}
+          {isTablet ? <RenderDateTitle /> : null}
           <RenderTimeslots />
         </Stack>
       );

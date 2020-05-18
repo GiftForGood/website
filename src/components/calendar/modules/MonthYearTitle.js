@@ -29,7 +29,7 @@ const MonthYearTitle = ({ ...props }) => {
       title={currentMonthYear}
       handlePrevClick={handlePrevMonthClick}
       handleNextClick={handleNextMonthClick}
-      onHide={true}
+      shouldHideButtons={true}
     />
   );
 };

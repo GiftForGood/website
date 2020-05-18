@@ -6,6 +6,7 @@ import RangeDates from './RangeDates';
 import { RENDER_DAYS } from '../constants/week';
 import { Stack, Tag, Text } from '@kiwicom/orbit-components/lib';
 
+// overwrite the default days to render based on the props renderDays
 const updateRenderDays = (renderDays) => {
   renderDays = Object.assign({}, RENDER_DAYS, renderDays);
   return renderDays;
@@ -27,7 +28,7 @@ const Calendar = ({ ...props }) => {
   const currentDateTime = moment();
   const [currentDate, setCurrentDate] = useState(moment().startOf('day'));
   const [selectedTimeslots, setSelectedTimeslots] = useState([]);
-  const hasTimeslot = selectedTimeslots.length == 0;
+  const hasNotSelectedAnyTimeslot = selectedTimeslots.length == 0;
 
   const updateCurrentDate = (date) => {
     setCurrentDate(date);
@@ -59,6 +60,7 @@ const Calendar = ({ ...props }) => {
       return newTimeslot.startDate.format() === timeslot.startDate.format();
     });
 
+    // remove time slot if clicking on a time slot that already exists
     if (isTimeslotExists) {
       newSelectedTimeslots.splice(timeslotIndex, 1);
     } else if (selectedTimeslots.length + 1 <= props.maxSlots && newTimeslot.startDate.isAfter(currentDateTime)) {
@@ -101,7 +103,7 @@ const Calendar = ({ ...props }) => {
         <Text weight="bold" size="large">
           My Selected Timeslots:
         </Text>
-        {hasTimeslot ? <Text>Please select a timeslot from the above</Text> : ''}
+        {hasNotSelectedAnyTimeslot ? <Text>Please select a timeslot from the above</Text> : null}
       </Stack>
       <Stack
         desktop={{ direction: 'row' }}

@@ -6,13 +6,13 @@ const ChatPage = () => {
   const [showModal, setShowModal] = useState(false);
 
   const handleShowModal = () => setShowModal(true);
-  const handleCloseModel = () => setShowModal(false);
+  const handleCloseModal = () => setShowModal(false);
 
   return (
     <div>
       <Text as="p">Welcome to Chat Page!</Text>
       <Button onClick={handleShowModal}>Suggest Dates</Button>
-      <CalendarModal onShow={showModal} onHide={handleCloseModel} />
+      <CalendarModal onShow={showModal} onHide={handleCloseModal} />
     </div>
   );
 };

@@ -16,6 +16,7 @@ const getWeekIndex = (currentDate, weeks) => {
 
     if (weekContainsDate) {
       weekIndex = index;
+      return true;
     }
   });
 
@@ -42,10 +43,13 @@ const RangeDates = ({ ...props }) => {
     };
 
     const handlePrevWeekClick = () => {
-      if (currentWeekIndex - 1 > 0) {
-        const firstDayOfPrevWeek = getMomentDateFromCalendarJSDate(weeks[currentWeekIndex - 1][0]);
+      const prevWeekIndex = currentWeekIndex - 1;
+      // if prevWeekIndex is second week onwards of the month
+      if (prevWeekIndex > 0) {
+        const firstDayOfPrevWeek = getMomentDateFromCalendarJSDate(weeks[prevWeekIndex][0]);
         validatePastDate(firstDayOfPrevWeek);
-      } else if (currentWeekIndex - 1 == 0) {
+        // if prevWeekIndex is first week of the month
+      } else if (prevWeekIndex == 0) {
         const firstDayOfPrevWeek = getMomentDateFromCalendarJSDate(weeks[0][0]);
         validatePastDate(firstDayOfPrevWeek);
       } else {
@@ -55,8 +59,10 @@ const RangeDates = ({ ...props }) => {
     };
 
     const handleNextWeekClick = () => {
-      if (currentWeekIndex + 1 < weeks.length - 1) {
-        setCurrentWeekIndex(currentWeekIndex + 1);
+      const nextWeekIndex = currentWeekIndex + 1;
+      // if nextWeekIndex is before the last week of month
+      if (nextWeekIndex < weeks.length - 1) {
+        setCurrentWeekIndex(nextWeekIndex);
       } else {
         const lastDay = weeks[currentWeekIndex].length - 1;
         const firstDayOfNextWeek = getMomentDateFromCalendarJSDate(weeks[currentWeekIndex][lastDay])
