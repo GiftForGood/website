@@ -106,7 +106,7 @@ const RegisterNpoOrganization = () => {
       ) {
         return true;
       }
-      let combineDate = dateOfRegistrationDay  + '-' + dateOfRegistrationMonth + '-' + dateOfRegistrationYear;
+      let combineDate = dateOfRegistrationDay + '-' + dateOfRegistrationMonth + '-' + dateOfRegistrationYear;
       var date = moment(combineDate, 'D-MM-YYYY', true);
       let valid = date.isValid();
       return valid;
@@ -209,7 +209,7 @@ const RegisterNpoOrganization = () => {
               formik.touched.dateOfRegistrationYear
                 ? formik.errors.dateOfRegistrationDay ||
                   formik.errors.dateOfRegistrationMonth ||
-                  formik.errors.dateOfRegistrationYear || 
+                  formik.errors.dateOfRegistrationYear ||
                   formik.errors.customDateValidation
                 : ''
             }

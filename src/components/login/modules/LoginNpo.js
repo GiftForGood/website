@@ -40,7 +40,7 @@ const LoginNpo = () => {
 
   const handleFormSubmission = async (values) => {
     try {
-      setIsLoading(true)
+      setIsLoading(true);
       const [token, user, userDoc] = await api.auth.loginNPO(values.email, values.password);
       let userData = userDoc.data();
       let response = await client.post('/api/sessionLogin', { token });
@@ -52,7 +52,7 @@ const LoginNpo = () => {
       }
     } catch (error) {
       console.log(error);
-      setIsLoading(false)
+      setIsLoading(false);
       formik.setSubmitting(false);
       if (error.code === 'auth/user-disabled') {
         displayAlert('User has been disabled, please contact administrator.', error.message, 'critical');

@@ -115,7 +115,7 @@ const RegisterNpoDetails = () => {
     mobileNumber: Yup.string()
       .required('Required')
       .matches(/^[6|8|9]\d{7}$/, 'Phone number is not valid'),
-    email: Yup.string().email("Email must be a valid email").required('Required'),
+    email: Yup.string().email('Email must be a valid email').required('Required'),
     password: Yup.string()
       .required('Required')
       .matches(
