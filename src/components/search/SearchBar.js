@@ -5,10 +5,10 @@ import { InputField, Button } from '@kiwicom/orbit-components/lib';
 import styled from 'styled-components';
 
 const SearchButton = styled.button`
-  width: 20px;
-  height: 20px;
+  width: 80%;
+  height: 80%;
   background: white;
-  margin: 10px;
+  margin-right: 5px;
   padding: 0px;
 `;
 
