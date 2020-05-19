@@ -66,7 +66,7 @@ const CardContent = ({ name, imageUrl, title, description, postedDateTime }) => 
  * @param {string} postedDateTime is the time posted for wish in milliseconds
  * @param {string} postHref is the link url to direct users to after clicking the wish card
  */
-const HomePageWishCard = ({ name, title, description, imageUrl, postedDateTime, postHref }) => {
+const GroupWishCard = ({ name, title, description, imageUrl, postedDateTime, postHref }) => {
   const router = useRouter();
   const handleOnClickWishPost = (event) => {
     event.preventDefault();
@@ -89,4 +89,4 @@ const HomePageWishCard = ({ name, title, description, imageUrl, postedDateTime, 
   );
 };
 
-export default HomePageWishCard;
+export default GroupWishCard;

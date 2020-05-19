@@ -4,7 +4,7 @@ import { Stack, Button, Text } from '@kiwicom/orbit-components/lib';
 import api from '../../../../utils/api/index';
 import styled, { css } from 'styled-components';
 import BlackText from '../../text/BlackText';
-import HomePageWishCard from '../../card/HomePageWishCard';
+import GroupWishCard from '../../card/GroupWishCard';
 import GreySubtleButton from '../../buttons/GreySubtleButton';
 import Desktop from '@kiwicom/orbit-components/lib/Desktop';
 import Mobile from '@kiwicom/orbit-components/lib/Mobile';
@@ -67,7 +67,9 @@ const TopWishes = ({ numberOfPosts, numberOfCategories }) => {
 
   const getTopCategories = async (numberOfCategories) => {
     const rawCategories = await api.categories.getAll().catch((err) => console.error(err));
-    return rawCategories.docs.slice(0, numberOfCategories).map((doc) => doc.data());
+    return rawCategories.docs
+      .slice(numberOfCategories, numberOfCategories + numberOfCategories)
+      .map((doc) => doc.data());
   };
 
   const getTopWishesForCategories = async (categories, numberOfPosts) => {
@@ -103,7 +105,7 @@ const TopWishes = ({ numberOfPosts, numberOfCategories }) => {
           {obj.wishes.map((wish) => {
             const wishPostHref = `/wishes/${wish.wishesId}`;
             return (
-              <HomePageWishCard
+              <GroupWishCard
                 key={wish.wishesId}
                 name={wish.organization.name}
                 title={wish.title}

@@ -19,7 +19,7 @@ const SearchBar = () => {
       placeholder="Search post or users"
       suffix={
         <Button type="white" asComponent={SearchButton} onClick={function () {}}>
-          <Search />{' '}
+          <Search />
         </Button>
       }
     />
