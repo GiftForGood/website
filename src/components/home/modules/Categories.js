@@ -7,9 +7,9 @@ import styled from 'styled-components';
 import CarouselScrollButton from '../../buttons/CarouselScrollButton';
 import Desktop from '@kiwicom/orbit-components/lib/Desktop';
 
-// The home page is structured using a grid and the row of categories has 
-// 1fr of height space, so during initial load when the categories are not 
-// populated from firestore, the categories row occupies less space which 
+// The home page is structured using a grid and the row of categories has
+// 1fr of height space, so during initial load when the categories are not
+// populated from firestore, the categories row occupies less space which
 // makes the initial home page look smaller than it is after populating all data.
 // The min-height property prevents that by having a height that matches
 // the real height after populating the categories. Note that the min-height
