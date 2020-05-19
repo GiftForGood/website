@@ -26,8 +26,7 @@ const CaptionInBox = styled.div`
  * @param {string} captionSize: small, normal, large
  * @param {string} captionType: primary, secondary, info, success, warning, critical, white
  */
-const SquareImageBox = ({ ...props }) => {
-  const { imageUrl, caption, captionSize, captionType } = props;
+const SquareImageBox = ({ imageUrl, caption, captionSize, captionType }) => {
   return (
     <SquareBox src={imageUrl}>
       <CaptionInBox>

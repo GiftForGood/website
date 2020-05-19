@@ -61,8 +61,7 @@ const wishesHomePageTitle = 'GiftForGood.io';
 const donationsHomePageTitle = 'Donations';
 const subTitle = 'Giving back to the society that needs your help';
 
-const BannerText = ({ ...props }) => {
-  const { title, subTitle } = props;
+const BannerText = ({ title, subTitle }) => {
   return (
     <TitleArea>
       <Title>{title}</Title>

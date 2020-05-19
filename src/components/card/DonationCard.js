@@ -70,8 +70,7 @@ const ClickableDiv = styled.a`
   z-index: 1;
 `;
 
-const CardDescription = ({ ...props }) => {
-  const { title, description } = props;
+const CardDescription = ({ title, description }) => {
   return (
     <Stack direction="column" spacing="tight">
       <Text size="normal" weight="bold">
@@ -82,8 +81,7 @@ const CardDescription = ({ ...props }) => {
   );
 };
 
-const CardDescriptionFooter = ({ ...props }) => {
-  const { validPeriod, location } = props;
+const CardDescriptionFooter = ({ validPeriod, location }) => {
   return (
     <>
       <GreyText size="small">Valid period: {validPeriod || '10/05/2020 - 10/05/2021'}</GreyText>
@@ -104,18 +102,17 @@ const CardDescriptionFooter = ({ ...props }) => {
  * @param {string} location is the location of the donation post
  * @param {string} validPeriod is the validity period of the donation post
  */
-const DonationCard = ({ ...props }) => {
-  const {
-    name,
-    title,
-    description,
-    profileImageUrl,
-    coverImageUrl,
-    postedDateTime,
-    postHref,
-    location,
-    validPeriod,
-  } = props;
+const DonationCard = ({
+  name,
+  title,
+  description,
+  profileImageUrl,
+  coverImageUrl,
+  postedDateTime,
+  postHref,
+  location,
+  validPeriod,
+}) => {
   const timeAgo = getTimeDifferenceFromNow(postedDateTime);
   const router = useRouter();
   const handleDonationPostOnClick = (event) => {

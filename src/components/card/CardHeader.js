@@ -29,8 +29,7 @@ const TimePosted = ({ timeAgo }) => {
   return <BlackText size="small">{timeAgo}</BlackText>;
 };
 
-const AvatarDetails = ({ ...props }) => {
-  const { name, distance } = props;
+const AvatarDetails = ({ name, distance }) => {
   return (
     <AvatarDetailsContainer>
       <Stack direction="column" spacing="extraTight">
@@ -41,8 +40,7 @@ const AvatarDetails = ({ ...props }) => {
   );
 };
 
-const CardHeader = ({ ...props }) => {
-  const { imageUrl, name, distance, timeAgo } = props;
+const CardHeader = ({ imageUrl, name, distance, timeAgo }) => {
   return (
     <CardHeaderContainer>
       <AvatarContainer>

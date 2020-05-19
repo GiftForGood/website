@@ -53,9 +53,8 @@ const numberOfCategories = 3;
 const categoriesTitle = 'Explore GiftForGood';
 const topCategoriesTitle = 'Top Categories';
 
-const HomePage = ({ ...props }) => {
+const HomePage = ({ pageType }) => {
   // TODO: default to wishes home page for now, will modify when the data for logged in user is ready
-  let { pageType } = props;
   pageType = pageType || 'wishes';
   return (
     <HomePageContainer>

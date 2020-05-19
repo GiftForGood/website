@@ -33,8 +33,7 @@ const CarouselArrow = styled.div`
  * @param {string} direction can be left or right
  * @param {string} scrollableId is the html id of the scrollable component that is scrolled when clicking on button
  */
-const CarouselScrollButton = ({ ...props }) => {
-  const { size, direction, scrollableId } = props;
+const CarouselScrollButton = ({ size, direction, scrollableId }) => {
   // current it scrolls based on the scrollable's client width
   const getScrollableWidth = () => document.getElementById(scrollableId).clientWidth;
   const handleScrollLeft = () => (document.getElementById(scrollableId).scrollLeft -= getScrollableWidth());

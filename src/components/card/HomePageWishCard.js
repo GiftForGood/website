@@ -30,8 +30,7 @@ const CardContentContainer = styled.div`
   height: 100px;
 `;
 
-const CardDescription = ({ ...props }) => {
-  const { title, description } = props;
+const CardDescription = ({ title, description }) => {
   return (
     <Stack direction="column" spacing="tight">
       <Text size="normal" weight="bold">
@@ -45,8 +44,7 @@ const CardDescription = ({ ...props }) => {
 /**
  * TODO: implement and pass the distance between NPO and Donor
  */
-const CardContent = ({ ...props }) => {
-  const { name, imageUrl, title, description, postedDateTime } = props;
+const CardContent = ({ name, imageUrl, title, description, postedDateTime }) => {
   const timeAgo = getTimeDifferenceFromNow(postedDateTime);
   return (
     <CardContentContainer>
@@ -68,8 +66,7 @@ const CardContent = ({ ...props }) => {
  * @param {string} postedDateTime is the time posted for wish in milliseconds
  * @param {string} postHref is the link url to direct users to after clicking the wish card
  */
-const HomePageWishCard = ({ ...props }) => {
-  const { name, title, description, imageUrl, postedDateTime, postHref } = props;
+const HomePageWishCard = ({ name, title, description, imageUrl, postedDateTime, postHref }) => {
   const router = useRouter();
   const handleWishPostOnClick = (event) => {
     event.preventDefault();
