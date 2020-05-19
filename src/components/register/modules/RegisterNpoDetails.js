@@ -161,6 +161,7 @@ const RegisterNpoDetails = () => {
           />
 
           <InputField
+            prefix="+65"
             disabled={formik.isSubmitting}
             label="Mobile Number"
             name="mobileNumber"
