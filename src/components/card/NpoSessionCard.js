@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { Text, Heading, Button } from '@kiwicom/orbit-components/lib';
 import { colors } from '../../../utils/constants/colors';
-import BlueButton from '../button/BlueButton';
+import BlueButton from '../buttons/BlueButton';
 
 const CardWrapper = styled.div`
   display: flex;

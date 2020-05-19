@@ -9,7 +9,7 @@ import * as Yup from 'yup';
 
 import { setIsBackToNpoRegister, setNpoDetails } from '../actions';
 import { getOrganization } from '../selectors';
-import BlueButton from '../../button/BlueButton';
+import BlueButton from '../../buttons/BlueButton';
 import TermsAndConditionModal from './TermsAndConditionModal';
 import api from '../../../../utils/api';
 import client from '../../../../utils/axios';
