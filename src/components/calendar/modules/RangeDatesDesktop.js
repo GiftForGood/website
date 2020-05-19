@@ -65,17 +65,17 @@ const RangeDatesDesktop = ({
 
   const handleNextWeekClick = () => {
     const nextWeekIndex = currentWeekIndex + 1;
+    const lastDay = weeks[currentWeekIndex].length - 1;
+    let lastDayOfNextWeek;
     // if nextWeekIndex is before the last week of month
     if (nextWeekIndex < weeks.length - 1) {
       setCurrentWeekIndex(nextWeekIndex);
+      lastDayOfNextWeek = getMomentDateFromCalendarJSDate(weeks[nextWeekIndex][lastDay]);
       // else nextWeekIndex is last week of the month or onwards
     } else {
-      const lastDay = weeks[currentWeekIndex].length - 1;
-      const lastDayOfNextWeek = getMomentDateFromCalendarJSDate(weeks[currentWeekIndex][lastDay])
-        .clone()
-        .add(7, 'days');
-      updateLastUpdatedDate(lastDayOfNextWeek);
+      lastDayOfNextWeek = getMomentDateFromCalendarJSDate(weeks[currentWeekIndex][lastDay]).clone().add(7, 'days');
     }
+    updateLastUpdatedDate(lastDayOfNextWeek);
   };
 
   const RenderDateTimeslot = () => {
