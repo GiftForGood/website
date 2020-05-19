@@ -18,7 +18,7 @@ const SearchBar = () => {
       inputMode="search"
       placeholder="Search post or users"
       suffix={
-      <Button type="white" asComponent={SearchButton} onClick={function () {}}>
+        <Button type="white" asComponent={SearchButton} onClick={function () {}}>
           <Search />{' '}
         </Button>
       }
