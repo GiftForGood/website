@@ -1,16 +1,17 @@
 import styled from 'styled-components';
+import { colors } from '../../../utils/constants/colors';
 
 const TimeslotButton = styled.button`
-  background: white;
+  background: ${colors.calendarUnselectedBackground};
 
-  box-shadow: 1px 1px 2px 2px #e7e7e7;
+  box-shadow: 1px 1px 2px 2px ${colors.calendarUnselectedHoverActiveFocus};
 
   :hover {
-    background: #e7e7e7;
+    background: ${colors.calendarUnselectedHoverActiveFocus};
   }
 
   :focus {
-    box-shadow: 1px 1px 2px 2px #e7e7e7;
+    box-shadow: 1px 1px 2px 2px ${colors.calendarUnselectedHoverActiveFocus};
   }
 `;
 
