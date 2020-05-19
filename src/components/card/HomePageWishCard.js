@@ -68,7 +68,7 @@ const CardContent = ({ name, imageUrl, title, description, postedDateTime }) => 
  */
 const HomePageWishCard = ({ name, title, description, imageUrl, postedDateTime, postHref }) => {
   const router = useRouter();
-  const handleWishPostOnClick = (event) => {
+  const handleOnClickWishPost = (event) => {
     event.preventDefault();
     router.push(postHref);
   };
@@ -84,7 +84,7 @@ const HomePageWishCard = ({ name, title, description, imageUrl, postedDateTime, 
         />
       }
     >
-      <ClickableDiv href={postHref} onClick={handleWishPostOnClick} />
+      <ClickableDiv href={postHref} onClick={handleOnClickWishPost} />
     </CardSection>
   );
 };

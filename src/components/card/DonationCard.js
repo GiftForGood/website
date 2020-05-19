@@ -115,7 +115,7 @@ const DonationCard = ({
 }) => {
   const timeAgo = getTimeDifferenceFromNow(postedDateTime);
   const router = useRouter();
-  const handleDonationPostOnClick = (event) => {
+  const handleOnClickDonationPost = (event) => {
     event.preventDefault();
     router.push(postHref);
   };
@@ -133,7 +133,7 @@ const DonationCard = ({
           </CardDescriptionFooterContainer>
         </CardDescriptionContainer>
       </Grid>
-      <ClickableDiv href={postHref} onClick={handleDonationPostOnClick} />
+      <ClickableDiv href={postHref} onClick={handleOnClickDonationPost} />
     </CardContainer>
   );
 };

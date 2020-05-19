@@ -44,12 +44,12 @@ const Categories = () => {
       <Stack direction="row" align="center" spacing="natural">
         {categories.map((category) => {
           const href = `/category/${category.id}`;
-          const handleClickOnCategory = (event) => {
+          const handleOnClickCategory = (event) => {
             event.preventDefault();
             router.push(href);
           };
           return (
-            <a href={href} onClick={handleClickOnCategory} key={category.id}>
+            <a href={href} onClick={handleOnClickCategory} key={category.id}>
               <SquareImageBox imageUrl={category.imageUrl} caption={category.name} />
             </a>
           );
