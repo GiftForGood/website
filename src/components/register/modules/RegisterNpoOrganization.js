@@ -34,6 +34,7 @@ import { colors } from '../../../../utils/constants/colors';
 import api from '../../../../utils/api';
 import moment from 'moment';
 
+const currentYear = moment().year();
 const HeadingColor = styled.div`
   color: ${colors.npoBackground};
 `;
@@ -89,8 +90,8 @@ const RegisterNpoOrganization = () => {
       .required('Required'),
     dateOfRegistrationMonth: Yup.string().required('Required'),
     dateOfRegistrationYear: Yup.number()
-      .min(1900, 'Year must be in the range 1900-2020')
-      .max(2020, 'Year must be in the range 1900-2020')
+      .min(1900, `Year must be in the range 1900-${currentYear}`)
+      .max(currentYear, `Year must be in the range 1900-${currentYear}`)
       .required('Required'),
     proofImage: Yup.mixed().required('Required'),
     activities: Yup.string()
