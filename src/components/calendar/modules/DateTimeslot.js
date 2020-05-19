@@ -13,7 +13,7 @@ const DateTimeslot = ({ dayToRender, currentDateTime, timeslots, renderDays, onT
     const weekDay = momentDate.format('ddd').toUpperCase();
 
     if (renderDays[weekDay]) {
-      const RenderDateTitle = () => {
+      const DateTitle = () => {
         return (
           <Text align="center" size="large">
             {momentDate.format('D MMM')}
@@ -23,7 +23,7 @@ const DateTimeslot = ({ dayToRender, currentDateTime, timeslots, renderDays, onT
         );
       };
 
-      const RenderTimeslots = () => {
+      const Timeslots = () => {
         return timeslots.map((slot, index) => {
           let description = '';
           for (let i = 0; i < slot.length; i++) {
@@ -88,8 +88,8 @@ const DateTimeslot = ({ dayToRender, currentDateTime, timeslots, renderDays, onT
 
       return (
         <Stack key={index} direction="column" align="center" shrink="true">
-          {isTablet ? <RenderDateTitle /> : null}
-          <RenderTimeslots />
+          {isTablet ? <DateTitle /> : null}
+          <Timeslots />
         </Stack>
       );
     }

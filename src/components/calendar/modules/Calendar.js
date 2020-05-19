@@ -26,24 +26,24 @@ const Calendar = ({ timeslot, maxSlots, renderDays }) => {
   const timeslots = generateTimeslots(timeslot.startTime, timeslot.endTime, timeslot.interval);
 
   const currentDateTime = moment();
-  const [currentDate, setCurrentDate] = useState(moment().startOf('day'));
+  const [lastUpdatedDate, setLastUpdatedDate] = useState(moment().startOf('day')); // to keep track of the date that user is currently on
   const [selectedTimeslots, setSelectedTimeslots] = useState([]);
   const hasNotSelectedAnyTimeslot = selectedTimeslots.length == 0;
 
-  const updateCurrentDate = (date) => {
-    setCurrentDate(date);
+  const updateLastUpdatedDate = (date) => {
+    setLastUpdatedDate(date);
   };
 
   const RenderRangeDates = () => {
-    const cal = new CalendarJS(currentDate.year(), currentDate.month() + 1);
+    const cal = new CalendarJS(lastUpdatedDate.year(), lastUpdatedDate.month() + 1);
     const weeks = cal.generate();
 
     return (
       <RangeDates
-        currentDate={currentDate}
+        lastUpdatedDate={lastUpdatedDate}
         currentDateTime={currentDateTime}
         weeks={weeks}
-        updateCurrentDate={updateCurrentDate}
+        updateLastUpdatedDate={updateLastUpdatedDate}
         timeslots={timeslots}
         onTimeslotClick={handleTimeslotClick}
         selectedTimeslots={selectedTimeslots}
@@ -60,16 +60,15 @@ const Calendar = ({ timeslot, maxSlots, renderDays }) => {
       return newTimeslot.startDate.format() === timeslot.startDate.format();
     });
 
-    // remove time slot if clicking on a time slot that already exists
     if (isTimeslotExists) {
-      newSelectedTimeslots.splice(timeslotIndex, 1);
+      newSelectedTimeslots.splice(timeslotIndex, 1); // remove timeslot if clicking on a timeslot that already exists
     } else if (selectedTimeslots.length + 1 <= maxSlots && newTimeslot.startDate.isAfter(currentDateTime)) {
       newSelectedTimeslots.push(newTimeslot);
     } else {
       return;
     }
 
-    setCurrentDate(moment(newTimeslot.startDate));
+    setLastUpdatedDate(moment(newTimeslot.startDate));
     setSelectedTimeslots(newSelectedTimeslots);
   };
 
@@ -95,8 +94,8 @@ const Calendar = ({ timeslot, maxSlots, renderDays }) => {
     <div>
       <MonthYearTitle
         currentDateTime={currentDateTime}
-        currentDate={currentDate}
-        updateCurrentDate={updateCurrentDate}
+        lastUpdatedDate={lastUpdatedDate}
+        updateLastUpdatedDate={updateLastUpdatedDate}
       />
       <RenderRangeDates />
       <Stack spaceAfter="small">

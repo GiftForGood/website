@@ -5,8 +5,8 @@ import { getMomentDateFromCalendarJSDate } from '../util/helpers';
 import { Stack } from '@kiwicom/orbit-components/lib';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 
-const getWeekIndex = (currentDate, weeks) => {
-  const startOfDate = currentDate.startOf('day'); // reset to 12:00 am of currentDate
+const getWeekIndex = (lastUpdatedDate, weeks) => {
+  const startOfDate = lastUpdatedDate.startOf('day'); // reset to 12:00 am of lastUpdatedDate
   let weekIndex = 0;
   weeks.some((week, index) => {
     let weekContainsDate = week.some((day) => {
@@ -24,10 +24,10 @@ const getWeekIndex = (currentDate, weeks) => {
 };
 
 const RangeDates = ({
-  currentDate,
+  lastUpdatedDate,
   currentDateTime,
   weeks,
-  updateCurrentDate,
+  updateLastUpdatedDate,
   timeslots,
   onTimeslotClick,
   selectedTimeslots,
@@ -36,7 +36,7 @@ const RangeDates = ({
   const { isTablet } = useMediaQuery();
 
   const RenderDateDesktop = () => {
-    const [currentWeekIndex, setCurrentWeekIndex] = useState(getWeekIndex(currentDate, weeks));
+    const [currentWeekIndex, setCurrentWeekIndex] = useState(getWeekIndex(lastUpdatedDate, weeks));
     const currentWeek = weeks[currentWeekIndex];
     const startDateOfWeek = getMomentDateFromCalendarJSDate(currentWeek[0]);
     const endDateOfWeek = getMomentDateFromCalendarJSDate(currentWeek[currentWeek.length - 1]);
@@ -44,9 +44,9 @@ const RangeDates = ({
 
     const validatePastDate = (date) => {
       if (date.isBefore(currentDateTime, 'day')) {
-        updateCurrentDate(currentDateTime);
+        updateLastUpdatedDate(currentDateTime);
       } else {
-        updateCurrentDate(date);
+        updateLastUpdatedDate(date);
       }
     };
 
@@ -60,8 +60,9 @@ const RangeDates = ({
       } else if (prevWeekIndex == 0) {
         const firstDayOfPrevWeek = getMomentDateFromCalendarJSDate(weeks[0][0]);
         validatePastDate(firstDayOfPrevWeek);
+        // else prevWeekIndex is the last week of the prev month
       } else {
-        const firstDayOfPrevWeek = getMomentDateFromCalendarJSDate(weeks[0][0]).clone().subtract(1, 'days');
+        const firstDayOfPrevWeek = getMomentDateFromCalendarJSDate(weeks[0][0]).clone().subtract(7, 'days');
         validatePastDate(firstDayOfPrevWeek);
       }
     };
@@ -71,12 +72,13 @@ const RangeDates = ({
       // if nextWeekIndex is before the last week of month
       if (nextWeekIndex < weeks.length - 1) {
         setCurrentWeekIndex(nextWeekIndex);
+        // else nextWeekIndex is last week of the month or onwards
       } else {
         const lastDay = weeks[currentWeekIndex].length - 1;
-        const firstDayOfNextWeek = getMomentDateFromCalendarJSDate(weeks[currentWeekIndex][lastDay])
+        const lastDayOfNextWeek = getMomentDateFromCalendarJSDate(weeks[currentWeekIndex][lastDay])
           .clone()
           .add(7, 'days');
-        updateCurrentDate(firstDayOfNextWeek);
+        updateLastUpdatedDate(lastDayOfNextWeek);
       }
     };
 
@@ -102,20 +104,22 @@ const RangeDates = ({
   };
 
   const RenderDateMobile = () => {
-    const lastTimeslotDay = currentDate.clone().add(timeslots[timeslots.length - 1][1], 'h');
+    const lastTimeslotDay = lastUpdatedDate.clone().add(timeslots[timeslots.length - 1][1], 'h');
     if (lastTimeslotDay.isBefore(currentDateTime, 'minutes')) {
-      updateCurrentDate(currentDate.clone().add(1, 'days'));
+      updateLastUpdatedDate(lastUpdatedDate.clone().add(1, 'days'));
     }
 
-    const currentDateTitle = `${currentDate.format('D MMM (ddd)')}`;
-    const day = [{ year: currentDate.format('YYYY'), month: currentDate.format('MM'), date: currentDate.format('DD') }];
+    const currentDateTitle = `${lastUpdatedDate.format('D MMM (ddd)')}`;
+    const day = [
+      { year: lastUpdatedDate.format('YYYY'), month: lastUpdatedDate.format('MM'), date: lastUpdatedDate.format('DD') },
+    ];
 
     const handlePrevDateClick = () => {
-      updateCurrentDate(currentDate.clone().subtract(1, 'days'));
+      updateLastUpdatedDate(lastUpdatedDate.clone().subtract(1, 'days'));
     };
 
     const handleNextDateClick = () => {
-      updateCurrentDate(currentDate.clone().add(1, 'days'));
+      updateLastUpdatedDate(lastUpdatedDate.clone().add(1, 'days'));
     };
 
     return (
