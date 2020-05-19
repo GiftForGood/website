@@ -61,25 +61,19 @@ const TopDonations = ({ numberOfPosts, numberOfCategories }) => {
   };
 
   const getTopNCategories = async (numberOfCategories) => {
-    try {
-      const rawCategories = await api.categories.getAll();
-      return rawCategories.docs.slice(0, numberOfCategories).map((doc) => doc.data());
-    } catch (err) {
-      console.error(err);
-    }
+    const rawCategories = await api.categories.getAll().catch((err) => console.error(err));
+    return rawCategories.docs.slice(0, numberOfCategories).map((doc) => doc.data());
   };
 
   const getDonationsForTopCategories = async (categories, numberOfPosts) => {
-    try {
-      let donationsForTopCategories = [];
-      for (let i = 0; i < categories.length; i++) {
-        const rawDonations = await api.donations.getTopNPendingDonations(categories[i].id, numberOfPosts);
-        donationsForTopCategories = [...donationsForTopCategories, rawDonations.docs.map((doc) => doc.data())];
-      }
-      return donationsForTopCategories;
-    } catch (err) {
-      console.error(err);
+    let donationsForTopCategories = [];
+    for (let i = 0; i < categories.length; i++) {
+      const rawDonations = await api.donations
+        .getTopNPendingDonations(categories[i].id, numberOfPosts)
+        .catch((err) => console.error(err));
+      donationsForTopCategories = [...donationsForTopCategories, rawDonations.docs.map((doc) => doc.data())];
     }
+    return donationsForTopCategories;
   };
 
   const mergeCategoriesAndDonations = (categories, donations) => {

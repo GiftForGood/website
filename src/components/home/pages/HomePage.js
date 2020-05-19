@@ -4,7 +4,8 @@ import Categories from '../modules/Categories';
 import TopWishes from '../modules/TopWishes';
 import TopDonations from '../modules/TopDonations';
 import { Grid } from '@kiwicom/orbit-components/lib';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
+import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 
 const HomePageContainer = styled.div`
   display: flex;
@@ -13,7 +14,10 @@ const HomePageContainer = styled.div`
 const ResponsiveTitle = styled.div`
   font-size: calc(14px + 0.5vw);
   font-weight: bold;
-  margin-bottom: ${(props) => (props.type === 'donation' ? '20px' : '27.5px')};
+  margin-bottom: ${(props) => (props.type === 'donation' ? '10px' : '17.5px')};
+  ${media.desktop(css`
+    margin-bottom: ${(props) => (props.type === 'donation' ? '20px' : '27.5px')};
+  `)};
 `;
 
 const CategoriesContainer = styled.div`
@@ -41,7 +45,6 @@ const TopWishesContainer = styled.div`
   width: 90vw;
   max-width: 1280px;
   margin: 0 auto;
-  margin-top: 10px;
   margin-bottom: 40px;
 `;
 
@@ -53,13 +56,13 @@ const topCategoriesTitle = 'Top Categories';
 const HomePage = ({ ...props }) => {
   // TODO: default to wishes home page for now, will modify when the data for logged in user is ready
   let { pageType } = props;
-  pageType = pageType || 'donation';
+  pageType = pageType || 'wishes';
   return (
     <HomePageContainer>
       <Grid
         style={styles.gridContainer}
         rows="2fr 1fr auto"
-        rowGap="20px"
+        rowGap="25px"
         columns="1fr"
         desktop={{
           rows: '3fr 1fr auto',

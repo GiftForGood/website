@@ -70,25 +70,19 @@ const TopWishes = ({ numberOfPosts, numberOfCategories }) => {
   };
 
   const getTopCategories = async (numberOfCategories) => {
-    try {
-      const rawCategories = await api.categories.getAll();
-      return rawCategories.docs.slice(0, numberOfCategories).map((doc) => doc.data());
-    } catch (err) {
-      console.error(err);
-    }
+    const rawCategories = await api.categories.getAll().catch((err) => console.error(err));
+    return rawCategories.docs.slice(0, numberOfCategories).map((doc) => doc.data());
   };
 
   const getTopWishesForCategories = async (categories, numberOfPosts) => {
-    try {
-      let wishes = [];
-      for (let i = 0; i < categories.length; i++) {
-        const rawWishes = await api.wishes.getTopNPendingWishes(categories[i].id, numberOfPosts);
-        wishes = [...wishes, rawWishes.docs.map((doc) => doc.data())];
-      }
-      return wishes;
-    } catch (err) {
-      console.error(err);
+    let wishes = [];
+    for (let i = 0; i < categories.length; i++) {
+      const rawWishes = await api.wishes
+        .getTopNPendingWishes(categories[i].id, numberOfPosts)
+        .catch((err) => console.error(err));
+      wishes = [...wishes, rawWishes.docs.map((doc) => doc.data())];
     }
+    return wishes;
   };
 
   const mergeCategoriesAndWishes = (categories, wishes) => {
@@ -125,7 +119,7 @@ const TopWishes = ({ numberOfPosts, numberOfCategories }) => {
             );
           })}
           <ViewAllButtonContainer>
-            <Button className="hello" size="small" asComponent={GreySubtleButton} onClick={handleViewAllButton}>
+            <Button size="small" asComponent={GreySubtleButton} onClick={handleViewAllButton}>
               <BlackText size="small">View all</BlackText>
             </Button>
           </ViewAllButtonContainer>

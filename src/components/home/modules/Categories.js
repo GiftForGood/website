@@ -27,12 +27,8 @@ const Categories = () => {
   }, []);
 
   const getAllCategories = async () => {
-    try {
-      const rawCategories = await api.categories.getAll();
-      return rawCategories.docs.map((doc) => doc.data());
-    } catch (err) {
-      console.log(err);
-    }
+    const rawCategories = await api.categories.getAll().catch((err) => console.error(err));
+    return rawCategories.docs.map((doc) => doc.data());
   };
 
   const RowOfCategories = () => {
