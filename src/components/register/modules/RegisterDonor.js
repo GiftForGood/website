@@ -9,7 +9,7 @@ import * as Yup from 'yup';
 import { setIsBackToLanding } from '../actions';
 import styled from 'styled-components';
 import { colors } from '../../../../utils/constants/colors';
-import RedButton from '../../button/RedButton';
+import RedButton from '../../buttons/RedButton';
 import api from '../../../../utils/api';
 import { useRouter } from 'next/router';
 import client from '../../../../utils/axios';

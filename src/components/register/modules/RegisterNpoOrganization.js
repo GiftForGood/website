@@ -29,7 +29,7 @@ import {
 import { getOrganization } from '../selectors';
 import { months } from '../../../../utils/constants/month';
 import styled from 'styled-components';
-import BlueButton from '../../button/BlueButton';
+import BlueButton from '../../buttons/BlueButton';
 import { colors } from '../../../../utils/constants/colors';
 import api from '../../../../utils/api';
 import moment from 'moment';
