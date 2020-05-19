@@ -12,47 +12,45 @@ const RangeDatesMobile = ({
   selectedTimeslots,
   renderDays,
 }) => {
-  const RenderDates = () => {
-    const lastTimeslotDay = lastUpdatedDate.clone().add(timeslots[timeslots.length - 1][1], 'h');
-    if (lastTimeslotDay.isBefore(currentDateTime, 'minutes')) {
-      updateLastUpdatedDate(lastUpdatedDate.clone().add(1, 'days'));
-    }
+  const lastTimeslotDay = lastUpdatedDate.clone().add(timeslots[timeslots.length - 1][1], 'h');
+  if (lastTimeslotDay.isBefore(currentDateTime, 'minutes')) {
+    updateLastUpdatedDate(lastUpdatedDate.clone().add(1, 'days'));
+  }
 
-    const currentDateTitle = `${lastUpdatedDate.format('D MMM (ddd)')}`;
-    const day = [
-      { year: lastUpdatedDate.format('YYYY'), month: lastUpdatedDate.format('MM'), date: lastUpdatedDate.format('DD') },
-    ];
-
-    const handlePrevDateClick = () => {
-      updateLastUpdatedDate(lastUpdatedDate.clone().subtract(1, 'days'));
-    };
-
-    const handleNextDateClick = () => {
-      updateLastUpdatedDate(lastUpdatedDate.clone().add(1, 'days'));
-    };
-
-    return (
-      <div>
-        <RangeButtonComponent
-          title={currentDateTitle}
-          handlePrevClick={handlePrevDateClick}
-          handleNextClick={handleNextDateClick}
-        />
-        <Stack direction="column" spaceAfter="medium">
-          <DateTimeslot
-            dayToRender={day}
-            currentDateTime={currentDateTime}
-            timeslots={timeslots}
-            renderDays={renderDays}
-            onTimeslotClick={onTimeslotClick}
-            selectedTimeslots={selectedTimeslots}
-          />
-        </Stack>
-      </div>
-    );
+  const currentDateTitle = `${lastUpdatedDate.format('D MMM (ddd)')}`;
+  const day = {
+    year: lastUpdatedDate.format('YYYY'),
+    month: lastUpdatedDate.format('MM'),
+    date: lastUpdatedDate.format('DD'),
   };
 
-  return <RenderDates />;
+  const handlePrevDateClick = () => {
+    updateLastUpdatedDate(lastUpdatedDate.clone().subtract(1, 'days'));
+  };
+
+  const handleNextDateClick = () => {
+    updateLastUpdatedDate(lastUpdatedDate.clone().add(1, 'days'));
+  };
+
+  return (
+    <div>
+      <RangeButtonComponent
+        title={currentDateTitle}
+        handlePrevClick={handlePrevDateClick}
+        handleNextClick={handleNextDateClick}
+      />
+      <Stack direction="column" spaceAfter="medium">
+        <DateTimeslot
+          dayToRender={day}
+          currentDateTime={currentDateTime}
+          timeslots={timeslots}
+          renderDays={renderDays}
+          onTimeslotClick={onTimeslotClick}
+          selectedTimeslots={selectedTimeslots}
+        />
+      </Stack>
+    </div>
+  );
 };
 
 export default RangeDatesMobile;
