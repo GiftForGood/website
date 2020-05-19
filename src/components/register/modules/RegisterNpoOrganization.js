@@ -234,7 +234,7 @@ const RegisterNpoOrganization = () => {
           </InputGroup>
 
           <InputFile
-            label="Proof of registration"
+            label="Proof of Registration"
             allowedFileTypes={['.pdf']}
             {...formik.getFieldProps('proofImage')}
             error={formik.touched.proofImage && formik.errors.proofImage ? formik.errors.proofImage : ''}

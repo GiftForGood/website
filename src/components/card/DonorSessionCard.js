@@ -51,7 +51,7 @@ const Card = ({ onClick, buttonTitle }) => {
     <CardWrapper>
       <CardContent>
         <Title />
-        <Description>With over 300 Non Profit Organization, you will definitely find something to donate.</Description>
+        <Description>With over 300 Non Profit Organizations, you will definitely find something to donate.</Description>
       </CardContent>
 
       <CardAction>
