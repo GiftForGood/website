@@ -2,6 +2,7 @@ import React from 'react';
 import SearchBar from '../../search/SearchBar';
 import styled, { css } from 'styled-components';
 import { wishesBannerImagePath, donationsBannerImagePath } from '../../../../utils/constants/imagePaths';
+import { wishesHomePageDetails, donationsHomePageDetails } from '../../../../utils/constants/homePageDetails';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 
 const TitleArea = styled.div`
@@ -57,10 +58,6 @@ const SearchBarContainer = styled.div`
   transform: translate(-50%, -50%);
 `;
 
-const wishesHomePageTitle = 'GiftForGood.io';
-const donationsHomePageTitle = 'Donations';
-const subTitle = 'Giving back to the society that needs your help';
-
 const BannerText = ({ title, subTitle }) => {
   return (
     <TitleArea>
@@ -74,10 +71,12 @@ const BannerText = ({ title, subTitle }) => {
  * @param {string} type can be donation or wish type
  */
 const Banner = ({ type }) => {
+  const bannerImagePath = type === 'donation' ? donationsBannerImagePath : wishesBannerImagePath;
+  const { bannerTitle, bannerSubtitle } = type === 'donation' ? donationsHomePageDetails : wishesHomePageDetails;
   return (
-    <BannerImageContainer src={type === 'donation' ? donationsBannerImagePath : wishesBannerImagePath}>
+    <BannerImageContainer src={bannerImagePath}>
       <BannerContentContainer>
-        <BannerText title={type === 'donation' ? donationsHomePageTitle : wishesHomePageTitle} subTitle={subTitle} />
+        <BannerText title={bannerTitle} subTitle={bannerSubtitle} />
         <SearchBarContainer>
           <SearchBar />
         </SearchBarContainer>

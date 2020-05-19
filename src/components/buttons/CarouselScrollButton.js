@@ -23,7 +23,6 @@ const CarouselArrow = styled.div`
   top: 50%;
   z-index: 10;
   transform: translate(0, -50%);
-  background-color: 'grey';
 `;
 
 /**
