@@ -8,7 +8,7 @@ import {
   AFFILIATED_NATIONAL_COUNCIL_OF_SOCIAL_SERVICE,
 } from '../constants/npoRegisteredRegistrar.js';
 import AuthError from './error/authError';
-import * as SiteUrlConstant from '../constants/siteUrl';
+import { FIREBASE_EMAIL_ACTION_URL } from '../constants/siteUrl';
 
 const donorsCollection = db.collection('donors');
 const nposCollection = db.collection('npos');
@@ -167,11 +167,7 @@ class AuthAPI {
    * Send a verification email to the currently logged in user
    */
   async sendVerificationEmail() {
-    let url = SiteUrlConstant.PRODUCTION_URL + '/';
-    if (process.env.NODE_ENV === 'development') {
-      url = SiteUrlConstant.DEV_URL + '/';
-    }
-
+    let url = FIREBASE_EMAIL_ACTION_URL + '/';
     const actionCodeSettings = {
       url: url,
     };
