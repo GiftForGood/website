@@ -7,12 +7,19 @@ import styled from 'styled-components';
 import CarouselScrollButton from '../../buttons/CarouselScrollButton';
 import Desktop from '@kiwicom/orbit-components/lib/Desktop';
 
-const CarouselContainer = styled.div`
+// The home page is structured using a grid and the row of categories has 
+// 1fr of height space, so during initial load when the categories are not 
+// populated from firestore, the categories row occupies less space which 
+// makes the initial home page look smaller than it is after populating all data.
+// The min-height property prevents that by having a height that matches
+// the real height after populating the categories. Note that the min-height
+// is the same as the SquareImageBox height.
+const RowOfCategoriesContainer = styled.div`
   position: relative;
   display: flex;
+  min-height: calc(75px + 2vw);
 `;
 
-// need the padding so that hovering each category will be able to zoom out
 const ScrollableRow = styled.div`
   width: 90vw;
   max-width: 1280px;
@@ -52,7 +59,7 @@ const Categories = () => {
   };
 
   return (
-    <CarouselContainer>
+    <RowOfCategoriesContainer>
       <Desktop>
         <CarouselScrollButton size="small" direction="left" scrollableId="scrollableCategory" />
       </Desktop>
@@ -62,7 +69,7 @@ const Categories = () => {
       <Desktop>
         <CarouselScrollButton size="small" direction="right" scrollableId="scrollableCategory" />
       </Desktop>
-    </CarouselContainer>
+    </RowOfCategoriesContainer>
   );
 };
 export default Categories;
