@@ -17,29 +17,29 @@ const circleButton = styled.button`
   }
 `;
 
-const RangeButtonComponent = ({ ...props }) => {
+const RangeButtonComponent = ({ shouldHideButtons, title, handlePrevClick, handleNextClick }) => {
   return (
     <Stack direction="row" align="center" spacing="loose" justify="center" spaceAfter="normal">
-      {!props.shouldHideButtons && (
+      {!shouldHideButtons && (
         <Button
           circled
           iconLeft={<ChevronLeft />}
           size="small"
           title="Button"
           type="white"
-          onClick={props.handlePrevClick}
+          onClick={handlePrevClick}
           asComponent={circleButton}
         />
       )}
-      <Text size="large">{props.title}</Text>
-      {!props.shouldHideButtons && (
+      <Text size="large">{title}</Text>
+      {!shouldHideButtons && (
         <Button
           circled
           iconLeft={<ChevronRight />}
           size="small"
           title="Button"
           type="white"
-          onClick={props.handleNextClick}
+          onClick={handleNextClick}
           asComponent={circleButton}
         />
       )}

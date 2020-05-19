@@ -23,9 +23,17 @@ const getWeekIndex = (currentDate, weeks) => {
   return weekIndex;
 };
 
-const RangeDates = ({ ...props }) => {
+const RangeDates = ({
+  currentDate,
+  currentDateTime,
+  weeks,
+  updateCurrentDate,
+  timeslots,
+  onTimeslotClick,
+  selectedTimeslots,
+  renderDays,
+}) => {
   const { isTablet } = useMediaQuery();
-  const { currentDate, currentDateTime, weeks, updateCurrentDate, timeslots, renderDays } = props;
 
   const RenderDateDesktop = () => {
     const [currentWeekIndex, setCurrentWeekIndex] = useState(getWeekIndex(currentDate, weeks));
@@ -85,8 +93,8 @@ const RangeDates = ({ ...props }) => {
             currentDateTime={currentDateTime}
             timeslots={timeslots}
             renderDays={renderDays}
-            onTimeslotClick={props.onTimeslotClick}
-            selectedTimeslots={props.selectedTimeslots}
+            onTimeslotClick={onTimeslotClick}
+            selectedTimeslots={selectedTimeslots}
           />
         </Stack>
       </div>
@@ -123,8 +131,8 @@ const RangeDates = ({ ...props }) => {
             currentDateTime={currentDateTime}
             timeslots={timeslots}
             renderDays={renderDays}
-            onTimeslotClick={props.onTimeslotClick}
-            selectedTimeslots={props.selectedTimeslots}
+            onTimeslotClick={onTimeslotClick}
+            selectedTimeslots={selectedTimeslots}
           />
         </Stack>
       </div>

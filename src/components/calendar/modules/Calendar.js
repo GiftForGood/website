@@ -21,9 +21,9 @@ const generateTimeslots = (startTime, endTime, interval) => {
   return slots;
 };
 
-const Calendar = ({ ...props }) => {
-  props.renderDays = updateRenderDays(props.renderDays);
-  const timeslots = generateTimeslots(props.timeslot.startTime, props.timeslot.endTime, props.timeslot.interval);
+const Calendar = ({ timeslot, maxSlots, renderDays }) => {
+  renderDays = updateRenderDays(renderDays);
+  const timeslots = generateTimeslots(timeslot.startTime, timeslot.endTime, timeslot.interval);
 
   const currentDateTime = moment();
   const [currentDate, setCurrentDate] = useState(moment().startOf('day'));
@@ -47,7 +47,7 @@ const Calendar = ({ ...props }) => {
         timeslots={timeslots}
         onTimeslotClick={handleTimeslotClick}
         selectedTimeslots={selectedTimeslots}
-        renderDays={props.renderDays}
+        renderDays={renderDays}
       />
     );
   };
@@ -63,7 +63,7 @@ const Calendar = ({ ...props }) => {
     // remove time slot if clicking on a time slot that already exists
     if (isTimeslotExists) {
       newSelectedTimeslots.splice(timeslotIndex, 1);
-    } else if (selectedTimeslots.length + 1 <= props.maxSlots && newTimeslot.startDate.isAfter(currentDateTime)) {
+    } else if (selectedTimeslots.length + 1 <= maxSlots && newTimeslot.startDate.isAfter(currentDateTime)) {
       newSelectedTimeslots.push(newTimeslot);
     } else {
       return;

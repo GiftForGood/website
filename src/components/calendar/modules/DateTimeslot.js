@@ -6,13 +6,13 @@ import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 import { getMomentDateFromCalendarJSDate } from '../util/helpers';
 import { Button, Stack, Text } from '@kiwicom/orbit-components/lib';
 
-const DateTimeslot = ({ ...props }) => {
+const DateTimeslot = ({ dayToRender, currentDateTime, timeslots, renderDays, onTimeslotClick, selectedTimeslots }) => {
   const { isTablet } = useMediaQuery();
-  return props.dayToRender.map((day, index) => {
+  return dayToRender.map((day, index) => {
     let momentDate = getMomentDateFromCalendarJSDate(day);
     const weekDay = momentDate.format('ddd').toUpperCase();
 
-    if (props.renderDays[weekDay]) {
+    if (renderDays[weekDay]) {
       const RenderDateTitle = () => {
         return (
           <Text align="center" size="large">
@@ -24,7 +24,7 @@ const DateTimeslot = ({ ...props }) => {
       };
 
       const RenderTimeslots = () => {
-        return props.timeslots.map((slot, index) => {
+        return timeslots.map((slot, index) => {
           let description = '';
           for (let i = 0; i < slot.length; i++) {
             description += moment(slot[i], 'h').format('h A');
@@ -38,12 +38,12 @@ const DateTimeslot = ({ ...props }) => {
             endDate: momentDate.clone().add(slot[slot.length - 1], 'h'),
           };
 
-          const isSelected = props.selectedTimeslots.some((selectedTimeslot) => {
+          const isSelected = selectedTimeslots.some((selectedTimeslot) => {
             return timeslotDates.startDate.format() === selectedTimeslot.startDate.format();
           });
 
           let isDisabled = false;
-          if (timeslotDates.startDate.isSameOrBefore(props.currentDateTime, 'hour')) {
+          if (timeslotDates.startDate.isSameOrBefore(currentDateTime, 'hour')) {
             isDisabled = true;
           }
 
@@ -79,11 +79,11 @@ const DateTimeslot = ({ ...props }) => {
 
       const onSelect = (index) => {
         const timeslot = {
-          startDate: momentDate.clone().add(props.timeslots[index][0], 'h'),
-          endDate: momentDate.clone().add(props.timeslots[index][1], 'h'),
+          startDate: momentDate.clone().add(timeslots[index][0], 'h'),
+          endDate: momentDate.clone().add(timeslots[index][1], 'h'),
         };
 
-        props.onTimeslotClick(timeslot);
+        onTimeslotClick(timeslot);
       };
 
       return (

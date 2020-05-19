@@ -1,9 +1,8 @@
 import React from 'react';
 import RangeButtonComponent from './RangeButtonComponent';
 
-const MonthYearTitle = ({ ...props }) => {
+const MonthYearTitle = ({ currentDateTime, currentDate, updateCurrentDate }) => {
   const monthYearFormat = 'MMMM YYYY';
-  const { currentDateTime, currentDate, updateCurrentDate } = props;
   const currentMonthYear = `${currentDate.format(monthYearFormat)}`;
 
   const handlePrevMonthClick = () => {

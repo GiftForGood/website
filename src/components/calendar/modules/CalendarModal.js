@@ -22,8 +22,8 @@ const DATE = '5';
 const title = 'Suggest Dates to deliver';
 const description = '*Please select up to ' + DATE + ' dates';
 
-const CalendarModal = ({ ...props }) => {
-  if (!props.onShow) {
+const CalendarModal = ({ onShow, onHide }) => {
+  if (!onShow) {
     return <div></div>;
   }
 
@@ -40,10 +40,10 @@ const CalendarModal = ({ ...props }) => {
       </ModalSection>
       <ModalFooter>
         <Stack direction="row" justify="end" align="center">
-          <Button type="secondary" onClick={props.onHide}>
+          <Button type="secondary" onClick={onHide}>
             Cancel
           </Button>
-          <Button onClick={props.onHide} asComponent={okButton}>
+          <Button onClick={onHide} asComponent={okButton}>
             Ok
           </Button>
         </Stack>
