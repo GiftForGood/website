@@ -1,5 +1,5 @@
 import React from 'react';
-import SearchBar from './SearchBar';
+import SearchBar from '../../search/SearchBar';
 import styled, { css } from 'styled-components';
 import { wishesBannerImagePath, donationsBannerImagePath } from '../../../../utils/constants/imagePaths';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
