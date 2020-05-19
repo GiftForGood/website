@@ -33,6 +33,11 @@ import BlueButton from '../../button/BlueButton';
 import { colors } from '../../../../utils/constants/colors';
 import api from '../../../../utils/api';
 import moment from 'moment';
+import {
+  REGISTRY_OF_SOCIETIES,
+  COMMISSIONER_OF_CHARITIES,
+  AFFILIATED_NATIONAL_COUNCIL_OF_SOCIAL_SERVICE,
+} from '../../../../utils/constants/npoRegisteredRegistrar';
 
 const currentYear = moment().year();
 const HeadingColor = styled.div`
@@ -176,18 +181,18 @@ const RegisterNpoOrganization = () => {
           >
             <Radio
               label="Registry of Societies"
-              value="Registry of Societies"
-              checked={'Registry of Societies' === formik.values.registeredUnder}
+              value={REGISTRY_OF_SOCIETIES}
+              checked={REGISTRY_OF_SOCIETIES === formik.values.registeredUnder}
             />
             <Radio
               label="Commissioner of Charities"
-              value="Commissioner of Charities"
-              checked={'Commissioner of Charities' === formik.values.registeredUnder}
+              value={COMMISSIONER_OF_CHARITIES}
+              checked={COMMISSIONER_OF_CHARITIES === formik.values.registeredUnder}
             />
             <Radio
               label="Affiliated to the National Council of Social Service"
-              value="Affiliated to the National Council of Social Service"
-              checked={'Affiliated to the National Council of Social Service' === formik.values.registeredUnder}
+              value={AFFILIATED_NATIONAL_COUNCIL_OF_SOCIAL_SERVICE}
+              checked={AFFILIATED_NATIONAL_COUNCIL_OF_SOCIAL_SERVICE === formik.values.registeredUnder}
             />
           </ChoiceGroup>
           <InputField
