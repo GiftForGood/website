@@ -100,7 +100,7 @@ const Calendar = ({ timeslot, maxSlots, renderDays }) => {
       const timeslotDescription =
         timeslot.startDate.format('D MMM (ddd), h A') + ' - ' + timeslot.endDate.format('h A');
       return (
-        <Tag key={index} selected={true} onRemove={removeKeyByIndex.bind(this, index)} size="small">
+        <Tag key={index} selected={true} onRemove={() => removeKeyByIndex(index)} size="small">
           {timeslotDescription}
         </Tag>
       );

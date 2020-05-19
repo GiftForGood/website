@@ -54,7 +54,7 @@ const DateTimeslot = ({ dayToRender, currentDateTime, timeslots, renderDays, onT
                 size="small"
                 asComponent={SelectedTimeslotButton}
                 fullWidth="100%"
-                onClick={onSelect.bind(this, index)}
+                onClick={() => onSelect(index)}
               >
                 {description}
               </Button>
@@ -67,7 +67,7 @@ const DateTimeslot = ({ dayToRender, currentDateTime, timeslots, renderDays, onT
                 asComponent={TimeslotButton}
                 size="small"
                 fullWidth="100%"
-                onClick={onSelect.bind(this, index)}
+                onClick={() => onSelect(index)}
                 disabled={isDisabled}
               >
                 {description}
