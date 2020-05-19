@@ -3,7 +3,6 @@ import DateTimeslot from './DateTimeslot';
 import RangeButtonComponent from './RangeButtonComponent';
 import { getMomentDateFromCalendarJSDate } from '../util/helpers';
 import { Stack } from '@kiwicom/orbit-components/lib';
-import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 
 const getWeekIndex = (lastUpdatedDate, weeks) => {
   const startOfDate = lastUpdatedDate.startOf('day'); // reset to 12:00 am of lastUpdatedDate
@@ -23,7 +22,7 @@ const getWeekIndex = (lastUpdatedDate, weeks) => {
   return weekIndex;
 };
 
-const RangeDates = ({
+const RangeDatesDesktop = ({
   lastUpdatedDate,
   currentDateTime,
   weeks,
@@ -33,9 +32,7 @@ const RangeDates = ({
   selectedTimeslots,
   renderDays,
 }) => {
-  const { isTablet } = useMediaQuery();
-
-  const RenderDateDesktop = () => {
+  const RenderDates = () => {
     const [currentWeekIndex, setCurrentWeekIndex] = useState(getWeekIndex(lastUpdatedDate, weeks));
     const currentWeek = weeks[currentWeekIndex];
     const startDateOfWeek = getMomentDateFromCalendarJSDate(currentWeek[0]);
@@ -103,47 +100,7 @@ const RangeDates = ({
     );
   };
 
-  const RenderDateMobile = () => {
-    const lastTimeslotDay = lastUpdatedDate.clone().add(timeslots[timeslots.length - 1][1], 'h');
-    if (lastTimeslotDay.isBefore(currentDateTime, 'minutes')) {
-      updateLastUpdatedDate(lastUpdatedDate.clone().add(1, 'days'));
-    }
-
-    const currentDateTitle = `${lastUpdatedDate.format('D MMM (ddd)')}`;
-    const day = [
-      { year: lastUpdatedDate.format('YYYY'), month: lastUpdatedDate.format('MM'), date: lastUpdatedDate.format('DD') },
-    ];
-
-    const handlePrevDateClick = () => {
-      updateLastUpdatedDate(lastUpdatedDate.clone().subtract(1, 'days'));
-    };
-
-    const handleNextDateClick = () => {
-      updateLastUpdatedDate(lastUpdatedDate.clone().add(1, 'days'));
-    };
-
-    return (
-      <div>
-        <RangeButtonComponent
-          title={currentDateTitle}
-          handlePrevClick={handlePrevDateClick}
-          handleNextClick={handleNextDateClick}
-        />
-        <Stack direction="column" spaceAfter="medium">
-          <DateTimeslot
-            dayToRender={day}
-            currentDateTime={currentDateTime}
-            timeslots={timeslots}
-            renderDays={renderDays}
-            onTimeslotClick={onTimeslotClick}
-            selectedTimeslots={selectedTimeslots}
-          />
-        </Stack>
-      </div>
-    );
-  };
-
-  return <div>{isTablet ? <RenderDateDesktop /> : <RenderDateMobile />}</div>;
+  return <RenderDates />;
 };
 
-export default RangeDates;
+export default RangeDatesDesktop;

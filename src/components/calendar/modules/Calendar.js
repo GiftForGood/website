@@ -2,7 +2,9 @@ import React, { useState } from 'react';
 import CalendarJS from 'calendarjs';
 import moment from 'moment';
 import MonthYearTitle from './MonthYearTitle';
-import RangeDates from './RangeDates';
+import RangeDatesDesktop from './RangeDatesDesktop';
+import RangeDatesMobile from './RangeDatesMobile';
+import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 import { RENDER_DAYS } from '../constants/week';
 import { Stack, Tag, Text } from '@kiwicom/orbit-components/lib';
 
@@ -22,6 +24,8 @@ const generateTimeslots = (startTime, endTime, interval) => {
 };
 
 const Calendar = ({ timeslot, maxSlots, renderDays }) => {
+  const { isTablet } = useMediaQuery();
+
   renderDays = updateRenderDays(renderDays);
   const timeslots = generateTimeslots(timeslot.startTime, timeslot.endTime, timeslot.interval);
 
@@ -34,15 +38,28 @@ const Calendar = ({ timeslot, maxSlots, renderDays }) => {
     setLastUpdatedDate(date);
   };
 
-  const RenderRangeDates = () => {
+  const RenderRangeDatesDesktop = () => {
     const cal = new CalendarJS(lastUpdatedDate.year(), lastUpdatedDate.month() + 1);
     const weeks = cal.generate();
-
     return (
-      <RangeDates
+      <RangeDatesDesktop
         lastUpdatedDate={lastUpdatedDate}
         currentDateTime={currentDateTime}
         weeks={weeks}
+        updateLastUpdatedDate={updateLastUpdatedDate}
+        timeslots={timeslots}
+        onTimeslotClick={handleTimeslotClick}
+        selectedTimeslots={selectedTimeslots}
+        renderDays={renderDays}
+      />
+    );
+  };
+
+  const RenderRangeDatesMobile = () => {
+    return (
+      <RangeDatesMobile
+        lastUpdatedDate={lastUpdatedDate}
+        currentDateTime={currentDateTime}
         updateLastUpdatedDate={updateLastUpdatedDate}
         timeslots={timeslots}
         onTimeslotClick={handleTimeslotClick}
@@ -97,7 +114,7 @@ const Calendar = ({ timeslot, maxSlots, renderDays }) => {
         lastUpdatedDate={lastUpdatedDate}
         updateLastUpdatedDate={updateLastUpdatedDate}
       />
-      <RenderRangeDates />
+      {isTablet ? <RenderRangeDatesDesktop /> : <RenderRangeDatesMobile />}
       <Stack spaceAfter="small">
         <Text weight="bold" size="large">
           My Selected Timeslots:
