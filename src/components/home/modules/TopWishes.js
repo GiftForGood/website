@@ -9,7 +9,6 @@ import GreySubtleButton from '../../buttons/GreySubtleButton';
 import Desktop from '@kiwicom/orbit-components/lib/Desktop';
 import Mobile from '@kiwicom/orbit-components/lib/Mobile';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
-import { dummyTopCategoriesAndTheirWishes } from '../../../../utils/dummyData/topCategoriesAndTheirWishes';
 
 const WishesColumn = styled.div`
   display: flex;
@@ -23,6 +22,7 @@ const WishesColumn = styled.div`
 const CategoryHeaderContainer = styled.div`
   height: fit-content;
   margin: 10px;
+  text-align: center;
 `;
 
 const ViewAllButtonContainer = styled.div`
@@ -54,13 +54,9 @@ const TopWishes = ({ numberOfPosts, numberOfCategories }) => {
   const [topCategoriesAndTheirWishes, setTopCategoriesAndTheirWishes] = useState([]);
 
   useEffect(() => {
-    if (process.env.NODE_ENV === 'development') {
-      setTopCategoriesAndTheirWishes(dummyTopCategoriesAndTheirWishes);
-    } else {
-      getTopCategoriesAndTheirWishes(numberOfPosts, numberOfCategories).then((result) =>
-        setTopCategoriesAndTheirWishes(result)
-      );
-    }
+    getTopCategoriesAndTheirWishes(numberOfPosts, numberOfCategories).then((result) =>
+      setTopCategoriesAndTheirWishes(result)
+    );
   }, []);
 
   const getTopCategoriesAndTheirWishes = async (numberOfPosts, numberOfCategories) => {
@@ -96,14 +92,14 @@ const TopWishes = ({ numberOfPosts, numberOfCategories }) => {
   const TopWishCards = () => {
     const router = useRouter();
     return topCategoriesAndTheirWishes.map((obj) => {
-      const categoryHref = `/category/${obj.id}`;
+      const categoryHref = `/category/${obj.category.id}`;
       const handleViewAllButton = (event) => {
         event.preventDefault();
         router.push(categoryHref);
       };
       return (
-        <WishesColumn key={obj.id}>
-          <CategoryHeader title={obj.name}></CategoryHeader>
+        <WishesColumn key={obj.category.id}>
+          <CategoryHeader title={obj.category.name}></CategoryHeader>
           {obj.wishes.map((wish) => {
             const wishPostHref = `/wishes/${wish.wishesId}`;
             return (
