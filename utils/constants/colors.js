@@ -5,4 +5,9 @@ export const colors = {
   npoBackground: '#065ef5',
   npoHoverActive: '#0554dc',
   npoFocus: '#0441aa',
+  calendarSelectedBackground: '#4db6ac',
+  calendarSelectedHoverActive: '#35ada0',
+  calendarSelectedFocus: '#16a595',
+  calendarUnselectedBackground: '#ffffff',
+  calendarUnselectedHoverActiveFocus: '#e7e7e7',
 };
