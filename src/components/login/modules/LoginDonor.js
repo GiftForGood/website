@@ -53,7 +53,7 @@ const LoginDonor = () => {
         throw response.error;
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
       setIsLoading(false);
       formik.setSubmitting(false);
       if (error.code === 'auth/user-disabled') {
@@ -85,7 +85,7 @@ const LoginDonor = () => {
         throw response.error;
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
       if (error.code === 'auth/unable-to-create-user') {
         displayAlert('Error', error.message, 'critical');
       } else if (error.code === 'auth/invalid-user') {

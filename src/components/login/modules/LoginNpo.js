@@ -51,7 +51,7 @@ const LoginNpo = () => {
         throw response.error;
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
       setIsLoading(false);
       formik.setSubmitting(false);
       if (error.code === 'auth/user-disabled') {
