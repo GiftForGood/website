@@ -4,6 +4,7 @@ import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import styled, { css } from 'styled-components';
 import { Text, Heading } from '@kiwicom/orbit-components/lib';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
+import { leftRegistrationPanelImagePath } from '../../../../utils/constants/imagePaths';
 
 const Wrapper = styled.div`
   background-size: cover;
@@ -13,7 +14,7 @@ const Wrapper = styled.div`
   flex: 1;
   display: block;
   position: relative;
-  background-image: url(https://images.unsplash.com/photo-1509885903707-b68568db61ed?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=634&q=80);
+  background-image: url(${leftRegistrationPanelImagePath});
 `;
 
 const Content = styled.div`
