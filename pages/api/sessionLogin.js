@@ -1,5 +1,6 @@
 import admin from '../../utils/admin-firebase';
 import cookies from '../../utils/cookie';
+import { SECURE_COOKIE } from '../../utils/constants/cookie';
 
 async function handler(req, res) {
   const { method } = req;
@@ -28,7 +29,7 @@ async function handler(req, res) {
         .then(
           (sessionCookie) => {
             // Set cookie policy for session cookie.
-            const options = { maxAge: expiresIn, httpOnly: true, secure: false, path: '/' }; //TODO: need to change to secure:true
+            const options = { maxAge: expiresIn, httpOnly: true, secure: SECURE_COOKIE, path: '/' };
             res.cookie('session', sessionCookie, options);
             res.json({ status: true });
           },
