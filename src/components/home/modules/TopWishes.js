@@ -67,9 +67,7 @@ const TopWishes = ({ numberOfPosts, numberOfCategories }) => {
 
   const getTopCategories = async (numberOfCategories) => {
     const rawCategories = await api.categories.getAll().catch((err) => console.error(err));
-    return rawCategories.docs
-      .slice(0, numberOfCategories)
-      .map((doc) => doc.data());
+    return rawCategories.docs.slice(0, numberOfCategories).map((doc) => doc.data());
   };
 
   const getTopWishesForCategories = async (categories, numberOfPosts) => {
