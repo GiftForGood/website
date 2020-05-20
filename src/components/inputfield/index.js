@@ -64,7 +64,7 @@ const Wrapper = styled.div`
 `;
 
 const Input = styled.input`
-  -webkit-appearance: none; 
+  -webkit-appearance: none;
   font-family: 'Roboto', -apple-system, '.SFNSText-Regular', 'San Francisco', 'Segoe UI', 'Helvetica Neue',
     'Lucida Grande', sans-serif;
   width: 100%;
