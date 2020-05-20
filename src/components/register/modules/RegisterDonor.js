@@ -82,6 +82,7 @@ const RegisterDonor = () => {
       }
     } catch (error) {
       console.error(error);
+      setGoogleLoading(false);
       if (error.code === 'auth/unable-to-create-user') {
         displayAlert('Error', error.message, 'critical');
       } else {
