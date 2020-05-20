@@ -2,9 +2,13 @@ import { db, firebaseAuth, firebaseStorage } from '../firebase';
 import firebase from 'firebase/app';
 import * as moment from 'moment';
 import * as path from 'path';
-import * as NPORegisteredRegistrar from '../constants/npoRegisteredRegistrar.js';
+import {
+  REGISTRY_OF_SOCIETIES,
+  COMMISSIONER_OF_CHARITIES,
+  AFFILIATED_NATIONAL_COUNCIL_OF_SOCIAL_SERVICE,
+} from '../constants/npoRegisteredRegistrar.js';
 import AuthError from './error/authError';
-import * as SiteUrlConstant from '../constants/siteUrl';
+import { FIREBASE_EMAIL_ACTION_URL } from '../constants/siteUrl';
 
 const donorsCollection = db.collection('donors');
 const nposCollection = db.collection('npos');
@@ -163,11 +167,7 @@ class AuthAPI {
    * Send a verification email to the currently logged in user
    */
   async sendVerificationEmail() {
-    let url = SiteUrlConstant.PRODUCTION_URL + '/login';
-    if (process.env.NODE_ENV === 'development') {
-      url = SiteUrlConstant.DEV_URL + '/login';
-    }
-
+    let url = FIREBASE_EMAIL_ACTION_URL + '/';
     const actionCodeSettings = {
       url: url,
     };
@@ -214,7 +214,6 @@ class AuthAPI {
       name: name,
       profileImageUrl: profileImageUrl,
       reviewRating: 0,
-      isVerifiedByEmail: false,
       hasAcceptedTermsOfService: true,
       isBlocked: false,
       isForcedRefreshRequired: false,
@@ -250,9 +249,9 @@ class AuthAPI {
 
   _validateRegistrar(registeredRegistrar) {
     const validRegistrar = [
-      NPORegisteredRegistrar.AFFILIATED_NATIONAL_COUNCIL_OF_SOCIAL_SERVICE,
-      NPORegisteredRegistrar.REGISTRY_OF_SOCIETY,
-      NPORegisteredRegistrar.COMMISSIONER_OF_CHARITIES,
+      AFFILIATED_NATIONAL_COUNCIL_OF_SOCIAL_SERVICE,
+      REGISTRY_OF_SOCIETIES,
+      COMMISSIONER_OF_CHARITIES,
     ];
 
     if (!validRegistrar.includes(registeredRegistrar)) {
@@ -282,7 +281,6 @@ class AuthAPI {
       profileImageUrl: '',
       organization: organizationInfo,
       reviewRating: 0,
-      isVerifiedByEmail: false,
       isVerifiedByAdmin: false,
       hasAcceptedTermsOfService: true,
       isBlocked: false,
@@ -326,7 +324,7 @@ class AuthAPI {
       name: name,
       contactNumber: contact,
       organization: organization,
-      isVerifiedByEmail: false,
+      isVerifiedByAdmin: false,
     };
     await newVerificationData.set(data);
     return newVerificationData;
