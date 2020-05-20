@@ -1,8 +1,11 @@
 import admin from '../../utils/admin-firebase';
 import cookie from 'cookie';
 import AuthError from '../../utils/api/error/authError';
+import { cors } from '../../utils/middleware/cors';
 
 async function handler(req, res) {
+  await cors(req, res);
+
   const { method } = req;
   switch (method) {
     case 'GET':
