@@ -3,7 +3,7 @@ import { cors } from '../../utils/middleware/cors';
 
 async function handler(req, res) {
   await cors(req, res);
-  
+
   const { method } = req;
   switch (method) {
     case 'POST':
