@@ -1,7 +1,7 @@
 import React from 'react';
 import WishesHomePage from '../src/components/home/pages/WishesHomePage';
 
-const Home = () => {
+const WishesHome = () => {
   return (
     <>
       <WishesHomePage />
@@ -9,4 +9,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default WishesHome;
