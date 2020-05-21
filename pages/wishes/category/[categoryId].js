@@ -17,7 +17,6 @@ const getCategoryDetails = async (categoryId) => {
   return rawCategory.docs[0].data();
 };
 
-
 const ViewCategory = ({ categoryDetails }) => {
   return <ViewCategoryPage categoryDetails={categoryDetails} />;
 };
