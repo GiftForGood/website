@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import api from '../../../utils/api';
 import Categories from './Categories';
 import WishCard from '../card/WishCard';
@@ -29,26 +29,73 @@ const ButtonContainer = styled.div`
   text-align: center;
 `;
 
-const ViewCategoryPage = ({ categoryDetails, firstBatchOfWishes }) => {
+const ViewCategoryPage = ({ categoryDetails }) => {
   const category = categoryDetails;
   const [filter, setFilter] = useState(WishesSortTypeConstant.TIMESTAMP);
-  const [allWishes, setAllWishes] = useState(firstBatchOfWishes);
+  // note that the wishes are in terms of documents, use data() to get data within
+  const [allWishes, setAllWishes] = useState([]);
+  const [numberOfBatchesLoaded, setNumberOfBatchesLoaded] = useState(1);
+
+  // toggled whenever filter changes, loads the same number of batches that were loaded previously, but with
+  // a different filter
+  useEffect(() => {
+    getNBatchesOfWishes(category.id, filter, numberOfBatchesLoaded).then((newWishes) => {
+      setAllWishes(newWishes);
+    });
+  }, [filter]);
+
+  /**
+   * TO ASK: do we need to have another api method that allows to specify the number of
+   * documents to query, instead of the batch size? In this way, I don't need a for loop
+   * and have multiple calls to firestore.
+   */
+  const getNBatchesOfWishes = async (categoryId, filter, numberOfBatchesLoaded) => {
+    let rawWishes = [];
+    for (let i = 0; i < numberOfBatchesLoaded; i++) {
+      let nextBatchOfRawWishes = [];
+      if (rawWishes.length === 0) {
+        // get the first batch of wishes
+        nextBatchOfRawWishes = await getNextBatchOfWishes(categoryId, filter, null).catch((err) => console.error(err));
+      } else {
+        // get the next batch of wishes w.r.t the last queried document
+        const lastQueriedDocument = rawWishes[rawWishes.length - 1];
+        nextBatchOfRawWishes = await getNextBatchOfWishes(categoryId, filter, lastQueriedDocument).catch((err) =>
+          console.error(err)
+        );
+      }
+      if (nextBatchOfRawWishes.length > 0) {
+        rawWishes = rawWishes.concat(nextBatchOfRawWishes);
+      }
+    }
+    return rawWishes;
+  };
+
+  const getNextBatchOfWishes = async (categoryId, filter, lastQueriedDocument) => {
+    const rawWishes = await api.wishes
+      .getPendingWishesForCategory(categoryId, filter, false, lastQueriedDocument)
+      .catch((err) => console.error(err));
+    return rawWishes.docs;
+  };
 
   const displayAllWishes = () => {
+    if (allWishes.length === 0) {
+      return;
+    }
     return allWishes.map((wish) => {
-      const postHref = `/wishes/${wish.wishesId}`;
-      const categoryTags = wish.categories.map((category) => category.name);
+      const { wishesId, categories, organization, title, description, user, postedDateTime, isBumped } = wish.data();
+      const postHref = `/wishes/${wishesId}`;
+      const categoryTags = categories.map((category) => category.name);
       return (
         <WishCard
-          key={wish.wishesId}
-          name={wish.organization.name}
-          title={wish.title}
-          description={wish.description}
-          profileImageUrl={wish.user.profileImageUrl}
-          postedDateTime={wish.postedDateTime}
+          key={wishesId}
+          name={organization.name}
+          title={title}
+          description={description}
+          profileImageUrl={user.profileImageUrl}
+          postedDateTime={postedDateTime}
           postHref={postHref}
           categoryTags={categoryTags}
-          isBumped={wish.isBumped}
+          isBumped={isBumped}
         />
       );
     });
@@ -85,6 +132,16 @@ const ViewCategoryPage = ({ categoryDetails, firstBatchOfWishes }) => {
     );
   };
 
+  const handleOnClickSeeMore = () => {
+    // TODO: load more wishes
+    getNextBatchOfWishes(category.id, filter, allWishes[allWishes.length - 1]).then((newWishes) => {
+      if (newWishes.length > 0) {
+        setAllWishes(allWishes.concat(newWishes));
+        setNumberOfBatchesLoaded(numberOfBatchesLoaded + 1);
+      }
+    });
+  };
+
   return (
     <ViewCategoryContainer>
       <Categories />
@@ -117,7 +174,7 @@ const ViewCategoryPage = ({ categoryDetails, firstBatchOfWishes }) => {
             </Grid>
             <br />
             <ButtonContainer>
-              <GreySubtleButton style={{ marginTop: '15px' }} type="normal">
+              <GreySubtleButton onClick={handleOnClickSeeMore} style={{ marginTop: '15px' }} type="normal">
                 <BlackText style={{ padding: '5px' }} size="medium">
                   See more
                 </BlackText>

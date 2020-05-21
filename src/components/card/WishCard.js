@@ -13,15 +13,15 @@ const CardContainer = styled.div`
   justify-content: space-between;
   border-radius: 5px;
   box-shadow: 0px 0px 5px 0px rgba(37, 42, 49, 0.16), 0px 2px 8px 0px rgba(37, 42, 49, 0.12);
-  width: 275px;
-  height: 300px;
-  min-width: 275px;
-  min-height: 300px;
+  width: 325px;
+  height: 350px;
+  min-width: 325px;
+  min-height: 350px;
   ${media.desktop(css`
-    width: calc(275px + 5vw);
-    height: calc(300px + 5vw);
-    min-width: 275px;
-    min-height: 300px;
+    width: 350px;
+    height: 400px;
+    min-width: 350px;
+    min-height: 400px;
   `)}
   position: relative;
 `;
