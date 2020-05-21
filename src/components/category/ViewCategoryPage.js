@@ -6,6 +6,7 @@ import BlackText from '../text/BlackText';
 import GreySubtleButton from '../buttons/GreySubtleButton';
 import { Stack, ChoiceGroup, Radio, Grid, Separator } from '@kiwicom/orbit-components/lib';
 import * as WishesSortTypeConstant from '../../../utils/constants/wishesSortType';
+import { WISHES_BATCH_SIZE } from '../../../utils/api/constants';
 import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 
@@ -34,6 +35,7 @@ const ViewCategoryPage = ({ categoryDetails }) => {
   const [filter, setFilter] = useState(WishesSortTypeConstant.TIMESTAMP);
   // note that the wishes are in terms of documents, use data() to get data within
   const [allWishes, setAllWishes] = useState([]);
+  const [hasAllLoaded, setHasAllLoaded] = useState(false);
   const [numberOfBatchesLoaded, setNumberOfBatchesLoaded] = useState(1);
 
   // toggled whenever filter changes, loads the same number of batches that were loaded previously, but with
@@ -70,13 +72,25 @@ const ViewCategoryPage = ({ categoryDetails }) => {
     return rawWishes;
   };
 
+  /**
+   * Note that this function returns WISHES_BATCH_SIZE - 1 amount of documents,
+   * instead of WISHES_BATCH_SIZE, as the last document is to see whether we
+   * have loaded all wishes.
+   */
   const getNextBatchOfWishes = async (categoryId, filter, lastQueriedDocument) => {
     // only time stamp should be reversed as it is from newest to oldest
     const isReverse = filter === WishesSortTypeConstant.TIMESTAMP ? true : false;
     const rawWishes = await api.wishes
       .getPendingWishesForCategory(categoryId, filter, isReverse, lastQueriedDocument)
       .catch((err) => console.error(err));
-    return rawWishes.docs;
+    const numberOfDocumentsReturned = rawWishes.docs.length;
+    if (numberOfDocumentsReturned < WISHES_BATCH_SIZE) {
+      // loaded all documents already
+      setHasAllLoaded(true);
+      return rawWishes.docs;
+    }
+    // have not loaded all documents, returned WISHES_BATCH_SIZE - 1 of documents
+    return rawWishes.docs.slice(0, WISHES_BATCH_SIZE - 1);
   };
 
   const displayAllWishes = () => {
@@ -175,13 +189,15 @@ const ViewCategoryPage = ({ categoryDetails }) => {
               {displayAllWishes()}
             </Grid>
             <br />
-            <ButtonContainer>
-              <GreySubtleButton onClick={handleOnClickSeeMore} style={{ marginTop: '15px' }} type="normal">
-                <BlackText style={{ padding: '5px' }} size="medium">
-                  See more
-                </BlackText>
-              </GreySubtleButton>
-            </ButtonContainer>
+            {!hasAllLoaded && (
+              <ButtonContainer>
+                <GreySubtleButton onClick={handleOnClickSeeMore} style={{ marginTop: '15px' }} type="normal">
+                  <BlackText style={{ padding: '5px' }} size="medium">
+                    See more
+                  </BlackText>
+                </GreySubtleButton>
+              </ButtonContainer>
+            )}
           </WishesContainer>
         </div>
       </Grid>
