@@ -71,8 +71,10 @@ const ViewCategoryPage = ({ categoryDetails }) => {
   };
 
   const getNextBatchOfWishes = async (categoryId, filter, lastQueriedDocument) => {
+    // only time stamp should be reversed as it is from newest to oldest
+    const isReverse = filter === WishesSortTypeConstant.TIMESTAMP ? true : false;
     const rawWishes = await api.wishes
-      .getPendingWishesForCategory(categoryId, filter, false, lastQueriedDocument)
+      .getPendingWishesForCategory(categoryId, filter, isReverse, lastQueriedDocument)
       .catch((err) => console.error(err));
     return rawWishes.docs;
   };
