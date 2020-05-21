@@ -13,5 +13,5 @@ export const colors = {
   subtleGrey: '#707070', // used in view all button's border, footer description of donation cards
   loginBackground: '#212121',
   loginHoverActive: '#424242',
-  loginFocus: '#616161'
+  loginFocus: '#616161',
 };

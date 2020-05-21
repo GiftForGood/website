@@ -1,11 +1,5 @@
 import React, { useState } from 'react';
-import {
-  Stack,
-  ButtonLink,
-  NavigationBar,
-  Separator,
-  Drawer,
-} from '@kiwicom/orbit-components';
+import { Stack, ButtonLink, NavigationBar, Separator, Drawer } from '@kiwicom/orbit-components';
 import TopLeftNavigation from './TopLeftNavigation';
 import TopRightNavigation from './TopRightNavigation';
 import CallToActionButton from '../../buttons/CallToActionButton';
@@ -27,7 +21,6 @@ const TopNavigationBar = () => {
         <Stack justify="between" spacing="none">
           <TopLeftNavigation onHamburgerClick={onHamburgerClick} />
           <TopRightNavigation />
-         
         </Stack>
       </NavigationBar>
 
@@ -40,7 +33,7 @@ const TopNavigationBar = () => {
             <ButtonLink transparent type="secondary" href={'/donations'}>
               Donations
             </ButtonLink>
-            <CallToActionButton fullWidth={true}/>
+            <CallToActionButton fullWidth={true} />
           </Stack>
 
           <Separator fullWidth />

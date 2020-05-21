@@ -2,7 +2,7 @@ import React from 'react';
 import { Stack, ButtonLink } from '@kiwicom/orbit-components/';
 import { MenuHamburger } from '@kiwicom/orbit-components/lib/icons';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
-import LogoButton from '../../buttons/LogoButton'
+import LogoButton from '../../buttons/LogoButton';
 
 const TopLeftNavigation = ({ onHamburgerClick }) => {
   const { isDesktop, isTablet } = useMediaQuery();
