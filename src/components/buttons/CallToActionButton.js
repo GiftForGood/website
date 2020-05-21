@@ -41,7 +41,7 @@ const CallToActionButton = ({ fullWidth }) => {
       disabled={!user.emailVerified}
       onClick={onButtonClick}
     >
-      {user.donor ? 'Donations' : 'Post'}
+      {user.donor ? 'Donate' : 'Post'}
     </Button>
   );
 };
