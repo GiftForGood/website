@@ -2,34 +2,15 @@ import React, { useState } from 'react';
 import {
   Stack,
   ButtonLink,
-  Button,
   NavigationBar,
-  Desktop,
-  Mobile,
   Separator,
-  Text,
   Drawer,
-  Tile,
 } from '@kiwicom/orbit-components';
-
-import {
-  StarFull,
-  QuestionCircle,
-  AccountCircle,
-  ChevronDown,
-  MenuHamburger,
-  Notification,
-  Messages,
-  Search,
-} from '@kiwicom/orbit-components/lib/icons';
-import styled from 'styled-components';
-import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 import TopLeftNavigation from './TopLeftNavigation';
 import TopRightNavigation from './TopRightNavigation';
 import CallToActionButton from '../../buttons/CallToActionButton';
 
 const TopNavigationBar = () => {
-  const { isDesktop, isTablet } = useMediaQuery();
   const [showDrawer, setShowDrawer] = useState(false);
 
   const onHamburgerClick = () => {

@@ -22,22 +22,13 @@ const CallToActionButtonStyle = styled.button`
 `;
 
 const CallToActionButton = ({ fullWidth }) => {
-  // const user = useUser();
-  const user = {
-    userId: '1231',
-    name: 'Marcus',
-    profileImageUrl: '',
-    reviewRating: 0,
-    hasAcceptedTermsOfService: true,
-    isBlocked: false,
-    isForcedRefreshRequired: false,
-    joinedDateTime: 'now',
-    lastLoggedInDateTime: 'now',
-    npo: true,
-    emailVerified: false,
+  const user = useUser();
+
+  const onButtonClick = () => {
+    //TODO: Add router to the create page
+    console.log('CTA clicked');
   };
 
-  const onButtonClick = () => {};
   if (!user) {
     return null;
   }
