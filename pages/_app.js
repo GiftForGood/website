@@ -6,6 +6,16 @@ import { ThemeProvider, createGlobalStyle } from 'styled-components';
 const GlobalStyle = createGlobalStyle`
   body {
     margin: 0 auto;
+    font-family: 'Trebuchet MS';
+  }
+
+  .default-avatar {
+    width: 40px;
+    height: 40px;
+  }
+
+  #scrollableCategory::-webkit-scrollbar, .scrollableDonation::-webkit-scrollbar {
+    display: none;
   }
 `;
 
