@@ -1,6 +1,6 @@
 import React from 'react';
 import Banner from '../modules/Banner';
-import Categories from '../modules/Categories';
+import Categories from '../../category/Categories';
 import TopDonations from '../modules/TopDonations';
 import { Grid } from '@kiwicom/orbit-components/lib';
 import styled, { css } from 'styled-components';

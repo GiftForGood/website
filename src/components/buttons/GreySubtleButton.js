@@ -3,7 +3,7 @@ import { colors } from '../../../utils/constants/colors';
 
 const GreySubtleButton = styled.button`
   border: 0.5px solid ${colors.subtleGrey};
-  border-radius: 25px;
+  border-radius: ${(props) => (props.type === 'normal' ? '3px' : '25px')};
   font-weight: normal;
   background: Transparent;
   text-align: center;
