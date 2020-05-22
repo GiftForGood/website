@@ -135,7 +135,13 @@ const LoginDonor = () => {
           </Heading>
         </Stack>
       </Text>
-      <SocialButton type="google" fullWidth={true} spaceAfter="normal" onClick={handleGoogleLogin} loading={isGoogleLoading}>
+      <SocialButton
+        type="google"
+        fullWidth={true}
+        spaceAfter="normal"
+        onClick={handleGoogleLogin}
+        loading={isGoogleLoading}
+      >
         Login with Google
       </SocialButton>
       <Text align="center" spaceAfter="normal">
