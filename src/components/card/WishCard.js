@@ -107,7 +107,7 @@ const Tags = ({ categoryTags }) => {
  * @param {string} description is the description of the wish
  * @param {string} profileImageUrl is the url to the avatar image of the wish user
  * @param {string} postedDateTime is the time posted for wish in milliseconds
- * @param {string} postHref is the link url to direct users to after clicking the donation card
+ * @param {string} postHref is the link url to direct users to after clicking the wish card
  * @param {string[]} categoryTags are the category names that the wish is under
  * @param {boolean} isBumped is whether the wish post is bumped
  */
