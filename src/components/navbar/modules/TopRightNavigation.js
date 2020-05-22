@@ -75,6 +75,7 @@ const LoggedInButtons = () => {
   const router = useRouter();
 
   const onLogoutClick = async () => {
+    //TODO: dispatch logout
     try {
       await api.auth.logout();
       let response = await client.post('/api/sessionLogout');
@@ -97,7 +98,7 @@ const LoggedInButtons = () => {
         <Stack direction="row" justify="end" align="center" shrink spacing="extraTight">
           <ButtonLink iconLeft={<Notification />} transparent type="secondary" onClick={onNotificationClick} />
           <ButtonLink iconLeft={<Messages />} transparent type="secondary" href="/chat" />
-          <AccountButton onNotificationClick={onNotificationClick} oonLogoutClick={onLogoutClick} user={user} />
+          <AccountButton onNotificationClick={onNotificationClick} onLogoutClick={onLogoutClick} user={user} />
           <CallToActionButton />
         </Stack>
       </Desktop>
@@ -106,7 +107,7 @@ const LoggedInButtons = () => {
         <Stack direction="row" justify="end" align="center" shrink spacing="extraTight">
           <ButtonLink iconLeft={<Search />} transparent type="secondary" href="/mobile-search" />
           <ButtonLink iconLeft={<Messages />} transparent type="secondary" href="/chat" />
-          <AccountButton onNotificationClick={onNotificationClick} oonLogoutClick={onLogoutClick} user={user} />
+          <AccountButton onNotificationClick={onNotificationClick} onLogoutClick={onLogoutClick} user={user} />
         </Stack>
       </Mobile>
     </>
