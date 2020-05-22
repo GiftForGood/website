@@ -1,13 +1,13 @@
 import React from 'react';
 import api from '../../../utils/api';
-import ViewCategoryPage from '../../../src/components/category/ViewCategoryPage';
+import ViewCategoryPage from '../../../src/components/category/pages/WishesViewCategoryPage';
 
 export async function getServerSideProps({ params, query }) {
   const categoryDetails = await getCategoryDetails(params.categoryId);
   return {
     props: {
       categoryDetails,
-      filterQuery: query.filter,
+      filterQuery: query.filter ? query.filter : null,
     },
   };
 }

@@ -17,10 +17,11 @@ const CardContainer = styled.div`
   height: 350px;
   min-width: 325px;
   min-height: 350px;
+  text-align: left;
   ${media.desktop(css`
-    width: 350px;
+    width: 345px;
     height: 400px;
-    min-width: 350px;
+    min-width: 345px;
     min-height: 400px;
   `)}
   position: relative;

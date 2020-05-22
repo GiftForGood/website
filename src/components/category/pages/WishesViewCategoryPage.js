@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
-import api from '../../../utils/api';
-import Categories from './Categories';
-import WishCard from '../card/WishCard';
-import BlackText from '../text/BlackText';
-import SeeMoreButton from '../buttons/SeeMoreButton';
-import { ChoiceGroup, Radio, Grid, Separator, Loading, Button } from '@kiwicom/orbit-components/lib';
-import * as WishesSortTypeConstant from '../../../utils/constants/wishesSortType';
-import { WISHES_BATCH_SIZE } from '../../../utils/api/constants';
+import api from '../../../../utils/api';
+import Categories from '../modules/Categories';
+import WishesFilterBy from '../modules/WishesFilterBy';
+import WishCard from '../../card/WishCard';
+import BlackText from '../../text/BlackText';
+import SeeMoreButton from '../../buttons/SeeMoreButton';
+import { Grid, Button, Loading } from '@kiwicom/orbit-components/lib';
+import * as WishesSortTypeConstant from '../../../../utils/constants/wishesSortType';
+import { WISHES_BATCH_SIZE } from '../../../../utils/api/constants';
 import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
+import InfiniteScroll from 'react-infinite-scroller';
+import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 
 const ViewCategoryContainer = styled.div`
   width: 90vw;
@@ -23,7 +25,15 @@ const WishesContainer = styled.div`
   margin: 0 auto;
   ${media.largeMobile(css`
     margin: 0;
+    width: 100%;
   `)}
+`;
+
+const PageLoadingContainer = styled.div`
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  margin: 0 auto;
 `;
 
 const ButtonContainer = styled.div`
@@ -34,21 +44,34 @@ const ButtonContainer = styled.div`
 
 const ViewCategoryPage = ({ categoryDetails, filterQuery }) => {
   const category = categoryDetails;
-  const router = useRouter();
   const [filter, setFilter] = useState(filterQuery ? filterQuery : WishesSortTypeConstant.TIMESTAMP); // set filter based on the filter obtained from url query
   const [allWishes, setAllWishes] = useState([]); // note that the wishes are in terms of documents, use data() to get data within
   const [hasAllLoaded, setHasAllLoaded] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isButtonLoading, setIsButtonLoading] = useState(false);
+  const [isPageLoading, setIsPageLoading] = useState(false);
   const [numberOfBatchesLoaded, setNumberOfBatchesLoaded] = useState(1);
+  const { isDesktop, isLargeMobile } = useMediaQuery();
 
   // toggled whenever filter changes, loads the same number of batches that were loaded previously, but with
   // a different filter
   useEffect(() => {
+    if (allWishes.length > 0) {
+      // only set page loading to true when filter is modified
+      setIsPageLoading(true);
+    }
+    setAllWishes([]); // reset all wishes
     getNBatchesOfWishes(category.id, filter, numberOfBatchesLoaded).then((newWishes) => {
       setAllWishes(newWishes);
+      setIsPageLoading(false);
     });
   }, [filter]);
 
+  const getLastQueriedDocument = () => {
+    if (allWishes.length === 0) {
+      return null;
+    }
+    return allWishes[allWishes.length - 1];
+  };
   /**
    * TO ASK: do we need to have another api method that allows to specify the number of
    * documents to query, instead of the batch size? In this way, I don't need a for loop
@@ -57,17 +80,11 @@ const ViewCategoryPage = ({ categoryDetails, filterQuery }) => {
   const getNBatchesOfWishes = async (categoryId, filter, numberOfBatchesLoaded) => {
     let rawWishes = [];
     for (let i = 0; i < numberOfBatchesLoaded; i++) {
-      let nextBatchOfRawWishes = [];
-      if (rawWishes.length === 0) {
-        // get the first batch of wishes
-        nextBatchOfRawWishes = await getNextBatchOfWishes(categoryId, filter, null).catch((err) => console.error(err));
-      } else {
-        // get the next batch of wishes w.r.t the last queried document
-        const lastQueriedDocument = rawWishes[rawWishes.length - 1];
-        nextBatchOfRawWishes = await getNextBatchOfWishes(categoryId, filter, lastQueriedDocument).catch((err) =>
-          console.error(err)
-        );
-      }
+      const nextBatchOfRawWishes = await getNextBatchOfWishes(
+        categoryId,
+        filter,
+        rawWishes[rawWishes.length - 1]
+      ).catch((err) => console.error(err));
       if (nextBatchOfRawWishes.length > 0) {
         rawWishes = rawWishes.concat(nextBatchOfRawWishes);
       }
@@ -120,49 +137,14 @@ const ViewCategoryPage = ({ categoryDetails, filterQuery }) => {
     });
   };
 
-  const FilterBy = () => {
-    const handleSelect = (event) => {
-      setFilter(event.target.value);
-      router.push(`/wishes/category/[categoryId]`, `/wishes/category/${category.id}?filter=${event.target.value}`, {
-        shallow: true,
-      });
-    };
-    return (
-      <div style={{ marginTop: '20px' }}>
-        <BlackText style={{ marginBottom: '10px' }} size="large">
-          Filter By
-        </BlackText>
-        <Separator />
-        <ChoiceGroup style={{ flexDirection: 'row' }} onChange={(event) => handleSelect(event)}>
-          <Radio
-            label="Newest - Oldest"
-            checked={filter === WishesSortTypeConstant.TIMESTAMP}
-            value={WishesSortTypeConstant.TIMESTAMP}
-          />
-          <Radio
-            label="Nearest - Furthest"
-            checked={filter === WishesSortTypeConstant.DISTANCE}
-            value={WishesSortTypeConstant.DISTANCE}
-          />
-          <Radio
-            label="NPOs (A - Z)"
-            checked={filter === WishesSortTypeConstant.NPO_NAME}
-            value={WishesSortTypeConstant.NPO_NAME}
-          />
-        </ChoiceGroup>
-      </div>
-    );
-  };
-
   const handleOnClickSeeMore = () => {
-    // TODO: load more wishes
-    setIsLoading(true);
-    getNextBatchOfWishes(category.id, filter, allWishes[allWishes.length - 1]).then((newWishes) => {
+    setIsButtonLoading(true);
+    getNextBatchOfWishes(category.id, filter, getLastQueriedDocument()).then((newWishes) => {
       if (newWishes.length > 0) {
         setAllWishes(allWishes.concat(newWishes));
         setNumberOfBatchesLoaded(numberOfBatchesLoaded + 1);
       }
-      setIsLoading(false);
+      setIsButtonLoading(false);
     });
   };
 
@@ -172,39 +154,73 @@ const ViewCategoryPage = ({ categoryDetails, filterQuery }) => {
       <Grid
         columnGap="20px"
         tablet={{
-          columns: '1fr 5fr',
+          columns: '1fr 6fr',
         }}
         rows="1fr auto"
       >
-        <FilterBy />
+        <WishesFilterBy category={category} filter={filter} setFilter={setFilter} />
         <div style={{ marginTop: '20px' }}>
           <BlackText style={{ marginBottom: '10px' }} size="large">
             {category.name}
           </BlackText>
           <WishesContainer>
-            <Grid
-              inline={true}
-              largeDesktop={{
-                columns: '1fr 1fr 1fr',
-              }}
-              largeMobile={{
-                columns: '1fr 1fr',
-              }}
-              rows="auto"
-              gap="20px"
-              columns="1fr"
-            >
-              {displayAllWishes()}
-            </Grid>
-            <br />
-            {!hasAllLoaded && (
-              <ButtonContainer>
-                <Button asComponent={SeeMoreButton} onClick={handleOnClickSeeMore} loading={isLoading}>
-                  <BlackText style={{ padding: '5px' }} size="medium">
-                    See more
-                  </BlackText>
-                </Button>
-              </ButtonContainer>
+            {isLargeMobile && (
+              <div>
+                <Grid
+                  inline={true}
+                  largeDesktop={{
+                    columns: '1fr 1fr 1fr',
+                  }}
+                  largeMobile={{
+                    columns: '1fr 1fr',
+                  }}
+                  rows="auto"
+                  gap="20px"
+                >
+                  {displayAllWishes()}
+                </Grid>
+                {isPageLoading && (
+                  <PageLoadingContainer>
+                    <Loading loading={isPageLoading} type="pageLoader" />
+                  </PageLoadingContainer>
+                )}
+                <br />
+                {!hasAllLoaded && (
+                  <ButtonContainer>
+                    <Button asComponent={SeeMoreButton} onClick={handleOnClickSeeMore} loading={isButtonLoading}>
+                      <BlackText style={{ padding: '5px' }} size="medium">
+                        See more
+                      </BlackText>
+                    </Button>
+                  </ButtonContainer>
+                )}
+              </div>
+            )}
+
+            {!isLargeMobile && (
+              <InfiniteScroll
+                pageStart={0}
+                loadMore={handleOnClickSeeMore}
+                hasMore={!hasAllLoaded}
+                loader={<Loading type="pageLoader" key={0} />}
+              >
+                <Grid
+                  inline={true}
+                  largeMobile={{
+                    columns: '1fr 1fr',
+                  }}
+                  rows="auto"
+                  gap="20px"
+                  columns="1fr"
+                >
+                  {displayAllWishes()}
+                </Grid>
+                {isPageLoading && (
+                  <PageLoadingContainer>
+                    <Loading loading={isPageLoading} type="pageLoader" />
+                  </PageLoadingContainer>
+                )}
+              </InfiniteScroll>
             )}
           </WishesContainer>
         </div>
