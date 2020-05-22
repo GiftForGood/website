@@ -22,6 +22,8 @@ const AccountImageContainer = styled.div`
 
 const AccountImageRounded = styled.img`
   border-radius: 24px;
+  width: 24px;
+  height: 24px;
 `;
 
 const AccountImage = ({ src }) => {
