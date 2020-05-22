@@ -196,7 +196,7 @@ const ViewCategoryPage = ({ categoryDetails, filterQuery }) => {
       <Categories />
       <Grid
         columnGap="20px"
-        tablet={{
+        desktop={{
           columns: '1fr 6fr',
         }}
         rows="1fr auto"
