@@ -13,7 +13,7 @@ export async function getServerSideProps({ params, query }) {
 }
 
 const getCategoryDetails = async (categoryId) => {
-  const rawCategory = await api.categories.getById(categoryId);
+  const rawCategory = await api.categories.getById(categoryId).catch((err) => console.error(err));
   return rawCategory.docs[0].data();
 };
 
