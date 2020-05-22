@@ -3,7 +3,7 @@ let FIREBASE_EMAIL_ACTION_URL = '';
 
 if (process.env.NODE_ENV === 'development') {
   BASE_URL = 'http://localhost:3000';
-  FIREBASE_EMAIL_ACTION_URL = 'http://localhost:3000/';
+  FIREBASE_EMAIL_ACTION_URL = 'http://localhost:3000';
 } else {
   BASE_URL = 'https://www.giftforgood.io';
   FIREBASE_EMAIL_ACTION_URL = 'https://www.giftforgood.io';
