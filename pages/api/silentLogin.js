@@ -23,6 +23,7 @@ async function handler(req, res) {
             donor: decodedClaims.donor,
             npo: decodedClaims.npo,
             emailVerified: decodedClaims.email_verified,
+            email: decodedClaims.email
           },
         });
       } catch (error) {
