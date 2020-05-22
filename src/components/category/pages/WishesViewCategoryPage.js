@@ -54,12 +54,14 @@ const ViewCategoryPage = ({ categoryDetails, filterQuery }) => {
   const [hasAllLoaded, setHasAllLoaded] = useState(false);
   const [isButtonLoading, setIsButtonLoading] = useState(false);
   const [isPageLoading, setIsPageLoading] = useState(false);
+  const [isDataMounted, setIsDataMounted] = useState(false); // to keep track when data is mounted on the page
   const { isLargeMobile } = useMediaQuery();
 
   /**
    * Toggled whenever filter changes, reset everything and get first batch of wishes with filter
    */
   useEffect(() => {
+    setIsDataMounted(false);
     if (allWishes.length > 0) {
       // only set page loading to true when filter is modified
       setAllWishes([]);
@@ -69,6 +71,7 @@ const ViewCategoryPage = ({ categoryDetails, filterQuery }) => {
     getNextBatchOfWishes(category.id, filter, null).then((newWishes) => {
       setAllWishes(newWishes);
       setIsPageLoading(false);
+      setIsDataMounted(true); // to show see more button & no wishes message after page is mounted
     });
   }, [filter]);
 
@@ -101,7 +104,7 @@ const ViewCategoryPage = ({ categoryDetails, filterQuery }) => {
 
   const displayAllWishes = () => {
     if (allWishes.length === 0) {
-      return;
+      return isDataMounted && <BlackText size="medium">No wishes found.</BlackText>;
     }
     return allWishes.map((wish) => {
       const { wishesId, categories, organization, title, description, user, postedDateTime, isBumped } = wish.data();
@@ -155,7 +158,7 @@ const ViewCategoryPage = ({ categoryDetails, filterQuery }) => {
           </PageLoadingContainer>
         )}
         <br />
-        {!hasAllLoaded && (
+        {!hasAllLoaded && isDataMounted && (
           <ButtonContainer>
             <Button asComponent={SeeMoreButton} onClick={handleOnClickSeeMore} loading={isButtonLoading}>
               <BlackText style={{ padding: '5px' }} size="medium">
