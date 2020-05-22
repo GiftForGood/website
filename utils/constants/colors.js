@@ -13,4 +13,5 @@ export const colors = {
   subtleGrey: '#707070', // used in view all button's border, footer description of donation cards
   categoryTagsFill: '#D9D9D9',
   bump: '#4db6ac',
+  seeMoreHoverFocusActive: '#e7e7e7',
 };

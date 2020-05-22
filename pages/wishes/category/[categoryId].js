@@ -1,13 +1,13 @@
 import React from 'react';
 import api from '../../../utils/api';
-import * as WishesSortTypeConstant from '../../../utils/constants/wishesSortType';
 import ViewCategoryPage from '../../../src/components/category/ViewCategoryPage';
 
-export async function getServerSideProps({ params }) {
+export async function getServerSideProps({ params, query }) {
   const categoryDetails = await getCategoryDetails(params.categoryId);
   return {
     props: {
       categoryDetails,
+      filterQuery: query.filter,
     },
   };
 }
@@ -17,8 +17,8 @@ const getCategoryDetails = async (categoryId) => {
   return rawCategory.docs[0].data();
 };
 
-const ViewCategory = ({ categoryDetails }) => {
-  return <ViewCategoryPage categoryDetails={categoryDetails} />;
+const ViewCategory = ({ categoryDetails, filterQuery }) => {
+  return <ViewCategoryPage categoryDetails={categoryDetails} filterQuery={filterQuery} />;
 };
 
 export default ViewCategory;

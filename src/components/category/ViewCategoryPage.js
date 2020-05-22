@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import api from '../../../utils/api';
 import Categories from './Categories';
 import WishCard from '../card/WishCard';
 import BlackText from '../text/BlackText';
-import GreySubtleButton from '../buttons/GreySubtleButton';
-import { Stack, ChoiceGroup, Radio, Grid, Separator } from '@kiwicom/orbit-components/lib';
+import SeeMoreButton from '../buttons/SeeMoreButton';
+import { ChoiceGroup, Radio, Grid, Separator, Loading, Button } from '@kiwicom/orbit-components/lib';
 import * as WishesSortTypeConstant from '../../../utils/constants/wishesSortType';
 import { WISHES_BATCH_SIZE } from '../../../utils/api/constants';
 import styled, { css } from 'styled-components';
@@ -28,14 +29,16 @@ const WishesContainer = styled.div`
 const ButtonContainer = styled.div`
   width: 100%;
   text-align: center;
+  margin-top: 20px;
 `;
 
-const ViewCategoryPage = ({ categoryDetails }) => {
+const ViewCategoryPage = ({ categoryDetails, filterQuery }) => {
   const category = categoryDetails;
-  const [filter, setFilter] = useState(WishesSortTypeConstant.TIMESTAMP);
-  // note that the wishes are in terms of documents, use data() to get data within
-  const [allWishes, setAllWishes] = useState([]);
+  const router = useRouter();
+  const [filter, setFilter] = useState(filterQuery ? filterQuery : WishesSortTypeConstant.TIMESTAMP); // set filter based on the filter obtained from url query
+  const [allWishes, setAllWishes] = useState([]); // note that the wishes are in terms of documents, use data() to get data within
   const [hasAllLoaded, setHasAllLoaded] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [numberOfBatchesLoaded, setNumberOfBatchesLoaded] = useState(1);
 
   // toggled whenever filter changes, loads the same number of batches that were loaded previously, but with
@@ -120,6 +123,9 @@ const ViewCategoryPage = ({ categoryDetails }) => {
   const FilterBy = () => {
     const handleSelect = (event) => {
       setFilter(event.target.value);
+      router.push(`/wishes/category/[categoryId]`, `/wishes/category/${category.id}?filter=${event.target.value}`, {
+        shallow: true,
+      });
     };
     return (
       <div style={{ marginTop: '20px' }}>
@@ -150,11 +156,13 @@ const ViewCategoryPage = ({ categoryDetails }) => {
 
   const handleOnClickSeeMore = () => {
     // TODO: load more wishes
+    setIsLoading(true);
     getNextBatchOfWishes(category.id, filter, allWishes[allWishes.length - 1]).then((newWishes) => {
       if (newWishes.length > 0) {
         setAllWishes(allWishes.concat(newWishes));
         setNumberOfBatchesLoaded(numberOfBatchesLoaded + 1);
       }
+      setIsLoading(false);
     });
   };
 
@@ -191,11 +199,11 @@ const ViewCategoryPage = ({ categoryDetails }) => {
             <br />
             {!hasAllLoaded && (
               <ButtonContainer>
-                <GreySubtleButton onClick={handleOnClickSeeMore} style={{ marginTop: '15px' }} type="normal">
+                <Button asComponent={SeeMoreButton} onClick={handleOnClickSeeMore} loading={isLoading}>
                   <BlackText style={{ padding: '5px' }} size="medium">
                     See more
                   </BlackText>
-                </GreySubtleButton>
+                </Button>
               </ButtonContainer>
             )}
           </WishesContainer>
