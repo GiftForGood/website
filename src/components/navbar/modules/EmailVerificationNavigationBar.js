@@ -27,7 +27,7 @@ const Container = styled.div`
   `)};
 `;
 
-const EmailVerificationNavigationBar = ({ onShow, onHide }) => {
+const EmailVerificationNavigationBar = () => {
   const user = useUser();
   const [shown, setShown] = useState(false);
   const [prevScrollPosition, setPrevScrollPosition] = useState(0);
@@ -39,7 +39,9 @@ const EmailVerificationNavigationBar = ({ onShow, onHide }) => {
     if (prevScrollPosition < currentScrollPosition && currentScrollPosition > NAVBAR_HEIGHT.DESKTOP) {
       setShown(false);
     } else {
-      setShown(true);
+      if (user) {
+        setShown(!user.emailVerified);
+      }
     }
 
     setPrevScrollPosition(currentScrollPosition);
