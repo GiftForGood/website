@@ -12,8 +12,7 @@ import api from '../../../../utils/api';
 import client from '../../../../utils/axios';
 import styled from 'styled-components';
 import { useDispatch } from 'react-redux';
-import { logout }from '../../session/actions';
-
+import { logout } from '../../session/actions';
 
 const AccountImageContainer = styled.div`
   width: 24px;
@@ -89,7 +88,7 @@ const LoggedInButtons = () => {
         throw response.error;
       }
     } catch (error) {
-      console.error(error)
+      console.error(error);
     }
   };
 

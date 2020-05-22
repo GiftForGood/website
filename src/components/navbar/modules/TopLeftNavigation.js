@@ -11,11 +11,7 @@ const TopLeftNavigation = ({ onHamburgerClick }) => {
     <Stack direction="row" shrink spacing="tight">
       {isDesktop || isTablet ? (
         <>
-          <LogoButton
-            src={companyLogoImagePath}
-            height={25}
-            href={'/'}
-          />
+          <LogoButton src={companyLogoImagePath} height={25} href={'/'} />
 
           <ButtonLink transparent type="secondary" href={'/'}>
             Wishes

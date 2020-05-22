@@ -9,8 +9,8 @@ const SessionProvider = ({ user, children }) => {
     if (user) {
       dispatch(setCurrentUser(user));
     }
-  }, [])
-  
+  }, []);
+
   return <>{children}</>;
 };
 
