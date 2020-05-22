@@ -5,6 +5,8 @@ import { isAuthenticated } from '../utils/authentication/authentication';
 import { withRedux } from '../utils/withRedux';
 import Verified from '../src/components/session/modules/Verified';
 import WishesHomePage from '../src/components/home/pages/WishesHomePage';
+import dynamic from 'next/dynamic';
+const TopNavigationBar = dynamic(() => import('../src/components/navbar/modules/TopNavigationBar'), { ssr: false });
 
 export async function getServerSideProps({ params, req, res, query }) {
   let user = await isAuthenticated(req, res);
@@ -19,6 +21,7 @@ const WishesHome = ({ user }) => {
   const userData = useUser();
   return (
     <SessionProvider user={user}>
+      <TopNavigationBar />
       <WishesHomePage />
     </SessionProvider>
   );

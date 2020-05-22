@@ -27,6 +27,7 @@ const LoginDonor = () => {
   const [alertType, setAlertType] = useState('');
   const [alertDescription, setAlertDescription] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const router = useRouter();
 
   const displayAlert = (title, description, type) => {
@@ -76,15 +77,18 @@ const LoginDonor = () => {
 
   const handleGoogleLogin = async () => {
     try {
+      setIsGoogleLoading(true);
       const [token, user, userDoc] = await api.auth.loginDonorWithGoogle();
       let userData = userDoc.data();
       let response = await client.post('/api/sessionLogin', { token });
       if (response.status === 200) {
+        setIsGoogleLoading(false);
         router.push('/');
       } else {
         throw response.error;
       }
     } catch (error) {
+      setIsGoogleLoading(false);
       console.error(error);
       if (error.code === 'auth/unable-to-create-user') {
         displayAlert('Error', error.message, 'critical');
@@ -131,7 +135,13 @@ const LoginDonor = () => {
           </Heading>
         </Stack>
       </Text>
-      <SocialButton type="google" fullWidth={true} spaceAfter="normal" onClick={handleGoogleLogin}>
+      <SocialButton
+        type="google"
+        fullWidth={true}
+        spaceAfter="normal"
+        onClick={handleGoogleLogin}
+        loading={isGoogleLoading}
+      >
         Login with Google
       </SocialButton>
       <Text align="center" spaceAfter="normal">

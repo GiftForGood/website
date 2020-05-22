@@ -1,5 +1,7 @@
 import admin from '../../utils/admin-firebase';
 import { cors } from '../../utils/middleware/cors';
+import { SECURE_COOKIE } from '../../utils/constants/cookie';
+import cookies from '../../utils/cookie';
 
 async function handler(req, res) {
   await cors(req, res);
@@ -8,14 +10,13 @@ async function handler(req, res) {
   switch (method) {
     case 'POST':
       const sessionCookie = req.cookies.session || '';
-      res.clearCookie('session');
+
       admin
         .auth()
-        .verifySessionCookie(sessionCookie)
+        .verifySessionCookie(sessionCookie, true /** checkRevoked */)
         .then((decodedClaims) => {
-          return admin.auth().revokeRefreshTokens(decodedClaims.sub);
-        })
-        .then(() => {
+          const options = { maxAge: 0, httpOnly: true, secure: SECURE_COOKIE, path: '/' };
+          res.cookie('session', '', options);
           res.json({ status: true });
         })
         .catch((error) => {
@@ -32,4 +33,4 @@ async function handler(req, res) {
   }
 }
 
-export default handler;
+export default cookies(handler);
