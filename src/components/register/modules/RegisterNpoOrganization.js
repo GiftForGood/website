@@ -167,6 +167,7 @@ const RegisterNpoOrganization = () => {
             label="Organization you are from"
             name="name"
             options={organizations}
+            placeholder="Organization"
             {...formik.getFieldProps('name')}
             error={formik.touched.name && formik.errors.name ? formik.errors.name : ''}
           />
