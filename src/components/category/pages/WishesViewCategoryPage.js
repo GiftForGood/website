@@ -42,6 +42,10 @@ const ButtonContainer = styled.div`
   margin-top: 20px;
 `;
 
+const GridSectionContainer = styled.div`
+  margin-top: 20px;
+`;
+
 const ViewCategoryPage = ({ categoryDetails, filterQuery }) => {
   const category = categoryDetails;
   const [filter, setFilter] = useState(filterQuery ? filterQuery : WishesSortTypeConstant.TIMESTAMP); // set filter based on the filter obtained from url query
@@ -49,18 +53,19 @@ const ViewCategoryPage = ({ categoryDetails, filterQuery }) => {
   const [hasAllLoaded, setHasAllLoaded] = useState(false);
   const [isButtonLoading, setIsButtonLoading] = useState(false);
   const [isPageLoading, setIsPageLoading] = useState(false);
-  const [numberOfBatchesLoaded, setNumberOfBatchesLoaded] = useState(1);
-  const { isDesktop, isLargeMobile } = useMediaQuery();
+  const { isLargeMobile } = useMediaQuery();
 
-  // toggled whenever filter changes, loads the same number of batches that were loaded previously, but with
-  // a different filter
+  /**
+   * Toggled whenever filter changes, reset everything and get first batch of wishes with filter
+   */
   useEffect(() => {
     if (allWishes.length > 0) {
       // only set page loading to true when filter is modified
+      setAllWishes([]);
       setIsPageLoading(true);
+      setHasAllLoaded(false);
     }
-    setAllWishes([]); // reset all wishes
-    getNBatchesOfWishes(category.id, filter, numberOfBatchesLoaded).then((newWishes) => {
+    getNextBatchOfWishes(category.id, filter, null).then((newWishes) => {
       setAllWishes(newWishes);
       setIsPageLoading(false);
     });
@@ -72,29 +77,10 @@ const ViewCategoryPage = ({ categoryDetails, filterQuery }) => {
     }
     return allWishes[allWishes.length - 1];
   };
-  /**
-   * TO ASK: do we need to have another api method that allows to specify the number of
-   * documents to query, instead of the batch size? In this way, I don't need a for loop
-   * and have multiple calls to firestore.
-   */
-  const getNBatchesOfWishes = async (categoryId, filter, numberOfBatchesLoaded) => {
-    let rawWishes = [];
-    for (let i = 0; i < numberOfBatchesLoaded; i++) {
-      const nextBatchOfRawWishes = await getNextBatchOfWishes(
-        categoryId,
-        filter,
-        rawWishes[rawWishes.length - 1]
-      ).catch((err) => console.error(err));
-      if (nextBatchOfRawWishes.length > 0) {
-        rawWishes = rawWishes.concat(nextBatchOfRawWishes);
-      }
-    }
-    return rawWishes;
-  };
 
   /**
    * Note that this function returns WISHES_BATCH_SIZE - 1 amount of documents,
-   * instead of WISHES_BATCH_SIZE, as the last document is to see whether we
+   * instead of WISHES_BATCH_SIZE, as the last document is to check whether we
    * have loaded all wishes.
    */
   const getNextBatchOfWishes = async (categoryId, filter, lastQueriedDocument) => {
@@ -105,11 +91,10 @@ const ViewCategoryPage = ({ categoryDetails, filterQuery }) => {
       .catch((err) => console.error(err));
     const numberOfDocumentsReturned = rawWishes.docs.length;
     if (numberOfDocumentsReturned < WISHES_BATCH_SIZE) {
-      // loaded all documents already
+      // loaded all documents already, since the number of wishes returned is less than batch size
       setHasAllLoaded(true);
       return rawWishes.docs;
     }
-    // have not loaded all documents, returned WISHES_BATCH_SIZE - 1 of documents
     return rawWishes.docs.slice(0, WISHES_BATCH_SIZE - 1);
   };
 
@@ -142,10 +127,67 @@ const ViewCategoryPage = ({ categoryDetails, filterQuery }) => {
     getNextBatchOfWishes(category.id, filter, getLastQueriedDocument()).then((newWishes) => {
       if (newWishes.length > 0) {
         setAllWishes(allWishes.concat(newWishes));
-        setNumberOfBatchesLoaded(numberOfBatchesLoaded + 1);
       }
       setIsButtonLoading(false);
     });
+  };
+
+  const DesktopAndTabletWishes = () => {
+    return (
+      <>
+        <Grid
+          inline={true}
+          largeDesktop={{
+            columns: '1fr 1fr 1fr',
+          }}
+          largeMobile={{
+            columns: '1fr 1fr',
+          }}
+          rows="auto"
+          gap="20px"
+        >
+          {displayAllWishes()}
+        </Grid>
+        {isPageLoading && (
+          <PageLoadingContainer>
+            <Loading loading={isPageLoading} type="pageLoader" />
+          </PageLoadingContainer>
+        )}
+        <br />
+        {!hasAllLoaded && (
+          <ButtonContainer>
+            <Button asComponent={SeeMoreButton} onClick={handleOnClickSeeMore} loading={isButtonLoading}>
+              <BlackText style={{ padding: '5px' }} size="medium">
+                See more
+              </BlackText>
+            </Button>
+          </ButtonContainer>
+        )}
+      </>
+    );
+  };
+
+  const MobileWishes = () => {
+    return (
+      <InfiniteScroll
+        pageStart={0}
+        loadMore={handleOnClickSeeMore}
+        hasMore={!hasAllLoaded}
+        loader={<Loading type="pageLoader" key={0} />}
+      >
+        <Grid
+          inline={true}
+          largeMobile={{
+            columns: '1fr 1fr',
+          }}
+          rows="auto"
+          gap="20px"
+          columns="1fr"
+        >
+          {displayAllWishes()}
+        </Grid>
+      </InfiniteScroll>
+    );
   };
 
   return (
@@ -158,72 +200,15 @@ const ViewCategoryPage = ({ categoryDetails, filterQuery }) => {
         }}
         rows="1fr auto"
       >
-        <WishesFilterBy category={category} filter={filter} setFilter={setFilter} />
-        <div style={{ marginTop: '20px' }}>
+        <GridSectionContainer>
+          <WishesFilterBy category={category} filter={filter} setFilter={setFilter} />
+        </GridSectionContainer>
+        <GridSectionContainer>
           <BlackText style={{ marginBottom: '10px' }} size="large">
             {category.name}
           </BlackText>
-          <WishesContainer>
-            {isLargeMobile && (
-              <div>
-                <Grid
-                  inline={true}
-                  largeDesktop={{
-                    columns: '1fr 1fr 1fr',
-                  }}
-                  largeMobile={{
-                    columns: '1fr 1fr',
-                  }}
-                  rows="auto"
-                  gap="20px"
-                >
-                  {displayAllWishes()}
-                </Grid>
-                {isPageLoading && (
-                  <PageLoadingContainer>
-                    <Loading loading={isPageLoading} type="pageLoader" />
-                  </PageLoadingContainer>
-                )}
-                <br />
-                {!hasAllLoaded && (
-                  <ButtonContainer>
-                    <Button asComponent={SeeMoreButton} onClick={handleOnClickSeeMore} loading={isButtonLoading}>
-                      <BlackText style={{ padding: '5px' }} size="medium">
-                        See more
-                      </BlackText>
-                    </Button>
-                  </ButtonContainer>
-                )}
-              </div>
-            )}
-
-            {!isLargeMobile && (
-              <InfiniteScroll
-                pageStart={0}
-                loadMore={handleOnClickSeeMore}
-                hasMore={!hasAllLoaded}
-                loader={<Loading type="pageLoader" key={0} />}
-              >
-                <Grid
-                  inline={true}
-                  largeMobile={{
-                    columns: '1fr 1fr',
-                  }}
-                  rows="auto"
-                  gap="20px"
-                  columns="1fr"
-                >
-                  {displayAllWishes()}
-                </Grid>
-                {isPageLoading && (
-                  <PageLoadingContainer>
-                    <Loading loading={isPageLoading} type="pageLoader" />
-                  </PageLoadingContainer>
-                )}
-              </InfiniteScroll>
-            )}
-          </WishesContainer>
-        </div>
+          <WishesContainer>{isLargeMobile ? <DesktopAndTabletWishes /> : <MobileWishes />}</WishesContainer>
+        </GridSectionContainer>
       </Grid>
     </ViewCategoryContainer>
   );

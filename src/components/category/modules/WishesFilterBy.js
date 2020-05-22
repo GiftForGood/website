@@ -13,7 +13,7 @@ const WishesFilterBy = ({ category, filter, setFilter }) => {
     });
   };
   return (
-    <div style={{ marginTop: '20px' }}>
+    <>
       <BlackText style={{ marginBottom: '10px' }} size="large">
         Filter By
       </BlackText>
@@ -35,7 +35,7 @@ const WishesFilterBy = ({ category, filter, setFilter }) => {
           value={WishesSortTypeConstant.NPO_NAME}
         />
       </ChoiceGroup>
-    </div>
+    </>
   );
 };
 
