@@ -11,6 +11,9 @@ import Mobile from '@kiwicom/orbit-components/lib/Mobile';
 import api from '../../../../utils/api';
 import client from '../../../../utils/axios';
 import styled from 'styled-components';
+import { useDispatch } from 'react-redux';
+import { logout }from '../../session/actions';
+
 
 const AccountImageContainer = styled.div`
   width: 24px;
@@ -73,18 +76,21 @@ const AccountButton = ({ onNotificationClick, onLogoutClick, user }) => {
 const LoggedInButtons = () => {
   const user = useUser();
   const router = useRouter();
+  const dispatch = useDispatch();
 
   const onLogoutClick = async () => {
-    //TODO: dispatch logout
     try {
       await api.auth.logout();
       let response = await client.post('/api/sessionLogout');
       if (response.status === 200) {
+        dispatch(logout());
         router.push('/');
       } else {
         throw response.error;
       }
-    } catch (error) {}
+    } catch (error) {
+      console.error(error)
+    }
   };
 
   const onNotificationClick = () => {
