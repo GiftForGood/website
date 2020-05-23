@@ -2,6 +2,8 @@ import styled from 'styled-components';
 import BlackText from '../text/BlackText';
 import Avatar from '../imageContainers/Avatar';
 import { Stack } from '@kiwicom/orbit-components/lib';
+import Replace from '@kiwicom/orbit-components/lib/icons/Replace';
+import { colors } from '../../../utils/constants/colors';
 
 const CardHeaderContainer = styled.div`
   display: flex;
@@ -40,7 +42,7 @@ const AvatarDetails = ({ name, distance }) => {
   );
 };
 
-const CardHeader = ({ imageUrl, name, distance, timeAgo }) => {
+const CardHeader = ({ imageUrl, name, distance, timeAgo, isBumped }) => {
   return (
     <CardHeaderContainer>
       <AvatarContainer>
@@ -48,7 +50,7 @@ const CardHeader = ({ imageUrl, name, distance, timeAgo }) => {
       </AvatarContainer>
       <AvatarDetails name={name} distance={distance || '2.5km'} />
       <TimePostedContainer>
-        <TimePosted timeAgo={timeAgo} />
+        {isBumped ? <Replace customColor={colors.bump} /> : <TimePosted timeAgo={timeAgo} />}
       </TimePostedContainer>
     </CardHeaderContainer>
   );
