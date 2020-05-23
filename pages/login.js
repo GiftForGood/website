@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { withRouter } from 'next/router';
-import { withRedux } from '../utils/withRedux';
 import { isAuthenticated } from '../utils/authentication/authentication';
 import LoginPage from '../src/components/login/pages/LoginPage';
 
@@ -26,4 +25,4 @@ const Login = () => {
   );
 };
 
-export default withRedux(withRouter(Login));
+export default withRouter(Login);
