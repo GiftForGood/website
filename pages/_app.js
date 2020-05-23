@@ -40,7 +40,6 @@ class MyApp extends App {
   }
 }
 
-
 const makeStore = () => store;
 const wrapper = createWrapper(makeStore);
 
