@@ -30,14 +30,25 @@ const CardHeaderContainer = styled.div`
   display: flex;
 `;
 
-const FiveLineTextContainer = styled.div`
+const ThreeLineTextContainer = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
   line-height: 1.5em;
-  max-height: 7.5em;
+  max-height: 4.5em;
   font-size: 14px;
-  -webkit-line-clamp: 5;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+`;
+
+const EightLineTextContainer = styled.div`
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  line-height: 1.5em;
+  max-height: 12em;
+  font-size: 14px;
+  -webkit-line-clamp: 8;
   -webkit-box-orient: vertical;
 `;
 
@@ -68,10 +79,12 @@ const ClickableDiv = styled.a`
 const CardDescription = ({ title, description }) => {
   return (
     <Stack direction="column" spacing="tight">
-      <Text size="normal" weight="bold">
-        {title}
-      </Text>
-      <FiveLineTextContainer>{description}</FiveLineTextContainer>
+      <ThreeLineTextContainer>
+        <Text size="normal" weight="bold">
+          {title}
+        </Text>
+      </ThreeLineTextContainer>
+      <EightLineTextContainer>{description}</EightLineTextContainer>
     </Stack>
   );
 };
