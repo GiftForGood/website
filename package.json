@@ -3,27 +3,39 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@kiwicom/orbit-components": "^0.82.1",
+    "@kiwicom/orbit-components": "^0.84.2",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
     "axios": "^0.19.2",
+    "calendarjs": "^0.2.0",
     "cloudinary-react": "^1.5.0",
+    "cookie": "^0.4.1",
+    "cors": "^2.8.5",
     "dotenv-webpack": "^1.7.0",
-    "firebase": "^7.14.3",
+    "firebase": "^7.14.1",
     "firebase-admin": "^8.12.0",
+    "formik": "^2.1.4",
+    "isomorphic-unfetch": "^3.0.0",
     "moment": "^2.25.3",
     "next": "^9.3.4",
+    "next-redux-wrapper": "^6.0.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-infinite-scroller": "^1.2.4",
+    "react-redux": "^7.2.0",
     "react-scripts": "3.4.0",
-    "styled-components": "^5.0.1"
+    "redux": "^4.0.5",
+    "redux-logger": "^3.0.6",
+    "redux-thunk": "^2.3.0",
+    "styled-components": "^5.0.1",
+    "yup": "^0.28.5"
   },
   "scripts": {
     "dev": "next",
+    "dev-local": "next --hostname 0.0.0.0",
     "build": "next build",
     "start": "next start -p $PORT",
-    "export": "next build && next export",
     "lint": "prettier --check '**/*.js'",
     "format": "prettier --write '**/*.js'"
   },
@@ -43,6 +55,8 @@
     ]
   },
   "devDependencies": {
+    "@kiwicom/babel-plugin-orbit-components": "^1.6.0",
+    "babel-plugin-styled-components": "^1.10.7",
     "prettier": "2.0.5"
   }
 }

@@ -9,7 +9,7 @@ class NPOOrganizationAPI {
    * @return {object} A firebase document of all the npo organizations
    */
   async getAll() {
-    return npoOrganizationsCollection.get();
+    return npoOrganizationsCollection.orderBy('name', 'asc').get();
   }
 
   /**

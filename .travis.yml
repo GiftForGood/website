@@ -9,7 +9,7 @@ git:
 
 script:
 - npm run lint
-- npm run export
+- npm run build
 after_success:
 - chmod +x ./config/travis/deploy-dokku.sh
 - |
