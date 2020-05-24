@@ -1,11 +1,9 @@
 import React from 'react';
 import CardHeader from '../card/CardHeader';
-import { Stack, Text, Grid } from '@kiwicom/orbit-components/lib';
+import { Stack, Text, Grid, Badge } from '@kiwicom/orbit-components/lib';
 import { getTimeDifferenceFromNow } from '../../../utils/api/time';
-import GreyText from '../text/GreyText';
 import styled, { css } from 'styled-components';
 import { useRouter } from 'next/router';
-import { colors } from '../../../utils/constants/colors';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 
 const CardContainer = styled.div`
@@ -14,9 +12,9 @@ const CardContainer = styled.div`
   justify-content: space-between;
   border-radius: 5px;
   box-shadow: 0px 0px 5px 0px rgba(37, 42, 49, 0.16), 0px 2px 8px 0px rgba(37, 42, 49, 0.12);
-  width: 325px;
+  width: 315px;
   height: 350px;
-  min-width: 325px;
+  min-width: 315px;
   min-height: 350px;
   text-align: left;
   ${media.desktop(css`
@@ -33,14 +31,25 @@ const CardHeaderContainer = styled.div`
   display: flex;
 `;
 
-const FiveLineTextContainer = styled.div`
+const ThreeLineTextContainer = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
   line-height: 1.5em;
-  max-height: 7.5em;
+  max-height: 4.5em;
   font-size: 14px;
-  -webkit-line-clamp: 5;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+`;
+
+const EightLineTextContainer = styled.div`
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  line-height: 1.5em;
+  max-height: 12em;
+  font-size: 14px;
+  -webkit-line-clamp: 8;
   -webkit-box-orient: vertical;
 `;
 
@@ -51,7 +60,10 @@ const CardDescriptionContainer = styled.div`
 `;
 
 const CardDescriptionFooterContainer = styled.div`
-  margin: 0 auto;
+  margin: 10px;
+  ${media.desktop(css`
+    margin: 14px;
+  `)}
   display: flex;
   align-items: center;
 `;
@@ -65,36 +77,27 @@ const ClickableDiv = styled.a`
   z-index: 1;
 `;
 
-const TagContainer = styled.div`
-  text-align: center;
-  width: 90px;
-  height: 30px;
-  border-radius: 25px;
-  background-color: ${colors.categoryTagsFill};
-  border: 1px solid ${colors.subtleGrey};
-`;
-
 const CardDescription = ({ title, description }) => {
   return (
     <Stack direction="column" spacing="tight">
-      <Text size="normal" weight="bold">
-        {title}
-      </Text>
-      <FiveLineTextContainer>{description}</FiveLineTextContainer>
+      <ThreeLineTextContainer>
+        <Text size="normal" weight="bold">
+          {title}
+        </Text>
+      </ThreeLineTextContainer>
+      <EightLineTextContainer>{description}</EightLineTextContainer>
     </Stack>
   );
 };
 
 const Tags = ({ categoryTags }) => {
   return (
-    <Stack row="1fr 1fr 1fr" rowGap="natural">
+    <Stack row="1fr 1fr 1fr" desktop={{ spacing: 'natural' }} spacing="condensed">
       {categoryTags.map((category) => {
         return (
-          <TagContainer key={category}>
-            <GreyText style={{ verticalAlign: 'middle', lineHeight: '30px' }} size="tiny">
-              {category}
-            </GreyText>
-          </TagContainer>
+          <Badge type="neutral" key={category}>
+            {category}
+          </Badge>
         );
       })}
     </Stack>
