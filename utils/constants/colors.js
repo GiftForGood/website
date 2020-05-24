@@ -14,4 +14,7 @@ export const colors = {
   loginBackground: '#212121',
   loginHoverActive: '#424242',
   loginFocus: '#616161',
+  categoryTagsFill: '#D9D9D9',
+  bump: '#4db6ac',
+  seeMoreHoverFocusActive: '#e7e7e7',
 };

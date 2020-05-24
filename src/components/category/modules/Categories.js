@@ -43,7 +43,7 @@ const Categories = () => {
     return (
       <Stack direction="row" align="center" spacing="natural">
         {categories.map((category) => {
-          const href = `/category/${category.id}`;
+          const href = `/wishes/category/${category.id}`;
           const handleOnClickCategory = (event) => {
             event.preventDefault();
             router.push(href);

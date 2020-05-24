@@ -92,7 +92,7 @@ const TopWishes = ({ numberOfPosts, numberOfCategories }) => {
   const TopWishCards = () => {
     const router = useRouter();
     return topCategoriesAndTheirWishes.map((obj) => {
-      const categoryHref = `/category/${obj.category.id}`;
+      const categoryHref = `/wishes/category/${obj.category.id}`;
       const handleViewAllButton = (event) => {
         event.preventDefault();
         router.push(categoryHref);

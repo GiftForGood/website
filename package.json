@@ -22,6 +22,7 @@
     "next-redux-wrapper": "^6.0.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-infinite-scroller": "^1.2.4",
     "react-redux": "^7.2.0",
     "react-scripts": "3.4.0",
     "redux": "^4.0.5",
