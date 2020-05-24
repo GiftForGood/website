@@ -19,6 +19,6 @@ if (process.env.NODE_ENV === 'development') {
   middlewares.push(logger);
 }
 
-export const initializeStore = (preloadedState = initialState) => {
-  return createStore(rootReducer, preloadedState, applyMiddleware(...middlewares));
-};
+const store = createStore(rootReducer, initialState, applyMiddleware(...middlewares));
+
+export default store;
