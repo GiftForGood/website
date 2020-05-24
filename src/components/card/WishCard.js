@@ -1,10 +1,8 @@
 import CardHeader from '../card/CardHeader';
-import { Stack, Text, Grid } from '@kiwicom/orbit-components/lib';
+import { Stack, Text, Grid, Badge } from '@kiwicom/orbit-components/lib';
 import { getTimeDifferenceFromNow } from '../../../utils/api/time';
-import GreyText from '../text/GreyText';
 import styled, { css } from 'styled-components';
 import { useRouter } from 'next/router';
-import { colors } from '../../../utils/constants/colors';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 
 const CardContainer = styled.div`
@@ -50,7 +48,7 @@ const CardDescriptionContainer = styled.div`
 `;
 
 const CardDescriptionFooterContainer = styled.div`
-  margin: 0 auto;
+  margin: 14px;
   display: flex;
   align-items: center;
 `;
@@ -62,15 +60,6 @@ const ClickableDiv = styled.a`
   top: 0;
   left: 0;
   z-index: 1;
-`;
-
-const TagContainer = styled.div`
-  text-align: center;
-  width: 90px;
-  height: 30px;
-  border-radius: 25px;
-  background-color: ${colors.categoryTagsFill};
-  border: 1px solid ${colors.subtleGrey};
 `;
 
 const CardDescription = ({ title, description }) => {
@@ -89,11 +78,9 @@ const Tags = ({ categoryTags }) => {
     <Stack row="1fr 1fr 1fr" rowGap="natural">
       {categoryTags.map((category) => {
         return (
-          <TagContainer key={category}>
-            <GreyText style={{ verticalAlign: 'middle', lineHeight: '30px' }} size="tiny">
-              {category}
-            </GreyText>
-          </TagContainer>
+          <Badge type="neutral" key={category}>
+            {category}
+          </Badge>
         );
       })}
     </Stack>
