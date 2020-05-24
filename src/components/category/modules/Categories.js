@@ -27,7 +27,10 @@ const ScrollableRow = styled.div`
   scroll-behavior: smooth;
 `;
 
-const Categories = () => {
+/**
+ * @param {string} type can be 'wishes' or 'donations'
+ */
+const Categories = ({ type }) => {
   const [categories, setCategories] = useState([]);
   useEffect(() => {
     getAllCategories().then((categories) => setCategories(categories));
@@ -43,7 +46,7 @@ const Categories = () => {
     return (
       <Stack direction="row" align="center" spacing="natural">
         {categories.map((category) => {
-          const href = `/wishes/category/${category.id}`;
+          const href = `/${type}/category/${category.id}`;
           const handleOnClickCategory = (event) => {
             event.preventDefault();
             router.push(href);

@@ -196,7 +196,7 @@ const ViewCategoryPage = ({ categoryDetails, filterQuery }) => {
 
   return (
     <ViewCategoryContainer>
-      <Categories />
+      <Categories type="wishes" />
       <Grid
         columnGap="20px"
         desktop={{

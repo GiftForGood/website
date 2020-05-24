@@ -64,7 +64,7 @@ const DonationsHomePage = () => {
         <Banner type={pageType} />
         <CategoriesContainer>
           <ResponsiveTitle>{categoriesTitle}</ResponsiveTitle>
-          <Categories />
+          <Categories type="donations" />
         </CategoriesContainer>
         <TopDonationsContainer>
           <ResponsiveTitle>{topCategoriesTitle}</ResponsiveTitle>

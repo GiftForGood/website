@@ -63,7 +63,7 @@ const WishesHomePage = () => {
         <Banner type={pageType} />
         <CategoriesContainer>
           <ResponsiveTitle>{categoriesTitle}</ResponsiveTitle>
-          <Categories />
+          <Categories type="wishes" />
         </CategoriesContainer>
         <TopWishesContainer>
           <ResponsiveTitle>{topCategoriesTitle}</ResponsiveTitle>
