@@ -4,7 +4,6 @@ import ViewCategoryPage from '../../../src/components/category/pages/WishesViewC
 import dynamic from 'next/dynamic';
 import SessionProvider from '../../../src/components/session/modules/SessionProvider';
 import { isAuthenticated } from '../../../utils/authentication/authentication';
-import { withRedux } from '../../../utils/withRedux';
 import Error from 'next/error';
 const TopNavigationBar = dynamic(() => import('../../../src/components/navbar/modules/TopNavigationBar'), {
   ssr: false,
@@ -43,4 +42,4 @@ const ViewCategory = ({ categoryDetails, filterQuery, user }) => {
   );
 };
 
-export default withRedux(ViewCategory);
+export default ViewCategory;

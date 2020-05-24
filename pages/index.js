@@ -2,7 +2,6 @@ import React from 'react';
 import SessionProvider from '../src/components/session/modules/SessionProvider';
 import useUser from '../src/components/session/modules/useUser';
 import { isAuthenticated } from '../utils/authentication/authentication';
-import { withRedux } from '../utils/withRedux';
 import Verified from '../src/components/session/modules/Verified';
 import WishesHomePage from '../src/components/home/pages/WishesHomePage';
 import dynamic from 'next/dynamic';
@@ -27,4 +26,4 @@ const WishesHome = ({ user }) => {
   );
 };
 
-export default withRedux(WishesHome);
+export default WishesHome;

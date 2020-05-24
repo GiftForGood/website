@@ -1,6 +1,5 @@
 import React from 'react';
 import { withRouter } from 'next/router';
-import { withRedux } from '../utils/withRedux';
 import { isAuthenticated } from '../utils/authentication/authentication';
 import RegisterPage from '../src/components/register/pages/RegisterPage';
 
@@ -26,4 +25,4 @@ const Register = () => {
   );
 };
 
-export default withRedux(withRouter(Register));
+export default withRouter(Register);
