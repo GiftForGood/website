@@ -1,3 +1,4 @@
+import React from 'react';
 import styled from 'styled-components';
 import AccountCircle from '@kiwicom/orbit-components/lib/icons/AccountCircle';
 import { colors } from '../../../utils/constants/colors';
