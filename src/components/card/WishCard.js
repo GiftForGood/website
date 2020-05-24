@@ -11,9 +11,9 @@ const CardContainer = styled.div`
   justify-content: space-between;
   border-radius: 5px;
   box-shadow: 0px 0px 5px 0px rgba(37, 42, 49, 0.16), 0px 2px 8px 0px rgba(37, 42, 49, 0.12);
-  width: 325px;
+  width: 315px;
   height: 350px;
-  min-width: 325px;
+  min-width: 315px;
   min-height: 350px;
   text-align: left;
   ${media.desktop(css`
@@ -48,7 +48,10 @@ const CardDescriptionContainer = styled.div`
 `;
 
 const CardDescriptionFooterContainer = styled.div`
-  margin: 14px;
+  margin: 10px;
+  ${media.desktop(css`
+    margin: 14px;
+  `)}
   display: flex;
   align-items: center;
 `;
@@ -75,7 +78,7 @@ const CardDescription = ({ title, description }) => {
 
 const Tags = ({ categoryTags }) => {
   return (
-    <Stack row="1fr 1fr 1fr" rowGap="natural">
+    <Stack row="1fr 1fr 1fr" desktop={{ spacing: 'natural' }} spacing="condensed">
       {categoryTags.map((category) => {
         return (
           <Badge type="neutral" key={category}>
