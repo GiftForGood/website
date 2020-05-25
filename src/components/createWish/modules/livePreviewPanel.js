@@ -19,7 +19,7 @@ const LivePreviewPanel = () => {
   if (!user) {
     return null;
   }
-  
+
   return (
     <Stack align="center" direction="column" basis="50%">
       <Container>
