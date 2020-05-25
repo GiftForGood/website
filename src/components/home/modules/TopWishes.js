@@ -74,7 +74,7 @@ const TopWishes = ({ numberOfPosts, numberOfCategories }) => {
     let wishes = [];
     for (let i = 0; i < categories.length; i++) {
       const rawWishes = await api.wishes
-        .getTopNPendingWishes(categories[i].id, numberOfPosts)
+        .getTopNPendingWishesForCategory(categories[i].id, numberOfPosts)
         .catch((err) => console.error(err));
       wishes = [...wishes, rawWishes.docs.map((doc) => doc.data())];
     }
