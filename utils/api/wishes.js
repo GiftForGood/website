@@ -85,6 +85,44 @@ class WishesAPI {
   }
 
   /**
+   * Get a batch of pending wishes. Only return results of WISHES_BATCH_SIZE
+   * @param {string} orderBy The way to order the wishes. Only wishesSortTypeAllowed
+   * @param {boolean} isReverse Indicates if the query should be ordered in reverse
+   * @param {object} lastQueriedDocument The last queried firebase document to start the query after. If the field is not given, the query will start from the first document
+   * @throws {ReferenceError}
+   * @throws {FirebaseError}
+   * @return {object} A firebase document of ordered pending wishes
+   */
+  async getPendingWishes(orderBy = WishesSortTypeConstant.TIMESTAMP, isReverse = false, lastQueriedDocument = null) {
+    let sortOrder = 'asc';
+    if (isReverse) {
+      sortOrder = 'desc';
+    }
+
+    const orderByField = this._getOrderByField(orderBy);
+    if (orderByField === '') {
+      throw ReferenceError('Invalid orderBy type specified');
+    }
+
+    if (lastQueriedDocument == null) {
+      // First page
+      return wishesCollection
+        .where('status', '==', 'pending')
+        .orderBy(orderByField, sortOrder)
+        .limit(Constants.WISHES_BATCH_SIZE)
+        .get();
+    } else {
+      // Subsequent pages
+      return wishesCollection
+        .where('status', '==', 'pending')
+        .orderBy(orderByField, sortOrder)
+        .startAfter(lastQueriedDocument)
+        .limit(Constants.WISHES_BATCH_SIZE)
+        .get();
+    }
+  }
+
+  /**
    * Get the initial batch of pending wishes belonging to a category. Only return results of WISHES_BATCH_SIZE
    * @param {object} categoryId The category id
    * @param {string} orderBy The way to order the wishes. Only wishesSortTypeAllowed
