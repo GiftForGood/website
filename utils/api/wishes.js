@@ -1,6 +1,7 @@
 import { db, firebaseAuth } from '../firebase';
-import * as Constants from './constants';
-import * as WishesSortTypeConstant from '../constants/wishesSortType';
+import { WISHES_BATCH_SIZE } from './constants';
+import { TIMESTAMP, NPO_NAME } from '../constants/wishesSortType';
+import WishError from './error/wishError';
 const moment = require('moment');
 
 const wishesCollection = db.collection('wishes');
@@ -8,11 +9,12 @@ const wishesCollection = db.collection('wishes');
 class WishesAPI {
   /**
    * Create a new wish
-   * @param {string} title The wish title
-   * @param {string} description The wish description
-   * @param {array} categories A list of categories that the wish belongs to
+   * @param {string} title The wish title text 
+   * @param {string} description The wish description text 
+   * @param {array} categories A list of categories names that the wish belongs to
+   * @throws {WishError}
    * @throws {FirebaseError}
-   * @return {boolean} true if the wish is created, false otherwise
+   * @return {object} A firebase document of the created wish
    */
   async create(title, description, categories) {
     let categoriesInfo = [];
@@ -28,10 +30,9 @@ class WishesAPI {
       }
     }
 
-    let allUserInfo = await this._getCurrentUserInfo();
-
-    if (Object.entries(allUserInfo).length === 0) {
-      return false;
+    const allUserInfo = await this._getCurrentUserInfo();
+    if (typeof allUserInfo === 'undefined') {
+      throw new WishError('invalid-current-user');
     }
     userInfo.userId = allUserInfo.userId;
     userInfo.userName = allUserInfo.name;
@@ -39,10 +40,10 @@ class WishesAPI {
     organizationInfo = allUserInfo.organization;
 
     let newWish = wishesCollection.doc();
-    let timeNow = Date.now();
+    const timeNow = Date.now();
     const expiryDateTime = moment(timeNow).add(1, 'month').valueOf();
     let data = {
-      wishesId: newWish.id,
+      wishId: newWish.id,
       title: title,
       description: description,
       categories: categoriesInfo,
@@ -55,9 +56,9 @@ class WishesAPI {
       expireDateTime: expiryDateTime,
       isBumped: false,
     };
-    newWish.set(data);
+    await newWish.set(data);
 
-    return true;
+    return newWish.get();
   }
 
   /**
@@ -69,12 +70,12 @@ class WishesAPI {
 
   /**
    * Get the top X pending wishes belonging to a category, sorted by timestamp
-   * @param {object} categoryId The category id
-   * @param {number} n The number of wishes to return
+   * @param {string} categoryId The category id
+   * @param {number} n The number of wishes to query
    * @throws {FirebaseError}
-   * @return {object} A firebase document of the top n pending wishes
+   * @return {array} A list of firebase document of the top n pending wishes
    */
-  async getTopNPendingWishes(categoryId, n) {
+  async getTopNPendingWishesForCategory(categoryId, n) {
     const categoryInfo = await this._getCategoryInfoById(categoryId);
     return wishesCollection
       .where('categories', 'array-contains', categoryInfo)
@@ -85,12 +86,48 @@ class WishesAPI {
   }
 
   /**
-   * Get the initial batch of pending wishes belonging to a category. Only return results of WISHES_BATCH_SIZE
-   * @param {object} categoryId The category id
+   * Gets a batch of all pending wishes. Only return results of WISHES_BATCH_SIZE
+   * @param {string} orderBy The way to order the wishes
+   * @param {boolean} isReverse Indicates if the query should be ordered in reverse
+   * @param {object} lastQueriedDocument The last queried firebase document to start the query after. If the field is not given, the query will start from the first document
+   * @throws {DonationError}
+   * @throws {FirebaseError}
+   * @returns {array} A list of firebase document of all ordered pending wishes
+   */	
+  async getAllPendingWishes(orderBy = TIMESTAMP, isReverse = false, lastQueriedDocument = null) {
+    // TODO: Sort by distance not implemented
+    this._validateOrderBy(orderBy);
+
+    let sortOrder = 'asc';
+    if (isReverse) {
+      sortOrder = 'desc';
+    }
+
+    if (lastQueriedDocument == null) {
+      // First page
+      return wishesCollection
+        .where('status', '==', 'pending')
+        .orderBy(orderBy, sortOrder)
+        .limit(WISHES_BATCH_SIZE)
+        .get();
+    } else {
+      // Subsequent pages
+      return wishesCollection
+        .where('status', '==', 'pending')
+        .orderBy(orderBy, sortOrder)
+        .startAfter(lastQueriedDocument)
+        .limit(WISHES_BATCH_SIZE)
+        .get();
+    }
+  }
+
+  /**
+   * Get a batch of pending wishes belonging to a category. Only return results of WISHES_BATCH_SIZE
+   * @param {string} categoryId The category id
    * @param {string} orderBy The way to order the wishes. Only wishesSortTypeAllowed
    * @param {boolean} isReverse Indicates if the query should be ordered in reverse
    * @param {object} lastQueriedDocument The last queried firebase document to start the query after. If the field is not given, the query will start from the first document
-   * @throws {ReferenceError}
+   * @throws {WishError}
    * @throws {FirebaseError}
    * @return {object} A firebase document of ordered pending wishes belonging to a category
    */
@@ -101,6 +138,7 @@ class WishesAPI {
     lastQueriedDocument = null
   ) {
     // TODO: Sort by distance not implemented
+    this._validateOrderBy(orderBy)
 
     let sortOrder = 'asc';
     if (isReverse) {
@@ -109,27 +147,22 @@ class WishesAPI {
 
     const categoryInfo = await this._getCategoryInfoById(categoryId);
 
-    const orderByField = this._getOrderByField(orderBy);
-    if (orderByField === '') {
-      throw ReferenceError('Invalid orderBy type specified');
-    }
-
     if (lastQueriedDocument == null) {
       // First page
       return wishesCollection
         .where('categories', 'array-contains', categoryInfo)
         .where('status', '==', 'pending')
-        .orderBy(orderByField, sortOrder)
-        .limit(Constants.WISHES_BATCH_SIZE)
+        .orderBy(orderBy, sortOrder)
+        .limit(WISHES_BATCH_SIZE)
         .get();
     } else {
       // Subsequent pages
       return wishesCollection
         .where('categories', 'array-contains', categoryInfo)
         .where('status', '==', 'pending')
-        .orderBy(orderByField, sortOrder)
+        .orderBy(orderBy, sortOrder)
         .startAfter(lastQueriedDocument)
-        .limit(Constants.WISHES_BATCH_SIZE)
+        .limit(WISHES_BATCH_SIZE)
         .get();
     }
   }
@@ -141,15 +174,15 @@ class WishesAPI {
    * @return {object} A firebase document of the wish info
    */
   async getWish(id) {
-    return wishesCollection.where('wishesId', '==', id).get();
+    return wishesCollection.doc(id).get();
   }
 
   /**
-   * Get the initial batch of wishes belonging to a NPO. Only return results of WISHES_BATCH_SIZE
+   * Get a batch of wishes belonging to a NPO. Only return results of WISHES_BATCH_SIZE
    * @param {string} npoId
    * @param {object} lastQueriedDocument The last queried firebase document to start the query after. If the field is not given, the query will start from the first document
    * @throws {FirebaseError}
-   * @return {object} A firebase document of wishes belonging to a NPO
+   * @return {array} A list of firebase document of wishes belonging to a NPO
    */
   async getNPOWishes(npoId, lastQueriedDocument = null) {
     if (lastQueriedDocument == null) {
@@ -157,7 +190,7 @@ class WishesAPI {
       return wishesCollection
         .where('user.userId', '==', npoId)
         .orderBy('postedDateTime', 'desc')
-        .limit(Constants.WISHES_BATCH_SIZE)
+        .limit(WISHES_BATCH_SIZE)
         .get();
     } else {
       // Subsequent pages
@@ -165,7 +198,7 @@ class WishesAPI {
         .where('user.userId', '==', npoId)
         .orderBy('postedDateTime', 'desc')
         .startAfter(lastQueriedDocument)
-        .limit(Constants.WISHES_BATCH_SIZE)
+        .limit(WISHES_BATCH_SIZE)
         .get();
     }
   }
@@ -173,10 +206,10 @@ class WishesAPI {
   /**
    * Get the initial batch of wishes belonging to a NPO filter by its status. Only return results of WISHES_BATCH_SIZE
    * @param {string} npoId
-   * @param {string} status The status of the wishes
+   * @param {string} status The status of the wishes to query
    * @param {object} lastQueriedDocument The last queried firebase document to start the query after. If the field is not given, the query will start from the first document
    * @throws {FirebaseError}
-   * @return {object} A firebase document of wishes belonging to a NPO, filtered by status
+   * @return {array} A list of firebase document of wishes belonging to a NPO, filtered by status
    */
   async getNPOWishesFilterByStatus(npoId, status, lastQueriedDocument = null) {
     if (lastQueriedDocument == null) {
@@ -185,7 +218,7 @@ class WishesAPI {
         .where('user.userId', '==', npoId)
         .where('status', '==', status.toLowerCase())
         .orderBy('postedDateTime', 'desc')
-        .limit(Constants.WISHES_BATCH_SIZE)
+        .limit(WISHES_BATCH_SIZE)
         .get();
     } else {
       // Subsequent pages
@@ -194,15 +227,16 @@ class WishesAPI {
         .where('status', '==', status.toLowerCase())
         .orderBy('postedDateTime', 'desc')
         .startAfter(lastQueriedDocument)
-        .limit(Constants.WISHES_BATCH_SIZE)
+        .limit(WISHES_BATCH_SIZE)
         .get();
     }
   }
 
   /**
-   * Get the initial batch of wishes that are completed by a donor. Only return results of WISHES_BATCH_SIZE
+   * Get a batch of wishes that are completed by a donor. Only return results of WISHES_BATCH_SIZE
    * @param {string} donorId
    * @param {object} lastQueriedDocument The last queried firebase document to start the query after. If the field is not given, the query will start from the first document
+   * @throws {FirebaseError}
    * @return {object} AA firebase document of wishes that a completed by a donor
    */
   async getDonorCompletedWishes(donorId, lastQueriedDocument = null) {
@@ -212,7 +246,7 @@ class WishesAPI {
         .where('status', '==', 'completed')
         .where('completed.donorUserId', '==', donorId)
         .orderBy('postedDateTime', 'desc')
-        .limit(Constants.WISHES_BATCH_SIZE)
+        .limit(WISHES_BATCH_SIZE)
         .get();
     } else {
       // Subsequent pages
@@ -221,7 +255,7 @@ class WishesAPI {
         .where('completed.donorUserId', '==', donorId)
         .orderBy('postedDateTime', 'desc')
         .startAfter(lastQueriedDocument)
-        .limit(Constants.WISHES_BATCH_SIZE)
+        .limit(WISHES_BATCH_SIZE)
         .get();
     }
   }
@@ -229,85 +263,90 @@ class WishesAPI {
   /**
    * Update the fields of a wish. Does not include updating of status
    * @param {string} id The wish id
-   * @param {string} title The wish title
-   * @param {string} description The wish description
-   * @param {array} categories A list of categories that the wish belongs to
-   * @return {boolean} true if the wish field/s is updated, false otherwise
+   * @param {string} title The wish title text 
+   * @param {string} description The wish description text
+   * @param {array} categories A list of categories names that the wish belongs to
+   * @throws {WishError}
+   * @throws {FirebaseError}
+   * @return {object} A firebase document of the updated wish
    */
   async updateWish(id, title, description, categories) {
     const wishInfo = await this._getWishInfo(id);
-    if (Object.entries(wishInfo).length === 0) {
-      return false;
+    if (typeof wishInfo === 'undefined') {
+      throw new WishError('invalid-wish-id', 'wish does not exist');
     }
 
     if (wishInfo.status !== 'pending') {
-      return false;
+      throw new WishError('invalid-wish-status', 'only can update a pending wish');
     }
 
     const categoriesInfo = await this._getWishCategoriesInfo(wishInfo.categories, categories);
 
-    let data = {
+    const data = {
       title: title,
       description: description,
       categories: categoriesInfo,
       updatedDateTime: Date.now(),
     };
 
-    wishesCollection.doc(id).update(data);
+    let wishDoc = wishesCollection.doc(id);
+    await wishDoc.update(data);
 
-    return true;
+    return wishDoc.get();
   }
 
   /**
    * Bump a wish
    * @param {string} id The wish id
+   * @throws {WishError}
    * @throws {FirebaseError}
-   * @return {boolean} true if the wish is bumped successfully, false otherwise
+   * @return {object} A firebase document of the bumped wish
    */
   async bumpWish(id) {
     const wishInfo = await this._getWishInfo(id);
-    if (Object.entries(wishInfo).length === 0) {
-      return false;
+    if (typeof wishInfo === 'undefined') {
+      throw new WishError('invalid-wish-id', 'wish does not exist');
     }
 
     if (wishInfo.status !== 'pending') {
-      return false;
+      throw new WishError('invalid-wish-status', 'only can update a pending wish');
     }
 
     const updateTime = Date.now();
     const newExpiryDateTime = moment(wishInfo.expiryDateTime).add(1, 'week').valueOf();
-    let wishUpdateInfo = {
+    const wishUpdateInfo = {
       expireDateTime: newExpiryDateTime,
       lastActionByUserDateTime: updateTime,
       updatedDateTime: updateTime,
       isBumped: true,
     };
-    let bumpInfo = {
+    const bumpInfo = {
       dateTime: updateTime,
     };
 
-    const wishRef = wishesCollection.doc(id);
-    wishRef.update(wishUpdateInfo);
-    wishRef.collection('bump').add(bumpInfo);
+    let wishDoc = wishesCollection.doc(id);
+    await wishDoc.update(wishUpdateInfo);
+    wishDoc.collection('bump').add(bumpInfo);
 
-    return true;
+    return wishDoc.get();
   }
 
   /**
    * Close a wish
    * @param {string} id The wish id
-   * @param {string} reason The reason for closing
+   * @param {string} reason The reason text for closing
+   * @throws {WishError}
    * @throws {FirebaseError}
-   * @return {boolean} true if the wish is closed successfully, false otherwise
+   * @return {object} A firebase document of the closed wish
    */
   async closeWish(id, reason) {
     const wishInfo = await this._getWishInfo(id);
-    if (Object.entries(wishInfo).length === 0) {
-      return false;
+    if (typeof wishInfo === 'undefined') {
+      throw new WishError('invalid-wish-id', 'wish does not exist');
     }
 
     if (wishInfo.status !== 'pending') {
-      return false;
+      throw new WishError('invalid-wish-status', 'only can update a pending wish');
     }
 
     const updateTime = Date.now();
@@ -319,27 +358,33 @@ class WishesAPI {
         dateTime: updateTime,
       },
     };
-    wishesCollection.doc(id).update(data);
 
-    return true;
+    let wishDoc = wishesCollection.doc(id);
+    await wishDoc.update(data);
+
+    return wishDoc.get();
   }
 
   /**
    * Complete a wish
    * @param {string} id The wish id
    * @param {string} donorId The donor id that completed the wish
+   * @throws {WishError}
    * @throws {FirebaseError}
-   * @return {boolean} true if the wish is completed successfully, false otherwise
+   * @return {object} A firebase document of the completed wish
    */
   async completeWish(id, donorId) {
     const wishInfo = await this._getWishInfo(id);
-    const donorInfo = await this._getUserInfo(donorId);
-    if (Object.entries(wishInfo).length === 0 || Object.entries(donorInfo).length === 0) {
-      return false;
+    const donorInfo = await this._getDonorInfo(donorId);
+    if (typeof wishInfo === 'undefined') {
+      throw new WishError('invalid-wish-id', 'wish does not exist');
+    }
+    if (typeof donorInfo === 'undefined') {
+      throw new WishError('invalid-donor-id', 'donor does not exist');
     }
 
     if (wishInfo.status !== 'pending') {
-      return false;
+      throw new WishError('invalid-wish-status', 'only can update a pending wish');
     }
 
     const updateTime = Date.now();
@@ -353,42 +398,11 @@ class WishesAPI {
         dateTime: updateTime,
       },
     };
-    wishesCollection.doc(id).update(data);
 
-    return true;
-  }
+    let wishDoc = wishesCollection.doc(id);
+    await wishDoc.update(data);
 
-  async _getWishInfo(id) {
-    let snapshot = await wishesCollection.where('wishesId', '==', id).get();
-
-    // Assumes that categories id are unique
-    if (snapshot.empty) {
-      return {};
-    }
-
-    return snapshot.docs[0].data();
-  }
-
-  async _getCategoryInfoById(id) {
-    let snapshot = await db.collection('categories').where('id', '==', id).get();
-
-    // Assumes that categories name are unique
-    if (snapshot.empty) {
-      return {};
-    }
-
-    return snapshot.docs[0].data();
-  }
-
-  async _getCategoryInfoByName(name) {
-    let snapshot = await db.collection('categories').where('name', '==', name).get();
-
-    // Assumes that categories name are unique
-    if (snapshot.empty) {
-      return {};
-    }
-
-    return snapshot.docs[0].data();
+    return wishDoc.get();
   }
 
   async _getCurrentUserInfo() {
@@ -399,13 +413,33 @@ class WishesAPI {
     }
 
     const userId = user.uid;
-    return this._getUserInfo(userId);
+    return this._getNPOInfo(userId);
   }
 
-  async _getUserInfo(id) {
-    let snapshot = await db.collection('users').where('userId', '==', id).get();
+  async _getNPOInfo(id) {
+    const snapshot = await db.collection('npos').doc(id).get();
+    return snapshot.data();
+  }
 
-    // Assumes that userId are unique
+  async _getDonorInfo(id) {
+    const snapshot = await db.collection('donors').doc(id).get();
+    return snapshot.data();
+  }
+
+  async _getWishInfo(id) {
+    const snapshot = await wishesCollection.doc(id).get();
+    return snapshot.data();
+  }
+
+  async _getCategoryInfoById(id) {
+    const snapshot = await db.collection('categories').doc(id).get();
+    return snapshot.data();
+  }
+
+  async _getCategoryInfoByName(name) {
+    const snapshot = await db.collection('categories').where('name', '==', name).get();
+
+    // Assumes that categories name are unique
     if (snapshot.empty) {
       return {};
     }
@@ -429,16 +463,14 @@ class WishesAPI {
     return categoriesInfo;
   }
 
-  _getOrderByField(orderByType) {
-    switch (orderByType) {
-      case WishesSortTypeConstant.TIMESTAMP:
-        return 'lastActionByUserDateTime';
-      case WishesSortTypeConstant.NPO_NAME:
-        return 'user.userName';
-      default:
-        return '';
+  _validateOrderBy(orderByType) {
+    const validOrderBys = [TIMESTAMP, NPO_NAME];
+
+    if (!validOrderBys.includes(orderByType)) {
+      throw new WishError('invalid-orderBy', `${orderByType} is not a valid orderby`);
     }
   }
+
 }
 
 export default WishesAPI;
