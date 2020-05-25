@@ -6,7 +6,6 @@ import styled from 'styled-components';
 import BlackText from '../../text/BlackText';
 import GreySubtleButton from '../../buttons/GreySubtleButton';
 import DonationCard from '../../card/DonationCard';
-import { dummyTopCategoriesAndTheirDonations } from '../../../../utils/dummyData/topCategoriesAndTheirDonations';
 import CarouselScrollButton from '../../buttons/CarouselScrollButton';
 import Desktop from '@kiwicom/orbit-components/lib/Desktop';
 
@@ -45,13 +44,9 @@ const TopDonations = ({ numberOfPosts, numberOfCategories }) => {
   const [topCategoriesAndTheirDonations, setTopCategoriesAndTheirDonations] = useState([]);
 
   useEffect(() => {
-    if (process.env.NODE_ENV === 'development') {
-      setTopCategoriesAndTheirDonations(dummyTopCategoriesAndTheirDonations);
-    } else {
-      getTopCategoriesAndTheirDonations(numberOfPosts, numberOfCategories).then((result) =>
-        setTopCategoriesAndTheirDonations(result)
-      );
-    }
+    getTopCategoriesAndTheirDonations(numberOfPosts, numberOfCategories).then((result) =>
+      setTopCategoriesAndTheirDonations(result)
+    );
   }, []);
 
   const getTopCategoriesAndTheirDonations = async (numberOfPosts, numberOfCategories) => {
@@ -69,7 +64,7 @@ const TopDonations = ({ numberOfPosts, numberOfCategories }) => {
     let donationsForTopCategories = [];
     for (let i = 0; i < categories.length; i++) {
       const rawDonations = await api.donations
-        .getTopNPendingDonations(categories[i].id, numberOfPosts)
+        .getTopNPendingDonationsForCategory(categories[i].id, numberOfPosts)
         .catch((err) => console.error(err));
       donationsForTopCategories = [...donationsForTopCategories, rawDonations.docs.map((doc) => doc.data())];
     }
@@ -86,18 +81,18 @@ const TopDonations = ({ numberOfPosts, numberOfCategories }) => {
 
   const TopDonationCards = () => {
     const router = useRouter();
-    return topCategoriesAndTheirDonations.map((categoryDonations) => {
-      const categoryHref = `/donations/category/${categoryDonations.id}`;
+    return topCategoriesAndTheirDonations.map((obj) => {
+      const categoryHref = `/donations/category/${obj.category.id}`;
       const handleViewAllButton = (event) => {
         event.preventDefault();
         router.push(categoryHref);
       };
       return (
-        <TopDonationCardsContainer key={categoryDonations.id}>
+        <TopDonationCardsContainer key={obj.category.id}>
           <CategoryHeader>
             <LeftAnchor>
               <Text size="normal" weight="bold">
-                {categoryDonations.name}
+                {obj.category.name}
               </Text>
             </LeftAnchor>
             <RightAnchor>
@@ -108,12 +103,15 @@ const TopDonations = ({ numberOfPosts, numberOfCategories }) => {
           </CategoryHeader>
           <CarouselContainer>
             <Desktop>
-              <CarouselScrollButton direction="left" size="normal" scrollableId={categoryDonations.id} />
+              <CarouselScrollButton direction="left" size="normal" scrollableId={obj.category.id} />
             </Desktop>
-            <DonationsRow id={categoryDonations.id} className="scrollableDonation">
+            <DonationsRow id={obj.category.id} className="scrollableDonation">
               <Stack direction="row" align="start" spacing="extraLoose">
-                {categoryDonations.donations.map((donation) => {
+                {obj.donations.map((donation) => {
                   const donationPostHref = `/donations/${donation.donationId}`;
+                  const locations = donation.locations.map((location) => {
+                    return location.name;
+                  });
                   return (
                     <DonationCard
                       key={donation.donationId}
@@ -124,14 +122,14 @@ const TopDonations = ({ numberOfPosts, numberOfCategories }) => {
                       postedDateTime={donation.postedDateTime}
                       coverImageUrl={donation.coverImageUrl}
                       postHref={donationPostHref}
-                      location="NUS SoC"
+                      location={locations.join(', ')}
                     ></DonationCard>
                   );
                 })}
               </Stack>
             </DonationsRow>
             <Desktop>
-              <CarouselScrollButton direction="right" size="normal" scrollableId={categoryDonations.id} />
+              <CarouselScrollButton direction="right" size="normal" scrollableId={obj.category.id} />
             </Desktop>
           </CarouselContainer>
         </TopDonationCardsContainer>
