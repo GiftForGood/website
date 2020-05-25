@@ -1,4 +1,5 @@
 import { db } from '../firebase';
+import ReviewError from './error/reviewError';
 
 const reviewsCollection = db.collection('reviews');
 
@@ -10,24 +11,27 @@ class ReviewsAPI {
    * @param {string} donorId The donor id that fulfilled the wish
    * @param {number} rating The rating given by the NPO to the donor
    * @param {string} review The review given by the NPO to the donor
+   * @throws {ReviewError}
    * @throws {FirebaseError}
-   * @return {boolean} true if the review is created, false otherwise
+   * @return {object} A firebase document of the reviewed wish
    */
   async createWishReview(wishId, npoId, donorId, rating, review) {
     const npoInfo = await this._getUserInfo('npos', npoId);
     const donorInfo = await this._getUserInfo('donors', donorId);
     const wishInfo = await this._getWishInfo(wishId);
 
-    const npoDoesNotExist = Object.entries(npoInfo).length === 0;
-    const donorDoesNotExist = Object.entries(donorInfo).length === 0;
-    const wishDoesNotExist = Object.entries(wishInfo).length === 0;
-
-    if (npoDoesNotExist || donorDoesNotExist || wishDoesNotExist) {
-      return false;
+    if (typeof npoInfo === 'undefined') {
+      throw new ReviewError('invalid-npo-id', 'npo does not exist');
+    }
+    if (typeof donorInfo === 'undefined') {
+      throw new ReviewError('invalid-donor-id', 'donor does not exist');
+    }
+    if (typeof wishInfo === 'undefined') {
+      throw new ReviewError('invalid-wish-id', 'wish does not exist');
     }
 
-    if (wishInfo.status !== 'pending') {
-      return false;
+    if (wishInfo.status !== 'completed') {
+      throw new ReviewError('invalid-wish-status', 'only can review a completed wish');
     }
 
     const post = {
@@ -56,9 +60,9 @@ class ReviewsAPI {
       reviewFor: reviewFor,
       dateTime: Date.now(),
     };
-    newReview.set(data);
+    await newReview.set(data);
 
-    return true;
+    return newReview.get();
   }
 
   /**
@@ -68,23 +72,27 @@ class ReviewsAPI {
    * @param {string} npoId The npo id that is requested for the donation
    * @param {number} rating The rating given by the donor to the NPO
    * @param {string} review The review given by the donor to the NPO
-   * @return {boolean} true if the review is created, false otherwise
+   * @throws {ReviewError}
+   * @throws {FirebaseError}
+   * @return {object} A firebase document of the reviewed donation
    */
   async createDonationReview(donationId, donorId, npoId, rating, review) {
     const npoInfo = await this._getUserInfo('npos', npoId);
     const donorInfo = await this._getUserInfo('donors', donorId);
     const donationInfo = await this._getDonationInfo(donationId);
 
-    const npoDoesNotExist = Object.entries(npoInfo).length === 0;
-    const donorDoesNotExist = Object.entries(donorInfo).length === 0;
-    const donationDoesNotExist = Object.entries(donationInfo).length === 0;
-
-    if (npoDoesNotExist || donorDoesNotExist || donationDoesNotExist) {
-      return false;
+    if (typeof npoInfo === 'undefined') {
+      throw new ReviewError('invalid-npo-id', 'npo does not exist');
+    }
+    if (typeof donorInfo === 'undefined') {
+      throw new ReviewError('invalid-donor-id', 'donor does not exist');
+    }
+    if (typeof donationInfo === 'undefined') {
+      throw new ReviewError('invalid-donation-id', 'donation does not exist');
     }
 
-    if (donationInfo.status !== 'pending') {
-      return false;
+    if (donationInfo.status !== 'completed') {
+      throw new ReviewError('invalid-donation-status', 'only can review a completed donation');
     }
 
     const post = {
@@ -113,42 +121,24 @@ class ReviewsAPI {
       reviewFor: reviewFor,
       dateTime: Date.now(),
     };
-    newReview.set(data);
+    await newReview.set(data);
 
-    return true;
+    return newReview.get();
   }
 
   async _getUserInfo(collectionName, id) {
-    let snapshot = await db.collection(collectionName).where('userId', '==', id).get();
-
-    // Assumes that userId are unique
-    if (snapshot.empty) {
-      return {};
-    }
-
-    return snapshot.docs[0].data();
+    let snapshot = await db.collection(collectionName).doc(id).get();
+    return snapshot.data();
   }
 
   async _getWishInfo(id) {
-    let snapshot = await db.collection('wishes').where('wishId', '==', id).get();
-
-    // Assumes that wishId are unique
-    if (snapshot.empty) {
-      return {};
-    }
-
-    return snapshot.docs[0].data();
+    let snapshot = await db.collection('wishes').doc(id).get();
+    return snapshot.data();
   }
 
   async _getDonationInfo(id) {
-    let snapshot = await db.collection('donations').where('donationId', '==', id).get();
-
-    // Assumes that donationId are unique
-    if (snapshot.empty) {
-      return {};
-    }
-
-    return snapshot.docs[0].data();
+    let snapshot = await db.collection('donations').doc(id).get();
+    return snapshot.data();
   }
 }
 
