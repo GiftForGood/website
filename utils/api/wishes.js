@@ -9,8 +9,8 @@ const wishesCollection = db.collection('wishes');
 class WishesAPI {
   /**
    * Create a new wish
-   * @param {string} title The wish title text 
-   * @param {string} description The wish description text 
+   * @param {string} title The wish title text
+   * @param {string} description The wish description text
    * @param {array} categories A list of categories names that the wish belongs to
    * @throws {WishError}
    * @throws {FirebaseError}
@@ -93,7 +93,8 @@ class WishesAPI {
    * @throws {DonationError}
    * @throws {FirebaseError}
    * @returns {array} A list of firebase document of all ordered pending wishes
-   */	
+   */
+
   async getAllPendingWishes(orderBy = TIMESTAMP, isReverse = false, lastQueriedDocument = null) {
     // TODO: Sort by distance not implemented
     this._validateOrderBy(orderBy);
@@ -138,7 +139,7 @@ class WishesAPI {
     lastQueriedDocument = null
   ) {
     // TODO: Sort by distance not implemented
-    this._validateOrderBy(orderBy)
+    this._validateOrderBy(orderBy);
 
     let sortOrder = 'asc';
     if (isReverse) {
@@ -263,7 +264,7 @@ class WishesAPI {
   /**
    * Update the fields of a wish. Does not include updating of status
    * @param {string} id The wish id
-   * @param {string} title The wish title text 
+   * @param {string} title The wish title text
    * @param {string} description The wish description text
    * @param {array} categories A list of categories names that the wish belongs to
    * @throws {WishError}
@@ -470,7 +471,6 @@ class WishesAPI {
       throw new WishError('invalid-orderBy', `${orderByType} is not a valid orderby`);
     }
   }
-
 }
 
 export default WishesAPI;
