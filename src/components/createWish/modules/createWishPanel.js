@@ -1,0 +1,189 @@
+import React, { useEffect, useState } from 'react';
+import {
+  Button,
+  InputField,
+  Stack,
+  Heading,
+  Tag,
+  Card,
+  CardSection,
+  Textarea,
+  Popover,
+  ListChoice,
+  TextLink,
+} from '@kiwicom/orbit-components/lib';
+import { useDispatch } from 'react-redux';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
+import api from '../../../../utils/api';
+import RedButton from '../../buttons/RedButton';
+
+import styled from 'styled-components';
+import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
+
+import { setTitle, setDescription, setAllCategories } from '../actions';
+import LivePreviewPanel from './livePreviewPanel';
+
+const Container = styled.div`
+  min-width: 300px;
+  width: 100%;
+`;
+
+const CreateWishPanel = () => {
+  const dispatch = useDispatch();
+  const { isDesktop } = useMediaQuery();
+  const [categories, setCategories] = useState([]);
+  const [selectedCategories, setSelectedCategories] = useState([]);
+
+  const validationSchema = Yup.object().shape({
+    title: Yup.string()
+      .required('Required')
+      .min(1, 'A title must be provided')
+      .max(140, 'Title too long and exceeds 140 character limit'),
+    description: Yup.string().required('Required'),
+    categories: Yup.array()
+      .required('Required')
+      .min(1, 'A category must be provided')
+      .max(3, 'Only 3 selected categories allowed'),
+  });
+
+  const formik = useFormik({
+    initialValues: {
+      title: '',
+      description: '',
+      categories: [],
+    },
+    validationSchema: validationSchema,
+    onSubmit: (values) => {
+      console.log('values', values);
+      //TODO: call the API.
+    },
+  });
+
+  const fetchCategories = () => {
+    api.categories.getAll().then((categoriesDocs) => {
+      let categories = [];
+      categoriesDocs.forEach((categoryDoc) => {
+        categories.push(categoryDoc.data());
+      });
+      setCategories(categories);
+    });
+  };
+
+  useEffect(() => {
+    if (formik) {
+      dispatch(setTitle(formik.values.title));
+      dispatch(setDescription(formik.values.description));
+      dispatch(setAllCategories(formik.values.categories));
+    }
+  }, [formik, dispatch]);
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  const onChoiceClicked = (id, name) => {
+    // Allow only 3 categories
+    if (!selectedCategories.includes(name) && selectedCategories.length <= 2) {
+      setSelectedCategories([...selectedCategories, name]);
+      formik.setFieldValue('categories', [...selectedCategories, name]);
+    }
+  };
+
+  const onTagRemoveClicked = (name) => {
+    if (selectedCategories.includes(name)) {
+      let updatedSelectedCategories = selectedCategories.filter((value) => {
+        return value !== name;
+      });
+      setSelectedCategories(updatedSelectedCategories);
+    }
+  };
+
+  const CategoryListChoices = () => {
+    return (
+      <div>
+        {categories.map((category) => (
+          <ListChoice
+            title={category.name}
+            key={category.id}
+            onClick={() => onChoiceClicked(category.id, category.name)}
+          />
+        ))}
+      </div>
+    );
+  };
+
+  const SelectedCategoryTags = () => {
+    return (
+      <>
+        {selectedCategories.map((categoryName) => (
+          <Tag selected key={categoryName} onRemove={() => onTagRemoveClicked(categoryName)}>
+            {categoryName}
+          </Tag>
+        ))}
+      </>
+    );
+  };
+
+  return (
+    <>
+      <Container>
+        <Card>
+          <CardSection>
+            <form onSubmit={formik.handleSubmit}>
+              <Stack spacing="extraLoose">
+                <Heading>Create a wish</Heading>
+                <InputField
+                  disabled={formik.isSubmitting}
+                  label="Title"
+                  name="title"
+                  placeholder="Title"
+                  error={formik.touched.title && formik.errors.title ? formik.errors.title : ''}
+                  {...formik.getFieldProps('title')}
+                  help="Allow 140 characters only"
+                />
+
+                <Textarea
+                  rows={10}
+                  label="Description"
+                  name="description"
+                  placeholder="Description"
+                  error={formik.touched.description && formik.errors.description ? formik.errors.description : ''}
+                  {...formik.getFieldProps('description')}
+                  help={
+                    <div>
+                      <TextLink type="secondary">Click here to find out how you can write better</TextLink>
+                    </div>
+                  }
+                />
+
+                <Popover content={<CategoryListChoices />} noPadding preferredPosition="bottom" width="250px">
+                  <InputField
+                    disabled={formik.isSubmitting}
+                    label="Categories"
+                    name="categories"
+                    error={formik.touched.categories && formik.errors.categories ? formik.errors.categories : ''}
+                    tags={selectedCategories.length > 0 ? <SelectedCategoryTags /> : false}
+                    help={
+                      <div>
+                        Select up to <strong>3</strong> categories
+                      </div>
+                    }
+                  />
+                </Popover>
+
+                {isDesktop ? null : <LivePreviewPanel />}
+
+                <Button fullWidth submit asComponent={RedButton} disabled={formik.isSubmitting}>
+                  Post it
+                </Button>
+              </Stack>
+            </form>
+          </CardSection>
+        </Card>
+      </Container>
+    </>
+  );
+};
+
+export default CreateWishPanel;
