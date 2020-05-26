@@ -76,6 +76,10 @@ const ClickableDiv = styled.a`
   z-index: 1;
 `;
 
+const BadgeWrapper = styled.div`
+  margin-bottom: 8px !important;
+`;
+
 const CardDescription = ({ title, description }) => {
   return (
     <Stack direction="column" spacing="tight">
@@ -91,12 +95,14 @@ const CardDescription = ({ title, description }) => {
 
 const Tags = ({ categoryTags }) => {
   return (
-    <Stack row="1fr 1fr 1fr" desktop={{ spacing: 'natural' }} spacing="condensed">
+    <Stack direction="row" wrap={true} spacing="condensed" desktop={{ spacing: 'natural' }}>
       {categoryTags.map((category) => {
         return (
-          <Badge type="neutral" key={category}>
-            {category}
-          </Badge>
+          <BadgeWrapper>
+            <Badge type="neutral" key={category}>
+              {category}
+            </Badge>
+          </BadgeWrapper>
         );
       })}
     </Stack>
