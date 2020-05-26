@@ -30,7 +30,6 @@ const getCategoryDetails = async (categoryId) => {
 };
 
 const ViewCategory = ({ categoryDetails, filterQuery, user }) => {
-  console.log(categoryDetails);
   if (Object.keys(categoryDetails).length === 0) {
     return <Error />;
   }
