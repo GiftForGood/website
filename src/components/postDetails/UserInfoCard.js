@@ -44,7 +44,8 @@ const UserInfoCard = ({
   postUserReviewRating,
   isNpoVerifiedByAdmin,
 }) => {
-  const isWishPost = postType === 'wish';
+  const isWishPost = postType !== 'wish';
+  const checkProfileHref = `/profile/${isWishPost ? 'npo' : 'donor'}/${postUserId}`;
 
   const HeaderInformation = () => {
     return (
@@ -65,7 +66,7 @@ const UserInfoCard = ({
       <Stack direction="column" shrink spacing="none">
         <Text>{postUserName}</Text>
         <Stack spaceAfter="large"> {isWishPost ? <Text>{npoOrgName}</Text> : null}</Stack>
-        <TextLink transparent asComponent={CheckProfileLink} href={`/profile/${postUserId}`}>
+        <TextLink transparent asComponent={CheckProfileLink} href={checkProfileHref}>
           Check Profile
         </TextLink>
       </Stack>

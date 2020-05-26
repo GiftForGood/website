@@ -81,6 +81,7 @@ const PostDetailsHeader = ({
   };
 
   const PopoverContent = ({ isDisabled }) => {
+    const editPostHref = `/edit/${isWishPost ? 'wishes' : 'donations'}/${postId}`;
     return (
       <>
         {showReportPostModal ? (
@@ -108,7 +109,7 @@ const PostDetailsHeader = ({
                     transparent
                     type="secondary"
                     iconLeft={<Edit />}
-                    href={`/edit/${isWishPost ? 'wishes' : 'donations'}/${postId}`}
+                    href={editPostHref}
                     fullWidth={!isLargeMobile}
                     disabled={isDisabled || isClosedPost}
                   >
