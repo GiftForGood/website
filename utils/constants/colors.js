@@ -21,4 +21,5 @@ export const colors = {
   chatButtonBackground: '#43aad8',
   chatButtonHoverActive: '#31A2D6',
   chatButtonFocus: '#138CC8',
+  ratingStarBackground: '#ED5555',
 };

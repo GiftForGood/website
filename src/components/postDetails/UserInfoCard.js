@@ -1,11 +1,11 @@
 import React from 'react';
 import Avatar from '../imageContainers/Avatar';
 import KiwicomGuarantee from '@kiwicom/orbit-components/lib/icons/KiwicomGuarantee';
-import RatingStars from '@kiwicom/orbit-components/lib/RatingStars';
 import styled from 'styled-components';
 import { colors } from '../../../utils/constants/colors';
 import { Stack, Text, TextLink } from '@kiwicom/orbit-components/lib';
 import { CardSection } from '@kiwicom/orbit-components/lib/Card';
+import RatingStars from '../ratingStars';
 
 const CheckProfileLink = styled.a`
   color: ${colors.npoBackground};
@@ -68,7 +68,7 @@ const UserInfoCard = ({ postType, postUserId, postUserName, profileImageUrl, org
     return (
       <Stack direction="column" shrink inline align="center" spacing="extraTight">
         <Avatar type="large" imageUrl={profileImageUrl} />
-        <RatingStars rating={3.5} size="small" color="attention" showEmpty />
+        <RatingStars rating={4} size="small" color={colors.ratingStarBackground} showEmpty />
       </Stack>
     );
   };
