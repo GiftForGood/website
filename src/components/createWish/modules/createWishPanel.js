@@ -179,6 +179,7 @@ const CreateWishPanel = () => {
                 />
 
                 <Textarea
+                  disabled={formik.isSubmitting}
                   rows={10}
                   label="Description"
                   name="description"
