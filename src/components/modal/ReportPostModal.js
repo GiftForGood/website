@@ -5,7 +5,7 @@ import { reportPostReasons } from '../../../utils/constants/reportPostReasons';
 import { Button, ChoiceGroup, Stack, Radio, Textarea } from '@kiwicom/orbit-components/lib';
 import Modal, { ModalSection } from '@kiwicom/orbit-components/lib/Modal';
 
-const ReportPostModal = ({ postId, type, userId, onClose }) => {
+const ReportPostModal = ({ postId, postType, loginUserId, onClose }) => {
   const OTHERS = reportPostReasons[reportPostReasons.length - 1];
 
   const [reason, setReason] = useState(reportPostReasons[0]); // set reason for radio button
@@ -13,10 +13,10 @@ const ReportPostModal = ({ postId, type, userId, onClose }) => {
 
   const postToFirestore = async (reportPostReason) => {
     try {
-      if (type === 'wish') {
-        const reportDoc = await api.reports.reportWish(postId, userId, reportPostReason);
+      if (postType === 'wish') {
+        const reportDoc = await api.reports.reportWish(postId, loginUserId, reportPostReason);
       } else {
-        const reportDoc = await api.reports.reportDonation(postId, userId, reportPostReason);
+        const reportDoc = await api.reports.reportDonation(postId, loginUserId, reportPostReason);
       }
       onClose();
     } catch (error) {

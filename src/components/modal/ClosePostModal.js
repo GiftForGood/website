@@ -6,8 +6,8 @@ import { wishClosePostReasons, donationClosePostReasons } from '../../../utils/c
 import { Button, ChoiceGroup, Heading, Stack, Radio, Text, Textarea } from '@kiwicom/orbit-components/lib';
 import Modal, { ModalSection } from '@kiwicom/orbit-components/lib/Modal';
 
-const ClosePostModal = ({ postId, type, onClose, updateIsClosedPost }) => {
-  const closePostReasons = type === 'wish' ? wishClosePostReasons : donationClosePostReasons;
+const ClosePostModal = ({ postId, postType, onClose, updateIsClosedPost }) => {
+  const closePostReasons = postType === 'wish' ? wishClosePostReasons : donationClosePostReasons;
   const OTHERS = closePostReasons[closePostReasons.length - 1];
 
   const [reason, setReason] = useState(closePostReasons[0]); // set reason for radio button
@@ -15,7 +15,11 @@ const ClosePostModal = ({ postId, type, onClose, updateIsClosedPost }) => {
 
   const postToFirestore = async (closePostReason) => {
     try {
-      const wishDoc = await api.wishes.closeWish(postId, closePostReason);
+      if (postType === 'wish') {
+        const wishDoc = await api.wishes.closeWish(postId, closePostReason);
+      } else {
+        const donationDoc = await api.donations.closeDonation(postId, closePostReason);
+      }
       updateIsClosedPost();
       onClose();
     } catch (error) {
