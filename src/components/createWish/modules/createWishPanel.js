@@ -57,7 +57,7 @@ const CreateWishPanel = () => {
       let description = values.description;
       let categories = values.categories;
       const wishDoc = await api.wishes.create(title, description, categories);
-      let wishId = wishDoc.data().wishId
+      let wishId = wishDoc.data().wishId;
       router.push(`/wishes/${wishId}`);
     } catch (error) {
       console.error(error);
