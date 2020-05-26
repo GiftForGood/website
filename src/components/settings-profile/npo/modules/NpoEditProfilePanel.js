@@ -16,7 +16,7 @@ const Container = styled.div`
 
   ${media.desktop(css`
     width: 50%;
-  `)};  
+  `)};
 `;
 
 const NpoEditProfilePanel = () => {

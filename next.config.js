@@ -1,5 +1,5 @@
 const Dotenv = require('dotenv-webpack');
-const withImages = require('next-images')
+const withImages = require('next-images');
 
 module.exports = withImages({
   webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {

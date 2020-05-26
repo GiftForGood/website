@@ -19,12 +19,11 @@ const Container = styled.div`
 `;
 
 const NpoSettingProfilePage = () => {
-
   return (
     <Container>
       <NpoEditProfilePanel />
     </Container>
-  )
-}
+  );
+};
 
 export default NpoSettingProfilePage;

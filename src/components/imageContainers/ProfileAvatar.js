@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import accountCircle from '../../../public/assets/account-circle.svg'
+import accountCircle from '../../../public/assets/account-circle.svg';
 
 const CircularImage = styled.img`
   width: ${(props) => (props.width ? props.width : 40)}px;
@@ -10,13 +10,12 @@ const CircularImage = styled.img`
 `;
 
 const Avatar = ({ imageUrl, height, width }) => {
- 
   return (
     <>
       {imageUrl ? (
         <CircularImage src={imageUrl} />
       ) : (
-        <CircularImage src={accountCircle} height={height} width={width}/>
+        <CircularImage src={accountCircle} height={height} width={width} />
       )}
     </>
   );

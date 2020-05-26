@@ -6,7 +6,6 @@ import NpoSettingProfilePage from '../../src/components/settings-profile/npo/pag
 
 const TopNavigationBar = dynamic(() => import('../../src/components/navbar/modules/TopNavigationBar'), { ssr: false });
 
-
 export async function getServerSideProps({ params, req, res, query }) {
   let user = await isAuthenticated(req, res);
   if (!user) {
