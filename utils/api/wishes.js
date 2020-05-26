@@ -11,7 +11,7 @@ class WishesAPI {
    * Create a new wish
    * @param {string} title The wish title text
    * @param {string} description The wish description text
-   * @param {array} categories A list of categories names that the wish belongs to
+   * @param {array} categories A list of categories id that the wish belongs to
    * @throws {WishError}
    * @throws {FirebaseError}
    * @return {object} A firebase document of the created wish
@@ -23,14 +23,14 @@ class WishesAPI {
 
     // Used a for loop instead of a forEach because forEach is not promise aware
     for (let i = 0; i < categories.length; i++) {
-      let categoryInfo = await this._getCategoryInfoByName(categories[i]);
+      let categoryInfo = this._getCategoryInfo(categories[i]);
 
-      if (Object.entries(categoryInfo).length !== 0) {
+      if (typeof categoryInfo !== 'undefined') {
         categoriesInfo.push(categoryInfo);
       }
     }
 
-    const allUserInfo = await this._getCurrentUserInfo();
+    const allUserInfo = this._getCurrentUserInfo();
     if (typeof allUserInfo === 'undefined') {
       throw new WishError('invalid-current-user');
     }
@@ -38,6 +38,8 @@ class WishesAPI {
     userInfo.userName = allUserInfo.name;
     userInfo.profileImageUrl = allUserInfo.profileImageUrl;
     organizationInfo = allUserInfo.organization;
+
+    Promise
 
     let newWish = wishesCollection.doc();
     const timeNow = Date.now();
@@ -76,7 +78,7 @@ class WishesAPI {
    * @return {array} A list of firebase document of the top n pending wishes
    */
   async getTopNPendingWishesForCategory(categoryId, n) {
-    const categoryInfo = await this._getCategoryInfoById(categoryId);
+    const categoryInfo = await this._getCategoryInfo(categoryId);
     return wishesCollection
       .where('categories', 'array-contains', categoryInfo)
       .where('status', '==', 'pending')
@@ -87,7 +89,7 @@ class WishesAPI {
 
   /**
    * Gets a batch of all pending wishes. Only return results of WISHES_BATCH_SIZE
-   * @param {string} orderBy The way to order the wishes
+   * @param {string} orderBy The way to order the wishes. Look at wishesSortType.js to know what are the various ways.
    * @param {boolean} isReverse Indicates if the query should be ordered in reverse
    * @param {object} lastQueriedDocument The last queried firebase document to start the query after. If the field is not given, the query will start from the first document
    * @throws {DonationError}
@@ -125,16 +127,16 @@ class WishesAPI {
   /**
    * Get a batch of pending wishes belonging to a category. Only return results of WISHES_BATCH_SIZE
    * @param {string} categoryId The category id
-   * @param {string} orderBy The way to order the wishes. Only wishesSortTypeAllowed
+   * @param {string} orderBy The way to order the wishes. Look at wishesSortType.js to know what are the various ways.
    * @param {boolean} isReverse Indicates if the query should be ordered in reverse
    * @param {object} lastQueriedDocument The last queried firebase document to start the query after. If the field is not given, the query will start from the first document
    * @throws {WishError}
    * @throws {FirebaseError}
-   * @return {object} A firebase document of ordered pending wishes belonging to a category
+   * @return {array} A list of firebase document of ordered pending wishes belonging to a category
    */
   async getPendingWishesForCategory(
     categoryId,
-    orderBy = WishesSortTypeConstant.TIMESTAMP,
+    orderBy = TIMESTAMP,
     isReverse = false,
     lastQueriedDocument = null
   ) {
@@ -146,7 +148,7 @@ class WishesAPI {
       sortOrder = 'desc';
     }
 
-    const categoryInfo = await this._getCategoryInfoById(categoryId);
+    const categoryInfo = await this._getCategoryInfo(categoryId);
 
     if (lastQueriedDocument == null) {
       // First page
@@ -266,7 +268,7 @@ class WishesAPI {
    * @param {string} id The wish id
    * @param {string} title The wish title text
    * @param {string} description The wish description text
-   * @param {array} categories A list of categories names that the wish belongs to
+   * @param {array} categories A list of categories id that the wish belongs to
    * @throws {WishError}
    * @throws {FirebaseError}
    * @return {object} A firebase document of the updated wish
@@ -432,30 +434,19 @@ class WishesAPI {
     return snapshot.data();
   }
 
-  async _getCategoryInfoById(id) {
+  async _getCategoryInfo(id) {
     const snapshot = await db.collection('categories').doc(id).get();
     return snapshot.data();
   }
 
-  async _getCategoryInfoByName(name) {
-    const snapshot = await db.collection('categories').where('name', '==', name).get();
-
-    // Assumes that categories name are unique
-    if (snapshot.empty) {
-      return {};
-    }
-
-    return snapshot.docs[0].data();
-  }
-
-  async _getWishCategoriesInfo(existingCategories, updatedCategoriesName) {
+  async _getWishCategoriesInfo(existingCategories, updatedCategoriesId) {
     let categoriesInfo = [];
 
-    for (const name of updatedCategoriesName) {
-      let categoryInfo = existingCategories.find((category) => category.name === name);
+    for (const id of updatedCategoriesId) {
+      let categoryInfo = existingCategories.find((category) => category.id === id);
 
       if (typeof categoryInfo === 'undefined') {
-        categoryInfo = await this._getCategoryInfoByName(name);
+        categoryInfo = await this._getCategoryInfo(id);
       }
 
       categoriesInfo.push(categoryInfo);
