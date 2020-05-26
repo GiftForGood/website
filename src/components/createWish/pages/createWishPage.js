@@ -17,7 +17,8 @@ const Container = styled.div`
   ${media.largeMobile(css`
     width: 90vw;
     margin: 0 auto;
-    height: 100vh;
+    padding-top: 80px;
+    padding-bottom: 100px;
   `)};
 `;
 
@@ -33,7 +34,6 @@ const Wrapper = styled.div`
   ${media.desktop(css`
     flex-direction: row;
     justify-content: center;
-    align-items: center;
   `)}
 `;
 
