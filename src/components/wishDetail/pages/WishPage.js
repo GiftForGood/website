@@ -26,8 +26,9 @@ const LeftPanel = styled.div`
   `)};
 `;
 
-const WishPage = ({ wishDetails, user }) => {
+const WishPage = ({ wishDetails, npoDetails, user }) => {
   const wish = wishDetails;
+  const npo = npoDetails;
   const categoryTags = wish.categories.map((category) => category.name);
   const loginUserId = user == null ? '' : user.user.userId;
 
@@ -60,7 +61,9 @@ const WishPage = ({ wishDetails, user }) => {
             postUserId={wish.user.userId}
             postUserName={wish.user.userName}
             profileImageUrl={wish.user.profileImageUrl}
-            orgName={wish.organization.name}
+            npoOrgName={wish.organization.name}
+            postUserReviewRating={npo.reviewRating}
+            isNpoVerifiedByAdmin={npo.isVerifiedByAdmin}
           />
         </RightPanel>
       </Grid>

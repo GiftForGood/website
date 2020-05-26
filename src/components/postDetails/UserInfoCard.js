@@ -35,14 +35,22 @@ const CardContainer = styled.div`
   box-shadow: 0px 0px 5px 0px rgba(37, 42, 49, 0.16), 0px 2px 8px 0px rgba(37, 42, 49, 0.12);
 `;
 
-const UserInfoCard = ({ postType, postUserId, postUserName, profileImageUrl, orgName }) => {
+const UserInfoCard = ({
+  postType,
+  postUserId,
+  postUserName,
+  profileImageUrl,
+  npoOrgName,
+  postUserReviewRating,
+  isNpoVerifiedByAdmin,
+}) => {
   const isWishPost = postType === 'wish';
 
   const HeaderInformation = () => {
     return (
       <Stack direction="row" inline spacing="natural" align="center" spaceAfter="normal">
         <Text>{isWishPost ? 'NPO Information' : 'Donor Information'}</Text>
-        {isWishPost && (
+        {isNpoVerifiedByAdmin && isWishPost && (
           <Stack direction="row" inline spacing="extraTight" align="center">
             <KiwicomGuarantee customColor={colors.verifiedIconBackground} />
             <Text size="small">Verified NPO</Text>
@@ -56,7 +64,7 @@ const UserInfoCard = ({ postType, postUserId, postUserName, profileImageUrl, org
     return (
       <Stack direction="column" shrink spacing="none">
         <Text>{postUserName}</Text>
-        <Stack spaceAfter="large"> {isWishPost ? <Text>{orgName}</Text> : null}</Stack>
+        <Stack spaceAfter="large"> {isWishPost ? <Text>{npoOrgName}</Text> : null}</Stack>
         <TextLink transparent asComponent={CheckProfileLink} href={`/profile/${postUserId}`}>
           Check Profile
         </TextLink>
@@ -68,7 +76,7 @@ const UserInfoCard = ({ postType, postUserId, postUserName, profileImageUrl, org
     return (
       <Stack direction="column" shrink inline align="center" spacing="extraTight">
         <Avatar type="large" imageUrl={profileImageUrl} />
-        <RatingStars rating={4} size="small" color={colors.ratingStarBackground} showEmpty />
+        <RatingStars rating={postUserReviewRating} size="small" color={colors.ratingStarBackground} showEmpty />
       </Stack>
     );
   };
