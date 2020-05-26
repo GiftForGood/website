@@ -23,6 +23,7 @@ import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 
 import { setTitle, setDescription, setAllCategories } from '../actions';
 import LivePreviewPanel from './livePreviewPanel';
+import { useRouter } from 'next/router';
 
 const Container = styled.div`
   min-width: 300px;
@@ -31,9 +32,44 @@ const Container = styled.div`
 
 const CreateWishPanel = () => {
   const dispatch = useDispatch();
+  const router = useRouter();
   const { isDesktop } = useMediaQuery();
   const [categories, setCategories] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
+
+  const [alertTitle, setAlertTitle] = useState('');
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertType, setAlertType] = useState('');
+  const [alertDescription, setAlertDescription] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+
+  const displayAlert = (title, description, type) => {
+    setShowAlert(true);
+    setAlertTitle(title);
+    setAlertDescription(description);
+    setAlertType(type);
+  };
+
+  const handleFormSubmission = async (values) => {
+    try {
+      setIsLoading(true);
+      let title = values.title;
+      let description = values.description;
+      let categories = values.categories;
+      const wishDoc = await api.wishes.create(title, description, categories);
+      let wishId = wishDoc.data().wishId
+      router.push(`/wishes/${wishId}`);
+    } catch (error) {
+      console.error(error);
+      setIsLoading(false);
+      formik.setSubmitting(false);
+      if (error.code === 'wish/invalid-current-user') {
+        displayAlert('Invalid current user', error.message, 'critical');
+      } else {
+        displayAlert('Error', error.message, 'critical');
+      }
+    }
+  };
 
   const validationSchema = Yup.object().shape({
     title: Yup.string()
@@ -55,8 +91,7 @@ const CreateWishPanel = () => {
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      console.log('values', values);
-      //TODO: call the API.
+      handleFormSubmission(values);
     },
   });
 
@@ -174,11 +209,17 @@ const CreateWishPanel = () => {
 
                 {isDesktop ? null : <LivePreviewPanel />}
 
-                <Button fullWidth submit asComponent={RedButton} disabled={formik.isSubmitting}>
+                <Button fullWidth submit asComponent={RedButton} disabled={formik.isSubmitting} loading={isLoading}>
                   Post it
                 </Button>
               </Stack>
             </form>
+
+            {showAlert ? (
+              <Alert icon title={alertTitle} type={alertType}>
+                {alertDescription}
+              </Alert>
+            ) : null}
           </CardSection>
         </Card>
       </Container>
