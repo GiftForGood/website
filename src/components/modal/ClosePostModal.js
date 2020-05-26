@@ -6,7 +6,7 @@ import { wishClosePostReasons, donationClosePostReasons } from '../../../utils/c
 import { Button, ChoiceGroup, Heading, Stack, Radio, Text, Textarea } from '@kiwicom/orbit-components/lib';
 import Modal, { ModalSection } from '@kiwicom/orbit-components/lib/Modal';
 
-const ClosePostModal = ({ wishId, type, onClose, updateIsClosedWish }) => {
+const ClosePostModal = ({ postId, type, onClose, updateIsClosedPost }) => {
   const closePostReasons = type === 'wish' ? wishClosePostReasons : donationClosePostReasons;
   const OTHERS = closePostReasons[closePostReasons.length - 1];
 
@@ -15,8 +15,8 @@ const ClosePostModal = ({ wishId, type, onClose, updateIsClosedWish }) => {
 
   const postToFirestore = async (closePostReason) => {
     try {
-      const wishDoc = await api.wishes.closeWish(wishId, closePostReason);
-      updateIsClosedWish();
+      const wishDoc = await api.wishes.closeWish(postId, closePostReason);
+      updateIsClosedPost();
       onClose();
     } catch (error) {
       console.error(error);
