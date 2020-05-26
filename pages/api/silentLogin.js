@@ -20,8 +20,8 @@ async function handler(req, res) {
         res.json({
           user: {
             ...user,
-            donor: decodedClaims.donor,
-            npo: decodedClaims.npo,
+            donor: decodedClaims.donor || currentUser.customClaims.donor,
+            npo: decodedClaims.npo || currentUser.customClaims.npo,
             emailVerified: currentUser.emailVerified,
             email: decodedClaims.email,
           },
