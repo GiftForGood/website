@@ -17,20 +17,14 @@ class WishesAPI {
    * @return {object} A firebase document of the created wish
    */
   async create(title, description, categories) {
-    let categoriesInfo = [];
+    // time: 1051ms -> 760ms
     let userInfo = {};
     let organizationInfo = {};
 
-    // Used a for loop instead of a forEach because forEach is not promise aware
-    for (let i = 0; i < categories.length; i++) {
-      let categoryInfo = this._getCategoryInfo(categories[i]);
+    const categoriesInfoPromise = this._getAllCategoriesInfo(categories);
+    const allUserInfoPromise = this._getCurrentUserInfo();
+    const [categoriesInfo, allUserInfo] = await Promise.all([categoriesInfoPromise, allUserInfoPromise]);
 
-      if (typeof categoryInfo !== 'undefined') {
-        categoriesInfo.push(categoryInfo);
-      }
-    }
-
-    const allUserInfo = this._getCurrentUserInfo();
     if (typeof allUserInfo === 'undefined') {
       throw new WishError('invalid-current-user');
     }
@@ -38,8 +32,6 @@ class WishesAPI {
     userInfo.userName = allUserInfo.name;
     userInfo.profileImageUrl = allUserInfo.profileImageUrl;
     organizationInfo = allUserInfo.organization;
-
-    Promise
 
     let newWish = wishesCollection.doc();
     const timeNow = Date.now();
@@ -134,12 +126,7 @@ class WishesAPI {
    * @throws {FirebaseError}
    * @return {array} A list of firebase document of ordered pending wishes belonging to a category
    */
-  async getPendingWishesForCategory(
-    categoryId,
-    orderBy = TIMESTAMP,
-    isReverse = false,
-    lastQueriedDocument = null
-  ) {
+  async getPendingWishesForCategory(categoryId, orderBy = TIMESTAMP, isReverse = false, lastQueriedDocument = null) {
     // TODO: Sort by distance not implemented
     this._validateOrderBy(orderBy);
 
@@ -377,8 +364,7 @@ class WishesAPI {
    * @return {object} A firebase document of the completed wish
    */
   async completeWish(id, donorId) {
-    const wishInfo = await this._getWishInfo(id);
-    const donorInfo = await this._getDonorInfo(donorId);
+    const [wishInfo, donorInfo] = await Promise.all([this._getWishInfo(id), this._getDonorInfo(donorId)]);
     if (typeof wishInfo === 'undefined') {
       throw new WishError('invalid-wish-id', 'wish does not exist');
     }
@@ -439,20 +425,35 @@ class WishesAPI {
     return snapshot.data();
   }
 
+  async _getAllCategoriesInfo(categoriesId) {
+    const categoriesPromise = categoriesId.map((categoryId) => {
+      return this._getCategoryInfo(categoryId);
+    });
+
+    const categoriesInfo = await Promise.all(categoriesPromise);
+    return categoriesInfo.filter((categoryInfo) => typeof categoryInfo !== 'undefined');
+  }
+
   async _getWishCategoriesInfo(existingCategories, updatedCategoriesId) {
     let categoriesInfo = [];
+    let newCategoriesIdToQuery = [];
 
     for (const id of updatedCategoriesId) {
       let categoryInfo = existingCategories.find((category) => category.id === id);
 
       if (typeof categoryInfo === 'undefined') {
-        categoryInfo = await this._getCategoryInfo(id);
+        newCategoriesIdToQuery.push(id);
+      } else {
+        categoriesInfo.push(categoryInfo);
       }
-
-      categoriesInfo.push(categoryInfo);
     }
 
-    return categoriesInfo;
+    const newCategoriesPromise = newCategoriesIdToQuery.map((categoryId) => {
+      return this._getCategoryInfo(categoryId);
+    });
+    const newCategoriesInfo = await Promise.all(newCategoriesPromise);
+
+    return [...categoriesInfo, ...newCategoriesInfo];
   }
 
   _validateOrderBy(orderByType) {
