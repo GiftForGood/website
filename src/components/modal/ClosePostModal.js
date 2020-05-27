@@ -6,7 +6,7 @@ import { wishClosePostReasons, donationClosePostReasons } from '../../../utils/c
 import { Button, ChoiceGroup, Heading, Stack, Radio, Text, Textarea } from '@kiwicom/orbit-components/lib';
 import Modal, { ModalSection } from '@kiwicom/orbit-components/lib/Modal';
 
-const ClosePostModal = ({ postId, postType, onClose, updateIsClosedPost }) => {
+const ClosePostModal = ({ postId, postType, onClose, setIsClosedPost }) => {
   const isWishPost = postType === 'wishes';
   const closePostReasons = isWishPost ? wishClosePostReasons : donationClosePostReasons;
   const OTHERS = closePostReasons[closePostReasons.length - 1];
@@ -21,7 +21,7 @@ const ClosePostModal = ({ postId, postType, onClose, updateIsClosedPost }) => {
       } else {
         const donationDoc = await api.donations.closeDonation(postId, closePostReason);
       }
-      updateIsClosedPost();
+      setIsClosedPost(true);
       onClose();
     } catch (error) {
       console.error(error);

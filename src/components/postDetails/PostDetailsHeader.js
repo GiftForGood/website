@@ -31,10 +31,6 @@ const PostDetailsHeader = ({
   const [showClosePostModal, setShowClosePostModal] = useState(false);
   const [showSharePostModal, setShowSharePostModal] = useState(false);
 
-  const updateIsClosedPost = () => {
-    setIsClosedPost(true);
-  };
-
   const handleReportPostModal = () => {
     if (showReportPostModal) {
       setShowPostPostModal(false);
@@ -96,7 +92,7 @@ const PostDetailsHeader = ({
             postId={postId}
             postType={postType}
             onClose={handleClosePostModal}
-            updateIsClosedPost={updateIsClosedPost}
+            setIsClosedPost={setIsClosedPost}
           />
         ) : null}
         <Popover
