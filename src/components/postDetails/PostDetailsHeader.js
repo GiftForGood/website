@@ -15,16 +15,15 @@ const PostDetailsHeader = ({
   postUserId,
   postUserName,
   profileImageUrl,
-  orgName,
+  npoOrgName,
   postId,
   postStatus,
   postType,
 }) => {
   const router = useRouter();
-  const isWishPost = postType === 'wish';
   const isOwnPost = loginUserId === postUserId; // whether login user is the post owner
   const chatType = isOwnPost ? 'View Chats' : 'Chat';
-  const postUrl = `https://www.giftforgood.io/${isWishPost ? 'wishes' : 'donations'}/${postId}`;
+  const postUrl = `https://www.giftforgood.io/${postType}/${postId}`;
 
   const { isLargeMobile } = useMediaQuery();
   const [isClosedPost, setIsClosedPost] = useState(postStatus === 'closed');
@@ -81,7 +80,7 @@ const PostDetailsHeader = ({
   };
 
   const PopoverContent = ({ isDisabled }) => {
-    const editPostHref = `/edit/${isWishPost ? 'wishes' : 'donations'}/${postId}`;
+    const editPostHref = `/edit/${postType}/${postId}`;
     return (
       <>
         {showReportPostModal ? (
@@ -154,7 +153,7 @@ const PostDetailsHeader = ({
         <Avatar imageUrl={profileImageUrl} />
         <Stack direction="column" shrink spacing="none">
           <Text>{postUserName}</Text>
-          <Text>{orgName}</Text>
+          <Text>{npoOrgName}</Text>
         </Stack>
       </Stack>
     );

@@ -26,7 +26,7 @@ const LeftPanel = styled.div`
   `)};
 `;
 
-const WishPage = ({ wishDetails, npoDetails, user }) => {
+const WishPage = ({ wishId, wishDetails, npoDetails, user }) => {
   const wish = wishDetails;
   const npo = npoDetails;
   const categoryTags = wish.categories.map((category) => category.name);
@@ -39,8 +39,8 @@ const WishPage = ({ wishDetails, npoDetails, user }) => {
           <Map
             lat={wish.organization.latitude}
             lng={wish.organization.longitude}
-            orgName={wish.organization.name}
-            orgAddress={wish.organization.address}
+            npoOrgName={wish.organization.name}
+            npoOrgAddress={wish.organization.address}
           />
         </LeftPanel>
         <RightPanel>
@@ -49,15 +49,15 @@ const WishPage = ({ wishDetails, npoDetails, user }) => {
             wishUserId={wish.user.userId}
             wishUserName={wish.user.userName}
             profileImageUrl={wish.user.profileImageUrl}
-            orgName={wish.organization.name}
-            wishId={wish.wishesId}
+            npoOrgName={wish.organization.name}
+            wishId={wishId}
             title={wish.title}
             description={wish.description}
             status={wish.status}
             categoryTags={categoryTags}
           />
           <NpoInformation
-            postType="wish"
+            postType="wishes"
             postUserId={wish.user.userId}
             postUserName={wish.user.userName}
             profileImageUrl={wish.user.profileImageUrl}

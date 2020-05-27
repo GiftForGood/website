@@ -16,7 +16,7 @@ const WishInformation = ({
   wishUserId,
   wishUserName,
   profileImageUrl,
-  orgName,
+  npoOrgName,
   wishId,
   title,
   description,
@@ -52,10 +52,10 @@ const WishInformation = ({
         postUserId={wishUserId}
         postUserName={wishUserName}
         profileImageUrl={profileImageUrl}
-        orgName={orgName}
+        npoOrgName={npoOrgName}
         postId={wishId}
         postStatus={status}
-        postType="wish"
+        postType="wishes"
       />
       <WishInformationBody />
     </Stack>

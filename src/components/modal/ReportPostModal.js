@@ -13,7 +13,7 @@ const ReportPostModal = ({ postId, postType, loginUserId, onClose }) => {
 
   const postToFirestore = async (reportPostReason) => {
     try {
-      if (postType === 'wish') {
+      if (postType === 'wishes') {
         const reportDoc = await api.reports.reportWish(postId, loginUserId, reportPostReason);
       } else {
         const reportDoc = await api.reports.reportDonation(postId, loginUserId, reportPostReason);

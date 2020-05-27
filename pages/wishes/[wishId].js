@@ -10,12 +10,14 @@ const TopNavigationBar = dynamic(() => import('../../src/components/navbar/modul
 });
 
 export async function getServerSideProps({ params, req, res, query }) {
-  const wishDetails = await getWishDetails(params.wishId);
+  const wishId = params.wishId;
+  const wishDetails = await getWishDetails(wishId);
   const npoDetails = {}; // TODO remove & uncomment bottom when getNPO API is up
   // const npoDetails = await getNpoDetails(wishDetails.user.userId);
   let user = await isAuthenticated(req, res);
   return {
     props: {
+      wishId,
       wishDetails,
       npoDetails,
       user,
@@ -33,7 +35,7 @@ const getNpoDetails = async (npoId) => {
   return rawNpo.docs[0].data();
 };
 
-const Wish = ({ wishDetails, npoDetails, user }) => {
+const Wish = ({ wishId, wishDetails, npoDetails, user }) => {
   return (
     <SessionProvider user={user}>
       <Head>
@@ -49,7 +51,7 @@ const Wish = ({ wishDetails, npoDetails, user }) => {
         />
       </Head>
       <TopNavigationBar />
-      <WishPage wishDetails={wishDetails} npoDetails={npoDetails} user={user} />
+      <WishPage wishId={wishId} wishDetails={wishDetails} npoDetails={npoDetails} user={user} />
     </SessionProvider>
   );
 };

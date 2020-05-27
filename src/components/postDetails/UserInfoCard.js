@@ -44,7 +44,7 @@ const UserInfoCard = ({
   postUserReviewRating,
   isNpoVerifiedByAdmin,
 }) => {
-  const isWishPost = postType !== 'wish';
+  const isWishPost = postType === 'wishes';
   const checkProfileHref = `/profile/${isWishPost ? 'npo' : 'donor'}/${postUserId}`;
 
   const HeaderInformation = () => {
