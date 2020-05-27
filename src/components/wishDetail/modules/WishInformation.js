@@ -3,6 +3,7 @@ import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import styled, { css } from 'styled-components';
 import { Badge, Stack, Text, Heading } from '@kiwicom/orbit-components/lib';
 import WishInformationHeader from '../../postDetails/PostDetailsHeader';
+import { wishes } from '../../../../utils/constants/postType';
 
 const WishInformationBodyContainer = styled.div`
   min-height: 100px;
@@ -55,7 +56,7 @@ const WishInformation = ({
         npoOrgName={npoOrgName}
         postId={wishId}
         postStatus={status}
-        postType="wishes"
+        postType={wishes}
       />
       <WishInformationBody />
     </Stack>

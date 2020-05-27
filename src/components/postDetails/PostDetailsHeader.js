@@ -9,6 +9,7 @@ import Verified from '../session/modules/Verified';
 import { AlertCircle, Edit, CloseCircle, MenuKebab, ShareAndroid } from '@kiwicom/orbit-components/lib/icons';
 import { Button, Stack, Text, Popover, ButtonLink } from '@kiwicom/orbit-components/lib';
 import { useRouter } from 'next/router';
+import { wishes } from '../../../utils/constants/postType';
 
 const PostDetailsHeader = ({
   loginUserId,
@@ -65,7 +66,7 @@ const PostDetailsHeader = ({
     if (navigator.share) {
       navigator
         .share({
-          text: `Check out this ${postType} from GiftForGood! \n${postUrl}`,
+          text: `Check out this ${postType === wishes ? 'wish' : 'donation'} from GiftForGood! \n${postUrl}`,
         })
         .then(() => console.log('Successful share'))
         .catch((error) => console.log('Error sharing', error));

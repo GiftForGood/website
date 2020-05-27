@@ -5,6 +5,7 @@ import WishInformation from '../modules/WishInformation';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import Map from '../modules/Map';
 import NpoInformation from '../../postDetails/UserInfoCard';
+import { wishes } from '../../../../utils/constants/postType';
 
 const Wrapper = styled.div`
   margin: 0 auto;
@@ -57,7 +58,7 @@ const WishPage = ({ wishId, wishDetails, npoDetails, user }) => {
             categoryTags={categoryTags}
           />
           <NpoInformation
-            postType="wishes"
+            postType={wishes}
             postUserId={wish.user.userId}
             postUserName={wish.user.userName}
             profileImageUrl={wish.user.profileImageUrl}

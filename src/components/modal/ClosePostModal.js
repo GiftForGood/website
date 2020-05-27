@@ -5,9 +5,10 @@ import api from '../../../utils/api';
 import { wishClosePostReasons, donationClosePostReasons } from '../../../utils/constants/closePostReasons';
 import { Button, ChoiceGroup, Heading, Stack, Radio, Text, Textarea } from '@kiwicom/orbit-components/lib';
 import Modal, { ModalSection } from '@kiwicom/orbit-components/lib/Modal';
+import { wishes } from '../../../utils/constants/postType';
 
 const ClosePostModal = ({ postId, postType, onClose, setIsClosedPost }) => {
-  const isWishPost = postType === 'wishes';
+  const isWishPost = postType === wishes;
   const closePostReasons = isWishPost ? wishClosePostReasons : donationClosePostReasons;
   const OTHERS = closePostReasons[closePostReasons.length - 1];
 

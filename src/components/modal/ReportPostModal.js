@@ -4,6 +4,7 @@ import api from '../../../utils/api';
 import { reportPostReasons } from '../../../utils/constants/reportPostReasons';
 import { Button, ChoiceGroup, Stack, Radio, Textarea } from '@kiwicom/orbit-components/lib';
 import Modal, { ModalSection } from '@kiwicom/orbit-components/lib/Modal';
+import { wishes } from '../../../utils/constants/postType';
 
 const ReportPostModal = ({ postId, postType, loginUserId, onClose }) => {
   const OTHERS = reportPostReasons[reportPostReasons.length - 1];
@@ -13,7 +14,7 @@ const ReportPostModal = ({ postId, postType, loginUserId, onClose }) => {
 
   const postToFirestore = async (reportPostReason) => {
     try {
-      if (postType === 'wishes') {
+      if (postType === wishes) {
         const reportDoc = await api.reports.reportWish(postId, loginUserId, reportPostReason);
       } else {
         const reportDoc = await api.reports.reportDonation(postId, loginUserId, reportPostReason);

@@ -6,6 +6,7 @@ import { colors } from '../../../utils/constants/colors';
 import { Stack, Text, TextLink } from '@kiwicom/orbit-components/lib';
 import { CardSection } from '@kiwicom/orbit-components/lib/Card';
 import RatingStars from '../ratingStars';
+import { wishes } from '../../../utils/constants/postType';
 
 const CheckProfileLink = styled.a`
   color: ${colors.npoBackground};
@@ -44,7 +45,7 @@ const UserInfoCard = ({
   postUserReviewRating,
   isNpoVerifiedByAdmin,
 }) => {
-  const isWishPost = postType === 'wishes';
+  const isWishPost = postType === wishes;
   const checkProfileHref = `/profile/${isWishPost ? 'npo' : 'donor'}/${postUserId}`;
 
   const HeaderInformation = () => {
