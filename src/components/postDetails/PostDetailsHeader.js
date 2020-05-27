@@ -4,7 +4,6 @@ import ReportPostModal from '../modal/ReportPostModal';
 import ClosePostModal from '../modal/ClosePostModal';
 import SharePostModal from '../modal/SharePostModal';
 import ChatButton from '../buttons/ChatButton';
-import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 import Verified from '../session/modules/Verified';
 import { AlertCircle, Edit, CloseCircle, MenuKebab, ShareAndroid } from '@kiwicom/orbit-components/lib/icons';
 import { Button, Stack, Text, Popover, ButtonLink } from '@kiwicom/orbit-components/lib';
@@ -26,7 +25,6 @@ const PostDetailsHeader = ({
   const chatType = isOwnPost ? 'View Chats' : 'Chat';
   const postUrl = `https://www.giftforgood.io/${postType}/${postId}`;
 
-  const { isLargeMobile } = useMediaQuery();
   const [isClosedPost, setIsClosedPost] = useState(postStatus === 'closed');
   const [showReportPostModal, setShowPostPostModal] = useState(false);
   const [showClosePostModal, setShowClosePostModal] = useState(false);
@@ -106,7 +104,6 @@ const PostDetailsHeader = ({
                     type="secondary"
                     iconLeft={<Edit />}
                     href={editPostHref}
-                    fullWidth={!isLargeMobile}
                     disabled={isDisabled || isClosedPost}
                   >
                     Edit post
@@ -115,7 +112,6 @@ const PostDetailsHeader = ({
                     transparent
                     type="secondary"
                     iconLeft={<CloseCircle />}
-                    fullWidth={!isLargeMobile}
                     onClick={handleClosePostModal}
                     disabled={isDisabled || isClosedPost}
                   >
@@ -128,7 +124,6 @@ const PostDetailsHeader = ({
                   type="secondary"
                   iconLeft={<AlertCircle />}
                   onClick={handleReportPostModal}
-                  fullWidth={!isLargeMobile}
                   disabled={isDisabled || isClosedPost}
                 >
                   Report post
