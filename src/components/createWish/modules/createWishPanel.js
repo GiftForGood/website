@@ -163,7 +163,7 @@ const CreateWishPanel = () => {
     <>
       <Container>
         <Card>
-          <CardSection>
+          <CardSection expanded>
             <form onSubmit={formik.handleSubmit}>
               <Stack spacing="extraLoose">
                 <Heading>Create a wish</Heading>
