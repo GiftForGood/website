@@ -11,7 +11,7 @@ import {
   Popover,
   ListChoice,
   TextLink,
-  Alert
+  Alert,
 } from '@kiwicom/orbit-components/lib';
 import { useDispatch } from 'react-redux';
 import { useFormik } from 'formik';
@@ -141,11 +141,7 @@ const CreateWishPanel = () => {
     return (
       <div>
         {categories.map((category) => (
-          <ListChoice
-            title={category.name}
-            key={category.id}
-            onClick={() => onChoiceClicked(category)}
-          />
+          <ListChoice title={category.name} key={category.id} onClick={() => onChoiceClicked(category)} />
         ))}
       </div>
     );
