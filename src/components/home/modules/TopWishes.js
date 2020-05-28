@@ -107,7 +107,7 @@ const TopWishes = ({ numberOfPosts, numberOfCategories }) => {
           const wishPostHref = `/wishes/${wish.wishesId}`;
           return (
             <GroupWishCard
-              key={wish.wishesId}
+              key={wish.wishId}
               name={wish.organization.name}
               title={wish.title}
               description={wish.description}
