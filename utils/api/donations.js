@@ -15,7 +15,7 @@ class DonationsAPI {
    * Create a new donation
    * @param {string} title The donation title text
    * @param {string} description The donation description text
-   * @param {array} categories A list of category names that the donation belongs to
+   * @param {array} categories A list of category id that the donation belongs to
    * @param {number} validPeriodFromDay The valid date that the donation is valid from (day)
    * @param {number} validPeriodFromMonth The valid date that the donation is valid from (month)
    * @param {number} validPeriodFromYear The valid date that the donation is valid from (year)
@@ -70,9 +70,9 @@ class DonationsAPI {
 
     // Used a for loop instead of a forEach because forEach is not promise aware
     for (let i = 0; i < categories.length; i++) {
-      let categoryInfo = await this._getCategoryInfoByName(categories[i]);
+      let categoryInfo = await this._getCategoryInfo(categories[i]);
 
-      if (Object.entries(categoryInfo).length !== 0) {
+      if (typeof categoryInfo !== 'undefined') {
         categoriesInfo.push(categoryInfo);
       }
     }
@@ -127,7 +127,7 @@ class DonationsAPI {
    * @returns {array} A list of firebase document of the top n pending donations
    */
   async getTopNPendingDonationsForCategory(categoryId, n) {
-    const categoryInfo = await this._getCategoryInfoById(categoryId);
+    const categoryInfo = await this._getCategoryInfo(categoryId);
     return donationsCollection
       .where('categories', 'array-contains', categoryInfo)
       .where('status', '==', 'pending')
@@ -191,7 +191,7 @@ class DonationsAPI {
       sortOrder = 'desc';
     }
 
-    const categoryInfo = await this._getCategoryInfoById(categoryId);
+    const categoryInfo = await this._getCategoryInfo(categoryId);
 
     if (lastQueriedDocument == null) {
       // First page
@@ -282,7 +282,7 @@ class DonationsAPI {
    * @param {string} id The donation id
    * @param {string} title The donation title text
    * @param {string} description The donation description text
-   * @param {array} categories A list of category names that the donation belongs to
+   * @param {array} categories A list of category ids that the donation belongs to
    * @param {number} validPeriodFromDay The valid date that the donation is valid from (day)
    * @param {number} validPeriodFromMonth The valid date that the donation is valid from (month)
    * @param {number} validPeriodFromYear The valid date that the donation is valid from (year)
@@ -478,20 +478,9 @@ class DonationsAPI {
     return snapshot.data();
   }
 
-  async _getCategoryInfoById(id) {
+  async _getCategoryInfo(id) {
     const snapshot = await db.collection('categories').doc(id).get();
     return snapshot.data();
-  }
-
-  async _getCategoryInfoByName(name) {
-    const snapshot = await db.collection('categories').where('name', '==', name).get();
-
-    // Assumes that categories name are unique
-    if (snapshot.empty) {
-      return {};
-    }
-
-    return snapshot.docs[0].data();
   }
 
   async _getNPOInfo(id) {
@@ -525,7 +514,7 @@ class DonationsAPI {
   }
 
   async _overwriteImages(userId, donationId, images, imagesName, coverImage) {
-    // Assumes that if cover image is a new image, it should exist images and it's name should exist in imagesName as well
+    // Assumes that if cover image is a new image, it should exist in images and it's name should exist in imagesName as well
     // Assumes that length of images == length of imagesName
     let imagesUrl = [];
     let coverImageUrl = '';
@@ -603,14 +592,14 @@ class DonationsAPI {
     return locationsDetails;
   }
 
-  async _getDonationCategoriesInfo(existingCategories, updatedCategoriesName) {
+  async _getDonationCategoriesInfo(existingCategories, updatedCategoriesId) {
     let categoriesInfo = [];
 
-    for (const name of updatedCategoriesName) {
-      let categoryInfo = existingCategories.find((category) => category.name === name);
+    for (const id of updatedCategoriesId) {
+      let categoryInfo = existingCategories.find((category) => category.id === id);
 
       if (typeof categoryInfo === 'undefined') {
-        categoryInfo = await this._getCategoryInfoByName(name);
+        categoryInfo = await this._getCategoryInfo(id);
       }
 
       categoriesInfo.push(categoryInfo);
