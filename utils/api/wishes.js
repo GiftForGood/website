@@ -80,16 +80,16 @@ class WishesAPI {
   }
 
   /**
-   * Gets a batch of all pending wishes. Only return results of WISHES_BATCH_SIZE
+   * Gets a batch of pending wishes. Only return results of WISHES_BATCH_SIZE
    * @param {string} orderBy The way to order the wishes. Look at wishesSortType.js to know what are the various ways.
    * @param {boolean} isReverse Indicates if the query should be ordered in reverse
    * @param {object} lastQueriedDocument The last queried firebase document to start the query after. If the field is not given, the query will start from the first document
-   * @throws {DonationError}
+   * @throws {WishError}
    * @throws {FirebaseError}
    * @returns {array} A list of firebase document of all ordered pending wishes
    */
 
-  async getAllPendingWishes(orderBy = TIMESTAMP, isReverse = false, lastQueriedDocument = null) {
+  async getPendingWishes(orderBy = TIMESTAMP, isReverse = false, lastQueriedDocument = null) {
     // TODO: Sort by distance not implemented
     this._validateOrderBy(orderBy);
 
