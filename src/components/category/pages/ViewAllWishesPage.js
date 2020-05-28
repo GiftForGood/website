@@ -112,6 +112,7 @@ const ViewAllWishesPage = ({ filterQuery }) => {
       return (
         <WishCard
           key={wishId}
+          wishId={wishId}
           name={organization.name}
           title={title}
           description={description}
