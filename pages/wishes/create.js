@@ -1,6 +1,7 @@
 import React from 'react';
 import { isAuthenticated } from '../../utils/authentication/authentication';
 import { isVerified } from '../../utils/authentication/verification';
+import { isNpo } from '../../utils/authentication/userType';
 import SessionProvider from '../../src/components/session/modules/SessionProvider';
 import CreateWishPage from '../../src/components/createWish/pages/createWishPage';
 
@@ -10,6 +11,7 @@ const TopNavigationBar = dynamic(() => import('../../src/components/navbar/modul
 export async function getServerSideProps({ params, req, res, query }) {
   let user = await isAuthenticated(req, res);
   isVerified(user.user, res, { Location: '/' });
+  isNpo(user.user, res, { Location: '/' });
   if (!user) {
     res.writeHead(302, { Location: '/' });
     res.end();
