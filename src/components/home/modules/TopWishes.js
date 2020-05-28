@@ -84,7 +84,7 @@ const TopWishes = ({ numberOfPosts, numberOfCategories }) => {
 
   const getTopWishesForCategory = async (category, numberOfPosts) => {
     const rawWishes = await api.wishes
-      .getTopNPendingWishes(category.id, numberOfPosts)
+      .getTopNPendingWishesForCategory(category.id, numberOfPosts)
       .catch((err) => console.error(err));
     return { category: category, wishes: rawWishes.docs.map((doc) => doc.data()) };
   };
@@ -107,7 +107,7 @@ const TopWishes = ({ numberOfPosts, numberOfCategories }) => {
           const wishPostHref = `/wishes/${wish.wishesId}`;
           return (
             <GroupWishCard
-              key={wish.wishesId}
+              key={wish.wishId}
               name={wish.organization.name}
               title={wish.title}
               description={wish.description}
