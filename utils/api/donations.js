@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { v4 as uuidv4 } from 'uuid';
 import { db, firebaseAuth, firebaseStorage } from '../firebase';
 import * as moment from 'moment';
 import * as path from 'path';
@@ -137,7 +138,7 @@ class DonationsAPI {
   }
 
   /**
-   * Gets a batch of all pending donations. Only return results of DONATIONS_BATCH_SIZE
+   * Gets a batch of pending donations. Only return results of DONATIONS_BATCH_SIZE
    * @param {string} orderBy The way to order the donations
    * @param {boolean} isReverse Indicates if the query should be ordered in reverse
    * @param {object} lastQueriedDocument The last queried firebase document to start the query after. If the field is not given, the query will start from the first document
@@ -145,7 +146,7 @@ class DonationsAPI {
    * @throws {FirebaseError}
    * @returns {array} A list of firebase document of all ordered pending donations
    */
-  async getAllPendingDonations(orderBy = TIMESTAMP, isReverse = false, lastQueriedDocument = null) {
+  async getPendingDonations(orderBy = TIMESTAMP, isReverse = false, lastQueriedDocument = null) {
     // TODO: Sort by distance not implemented
     this._validateOrderBy(orderBy);
 
@@ -218,7 +219,7 @@ class DonationsAPI {
    * @param {string} id
    * @return {object} A firebase document of the donation info
    */
-  async getDonation(id) {
+  async get(id) {
     return donationsCollection.doc(id).get();
   }
 
@@ -303,7 +304,7 @@ class DonationsAPI {
    * @throws {FirebaseError}
    * @return {object} A firebase document of the updated donation
    */
-  async updateDonation(
+  async update(
     id,
     title,
     description,
@@ -346,8 +347,8 @@ class DonationsAPI {
     const validPeriodFromDate = `${validPeriodFromDay}-${validPeriodFromMonth}-${validPeriodFromYear}`;
     const validPeriodToDate = `${validPeriodToDay}-${validPeriodToMonth}-${validPeriodToYear}`;
 
-    const categoriesInfo = await this._getDonationCategoriesInfo(donationInfo.categories, categories);
-    const locationsInfo = await this._getDonationLocations(donationInfo.locations, locations);
+    // const categoriesInfo = await this._getDonationCategoriesInfo(donationInfo.categories, categories);
+    // const locationsInfo = await this._getDonationLocations(donationInfo.locations, locations);
 
     const [coverImageUrl, imagesUrl] = await this._getDonationImages(
       donationInfo.user.userId,
@@ -385,7 +386,7 @@ class DonationsAPI {
    * @throws {FirebaseError}
    * @return {object} A firebase document of the closed donation
    */
-  async closeDonation(id, reason) {
+  async close(id, reason) {
     const donationInfo = await this._getDonationInfo(id);
     if (typeof donationInfo === 'undefined') {
       throw new DonationError('invalid-donation-id', 'donation does not exist');
@@ -419,7 +420,7 @@ class DonationsAPI {
    * @throws {FirebaseError}
    * @return {object} A firebase document of the completed donation
    */
-  async completeDonation(id, npoId) {
+  async complete(id, npoId) {
     const donationInfo = await this._getDonationInfo(id);
     const npoInfo = await this._getNPOInfo(npoId);
     if (typeof donationInfo === 'undefined') {
@@ -458,13 +459,15 @@ class DonationsAPI {
   }
 
   async _getCurrentUserInfo() {
-    const user = firebaseAuth.currentUser;
+    // const user = firebaseAuth.currentUser;
 
-    if (user == null) {
-      return {};
-    }
+    // if (user == null) {
+    //   return {};
+    // }
 
-    const userId = user.uid;
+    // const userId = user.uid;
+    // TODO: TO REMOVE
+    const userId = '48I62GsKYsUeoz3iOZwawNr8Pdt2';
     return this._getDonorInfo(userId);
   }
 
@@ -489,26 +492,27 @@ class DonationsAPI {
   }
 
   async _uploadNewImages(userId, donationId, images, coverImage) {
-    let imagesUrl = [];
-    let coverImageUrl = '';
+    let imagesInfo = [];
 
-    let imageId = 1;
     for (const image of images) {
       const ext = path.extname(image.name);
-      let imageName = donationId;
       const isCoverImage = image.name == coverImage.name;
-      if (isCoverImage) {
-        imageName += `_cover${ext}`;
-      } else {
-        imageName += `_${imageId++}${ext}`;
-      }
+      const imageName = `${donationId}_${Date.now()}_${uuidv4()}${ext}`;
+      const imageInfo = {imageName: image};
 
-      const imageUrl = await this._uploadImage(userId, donationId, image, imageName);
-      imagesUrl.push(imageUrl);
       if (isCoverImage) {
-        coverImageUrl = imageUrl;
+        imagesInfo.unshift(imageInfo);
+      } else {
+        imagesInfo.push(imageInfo);
       }
     }
+
+    const imagesPromise = Object.keys(images).map((key, index) => {
+      return this._uploadImage(userId, donationId, images[key], key);
+    })
+    
+    const imagesUrl = await Promise.all(imagesPromise);
+    const coverImageUrl = imagesUrl[0];
 
     return [coverImageUrl, imagesUrl];
   }
