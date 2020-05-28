@@ -17,7 +17,6 @@ class WishesAPI {
    * @return {object} A firebase document of the created wish
    */
   async create(title, description, categories) {
-    // time: 1051ms -> 760ms
     let userInfo = {};
     let organizationInfo = {};
 
