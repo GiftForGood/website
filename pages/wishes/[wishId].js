@@ -5,6 +5,7 @@ import dynamic from 'next/dynamic';
 import SessionProvider from '../../src/components/session/modules/SessionProvider';
 import Head from 'next/head';
 import { isAuthenticated } from '../../utils/authentication/authentication';
+import Error from 'next/error';
 const TopNavigationBar = dynamic(() => import('../../src/components/navbar/modules/TopNavigationBar'), {
   ssr: false,
 });
@@ -12,8 +13,10 @@ const TopNavigationBar = dynamic(() => import('../../src/components/navbar/modul
 export async function getServerSideProps({ params, req, res, query }) {
   const wishId = params.wishId;
   const wishDetails = await getWishDetails(wishId);
-  const npoDetails = {}; // TODO remove & uncomment bottom when getNPO API is up
-  // const npoDetails = await getNpoDetails(wishDetails.user.userId);
+  let npoDetails = {}; // TODO remove & uncomment bottom when getNPO API is up
+  if (Object.keys(wishDetails).length !== 0) {
+    // npoDetails = await getNpoDetails(wishDetails.user.userId);
+  }
   let user = await isAuthenticated(req, res);
   return {
     props: {
@@ -27,15 +30,18 @@ export async function getServerSideProps({ params, req, res, query }) {
 
 const getWishDetails = async (wishId) => {
   const rawWish = await api.wishes.getWish(wishId).catch((err) => console.error(err));
-  return rawWish.docs[0].data();
+  return rawWish.data() ? rawWish.data() : {};
 };
 
 const getNpoDetails = async (npoId) => {
   const rawNpo = await api.users.getNPO(npoId).catch((err) => console.error(err));
-  return rawNpo.docs[0].data();
+  return rawNpo.data();
 };
 
 const Wish = ({ wishId, wishDetails, npoDetails, user }) => {
+  if (Object.keys(wishDetails).length === 0) {
+    return <Error statusCode={404} />;
+  }
   return (
     <SessionProvider user={user}>
       <Head>
