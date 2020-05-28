@@ -1,3 +1,4 @@
+import React from 'react';
 import CardHeader from '../card/CardHeader';
 import { Stack, Text, Grid, Badge } from '@kiwicom/orbit-components/lib';
 import { getTimeDifferenceFromNow } from '../../../utils/api/time';
@@ -93,15 +94,13 @@ const CardDescription = ({ title, description }) => {
   );
 };
 
-const Tags = ({ categoryTags }) => {
+const Tags = ({ categoryTags, wishId }) => {
   return (
     <Stack direction="row" wrap={true} spacing="condensed" desktop={{ spacing: 'natural' }}>
       {categoryTags.map((category) => {
         return (
-          <BadgeWrapper>
-            <Badge type="neutral" key={category}>
-              {category}
-            </Badge>
+          <BadgeWrapper key={`${wishId}-${category}`}>
+            <Badge type="neutral">{category}</Badge>
           </BadgeWrapper>
         );
       })}
@@ -111,6 +110,7 @@ const Tags = ({ categoryTags }) => {
 
 /**
  *
+ * @param {string} wishId is the wish's id
  * @param {string} name is the NPO organization's name
  * @param {string} title is the title of the wish
  * @param {string} description is the description of the wish
@@ -120,7 +120,17 @@ const Tags = ({ categoryTags }) => {
  * @param {string[]} categoryTags are the category names that the wish is under
  * @param {boolean} isBumped is whether the wish post is bumped
  */
-const WishCard = ({ name, title, description, profileImageUrl, postedDateTime, postHref, categoryTags, isBumped }) => {
+const WishCard = ({
+  wishId,
+  name,
+  title,
+  description,
+  profileImageUrl,
+  postedDateTime,
+  postHref,
+  categoryTags,
+  isBumped,
+}) => {
   const timeAgo = getTimeDifferenceFromNow(postedDateTime);
   const router = useRouter();
   const handleOnClickWishPost = (event) => {
@@ -137,7 +147,7 @@ const WishCard = ({ name, title, description, profileImageUrl, postedDateTime, p
           <CardDescription title={title} description={description} />
         </CardDescriptionContainer>
         <CardDescriptionFooterContainer>
-          <Tags categoryTags={categoryTags} />
+          <Tags categoryTags={categoryTags} wishId={wishId} />
         </CardDescriptionFooterContainer>
       </Grid>
       <ClickableDiv href={postHref} onClick={handleOnClickWishPost} />
