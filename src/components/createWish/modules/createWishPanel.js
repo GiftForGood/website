@@ -11,6 +11,7 @@ import {
   Popover,
   ListChoice,
   TextLink,
+  Alert
 } from '@kiwicom/orbit-components/lib';
 import { useDispatch } from 'react-redux';
 import { useFormik } from 'formik';
@@ -52,11 +53,12 @@ const CreateWishPanel = () => {
 
   const handleFormSubmission = async (values) => {
     try {
+      setShowAlert(false);
       setIsLoading(true);
       let title = values.title;
       let description = values.description;
-      let categories = values.categories;
-      const wishDoc = await api.wishes.create(title, description, categories);
+      let categoryIds = values.categories.map((category) => category.id);
+      const wishDoc = await api.wishes.create(title, description, categoryIds);
       let wishId = wishDoc.data().wishId;
       router.push(`/wishes/${wishId}`);
     } catch (error) {
@@ -117,18 +119,18 @@ const CreateWishPanel = () => {
     fetchCategories();
   }, []);
 
-  const onChoiceClicked = (id, name) => {
+  const onChoiceClicked = (category) => {
     // Allow only 3 categories
-    if (!selectedCategories.includes(name) && selectedCategories.length <= 2) {
-      setSelectedCategories([...selectedCategories, name]);
-      formik.setFieldValue('categories', [...selectedCategories, name]);
+    if (!selectedCategories.includes(category) && selectedCategories.length <= 2) {
+      setSelectedCategories([...selectedCategories, category]);
+      formik.setFieldValue('categories', [...selectedCategories, category]);
     }
   };
 
-  const onTagRemoveClicked = (name) => {
-    if (selectedCategories.includes(name)) {
+  const onTagRemoveClicked = (category) => {
+    if (selectedCategories.includes(category)) {
       let updatedSelectedCategories = selectedCategories.filter((value) => {
-        return value !== name;
+        return value !== category;
       });
       setSelectedCategories(updatedSelectedCategories);
       formik.setFieldValue('categories', updatedSelectedCategories);
@@ -142,7 +144,7 @@ const CreateWishPanel = () => {
           <ListChoice
             title={category.name}
             key={category.id}
-            onClick={() => onChoiceClicked(category.id, category.name)}
+            onClick={() => onChoiceClicked(category)}
           />
         ))}
       </div>
@@ -152,9 +154,9 @@ const CreateWishPanel = () => {
   const SelectedCategoryTags = () => {
     return (
       <>
-        {selectedCategories.map((categoryName) => (
-          <Tag selected key={categoryName} onRemove={() => onTagRemoveClicked(categoryName)}>
-            {categoryName}
+        {selectedCategories.map((category) => (
+          <Tag selected key={category.id} onRemove={() => onTagRemoveClicked(category)}>
+            {category.name}
           </Tag>
         ))}
       </>

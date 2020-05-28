@@ -36,7 +36,7 @@ const LivePreviewPanel = () => {
               description={description}
               postedDateTime={Date.now()}
               postHref={''}
-              categoryTags={categories}
+              categoryTags={categories.map((category) => category.name)}
               isBumped={false}
             />
           </Stack>
