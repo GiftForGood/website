@@ -131,6 +131,7 @@ const CreateWishPanel = () => {
         return value !== name;
       });
       setSelectedCategories(updatedSelectedCategories);
+      formik.setFieldValue('categories', updatedSelectedCategories);
     }
   };
 
