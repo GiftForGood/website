@@ -75,7 +75,7 @@ const PostDetailsHeader = ({
   };
 
   const PopoverContent = ({ isDisabled }) => {
-    const editPostHref = `/edit/${postType}/${postId}`;
+    const editPostHref = `/${postType}/edit?id=${postId}`;
     return (
       <>
         {showReportPostModal ? (
