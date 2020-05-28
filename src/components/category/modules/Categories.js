@@ -28,7 +28,7 @@ const ScrollableRow = styled.div`
   scroll-behavior: smooth;
 `;
 
-// To represent the category for all wishes
+// To represent the category for all wishes, note that it does not have id property
 const allCategory = {
   imageUrl: allCategoriesImagePath,
   name: 'All',
