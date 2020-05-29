@@ -1,9 +1,9 @@
 import React from 'react';
 import dynamic from 'next/dynamic';
-import NpoProfilePage from '../../../src/components/profile/pages/NpoProfilePage';
-import SessionProvider from '../../../src/components/session/modules/SessionProvider';
-import { isAuthenticated } from '../../../utils/authentication/authentication';
-const TopNavigationBar = dynamic(() => import('../../../src/components/navbar/modules/TopNavigationBar'), {
+import NpoProfilePage from '../../src/components/profile/pages/NpoProfilePage';
+import SessionProvider from '../../src/components/session/modules/SessionProvider';
+import { isAuthenticated } from '../../utils/authentication/authentication';
+const TopNavigationBar = dynamic(() => import('../../src/components/navbar/modules/TopNavigationBar'), {
   ssr: false,
 });
 
