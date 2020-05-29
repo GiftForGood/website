@@ -29,7 +29,7 @@ const selectedLink = styled.a`
   }
 `;
 
-const ProfileHeaderBar = ({ isShowPastWishes, isShowReviews, setIsShowPastWishes, setIsShowReviews }) => {
+const ProfileHeaderBar = ({ isShowPastWishes, isShowReviews, setIsShowPastWishes, setIsShowReviews, isMine }) => {
   const router = useRouter();
 
   const handleOnClickEditProfileBtn = (event) => {
@@ -64,9 +64,12 @@ const ProfileHeaderBar = ({ isShowPastWishes, isShowReviews, setIsShowPastWishes
               Past Wishes
             </TextLink>
           </Stack>
-          <Button asComponent={EditProfileButton} size="small" onClick={handleOnClickEditProfileBtn}>
-            Edit Profile
-          </Button>
+
+          {isMine ? (
+            <Button asComponent={EditProfileButton} size="small" onClick={handleOnClickEditProfileBtn}>
+              Edit Profile
+            </Button>
+          ) : null}
         </Stack>
       </HeaderBarContainer>
       <Separator />

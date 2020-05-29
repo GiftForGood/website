@@ -7,6 +7,7 @@ import styled, { css } from 'styled-components';
 import ProfileHeaderBar from '../modules/ProfileHeaderBar';
 import ReviewPanel from '../modules/ReviewPanel';
 import ProfilePanel from '../modules/ProfilePanel';
+import PastWishesPanel from '../modules/PastWishesPanel';
 
 const Wrapper = styled.div`
   margin: 0 auto;
@@ -16,9 +17,18 @@ const Wrapper = styled.div`
   padding-bottom: 30px;
 `;
 
-const NpoProfilePage = () => {
+const NpoProfilePage = ({ userId }) => {
   const [isShowPastWishes, setIsShowPastWishes] = useState(false);
   const [isShowReviews, setIsShowReviews] = useState(true);
+  const [npo, setNpo] = useState(null);
+  const [isMine, setIsMine] = useState(false);
+
+  useEffect(() => {
+    // TODO: Check if the userId exists.
+    // TODO: Check if the profile belongs to me.
+    setNpo(null);
+    setIsMine(true);
+  }, [])
 
   return (
     <Wrapper>
@@ -30,9 +40,10 @@ const NpoProfilePage = () => {
             isShowReviews={isShowReviews}
             setIsShowPastWishes={setIsShowPastWishes}
             setIsShowReviews={setIsShowReviews}
+            isMine={isMine}
           />
           {isShowReviews && <ReviewPanel />}
-          {isShowPastWishes && <Text>show past wishes</Text>}
+          {isShowPastWishes && <PastWishesPanel isMine={isMine}/>}
         </Stack>
       </Grid>
     </Wrapper>

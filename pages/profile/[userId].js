@@ -9,18 +9,20 @@ const TopNavigationBar = dynamic(() => import('../../src/components/navbar/modul
 
 export async function getServerSideProps({ params, req, res, query }) {
   let user = await isAuthenticated(req, res);
+  let userId = params.userId;
   return {
     props: {
       user,
+      userId
     },
   };
 }
 
-const Profile = ({ user }) => {
+const Profile = ({ user, userId }) => {
   return (
     <SessionProvider user={user}>
       <TopNavigationBar />
-      {user.user.npo ? <NpoProfilePage user={user} /> : null}
+      {user.user.npo ? <NpoProfilePage userId={userId} /> : null}
     </SessionProvider>
   );
 };
