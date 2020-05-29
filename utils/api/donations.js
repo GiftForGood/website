@@ -416,8 +416,9 @@ class DonationsAPI {
    * @return {object} A firebase document of the completed donation
    */
   async complete(id, npoId) {
-    const donationInfo = await this._getDonationInfo(id);
-    const npoInfo = await this._getNPOInfo(npoId);
+    // 2200, 1600, 1199
+    // 1663, 2022, 891
+    const [donationInfo, npoInfo] = await Promise.all([this._getDonationInfo(id), this._getNPOInfo(npoId)]);
     if (typeof donationInfo === 'undefined') {
       throw new DonationError('invalid-donation-id', 'donation does not exist');
     }
@@ -454,15 +455,13 @@ class DonationsAPI {
   }
 
   async _getCurrentUserInfo() {
-    // const user = firebaseAuth.currentUser;
+    const user = firebaseAuth.currentUser;
 
-    // if (user == null) {
-    //   return {};
-    // }
+    if (user == null) {
+      return {};
+    }
 
-    // const userId = user.uid;
-    // TODO: TO REMOVE
-    const userId = '48I62GsKYsUeoz3iOZwawNr8Pdt2';
+    const userId = user.uid;
     return this._getDonorInfo(userId);
   }
 
