@@ -8,9 +8,16 @@ const WishesFilterBy = ({ category, filter, setFilter }) => {
   const router = useRouter();
   const handleSelect = (event) => {
     setFilter(event.target.value);
-    router.push(`/wishes/category/[categoryId]`, `/wishes/category/${category.id}?filter=${event.target.value}`, {
-      shallow: true,
-    });
+    if (category) {
+      router.push(`/wishes/category/[categoryId]`, `/wishes/category/${category.id}?filter=${event.target.value}`, {
+        shallow: true,
+      });
+    } else {
+      // for view all wishes
+      router.push(`/wishes/category`, `/wishes/category?filter=${event.target.value}`, {
+        shallow: true,
+      });
+    }
   };
   return (
     <>
