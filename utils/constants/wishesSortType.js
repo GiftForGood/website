@@ -1,3 +1,3 @@
 export const DISTANCE = 'wishesDistance';
-export const TIMESTAMP = 'wishesTimestamp';
-export const NPO_NAME = 'wishesNPOName';
+export const TIMESTAMP = 'lastActionByUserDateTime';
+export const NPO_NAME = 'organization.name';

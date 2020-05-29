@@ -20,5 +20,9 @@ export const colors = {
   editProfileButtonBackground: '#43aad8',
   editProfileButtonHoverActive: '#31A2D6',
   editProfileButtonFocus: '#138CC8',
+  verifiedIconBackground: '#57A4FF',
+  chatButtonBackground: '#43aad8',
+  chatButtonHoverActive: '#31A2D6',
+  chatButtonFocus: '#138CC8',
   ratingStarBackground: '#ED5555',
 };
