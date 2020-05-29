@@ -47,9 +47,9 @@ class DonationsAPI {
     itemCondition,
     coverImage,
     images
-  ) { 
+  ) {
     // 2085, 2475, 2242
-    // 2063, 1482, 1434
+    // 1932, 1251, 1674
     let userInfo = {};
 
     // Input validation
@@ -71,9 +71,9 @@ class DonationsAPI {
     const validPeriodToDate = `${validPeriodToDay}-${validPeriodToMonth}-${validPeriodToYear}`;
 
     const [categoryInfos, allUserInfo] = await Promise.all([
-      this._getAllCategoriesInfo(categories),
-      this._getCurrentUserInfo()
-    ])
+      this._getAllCategoryInfos(categories),
+      this._getCurrentUserInfo(),
+    ]);
 
     if (typeof allUserInfo === 'undefined') {
       throw new DonationError('invalid-current-user');
@@ -83,8 +83,10 @@ class DonationsAPI {
     userInfo.profileImageUrl = allUserInfo.profileImageUrl;
 
     let newDonation = donationsCollection.doc();
-    const [coverImageUrl, imageUrls] = await this._uploadImages(userInfo.userId, newDonation.id, images, coverImage);
-    const locationInfos = await this._getLocations(locations);
+    const [[coverImageUrl, imageUrls], locationInfos] = await Promise.all([
+      this._uploadImages(userInfo.userId, newDonation.id, images, coverImage),
+      this._getLocations(locations),
+    ]);
 
     const timeNow = Date.now();
     let data = {
@@ -348,13 +350,8 @@ class DonationsAPI {
     const [categoriesInfo, locationsInfo, [coverImageUrl, imagesUrl]] = await Promise.all([
       this._getDonationCategoriesInfo(donationInfo.categories, categories),
       this._getDonationLocations(donationInfo.locations, locations),
-      this._getDonationImages(
-        donationInfo.user.userId,
-        donationInfo.donationId,
-        images,
-        coverImage
-      )
-    ])
+      this._getDonationImages(donationInfo.user.userId, donationInfo.donationId, images, coverImage),
+    ]);
 
     const data = {
       title: title,
@@ -479,7 +476,7 @@ class DonationsAPI {
     return snapshot.data();
   }
 
-  async _getAllCategoriesInfo(categoriesId) {
+  async _getAllCategoryInfos(categoriesId) {
     const categoriesPromise = categoriesId.map((categoryId) => {
       return this._getCategoryInfo(categoryId);
     });
@@ -505,7 +502,7 @@ class DonationsAPI {
       const ext = path.extname(image.name);
       const isCoverImage = coverImage !== null && image.name == coverImage.name;
       const imageName = `${donationId}_${Date.now()}_${uuidv4()}${ext}`;
-      const imageInfo = {[imageName]: image};
+      const imageInfo = { [imageName]: image };
 
       if (isCoverImage) {
         // Ensure that cover image is the first item in the array
@@ -515,10 +512,10 @@ class DonationsAPI {
       }
     }
 
-    const imagesPromise = imagesInfo.map(imageInfo => {
+    const imagesPromise = imagesInfo.map((imageInfo) => {
       return this._uploadImage(userId, donationId, Object.values(imageInfo)[0], Object.keys(imageInfo)[0]);
-    })
-    
+    });
+
     const imagesUrl = await Promise.all(imagesPromise);
     const coverImageUrl = coverImage !== null ? imagesUrl[0] : '';
 
@@ -548,9 +545,9 @@ class DonationsAPI {
   async _getLocations(locations) {
     let locationDetails = [];
 
-    const locationPromises = locations.map(location => {
-      return axios.get(`${GEO_LOCATION_URL}?address=${location}&key=${process.env.FIREBASE_API_KEY}`); 
-    })
+    const locationPromises = locations.map((location) => {
+      return axios.get(`${GEO_LOCATION_URL}?address=${location}&key=${process.env.FIREBASE_API_KEY}`);
+    });
 
     try {
       const results = await Promise.all(locationPromises);
@@ -593,11 +590,11 @@ class DonationsAPI {
       if (typeof categoryInfo === 'undefined') {
         newCategoriesIdToQuery.push(id);
       } else {
-        categoriesInfo.push(categoryInfo)
+        categoriesInfo.push(categoryInfo);
       }
     }
 
-    const newCategoriesInfo = await this._getAllCategoriesInfo(newCategoriesIdToQuery);
+    const newCategoriesInfo = await this._getAllCategoryInfos(newCategoriesIdToQuery);
 
     return [...categoriesInfo, ...newCategoriesInfo];
   }
@@ -632,22 +629,22 @@ class DonationsAPI {
     const storageRef = firebaseStorage.ref();
     const imageRef = storageRef.child(`donors/${userId}/donations/${donationId}/`);
 
-    let existingImagesInfo = []
+    let existingImagesInfo = [];
     const existingImagesRef = await imageRef.listAll();
-    const existingImagesUrlPromise = existingImagesRef.items.map(imageRef => {
+    const existingImagesUrlPromise = existingImagesRef.items.map((imageRef) => {
       return imageRef.getDownloadURL();
-    })
+    });
     const existingImagesUrl = await Promise.all(existingImagesUrlPromise);
-    
+
     for (let i = 0; i < existingImagesUrl.length; i++) {
-      const imageInfo = {name: existingImagesRef.items[i].name, url: existingImagesUrl[i]};
+      const imageInfo = { name: existingImagesRef.items[i].name, url: existingImagesUrl[i] };
       existingImagesInfo.push(imageInfo);
     }
 
     for (const image of updatedImages) {
       if (typeof image === 'string') {
         // Existing images
-        const existingImageIndex = existingImagesInfo.findIndex(existingImageInfo => {
+        const existingImageIndex = existingImagesInfo.findIndex((existingImageInfo) => {
           return existingImageInfo.url == image;
         });
 
@@ -670,7 +667,12 @@ class DonationsAPI {
     }
 
     this._deleteImages(userId, donationId, imagesNameToDelete);
-    const [coverImageUrl, newImagesUrl] = await this._uploadUpdatedImages(userId, donationId, newImagesObject, coverImage)
+    const [coverImageUrl, newImagesUrl] = await this._uploadUpdatedImages(
+      userId,
+      donationId,
+      newImagesObject,
+      coverImage
+    );
 
     return [coverImageUrl, [...imagesUrl, ...newImagesUrl]];
   }
@@ -681,10 +683,15 @@ class DonationsAPI {
     let coverImageToUpload = null;
 
     if (typeof coverImage !== 'string') {
-      coverImageToUpload = coverImage
+      coverImageToUpload = coverImage;
     }
 
-    const [uploadedCoverImageUrl, uploadedImagesUrl] = await this._uploadImages(userId, donationId, images, coverImageToUpload);
+    const [uploadedCoverImageUrl, uploadedImagesUrl] = await this._uploadImages(
+      userId,
+      donationId,
+      images,
+      coverImageToUpload
+    );
 
     if (typeof coverImage === 'string') {
       coverImageUrl = coverImage;
