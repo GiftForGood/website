@@ -6,6 +6,7 @@ import SquareImageBox from '../../imageContainers/SquareImageBox';
 import styled from 'styled-components';
 import CarouselScrollButton from '../../buttons/CarouselScrollButton';
 import Desktop from '@kiwicom/orbit-components/lib/Desktop';
+import { allCategoriesImagePath } from '../../../../utils/constants/imagePaths';
 
 // The home page is structured using a grid and the row of categories has
 // 1fr of height space, so during initial load when the categories are not
@@ -27,13 +28,22 @@ const ScrollableRow = styled.div`
   scroll-behavior: smooth;
 `;
 
+// To represent the category for all wishes, note that it does not have id property
+const allCategory = {
+  imageUrl: allCategoriesImagePath,
+  name: 'All',
+};
+
 /**
  * @param {string} type can be 'wishes' or 'donations'
  */
 const Categories = ({ type }) => {
   const [categories, setCategories] = useState([]);
   useEffect(() => {
-    getAllCategories().then((categories) => setCategories(categories));
+    getAllCategories().then((newCategories) => {
+      newCategories.unshift(allCategory); // add the 'all' to the front of array
+      setCategories(newCategories);
+    });
   }, []);
 
   const getAllCategories = async () => {
@@ -46,13 +56,13 @@ const Categories = ({ type }) => {
     return (
       <Stack direction="row" align="center" spacing="natural">
         {categories.map((category) => {
-          const href = `/${type}/category/${category.id}`;
+          const href = category.id ? `/${type}/category/${category.id}` : `/${type}/category`;
           const handleOnClickCategory = (event) => {
             event.preventDefault();
             router.push(href);
           };
           return (
-            <a href={href} onClick={handleOnClickCategory} key={category.id}>
+            <a href={href} onClick={handleOnClickCategory} key={category.name}>
               <SquareImageBox imageUrl={category.imageUrl} caption={category.name} />
             </a>
           );
