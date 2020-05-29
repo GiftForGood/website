@@ -1,3 +1,4 @@
+import React from 'react';
 import { Text } from '@kiwicom/orbit-components/lib';
 import styled from 'styled-components';
 

@@ -17,11 +17,12 @@ async function handler(req, res) {
         let decodedClaims = await admin.auth().verifySessionCookie(sessionCookie, true /** checkRevoked */);
         let currentUser = await admin.auth().getUser(decodedClaims.uid);
         let user = await getUser(currentUser.customClaims, currentUser.uid);
+        // Checking for user type from 3 different sources because Cloud function doesnt update the claims fast enough.
         res.json({
           user: {
             ...user,
-            donor: decodedClaims.donor,
-            npo: decodedClaims.npo,
+            donor: decodedClaims.donor || currentUser.customClaims.donor || user.donor,
+            npo: decodedClaims.npo || currentUser.customClaims.npo || user.npo,
             emailVerified: currentUser.emailVerified,
             email: decodedClaims.email,
           },

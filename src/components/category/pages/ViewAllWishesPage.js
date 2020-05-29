@@ -13,7 +13,7 @@ import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import InfiniteScroll from 'react-infinite-scroller';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 
-const ViewCategoryContainer = styled.div`
+const ViewAllWishesContainer = styled.div`
   width: 90vw;
   max-width: 1280px;
   margin: 0 auto;
@@ -47,8 +47,7 @@ const GridSectionContainer = styled.div`
   margin-top: 20px;
 `;
 
-const ViewCategoryPage = ({ categoryDetails, filterQuery }) => {
-  const category = categoryDetails;
+const ViewAllWishesPage = ({ filterQuery }) => {
   const [filter, setFilter] = useState(filterQuery ? filterQuery : WishesSortTypeConstant.TIMESTAMP); // set filter based on the filter obtained from url query
   const [allWishes, setAllWishes] = useState([]); // note that the wishes are in terms of documents, use data() to get data within
   const [hasAllLoaded, setHasAllLoaded] = useState(false);
@@ -68,7 +67,7 @@ const ViewCategoryPage = ({ categoryDetails, filterQuery }) => {
       setIsPageLoading(true);
       setHasAllLoaded(false);
     }
-    getNextBatchOfWishes(category.id, filter, null).then((newWishes) => {
+    getNextBatchOfWishes(filter, null).then((newWishes) => {
       setAllWishes(newWishes);
       setIsPageLoading(false);
       setIsDataMounted(true); // to show see more button & no wishes message after page is mounted
@@ -87,11 +86,11 @@ const ViewCategoryPage = ({ categoryDetails, filterQuery }) => {
    * instead of WISHES_BATCH_SIZE, as the last document is to check whether we
    * have loaded all wishes.
    */
-  const getNextBatchOfWishes = async (categoryId, filter, lastQueriedDocument) => {
+  const getNextBatchOfWishes = async (filter, lastQueriedDocument) => {
     // only time stamp should be reversed as it is from newest to oldest
     const isReverse = filter === WishesSortTypeConstant.TIMESTAMP ? true : false;
     const rawWishes = await api.wishes
-      .getPendingWishesForCategory(categoryId, filter, isReverse, lastQueriedDocument)
+      .getPendingWishes(filter, isReverse, lastQueriedDocument)
       .catch((err) => console.error(err));
     const numberOfDocumentsReturned = rawWishes.docs.length;
     if (numberOfDocumentsReturned < WISHES_BATCH_SIZE) {
@@ -129,7 +128,7 @@ const ViewCategoryPage = ({ categoryDetails, filterQuery }) => {
 
   const handleOnClickSeeMore = () => {
     setIsButtonLoading(true);
-    getNextBatchOfWishes(category.id, filter, getLastQueriedDocument()).then((newWishes) => {
+    getNextBatchOfWishes(filter, getLastQueriedDocument()).then((newWishes) => {
       if (newWishes.length > 0) {
         setAllWishes(allWishes.concat(newWishes));
       }
@@ -196,7 +195,7 @@ const ViewCategoryPage = ({ categoryDetails, filterQuery }) => {
   };
 
   return (
-    <ViewCategoryContainer>
+    <ViewAllWishesContainer>
       <Categories type="wishes" />
       <Grid
         columnGap="20px"
@@ -206,17 +205,17 @@ const ViewCategoryPage = ({ categoryDetails, filterQuery }) => {
         rows="1fr auto"
       >
         <GridSectionContainer>
-          <WishesFilterBy category={category} filter={filter} setFilter={setFilter} />
+          <WishesFilterBy filter={filter} setFilter={setFilter} />
         </GridSectionContainer>
         <GridSectionContainer>
           <BlackText style={{ marginBottom: '10px' }} size="large">
-            {category.name}
+            All Wishes
           </BlackText>
           <WishesContainer>{isLargeMobile ? <DesktopAndTabletWishes /> : <MobileWishes />}</WishesContainer>
         </GridSectionContainer>
       </Grid>
-    </ViewCategoryContainer>
+    </ViewAllWishesContainer>
   );
 };
 
-export default ViewCategoryPage;
+export default ViewAllWishesPage;
