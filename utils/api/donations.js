@@ -47,14 +47,15 @@ class DonationsAPI {
     itemCondition,
     coverImage,
     images
-  ) {
-    let categoriesInfo = [];
+  ) { 
+    // 2085, 2475, 2242
+    // 2063, 1482, 1434
     let userInfo = {};
 
     // Input validation
     this._validateDate(validPeriodFromDay, validPeriodFromMonth, validPeriodFromYear);
     this._validateDate(validPeriodToDay, validPeriodToMonth, validPeriodToYear);
-    this._validateDatesRange(
+    this._validateDateRanges(
       validPeriodFromDay,
       validPeriodFromMonth,
       validPeriodFromYear,
@@ -63,22 +64,17 @@ class DonationsAPI {
       validPeriodToYear
     );
     this._validateItemCondition(itemCondition);
-    this._validateImagesExtension(images);
-    this._validateCoverImagesAndImages(coverImage, images);
+    this._validateImageExtensions(images);
+    this._validateCoverImageAndImages(coverImage, images);
 
     const validPeriodFromDate = `${validPeriodFromDay}-${validPeriodFromMonth}-${validPeriodFromYear}`;
     const validPeriodToDate = `${validPeriodToDay}-${validPeriodToMonth}-${validPeriodToYear}`;
 
-    // Used a for loop instead of a forEach because forEach is not promise aware
-    for (let i = 0; i < categories.length; i++) {
-      let categoryInfo = await this._getCategoryInfo(categories[i]);
+    const [categoryInfos, allUserInfo] = await Promise.all([
+      this._getAllCategoriesInfo(categories),
+      this._getCurrentUserInfo()
+    ])
 
-      if (typeof categoryInfo !== 'undefined') {
-        categoriesInfo.push(categoryInfo);
-      }
-    }
-
-    const allUserInfo = await this._getCurrentUserInfo();
     if (typeof allUserInfo === 'undefined') {
       throw new DonationError('invalid-current-user');
     }
@@ -87,8 +83,8 @@ class DonationsAPI {
     userInfo.profileImageUrl = allUserInfo.profileImageUrl;
 
     let newDonation = donationsCollection.doc();
-    const [coverImageUrl, imagesUrl] = await this._uploadImages(userInfo.userId, newDonation.id, images, coverImage);
-    const locationsInfo = await this._getLocations(locations);
+    const [coverImageUrl, imageUrls] = await this._uploadImages(userInfo.userId, newDonation.id, images, coverImage);
+    const locationInfos = await this._getLocations(locations);
 
     const timeNow = Date.now();
     let data = {
@@ -96,14 +92,14 @@ class DonationsAPI {
       title: title,
       description: description,
       status: 'pending',
-      categories: categoriesInfo,
+      categories: categoryInfos,
       user: userInfo,
-      imageUrls: imagesUrl,
+      imageUrls: imageUrls,
       coverImageUrl: coverImageUrl,
       validPeriodFrom: moment(validPeriodFromDate, 'DD-MM-YYYY').valueOf(),
       validPeriodTo: moment(validPeriodToDate, 'DD-MM-YYYY').valueOf(),
       dimensions: dimensions,
-      locations: locationsInfo,
+      locations: locationInfos,
       itemCondition: itemCondition,
       postedDateTime: timeNow,
       updatedDateTime: timeNow,
@@ -323,10 +319,9 @@ class DonationsAPI {
   ) {
     // 1884, 2645, 2460
     // 1574, 1709, 1983
-    console.time();
     this._validateDate(validPeriodFromDay, validPeriodFromMonth, validPeriodFromYear);
     this._validateDate(validPeriodToDay, validPeriodToMonth, validPeriodToYear);
-    this._validateDatesRange(
+    this._validateDateRanges(
       validPeriodFromDay,
       validPeriodFromMonth,
       validPeriodFromYear,
@@ -377,8 +372,6 @@ class DonationsAPI {
 
     let donationDoc = donationsCollection.doc(id);
     await donationDoc.update(data);
-
-    console.timeEnd();
 
     return donationDoc.get();
   }
@@ -724,7 +717,7 @@ class DonationsAPI {
     }
   }
 
-  _validateDatesRange(fromDay, fromMonth, fromYear, toDay, toMonth, toYear) {
+  _validateDateRanges(fromDay, fromMonth, fromYear, toDay, toMonth, toYear) {
     const fromDate = `${fromDay}-${fromMonth}-${fromYear}`;
     const toDate = `${toDay}-${toMonth}-${toYear}`;
 
@@ -743,7 +736,7 @@ class DonationsAPI {
     }
   }
 
-  _validateImagesExtension(images) {
+  _validateImageExtensions(images) {
     const validExtensions = ['.jpg', 'jpeg', 'png'];
 
     for (const image of images) {
@@ -770,10 +763,10 @@ class DonationsAPI {
       }
     }
 
-    this._validateImagesExtension(imagesToValidate);
+    this._validateImageExtensions(imagesToValidate);
   }
 
-  _validateCoverImagesAndImages(coverImage, images) {
+  _validateCoverImageAndImages(coverImage, images) {
     const isCoverImageIncluded = images.find((image) => {
       return image != null && coverImage != null && coverImage.name == image.name;
     });
@@ -786,7 +779,7 @@ class DonationsAPI {
   _validateCoverImageAndUpdateImages(coverImage, updateImages) {
     if (typeof coverImage !== 'string') {
       // Cover image is a new image
-      this._validateCoverImagesAndImages(coverImage, updateImages);
+      this._validateCoverImageAndImages(coverImage, updateImages);
     } else {
       // Cover image is an existing one
       if (!updateImages.includes(coverImage)) {
