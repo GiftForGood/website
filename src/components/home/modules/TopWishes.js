@@ -104,7 +104,7 @@ const TopWishes = ({ numberOfPosts, numberOfCategories }) => {
       <WishesColumn key={category.id}>
         <CategoryHeader title={category.name}></CategoryHeader>
         {wishes.map((wish) => {
-          const wishPostHref = `/wishes/${wish.wishesId}`;
+          const wishPostHref = `/wishes/${wish.wishId}`;
           return (
             <GroupWishCard
               key={wish.wishId}
