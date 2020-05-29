@@ -17,4 +17,9 @@ export const colors = {
   categoryTagsFill: '#D9D9D9',
   bump: '#4db6ac',
   seeMoreHoverFocusActive: '#e7e7e7',
+  verifiedIconBackground: '#57A4FF',
+  chatButtonBackground: '#43aad8',
+  chatButtonHoverActive: '#31A2D6',
+  chatButtonFocus: '#138CC8',
+  ratingStarBackground: '#ED5555',
 };
