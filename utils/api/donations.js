@@ -48,8 +48,6 @@ class DonationsAPI {
     coverImage,
     images
   ) {
-    // 2085, 2475, 2242
-    // 1932, 1251, 1674
     let userInfo = {};
 
     // Input validation
@@ -319,8 +317,6 @@ class DonationsAPI {
     coverImage,
     images
   ) {
-    // 1884, 2645, 2460
-    // 1574, 1709, 1983
     this._validateDate(validPeriodFromDay, validPeriodFromMonth, validPeriodFromYear);
     this._validateDate(validPeriodToDay, validPeriodToMonth, validPeriodToYear);
     this._validateDateRanges(
@@ -332,7 +328,7 @@ class DonationsAPI {
       validPeriodToYear
     );
     this._validateItemCondition(itemCondition);
-    this._validateUpdateImagesExtension(images);
+    this._validateUpdateImageExtensions(images);
     this._validateCoverImageAndUpdateImages(coverImage, images);
 
     const donationInfo = await this._getDonationInfo(id);
@@ -347,8 +343,8 @@ class DonationsAPI {
     const validPeriodFromDate = `${validPeriodFromDay}-${validPeriodFromMonth}-${validPeriodFromYear}`;
     const validPeriodToDate = `${validPeriodToDay}-${validPeriodToMonth}-${validPeriodToYear}`;
 
-    const [categoriesInfo, locationsInfo, [coverImageUrl, imagesUrl]] = await Promise.all([
-      this._getDonationCategoriesInfo(donationInfo.categories, categories),
+    const [categoryInfos, locationInfos, [coverImageUrl, imageUrls]] = await Promise.all([
+      this._getDonationCategoryInfos(donationInfo.categories, categories),
       this._getDonationLocations(donationInfo.locations, locations),
       this._getDonationImages(donationInfo.user.userId, donationInfo.donationId, images, coverImage),
     ]);
@@ -356,13 +352,13 @@ class DonationsAPI {
     const data = {
       title: title,
       description: description,
-      categories: categoriesInfo,
-      imageUrls: imagesUrl,
+      categories: categoryInfos,
+      imageUrls: imageUrls,
       coverImageUrl: coverImageUrl,
       validPeriodFrom: moment(validPeriodFromDate, 'DD-MM-YYYY').valueOf(),
       validPeriodTo: moment(validPeriodToDate, 'DD-MM-YYYY').valueOf(),
       dimensions: dimensions,
-      locations: locationsInfo,
+      locations: locationInfos,
       itemCondition: itemCondition,
       updatedDateTime: Date.now(),
     };
@@ -416,8 +412,6 @@ class DonationsAPI {
    * @return {object} A firebase document of the completed donation
    */
   async complete(id, npoId) {
-    // 2200, 1600, 1199
-    // 1663, 2022, 891
     const [donationInfo, npoInfo] = await Promise.all([this._getDonationInfo(id), this._getNPOInfo(npoId)]);
     if (typeof donationInfo === 'undefined') {
       throw new DonationError('invalid-donation-id', 'donation does not exist');
@@ -495,7 +489,7 @@ class DonationsAPI {
   }
 
   async _uploadImages(userId, donationId, images, coverImage = null) {
-    let imagesInfo = [];
+    let imageInfos = [];
 
     for (const image of images) {
       const ext = path.extname(image.name);
@@ -505,20 +499,20 @@ class DonationsAPI {
 
       if (isCoverImage) {
         // Ensure that cover image is the first item in the array
-        imagesInfo.unshift(imageInfo);
+        imageInfos.unshift(imageInfo);
       } else {
-        imagesInfo.push(imageInfo);
+        imageInfos.push(imageInfo);
       }
     }
 
-    const imagesPromise = imagesInfo.map((imageInfo) => {
+    const imagesPromise = imageInfos.map((imageInfo) => {
       return this._uploadImage(userId, donationId, Object.values(imageInfo)[0], Object.keys(imageInfo)[0]);
     });
 
-    const imagesUrl = await Promise.all(imagesPromise);
-    const coverImageUrl = coverImage !== null ? imagesUrl[0] : '';
+    const imageUrls = await Promise.all(imagesPromise);
+    const coverImageUrl = coverImage !== null ? imageUrls[0] : '';
 
-    return [coverImageUrl, imagesUrl];
+    return [coverImageUrl, imageUrls];
   }
 
   async _uploadImage(userId, donationId, image, imageName) {
@@ -529,8 +523,8 @@ class DonationsAPI {
     return imageRef.getDownloadURL();
   }
 
-  async _deleteImages(userId, donationId, imagesName) {
-    for (const imageName of imagesName) {
+  async _deleteImages(userId, donationId, imageNames) {
+    for (const imageName of imageNames) {
       this._deleteImage(userId, donationId, imageName);
     }
   }
@@ -579,23 +573,23 @@ class DonationsAPI {
     return locationDetails;
   }
 
-  async _getDonationCategoriesInfo(existingCategories, updatedCategoriesId) {
-    let categoriesInfo = [];
-    let newCategoriesIdToQuery = [];
+  async _getDonationCategoryInfos(existingCategories, updatedCategoryIds) {
+    let categoryInfos = [];
+    let newCategoryIdsToQuery = [];
 
-    for (const id of updatedCategoriesId) {
+    for (const id of updatedCategoryIds) {
       let categoryInfo = existingCategories.find((category) => category.id === id);
 
       if (typeof categoryInfo === 'undefined') {
-        newCategoriesIdToQuery.push(id);
+        newCategoryIdsToQuery.push(id);
       } else {
-        categoriesInfo.push(categoryInfo);
+        categoryInfos.push(categoryInfo);
       }
     }
 
-    const newCategoriesInfo = await this._getAllCategoryInfos(newCategoriesIdToQuery);
+    const newCategoryInfos = await this._getAllCategoryInfos(newCategoryIdsToQuery);
 
-    return [...categoriesInfo, ...newCategoriesInfo];
+    return [...categoryInfos, ...newCategoryInfos];
   }
 
   async _getDonationLocations(existingLocations, updatedLocations) {
@@ -620,30 +614,30 @@ class DonationsAPI {
   }
 
   async _getDonationImages(userId, donationId, updatedImages, coverImage) {
-    let imagesUrl = [];
-    let newImagesObject = [];
-    let existingImagesIndex = [];
-    let imagesNameToDelete = [];
+    let imageUrls = [];
+    let newImageObjects = [];
+    let existingImageIndexes = [];
+    let imageNamesToDelete = [];
 
     const storageRef = firebaseStorage.ref();
-    const imageRef = storageRef.child(`donors/${userId}/donations/${donationId}/`);
+    const imageRefs = storageRef.child(`donors/${userId}/donations/${donationId}/`);
 
-    let existingImagesInfo = [];
-    const existingImagesRef = await imageRef.listAll();
-    const existingImagesUrlPromise = existingImagesRef.items.map((imageRef) => {
+    let existingImageInfos = [];
+    const existingImageRefs = await imageRefs.listAll();
+    const existingImageUrlPromises = existingImageRefs.items.map((imageRef) => {
       return imageRef.getDownloadURL();
     });
-    const existingImagesUrl = await Promise.all(existingImagesUrlPromise);
+    const existingImageUrls = await Promise.all(existingImageUrlPromises);
 
-    for (let i = 0; i < existingImagesUrl.length; i++) {
-      const imageInfo = { name: existingImagesRef.items[i].name, url: existingImagesUrl[i] };
-      existingImagesInfo.push(imageInfo);
+    for (let i = 0; i < existingImageUrls.length; i++) {
+      const imageInfo = { name: existingImageRefs.items[i].name, url: existingImageUrls[i] };
+      existingImageInfos.push(imageInfo);
     }
 
     for (const image of updatedImages) {
       if (typeof image === 'string') {
         // Existing images
-        const existingImageIndex = existingImagesInfo.findIndex((existingImageInfo) => {
+        const existingImageIndex = existingImageInfos.findIndex((existingImageInfo) => {
           return existingImageInfo.url == image;
         });
 
@@ -651,29 +645,30 @@ class DonationsAPI {
           throw new DonationError('invalid-image-url', 'the image url should be an existing image url');
         }
 
-        existingImagesIndex.push(existingImageIndex);
-        imagesUrl.push(existingImagesInfo[existingImageIndex].url);
+        existingImageIndexes.push(existingImageIndex);
+        imageUrls.push(existingImageInfos[existingImageIndex].url);
       } else {
-        newImagesObject.push(image);
+        // New images
+        newImageObjects.push(image);
       }
     }
 
     // Finding images to delete
-    for (let i = 0; i < existingImagesInfo.length; i++) {
-      if (!existingImagesIndex.includes(i)) {
-        imagesNameToDelete.push(existingImagesInfo[i].name);
+    for (let i = 0; i < existingImageInfos.length; i++) {
+      if (!existingImageIndexes.includes(i)) {
+        imageNamesToDelete.push(existingImageInfos[i].name);
       }
     }
 
-    this._deleteImages(userId, donationId, imagesNameToDelete);
-    const [coverImageUrl, newImagesUrl] = await this._uploadUpdatedImages(
+    this._deleteImages(userId, donationId, imageNamesToDelete);
+    const [coverImageUrl, newImageUrls] = await this._uploadUpdatedImages(
       userId,
       donationId,
-      newImagesObject,
+      newImageObjects,
       coverImage
     );
 
-    return [coverImageUrl, [...imagesUrl, ...newImagesUrl]];
+    return [coverImageUrl, [...imageUrls, ...newImageUrls]];
   }
 
   async _uploadUpdatedImages(userId, donationId, images, coverImage) {
@@ -685,7 +680,7 @@ class DonationsAPI {
       coverImageToUpload = coverImage;
     }
 
-    const [uploadedCoverImageUrl, uploadedImagesUrl] = await this._uploadImages(
+    const [uploadedCoverImageUrl, uploadedImageUrls] = await this._uploadImages(
       userId,
       donationId,
       images,
@@ -698,7 +693,7 @@ class DonationsAPI {
       coverImageUrl = uploadedCoverImageUrl;
     }
 
-    return [coverImageUrl, uploadedImagesUrl];
+    return [coverImageUrl, uploadedImageUrls];
   }
 
   _validateOrderBy(orderByType) {
@@ -760,7 +755,7 @@ class DonationsAPI {
     }
   }
 
-  _validateUpdateImagesExtension(updateImages) {
+  _validateUpdateImageExtensions(updateImages) {
     let imagesToValidate = [];
 
     for (const image of updateImages) {
