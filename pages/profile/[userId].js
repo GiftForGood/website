@@ -20,7 +20,7 @@ const Profile = ({ user }) => {
   return (
     <SessionProvider user={user}>
       <TopNavigationBar />
-      <NpoProfilePage user={user} />
+      {user.user.npo ? <NpoProfilePage user={user} /> : null}
     </SessionProvider>
   );
 };
