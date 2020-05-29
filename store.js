@@ -5,6 +5,7 @@ import logger from 'redux-logger';
 import registerReducer from './src/components/register';
 import loginReducer from './src/components/login';
 import sessionReducer from './src/components/session';
+import createWishReducer from './src/components/createWish';
 
 const initialState = {};
 
@@ -12,6 +13,7 @@ const rootReducer = combineReducers({
   register: registerReducer,
   login: loginReducer,
   session: sessionReducer,
+  createWish: createWishReducer,
 });
 
 const middlewares = [thunk];
