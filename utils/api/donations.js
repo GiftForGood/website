@@ -321,6 +321,9 @@ class DonationsAPI {
     coverImage,
     images
   ) {
+    // 1884, 2645, 2460
+    // 1574, 1709, 1983
+    console.time();
     this._validateDate(validPeriodFromDay, validPeriodFromMonth, validPeriodFromYear);
     this._validateDate(validPeriodToDay, validPeriodToMonth, validPeriodToYear);
     this._validateDatesRange(
@@ -347,15 +350,16 @@ class DonationsAPI {
     const validPeriodFromDate = `${validPeriodFromDay}-${validPeriodFromMonth}-${validPeriodFromYear}`;
     const validPeriodToDate = `${validPeriodToDay}-${validPeriodToMonth}-${validPeriodToYear}`;
 
-    const categoriesInfo = await this._getDonationCategoriesInfo(donationInfo.categories, categories);
-    const locationsInfo = await this._getDonationLocations(donationInfo.locations, locations);
-
-    const [coverImageUrl, imagesUrl] = await this._getDonationImages(
-      donationInfo.user.userId,
-      donationInfo.donationId,
-      images,
-      coverImage
-    );
+    const [categoriesInfo, locationsInfo, [coverImageUrl, imagesUrl]] = await Promise.all([
+      this._getDonationCategoriesInfo(donationInfo.categories, categories),
+      this._getDonationLocations(donationInfo.locations, locations),
+      this._getDonationImages(
+        donationInfo.user.userId,
+        donationInfo.donationId,
+        images,
+        coverImage
+      )
+    ])
 
     const data = {
       title: title,
@@ -373,6 +377,8 @@ class DonationsAPI {
 
     let donationDoc = donationsCollection.doc(id);
     await donationDoc.update(data);
+
+    console.timeEnd();
 
     return donationDoc.get();
   }
@@ -480,6 +486,15 @@ class DonationsAPI {
     return snapshot.data();
   }
 
+  async _getAllCategoriesInfo(categoriesId) {
+    const categoriesPromise = categoriesId.map((categoryId) => {
+      return this._getCategoryInfo(categoryId);
+    });
+
+    const categoriesInfo = await Promise.all(categoriesPromise);
+    return categoriesInfo.filter((categoryInfo) => typeof categoryInfo !== 'undefined');
+  }
+
   async _getCategoryInfo(id) {
     const snapshot = await db.collection('categories').doc(id).get();
     return snapshot.data();
@@ -538,52 +553,60 @@ class DonationsAPI {
   }
 
   async _getLocations(locations) {
-    let locationsDetails = [];
+    let locationDetails = [];
 
-    for (const location of locations) {
-      try {
-        let res = await axios.get(`${GEO_LOCATION_URL}?address=${location}&key=${process.env.FIREBASE_API_KEY}`);
-        if (res.status != 200) {
+    const locationPromises = locations.map(location => {
+      return axios.get(`${GEO_LOCATION_URL}?address=${location}&key=${process.env.FIREBASE_API_KEY}`); 
+    })
+
+    try {
+      const results = await Promise.all(locationPromises);
+
+      for (let i = 0; i < results.length; i++) {
+        if (results[i].status != 200) {
           continue;
         }
 
-        if (res.data.status !== 'OK') {
+        if (results[i].data.status !== 'OK') {
           continue;
         }
 
-        const fullAddress = res.data.results[0]['formatted_address'];
-        const lat = res.data.results[0]['geometry']['location']['lat'];
-        const long = res.data.results[0]['geometry']['location']['lng'];
+        const fullAddress = results[i].data.results[0]['formatted_address'];
+        const lat = results[i].data.results[0]['geometry']['location']['lat'];
+        const long = results[i].data.results[0]['geometry']['location']['lng'];
 
         const locationDetail = {
-          name: location,
+          name: locations[i],
           fullAddress: fullAddress,
           latitude: lat,
           longitude: long,
         };
-        locationsDetails.push(locationDetail);
-      } catch (error) {
-        continue;
+        locationDetails.push(locationDetail);
       }
+    } catch (error) {
+      throw new DonationError('invalid-location', 'invalid location/s');
     }
 
-    return locationsDetails;
+    return locationDetails;
   }
 
   async _getDonationCategoriesInfo(existingCategories, updatedCategoriesId) {
     let categoriesInfo = [];
+    let newCategoriesIdToQuery = [];
 
     for (const id of updatedCategoriesId) {
       let categoryInfo = existingCategories.find((category) => category.id === id);
 
       if (typeof categoryInfo === 'undefined') {
-        categoryInfo = await this._getCategoryInfo(id);
+        newCategoriesIdToQuery.push(id);
+      } else {
+        categoriesInfo.push(categoryInfo)
       }
-
-      categoriesInfo.push(categoryInfo);
     }
 
-    return categoriesInfo;
+    const newCategoriesInfo = await this._getAllCategoriesInfo(newCategoriesIdToQuery);
+
+    return [...categoriesInfo, ...newCategoriesInfo];
   }
 
   async _getDonationLocations(existingLocations, updatedLocations) {
