@@ -74,7 +74,7 @@ const GroupWishCard = ({ name, title, description, imageUrl, postedDateTime, pos
     event.preventDefault();
     router.push({
       pathname: postHref,
-      query: { href: `/wishes/category/${categoryId}`, categoryName: categoryName },
+      query: { categoryId: categoryId, categoryName: categoryName },
     });
   };
   return (

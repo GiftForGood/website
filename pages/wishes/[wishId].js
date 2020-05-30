@@ -13,8 +13,8 @@ const TopNavigationBar = dynamic(() => import('../../src/components/navbar/modul
 
 export async function getServerSideProps({ params, req, res, query }) {
   const wishId = params.wishId;
-  const prevHref = query.href ? query.href : '';
-  const categoryName = query.categoryName ? query.categoryName : '';
+  const prevHref = query.categoryId ? `/wishes/category/${query.categoryId}` : `/wishes/category`;
+  const categoryName = query.categoryName ? query.categoryName : 'All wishes';
   const wishDetails = await getWishDetails(wishId);
   let npoDetails = {}; // TODO remove & uncomment bottom when getNPO API is up
   if (Object.keys(wishDetails).length !== 0) {
