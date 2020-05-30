@@ -51,7 +51,7 @@ const ViewCategoryPage = ({ categoryDetails, filterQuery }) => {
   const category = categoryDetails;
   const [filter, setFilter] = useState(filterQuery ? filterQuery : WishesSortTypeConstant.TIMESTAMP); // set filter based on the filter obtained from url query
   const [allWishes, setAllWishes] = useState([]); // note that the wishes are in terms of documents, use data() to get data within
-  const [hasAllLoaded, setHasAllLoaded] = useState(false);
+  const [shouldSeeMore, setShouldSeeMore] = useState(true);
   const [isButtonLoading, setIsButtonLoading] = useState(false);
   const [isPageLoading, setIsPageLoading] = useState(false);
   const [isDataMounted, setIsDataMounted] = useState(false); // to keep track when data is mounted on the page
@@ -66,9 +66,14 @@ const ViewCategoryPage = ({ categoryDetails, filterQuery }) => {
       // only set page loading to true when filter is modified
       setAllWishes([]);
       setIsPageLoading(true);
-      setHasAllLoaded(false);
+      setShouldSeeMore(true);
     }
     getNextBatchOfWishes(category.id, filter, null).then((newWishes) => {
+      const numberOfDocumentsReturned = newWishes.length;
+      if (numberOfDocumentsReturned < WISHES_BATCH_SIZE) {
+        // loaded all documents already, since the number of wishes returned is less than batch size
+        setShouldSeeMore(false);
+      }
       setAllWishes(newWishes);
       setIsPageLoading(false);
       setIsDataMounted(true); // to show see more button & no wishes message after page is mounted
@@ -82,24 +87,13 @@ const ViewCategoryPage = ({ categoryDetails, filterQuery }) => {
     return allWishes[allWishes.length - 1];
   };
 
-  /**
-   * Note that this function returns WISHES_BATCH_SIZE - 1 amount of documents,
-   * instead of WISHES_BATCH_SIZE, as the last document is to check whether we
-   * have loaded all wishes.
-   */
   const getNextBatchOfWishes = async (categoryId, filter, lastQueriedDocument) => {
     // only time stamp should be reversed as it is from newest to oldest
     const isReverse = filter === WishesSortTypeConstant.TIMESTAMP ? true : false;
     const rawWishes = await api.wishes
       .getPendingWishesForCategory(categoryId, filter, isReverse, lastQueriedDocument)
       .catch((err) => console.error(err));
-    const numberOfDocumentsReturned = rawWishes.docs.length;
-    if (numberOfDocumentsReturned < WISHES_BATCH_SIZE) {
-      // loaded all documents already, since the number of wishes returned is less than batch size
-      setHasAllLoaded(true);
-      return rawWishes.docs;
-    }
-    return rawWishes.docs.slice(0, WISHES_BATCH_SIZE - 1);
+    return rawWishes.docs;
   };
 
   const displayAllWishes = () => {
@@ -130,7 +124,12 @@ const ViewCategoryPage = ({ categoryDetails, filterQuery }) => {
   const handleOnClickSeeMore = () => {
     setIsButtonLoading(true);
     getNextBatchOfWishes(category.id, filter, getLastQueriedDocument()).then((newWishes) => {
-      if (newWishes.length > 0) {
+      const numberOfDocumentsReturned = newWishes.length;
+      if (numberOfDocumentsReturned < WISHES_BATCH_SIZE) {
+        // loaded all documents already, since the number of wishes returned is less than batch size
+        setShouldSeeMore(false);
+      }
+      if (numberOfDocumentsReturned > 0) {
         setAllWishes(allWishes.concat(newWishes));
       }
       setIsButtonLoading(false);
@@ -159,7 +158,7 @@ const ViewCategoryPage = ({ categoryDetails, filterQuery }) => {
           </PageLoadingContainer>
         )}
         <br />
-        {!hasAllLoaded && isDataMounted && (
+        {shouldSeeMore && isDataMounted && (
           <ButtonContainer>
             <Button asComponent={SeeMoreButton} onClick={handleOnClickSeeMore} loading={isButtonLoading}>
               <BlackText style={{ padding: '5px' }} size="medium">
@@ -177,7 +176,7 @@ const ViewCategoryPage = ({ categoryDetails, filterQuery }) => {
       <InfiniteScroll
         pageStart={0}
         loadMore={handleOnClickSeeMore}
-        hasMore={!hasAllLoaded}
+        hasMore={shouldSeeMore}
         loader={<Loading type="pageLoader" key={0} />}
       >
         <Grid
