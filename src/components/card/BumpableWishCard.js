@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import CardHeader from '../card/CardHeader';
-import { Stack, Text, Grid, Badge } from '@kiwicom/orbit-components/lib';
+import { Stack, Text, Grid, Modal, ModalSection, ModalHeader, ModalFooter } from '@kiwicom/orbit-components/lib';
 import { getTimeDifferenceFromNow } from '../../../utils/api/time';
 import styled, { css } from 'styled-components';
 import { useRouter } from 'next/router';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import Button from '@kiwicom/orbit-components/lib/Button';
+import moment from 'moment';
+import api from '../../../utils/api';
 
 const CardContainer = styled.div`
   display: flex;
@@ -91,7 +93,6 @@ const CardDescription = ({ title, description }) => {
   );
 };
 
-
 /**
  *
  * @param {string} wishId is the wish's id
@@ -103,6 +104,8 @@ const CardDescription = ({ title, description }) => {
  * @param {string} postHref is the link url to direct users to after clicking the wish card
  * @param {string[]} categoryTags are the category names that the wish is under
  * @param {boolean} isBumped is whether the wish post is bumped
+ * @param {string} expireDateTime is the expire date time of the post 
+ * @param {function} bumpCallback is to update the caller past wishes
  */
 const WishCard = ({
   wishId,
@@ -113,30 +116,86 @@ const WishCard = ({
   postedDateTime,
   postHref,
   isBumped,
+  expireDateTime,
+  bumpCallback,
 }) => {
+  const [openBumpModal, setOpenBumpModal] = useState(false);
+  const [loading, setLoading] = useState(false);
+
   const timeAgo = getTimeDifferenceFromNow(postedDateTime);
   const router = useRouter();
   const handleOnClickWishPost = (event) => {
     event.preventDefault();
     router.push(postHref);
   };
+  const newExpiryDateTime = moment(expireDateTime).add(1, 'week').format('DD MMM YYYY');
+
+  const onBumpCardClick = () => {
+    setOpenBumpModal(true);
+  };
+
+  const onCloseModal = () => {
+    setOpenBumpModal(false);
+  };
+
+  const onBumpClicked = () => {
+    setLoading(true);
+    api.wishes
+      .bumpWish(wishId)
+      .then(() => {
+        setOpenBumpModal(false);
+        bumpCallback();
+      })
+      .catch((error) => {
+        setOpenBumpModal(false);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
   return (
-    <CardContainer>
-      <Grid style={{ height: '100%', paddingLeft: '10px', paddingRight: '10px' }} rows="2fr 6fr 2fr" cols="1fr">
-        <CardHeaderContainer>
-          <CardHeader name={name} imageUrl={profileImageUrl} timeAgo={timeAgo} isBumped={isBumped} />
-        </CardHeaderContainer>
-        <CardDescriptionContainer>
-          <CardDescription title={title} description={description} />
-        </CardDescriptionContainer>
-        <CardDescriptionFooterContainer>
-          <Button fullWidth disabled={isBumped}>
-            Bump
-          </Button>
-        </CardDescriptionFooterContainer>
-      </Grid>
-      <ClickableDiv href={postHref} onClick={handleOnClickWishPost} /> 
-    </CardContainer>
+    <>
+      <CardContainer>
+        <Grid style={{ height: '100%', paddingLeft: '10px', paddingRight: '10px' }} rows="2fr 6fr 2fr" cols="1fr">
+          <CardHeaderContainer>
+            <CardHeader name={name} imageUrl={profileImageUrl} timeAgo={timeAgo} isBumped={isBumped} />
+          </CardHeaderContainer>
+          <CardDescriptionContainer>
+            <CardDescription title={title} description={description} />
+          </CardDescriptionContainer>
+          <CardDescriptionFooterContainer>
+            <Button fullWidth disabled={isBumped} onClick={onBumpCardClick}>
+              Bump
+            </Button>
+          </CardDescriptionFooterContainer>
+        </Grid>
+        <ClickableDiv href={postHref} onClick={handleOnClickWishPost} />
+      </CardContainer>
+
+      {openBumpModal ? (
+        <Modal size="small" onClose={onCloseModal}>
+          <ModalHeader title="Bump your Wish"></ModalHeader>
+          <ModalSection>
+            <Text>
+              Bumping your post means that your wish will expire <u>1 week</u> later than the stipulated date.
+            </Text>
+            <br />
+            <Text>
+              Wish will now expire on: <strong>{newExpiryDateTime}</strong>
+            </Text>
+          </ModalSection>
+          <ModalFooter flex={['0 0 auto', '1 1 100%']}>
+            <Button type="secondary" onClick={onCloseModal}>
+              Cancel
+            </Button>
+            <Button fullWidth loading={loading} onClick={onBumpClicked}>
+              Bump
+            </Button>
+          </ModalFooter>
+        </Modal>
+      ) : null}
+    </>
   );
 };
 

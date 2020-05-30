@@ -36,7 +36,7 @@ const PastWishesPanel = ({ isMine, userId }) => {
     if (pastWishes.length === 0) {
       return (
         <Stack justify="center" align="center" direction="column" grow>
-          <Loading dataTest="test" loading text="Please wait, content of the page is loading..." type="pageLoader" />
+          <Loading dataTest="test" loading text="Please wait, fetching wishes..." type="pageLoader" />
         </Stack>
       );
     }
@@ -64,6 +64,8 @@ const PastWishesPanel = ({ isMine, userId }) => {
             postedDateTime={pastWish.postedDateTime}
             postHref={`/wishes/${pastWish.wishId}`}
             isBumped={pastWish.isBumped}
+            expireDateTime={pastWish.expireDateTime}
+            bumpCallback={fetchPastWishes}
           />
         ))}
       </Grid>
