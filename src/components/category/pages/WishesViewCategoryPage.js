@@ -122,6 +122,8 @@ const ViewCategoryPage = ({ categoryDetails, filterQuery }) => {
           postHref={postHref}
           categoryTags={categoryTags}
           isBumped={isBumped}
+          categoryId={category.id}
+          categoryName={category.name}
         />
       );
     });

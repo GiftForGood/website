@@ -6,12 +6,15 @@ import SessionProvider from '../../src/components/session/modules/SessionProvide
 import Head from 'next/head';
 import { isAuthenticated } from '../../utils/authentication/authentication';
 import Error from 'next/error';
+import { companyLogoImagePngPath } from '../../utils/constants/imagePaths';
 const TopNavigationBar = dynamic(() => import('../../src/components/navbar/modules/TopNavigationBar'), {
   ssr: false,
 });
 
 export async function getServerSideProps({ params, req, res, query }) {
   const wishId = params.wishId;
+  const prevHref = query.categoryId ? `/wishes/category/${query.categoryId}` : `/wishes/category`;
+  const categoryName = query.categoryName ? query.categoryName : 'All wishes';
   const wishDetails = await getWishDetails(wishId);
   let npoDetails = {}; // TODO remove & uncomment bottom when getNPO API is up
   if (Object.keys(wishDetails).length !== 0) {
@@ -24,6 +27,8 @@ export async function getServerSideProps({ params, req, res, query }) {
       wishDetails,
       npoDetails,
       user,
+      prevHref,
+      categoryName,
     },
   };
 }
@@ -38,26 +43,29 @@ const getNpoDetails = async (npoId) => {
   return rawNpo.data();
 };
 
-const Wish = ({ wishId, wishDetails, npoDetails, user }) => {
+const Wish = ({ wishId, wishDetails, npoDetails, user, prevHref, categoryName }) => {
   if (Object.keys(wishDetails).length === 0) {
     return <Error statusCode={404} />;
   }
   return (
     <SessionProvider user={user}>
       <Head>
-        {/* meta property for Facebook sharing purposes */}
-        <meta property="og:url" content={'https://www.giftforgood.io/wishes/' + wishDetails.wishesId} />
+        {/* meta property for sharing purposes */}
+        <meta property="og:url" content={'https://www.giftforgood.io/wishes/' + wishId} />
         <meta property="og:type" content="website" />
         <meta property="og:title" content="GiftForGood" />
         <meta property="og:description" content="Check out this wish from GiftForGood!" />
-        {/* og:image is used for testing purposes, will remove or be replaced */}
-        <meta
-          property="og:image"
-          content="https://i.kinja-img.com/gawker-media/image/upload/c_scale,f_auto,fl_progressive,q_80,w_800/1877zq2agxex9jpg.jpg"
-        />
+        <meta property="og:image:secure" content={companyLogoImagePngPath} />
       </Head>
       <TopNavigationBar />
-      <WishPage wishId={wishId} wishDetails={wishDetails} npoDetails={npoDetails} user={user} />
+      <WishPage
+        wishId={wishId}
+        wishDetails={wishDetails}
+        npoDetails={npoDetails}
+        user={user}
+        prevHref={prevHref}
+        categoryName={categoryName}
+      />
     </SessionProvider>
   );
 };
