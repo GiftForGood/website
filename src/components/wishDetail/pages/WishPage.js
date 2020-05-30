@@ -6,6 +6,8 @@ import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import Map from '../modules/Map';
 import NpoInformation from '../../postDetails/UserInfoCard';
 import { wishes } from '../../../../utils/constants/postType';
+import Desktop from '@kiwicom/orbit-components/lib/Desktop';
+import BreadcrumbsPanel from '../../postDetails/BreadcrumbsPanel';
 
 const Wrapper = styled.div`
   margin: 0 auto;
@@ -27,7 +29,11 @@ const LeftPanel = styled.div`
   `)};
 `;
 
-const WishPage = ({ wishId, wishDetails, npoDetails, user }) => {
+const BreadcrumbsWrapper = styled.div`
+  padding: 15px 0px 15px 40px;
+`;
+
+const WishPage = ({ wishId, wishDetails, npoDetails, user, prevHref, categoryName }) => {
   const wish = wishDetails;
   const npo = npoDetails;
   const categoryTags = wish.categories.map((category) => category.name);
@@ -35,6 +41,11 @@ const WishPage = ({ wishId, wishDetails, npoDetails, user }) => {
 
   return (
     <Wrapper>
+      <Desktop>
+        <BreadcrumbsWrapper>
+          <BreadcrumbsPanel postType={wishes} prevHref={prevHref} categoryName={categoryName} />
+        </BreadcrumbsWrapper>
+      </Desktop>
       <Grid desktop={{ columns: '1fr 1fr', gap: '10px' }}>
         <LeftPanel id="map">
           <Map
