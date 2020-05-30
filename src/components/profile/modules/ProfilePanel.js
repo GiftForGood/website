@@ -12,15 +12,14 @@ const ProfilePanelWrapper = styled.div`
 `;
 
 const ProfilePanel = ({ user }) => {
-  
   return (
     <ProfilePanelWrapper>
       <ProfileDetails
         profileImageUrl={user ? user.profileImageUrl : ''}
-        npoOrgName={user ? user.organization ? user.organization.name : '' : ''}
-        userRating={user ?  user.reviewRating : ''}
-        npoOrgAddress={user ? user.organization ? user.organization.address : '' : ''}
-        npoContact={user ? user.organization ? user.organization.contact : '' : ''}
+        npoOrgName={user ? (user.organization ? user.organization.name : '') : ''}
+        userRating={user ? user.reviewRating : ''}
+        npoOrgAddress={user ? (user.organization ? user.organization.address : '') : ''}
+        npoContact={user ? (user.organization ? user.organization.contact : '') : ''}
         userType={npo}
       />
     </ProfilePanelWrapper>

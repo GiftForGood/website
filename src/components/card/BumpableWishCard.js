@@ -74,7 +74,7 @@ const CardDescriptionFooterContainer = styled.div`
 const ClickableDiv = styled.a`
   position: absolute;
   width: 100%;
-  height: ${props => props.isMine ? "82" : "100"}%;
+  height: ${(props) => (props.isMine ? '82' : '100')}%;
   top: 0;
   left: 0;
   z-index: 1;
@@ -197,7 +197,7 @@ const WishCard = ({
             )}
           </CardDescriptionFooterContainer>
         </Grid>
-        <ClickableDiv href={postHref} onClick={handleOnClickWishPost} isMine={isMine}/>
+        <ClickableDiv href={postHref} onClick={handleOnClickWishPost} isMine={isMine} />
       </CardContainer>
 
       {openBumpModal ? (
