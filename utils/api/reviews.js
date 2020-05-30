@@ -6,6 +6,32 @@ const reviewsCollection = db.collection('reviews');
 
 class ReviewsAPI {
   /**
+   * Gets a batch of reviews for either an NPO or donor, sorted by dateTime. Only return results of REVIEWS_BATCH_SIZE
+   * @param {string} userId The user id for either the NPO or donor
+   * @param {object} lastQueriedDocument The last queried firebase document to start the query after. If the field is not given, the query will start from the first document
+   * @throws {FirebaseError}
+   * @return {array} A list of firebase document of the reviews belonging to a user.
+   */
+  async get(userId, lastQueriedDocument = null) {
+    if (lastQueriedDocument == null) {
+      // First page
+      return reviewsCollection
+        .where('reviewFor.userId', '==', userId)
+        .orderBy('dateTime', 'desc')
+        .limit(REVIEWS_BATCH_SIZE)
+        .get();
+    } else {
+      // Subsequent pages
+      return reviewsCollection
+        .where('reviewFor.userId', '==', userId)
+        .orderBy('dateTime', 'desc')
+        .startAfter(lastQueriedDocument)
+        .limit(REVIEWS_BATCH_SIZE)
+        .get();
+    }
+  }
+
+  /**
    *
    * @param {string} wishId The wish id that is being reviewed
    * @param {string} npoId The NPO id that owns the wish
