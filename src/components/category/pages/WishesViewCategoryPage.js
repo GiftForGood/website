@@ -107,12 +107,13 @@ const ViewCategoryPage = ({ categoryDetails, filterQuery }) => {
       return isDataMounted && <BlackText size="medium">No wishes found.</BlackText>;
     }
     return allWishes.map((wish) => {
-      const { wishesId, categories, organization, title, description, user, postedDateTime, isBumped } = wish.data();
-      const postHref = `/wishes/${wishesId}`;
+      const { wishId, categories, organization, title, description, user, postedDateTime, isBumped } = wish.data();
+      const postHref = `/wishes/${wishId}`;
       const categoryTags = categories.map((category) => category.name);
       return (
         <WishCard
-          key={wishesId}
+          key={wishId}
+          wishId={wishId}
           name={organization.name}
           title={title}
           description={description}
@@ -121,6 +122,8 @@ const ViewCategoryPage = ({ categoryDetails, filterQuery }) => {
           postHref={postHref}
           categoryTags={categoryTags}
           isBumped={isBumped}
+          categoryId={category.id}
+          categoryName={category.name}
         />
       );
     });

@@ -6,7 +6,6 @@ import styled from 'styled-components';
 import BlackText from '../../text/BlackText';
 import GreySubtleButton from '../../buttons/GreySubtleButton';
 import DonationCard from '../../card/DonationCard';
-import { dummyTopCategoriesAndTheirDonations } from '../../../../utils/dummyData/topCategoriesAndTheirDonations';
 import CarouselScrollButton from '../../buttons/CarouselScrollButton';
 import Desktop from '@kiwicom/orbit-components/lib/Desktop';
 
@@ -42,22 +41,32 @@ const TopDonationCardsContainer = styled.div`
 `;
 
 const TopDonations = ({ numberOfPosts, numberOfCategories }) => {
-  const [topCategoriesAndTheirDonations, setTopCategoriesAndTheirDonations] = useState([]);
+  // assumes that there are only 3 top categories
+  const [firstTopCategoryAndDonations, setFirstTopCategoryAndDonations] = useState({});
+  const [secondTopCategoryAndDonations, setSecondTopCategoryAndDonations] = useState({});
+  const [thirdTopCategoryAndDonations, setThirdTopCategoryAndDonations] = useState({});
+  const router = useRouter();
 
   useEffect(() => {
-    if (process.env.NODE_ENV === 'development') {
-      setTopCategoriesAndTheirDonations(dummyTopCategoriesAndTheirDonations);
-    } else {
-      getTopCategoriesAndTheirDonations(numberOfPosts, numberOfCategories).then((result) =>
-        setTopCategoriesAndTheirDonations(result)
-      );
-    }
+    getTopNCategories(numberOfCategories).then((categories) => {
+      // set all three top categories and their donations in parallel
+      getTopDonationForCategory(categories[0], numberOfPosts).then((result) => {
+        setFirstTopCategoryAndDonations(result);
+      });
+      getTopDonationForCategory(categories[1], numberOfPosts).then((result) => {
+        setSecondTopCategoryAndDonations(result);
+      });
+      getTopDonationForCategory(categories[2], numberOfPosts).then((result) => {
+        setThirdTopCategoryAndDonations(result);
+      });
+    });
   }, []);
 
-  const getTopCategoriesAndTheirDonations = async (numberOfPosts, numberOfCategories) => {
-    const topNCategories = await getTopNCategories(numberOfCategories);
-    const donationsForTopCategories = await getDonationsForTopCategories(topNCategories, numberOfPosts);
-    return mergeCategoriesAndDonations(topNCategories, donationsForTopCategories);
+  const getTopDonationForCategory = async (category, numberOfPosts) => {
+    const rawDonations = await api.donations
+      .getTopNPendingDonationsForCategory(category.id, numberOfPosts)
+      .catch((err) => console.error(err));
+    return { category: category, donations: rawDonations.docs.map((doc) => doc.data()) };
   };
 
   const getTopNCategories = async (numberOfCategories) => {
@@ -65,83 +74,71 @@ const TopDonations = ({ numberOfPosts, numberOfCategories }) => {
     return rawCategories.docs.slice(0, numberOfCategories).map((doc) => doc.data());
   };
 
-  const getDonationsForTopCategories = async (categories, numberOfPosts) => {
-    let donationsForTopCategories = [];
-    for (let i = 0; i < categories.length; i++) {
-      const rawDonations = await api.donations
-        .getTopNPendingDonations(categories[i].id, numberOfPosts)
-        .catch((err) => console.error(err));
-      donationsForTopCategories = [...donationsForTopCategories, rawDonations.docs.map((doc) => doc.data())];
+  const TopDonationsRow = (topCategoryAndDonations) => {
+    // haven't loaded the data yet
+    if (Object.keys(topCategoryAndDonations).length === 0) {
+      return;
     }
-    return donationsForTopCategories;
-  };
-
-  const mergeCategoriesAndDonations = (categories, donations) => {
-    const merged = [];
-    categories.forEach((category, i) => {
-      merged.push({ category: category, donations: donations[i] });
-    });
-    return merged;
-  };
-
-  const TopDonationCards = () => {
-    const router = useRouter();
-    return topCategoriesAndTheirDonations.map((categoryDonations) => {
-      const categoryHref = `/donations/category/${categoryDonations.id}`;
-      const handleViewAllButton = (event) => {
-        event.preventDefault();
-        router.push(categoryHref);
-      };
-      return (
-        <TopDonationCardsContainer key={categoryDonations.id}>
-          <CategoryHeader>
-            <LeftAnchor>
-              <Text size="normal" weight="bold">
-                {categoryDonations.name}
-              </Text>
-            </LeftAnchor>
-            <RightAnchor>
-              <Button size="small" asComponent={GreySubtleButton} onClick={handleViewAllButton}>
-                <BlackText size="small">View all</BlackText>
-              </Button>
-            </RightAnchor>
-          </CategoryHeader>
-          <CarouselContainer>
-            <Desktop>
-              <CarouselScrollButton direction="left" size="normal" scrollableId={categoryDonations.id} />
-            </Desktop>
-            <DonationsRow id={categoryDonations.id} className="scrollableDonation">
-              <Stack direction="row" align="start" spacing="extraLoose">
-                {categoryDonations.donations.map((donation) => {
-                  const donationPostHref = `/donations/${donation.donationId}`;
-                  return (
-                    <DonationCard
-                      key={donation.donationId}
-                      name={donation.user.userName}
-                      title={donation.title}
-                      description={donation.description}
-                      profileImageUrl={donation.user.profileImageUrl}
-                      postedDateTime={donation.postedDateTime}
-                      coverImageUrl={donation.coverImageUrl}
-                      postHref={donationPostHref}
-                      location="NUS SoC"
-                    ></DonationCard>
-                  );
-                })}
-              </Stack>
-            </DonationsRow>
-            <Desktop>
-              <CarouselScrollButton direction="right" size="normal" scrollableId={categoryDonations.id} />
-            </Desktop>
-          </CarouselContainer>
-        </TopDonationCardsContainer>
-      );
-    });
+    const { category, donations } = topCategoryAndDonations;
+    const categoryHref = `/donations/category/${category.id}`;
+    const handleViewAllButton = (event) => {
+      event.preventDefault();
+      router.push(categoryHref);
+    };
+    return (
+      <TopDonationCardsContainer key={category.id}>
+        <CategoryHeader>
+          <LeftAnchor>
+            <Text size="normal" weight="bold">
+              {category.name}
+            </Text>
+          </LeftAnchor>
+          <RightAnchor>
+            <Button size="small" asComponent={GreySubtleButton} onClick={handleViewAllButton}>
+              <BlackText size="small">View all</BlackText>
+            </Button>
+          </RightAnchor>
+        </CategoryHeader>
+        <CarouselContainer>
+          <Desktop>
+            <CarouselScrollButton direction="left" size="normal" scrollableId={category.id} />
+          </Desktop>
+          <DonationsRow id={category.id} className="scrollableDonation">
+            <Stack direction="row" align="start" spacing="extraLoose">
+              {donations.map((donation) => {
+                const donationPostHref = `/donations/${donation.donationId}`;
+                const locations = donation.locations.map((location) => {
+                  return location.name;
+                });
+                return (
+                  <DonationCard
+                    key={donation.donationId}
+                    name={donation.user.userName}
+                    title={donation.title}
+                    description={donation.description}
+                    profileImageUrl={donation.user.profileImageUrl}
+                    postedDateTime={donation.postedDateTime}
+                    coverImageUrl={donation.coverImageUrl}
+                    postHref={donationPostHref}
+                    location={locations.join(', ')}
+                  ></DonationCard>
+                );
+              })}
+            </Stack>
+          </DonationsRow>
+          <Desktop>
+            <CarouselScrollButton direction="right" size="normal" scrollableId={category.id} />
+          </Desktop>
+        </CarouselContainer>
+      </TopDonationCardsContainer>
+    );
   };
 
   return (
     <Stack direction="column" align="start" spacing="natural">
-      {TopDonationCards()}
+      {TopDonationsRow(firstTopCategoryAndDonations)}
+      {TopDonationsRow(secondTopCategoryAndDonations)}
+      {TopDonationsRow(thirdTopCategoryAndDonations)}
     </Stack>
   );
 };

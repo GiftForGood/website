@@ -1,3 +1,4 @@
+import React from 'react';
 import CardHeader from '../card/CardHeader';
 import { Stack, Text, Grid, Badge } from '@kiwicom/orbit-components/lib';
 import { getTimeDifferenceFromNow } from '../../../utils/api/time';
@@ -76,6 +77,10 @@ const ClickableDiv = styled.a`
   z-index: 1;
 `;
 
+const BadgeWrapper = styled.div`
+  margin-bottom: 8px !important;
+`;
+
 const CardDescription = ({ title, description }) => {
   return (
     <Stack direction="column" spacing="tight">
@@ -89,14 +94,14 @@ const CardDescription = ({ title, description }) => {
   );
 };
 
-const Tags = ({ categoryTags }) => {
+const Tags = ({ categoryTags, wishId }) => {
   return (
-    <Stack row="1fr 1fr 1fr" desktop={{ spacing: 'natural' }} spacing="condensed">
+    <Stack direction="row" wrap={true} spacing="condensed" desktop={{ spacing: 'natural' }}>
       {categoryTags.map((category) => {
         return (
-          <Badge type="neutral" key={category}>
-            {category}
-          </Badge>
+          <BadgeWrapper key={`${wishId}-${category}`}>
+            <Badge type="neutral">{category}</Badge>
+          </BadgeWrapper>
         );
       })}
     </Stack>
@@ -105,6 +110,7 @@ const Tags = ({ categoryTags }) => {
 
 /**
  *
+ * @param {string} wishId is the wish's id
  * @param {string} name is the NPO organization's name
  * @param {string} title is the title of the wish
  * @param {string} description is the description of the wish
@@ -113,13 +119,30 @@ const Tags = ({ categoryTags }) => {
  * @param {string} postHref is the link url to direct users to after clicking the wish card
  * @param {string[]} categoryTags are the category names that the wish is under
  * @param {boolean} isBumped is whether the wish post is bumped
+ * @param {string} categoryId is the category id
+ * @param {string} categoryName is the category name of the wish currently displayed in
  */
-const WishCard = ({ name, title, description, profileImageUrl, postedDateTime, postHref, categoryTags, isBumped }) => {
+const WishCard = ({
+  wishId,
+  name,
+  title,
+  description,
+  profileImageUrl,
+  postedDateTime,
+  postHref,
+  categoryTags,
+  isBumped,
+  categoryId,
+  categoryName,
+}) => {
   const timeAgo = getTimeDifferenceFromNow(postedDateTime);
   const router = useRouter();
   const handleOnClickWishPost = (event) => {
     event.preventDefault();
-    router.push(postHref);
+    router.push({
+      pathname: postHref,
+      query: { categoryId: categoryId, categoryName: categoryName },
+    });
   };
   return (
     <CardContainer>
@@ -131,7 +154,7 @@ const WishCard = ({ name, title, description, profileImageUrl, postedDateTime, p
           <CardDescription title={title} description={description} />
         </CardDescriptionContainer>
         <CardDescriptionFooterContainer>
-          <Tags categoryTags={categoryTags} />
+          <Tags categoryTags={categoryTags} wishId={wishId} />
         </CardDescriptionFooterContainer>
       </Grid>
       <ClickableDiv href={postHref} onClick={handleOnClickWishPost} />
