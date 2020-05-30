@@ -23,12 +23,14 @@ const NpoProfilePage = ({ userId }) => {
   const [isShowPastWishes, setIsShowPastWishes] = useState(true);
   const [isShowReviews, setIsShowReviews] = useState(false);
   const [isMine, setIsMine] = useState(false);
+  const [npo, setNpo] = useState(null);
   const user = useUser();
 
   const fetchUserInfo = () => {
     api.users.getNPO(userId).then((userDoc) => {
       if (userDoc.exists) {
         setIsMine(isMyProfile(userDoc));
+        setNpo(userDoc.data());
       } else {
         setIsMine(false);
       }
@@ -49,7 +51,7 @@ const NpoProfilePage = ({ userId }) => {
   return (
     <Wrapper>
       <Grid desktop={{ columns: '1fr 5fr' }}>
-        <ProfilePanel />
+        <ProfilePanel user={npo} />
         <Stack>
           <ProfileHeaderBar
             isShowPastWishes={isShowPastWishes}

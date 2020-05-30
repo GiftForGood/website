@@ -1,5 +1,5 @@
 import React from 'react';
-import Avatar from '../../imageContainers/Avatar';
+import ProfileAvatar from '../../imageContainers/ProfileAvatar';
 import RatingStars from '../../ratingStars';
 import { Stack, Text } from '@kiwicom/orbit-components/lib';
 import { npo } from '../../../../utils/constants/userType';
@@ -9,8 +9,8 @@ const ProfileDetails = ({ profileImageUrl, npoOrgName, userRating, npoOrgAddress
   const isNpo = userType === npo;
   return (
     <Stack direction="column" justify="center">
-      <Avatar size="120px" imageUrl={profileImageUrl} />
-      <Stack direction="column" spacing="tight" justif="start">
+      <ProfileAvatar imageUrl={profileImageUrl} height={120} width={120} />
+      <Stack direction="column" spacing="tight" justify="start">
         <Text weight="bold">{npoOrgName}</Text>
         <RatingStars rating={userRating} size="small" color={colors.ratingStarBackground} showEmpty />
         {isNpo && <Text>{npoOrgAddress}</Text>}
