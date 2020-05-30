@@ -51,7 +51,7 @@ const Wish = ({ wishId, wishDetails, npoDetails, user, prevHref, categoryName })
     <SessionProvider user={user}>
       <Head>
         {/* meta property for sharing purposes */}
-        <meta property="og:url" content={'https://www.giftforgood.io/wishes/' + wishDetails.wishesId} />
+        <meta property="og:url" content={'https://www.giftforgood.io/wishes/' + wishId} />
         <meta property="og:type" content="website" />
         <meta property="og:title" content="GiftForGood" />
         <meta property="og:description" content="Check out this wish from GiftForGood!" />
