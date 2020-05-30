@@ -24,15 +24,6 @@ class UsersAPI {
    */
   async updateNPO(name, contact, profileImage = null) {
     // Important: This function will trigger the cloud function to update all the relevant collection's documents that contain the NPO info
-    /*
-      Table to update: 
-        npos
-        wishes
-        donations - completed
-        reviews - for post type of wishes
-        chat - chat document & all sub collection
-    */
-
     const userId = await this._getCurrentUserId();
     let data = {
       name: name,
