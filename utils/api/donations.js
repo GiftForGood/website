@@ -285,7 +285,7 @@ class DonationsAPI {
    * @param {number} validPeriodFromYear The valid date that the donation is valid from (year)
    * @param {number} validPeriodToDay The valid date that the donation is valid to (day)
    * @param {number} validPeriodToMonth The valid date that the donation is valid to (month)
-   * @param {number} validPeriodToYear The valid date that the donation is valid to (yes)
+   * @param {number} validPeriodToYear The valid date that the donation is valid to (year)
    * @param {string} dimensions The dimension text of the donated item
    * @param {array} locations A list of location text of the donation
    * @param {string} itemCondition The condition of the donated item
