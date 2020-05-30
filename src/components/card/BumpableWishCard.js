@@ -105,7 +105,7 @@ const CardDescription = ({ title, description }) => {
  * @param {string} postHref is the link url to direct users to after clicking the wish card
  * @param {string[]} categoryTags are the category names that the wish is under
  * @param {boolean} isBumped is whether the wish post is bumped
- * @param {string} expireDateTime is the expire date time of the post 
+ * @param {string} expireDateTime is the expire date time of the post
  * @param {function} bumpCallback is to update the caller past wishes
  * @param {boolean} isMine is to know if the card belongs to the user
  */
@@ -121,7 +121,7 @@ const WishCard = ({
   isBumped,
   expireDateTime,
   bumpCallback,
-  isMine
+  isMine,
 }) => {
   const [openBumpModal, setOpenBumpModal] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -169,10 +169,11 @@ const WishCard = ({
             <CardDescription title={title} description={description} />
           </CardDescriptionContainer>
           <CardDescriptionFooterContainer>
-            {isMine ? <Button fullWidth disabled={isBumped} onClick={onBumpCardClick}>
-              Bump
-            </Button> : null }
-            
+            {isMine ? (
+              <Button fullWidth disabled={isBumped} onClick={onBumpCardClick}>
+                Bump
+              </Button>
+            ) : null}
           </CardDescriptionFooterContainer>
         </Grid>
         <ClickableDiv href={postHref} onClick={handleOnClickWishPost} />

@@ -61,10 +61,10 @@ const PastWishesPanel = ({ isMine, userId }) => {
   };
 
   const bumpCallback = (index, updatedWish) => {
-    let updatedPastWishes = [...pastWishes]
-    updatedPastWishes[index] = updatedWish
-    setPastWishes(updatedPastWishes)
-  }
+    let updatedPastWishes = [...pastWishes];
+    updatedPastWishes[index] = updatedWish;
+    setPastWishes(updatedPastWishes);
+  };
 
   const SeeMoreButton = () => {
     return (

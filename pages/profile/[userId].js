@@ -13,7 +13,7 @@ export async function getServerSideProps({ params, req, res, query }) {
   return {
     props: {
       user,
-      userId
+      userId,
     },
   };
 }

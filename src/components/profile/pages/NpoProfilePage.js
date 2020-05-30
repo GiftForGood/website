@@ -28,7 +28,7 @@ const NpoProfilePage = ({ userId }) => {
     // TODO: Check if the profile belongs to me.
     setNpo(null);
     setIsMine(true);
-  }, [])
+  }, []);
 
   return (
     <Wrapper>
