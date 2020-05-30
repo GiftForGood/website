@@ -153,7 +153,7 @@ class ReviewsAPI {
 
   async _getWishInfo(id) {
     const snapshot = await db.collection('wishes').doc(id).get();
-  
+
     if (!snapshot.exists) {
       throw new ReviewError('invalid-wish-id', 'wish does not exist');
     }
@@ -173,7 +173,7 @@ class ReviewsAPI {
 
   _validateRating(rating) {
     if (rating < 1 || rating > 5) {
-      throw new ReviewError('invalid-rating', 'rating only can be between 1 to 5')
+      throw new ReviewError('invalid-rating', 'rating only can be between 1 to 5');
     }
   }
 }
