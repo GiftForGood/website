@@ -95,6 +95,7 @@ const CardDescription = ({ title, description }) => {
 
 /**
  *
+ * @param {number} index is the index of the card in the array
  * @param {string} wishId is the wish's id
  * @param {string} name is the NPO organization's name
  * @param {string} title is the title of the wish
@@ -106,8 +107,10 @@ const CardDescription = ({ title, description }) => {
  * @param {boolean} isBumped is whether the wish post is bumped
  * @param {string} expireDateTime is the expire date time of the post 
  * @param {function} bumpCallback is to update the caller past wishes
+ * @param {boolean} isMine is to know if the card belongs to the user
  */
 const WishCard = ({
+  index,
   wishId,
   name,
   title,
@@ -118,6 +121,7 @@ const WishCard = ({
   isBumped,
   expireDateTime,
   bumpCallback,
+  isMine
 }) => {
   const [openBumpModal, setOpenBumpModal] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -142,9 +146,9 @@ const WishCard = ({
     setLoading(true);
     api.wishes
       .bumpWish(wishId)
-      .then(() => {
+      .then((updatedWish) => {
         setOpenBumpModal(false);
-        bumpCallback();
+        bumpCallback(index, updatedWish);
       })
       .catch((error) => {
         setOpenBumpModal(false);
@@ -165,9 +169,10 @@ const WishCard = ({
             <CardDescription title={title} description={description} />
           </CardDescriptionContainer>
           <CardDescriptionFooterContainer>
-            <Button fullWidth disabled={isBumped} onClick={onBumpCardClick}>
+            {isMine ? <Button fullWidth disabled={isBumped} onClick={onBumpCardClick}>
               Bump
-            </Button>
+            </Button> : null }
+            
           </CardDescriptionFooterContainer>
         </Grid>
         <ClickableDiv href={postHref} onClick={handleOnClickWishPost} />

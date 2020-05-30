@@ -4,6 +4,9 @@ import BumpableWishCard from '../../card/BumpableWishCard';
 import { Grid, Button, Loading, Stack } from '@kiwicom/orbit-components/lib';
 import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
+import SeeMoreButtonStyle from '../../buttons/SeeMoreButton';
+import BlackText from '../../text/BlackText';
+import { WISHES_BATCH_SIZE } from '../../../../utils/api/constants';
 
 const GridSectionContainer = styled.div`
   margin-top: 20px;
@@ -18,19 +21,62 @@ const WishesContainer = styled.div`
   `)}
 `;
 
+const ButtonContainer = styled.div`
+  width: 100%;
+  text-align: center;
+  margin-top: 20px;
+`;
+
 const PastWishesPanel = ({ isMine, userId }) => {
   const [pastWishes, setPastWishes] = useState([]);
+  const [shouldSeeMore, setShouldSeeMore] = useState(true);
+  const [seeMoreIsLoading, setSeeMoreIsLoading] = useState(false);
 
-  const fetchPastWishes = () => {
-    api.wishes.getNPOWishes(userId).then((wishesDoc) => {
-      let wishes = wishesDoc.docs.map((wishDoc) => wishDoc.data());
-      setPastWishes(wishes);
+  const fetchPastWishes = (lastQueriedDocument) => {
+    api.wishes.getNPOWishes(userId, lastQueriedDocument).then((wishesDoc) => {
+      const numberOfDocumentsReturned = wishesDoc.docs.length;
+      if (numberOfDocumentsReturned < WISHES_BATCH_SIZE) {
+        // loaded all documents already, since the number of wishes returned is less than batch size
+        setShouldSeeMore(false);
+      }
+      setPastWishes([...pastWishes, ...wishesDoc.docs]);
+      setSeeMoreIsLoading(false);
     });
   };
 
   useEffect(() => {
-    fetchPastWishes();
+    fetchPastWishes(null);
   }, []);
+
+  const getLastQueriedDocument = () => {
+    if (pastWishes.length === 0) {
+      return null;
+    }
+    return pastWishes[pastWishes.length - 1];
+  };
+
+  const onSeeMoreClicked = () => {
+    setSeeMoreIsLoading(true);
+    fetchPastWishes(getLastQueriedDocument());
+  };
+
+  const bumpCallback = (index, updatedWish) => {
+    let updatedPastWishes = [...pastWishes]
+    updatedPastWishes[index] = updatedWish
+    setPastWishes(updatedPastWishes)
+  }
+
+  const SeeMoreButton = () => {
+    return (
+      <ButtonContainer>
+        <Button asComponent={SeeMoreButtonStyle} loading={seeMoreIsLoading} onClick={onSeeMoreClicked}>
+          <BlackText style={{ padding: '5px' }} size="medium">
+            See more
+          </BlackText>
+        </Button>
+      </ButtonContainer>
+    );
+  };
 
   const GridWishes = () => {
     if (pastWishes.length === 0) {
@@ -42,33 +88,39 @@ const PastWishesPanel = ({ isMine, userId }) => {
     }
 
     return (
-      <Grid
-        inline={true}
-        largeDesktop={{
-          columns: '1fr 1fr 1fr',
-        }}
-        largeMobile={{
-          columns: '1fr 1fr',
-        }}
-        rows="auto"
-        gap="20px"
-      >
-        {pastWishes.map((pastWish) => (
-          <BumpableWishCard
-            key={pastWish.wishId}
-            wishId={pastWish.wishId}
-            name={pastWish.organization.name}
-            title={pastWish.title}
-            description={pastWish.description}
-            profileImageUrl={pastWish.user.profileImageUrl}
-            postedDateTime={pastWish.postedDateTime}
-            postHref={`/wishes/${pastWish.wishId}`}
-            isBumped={pastWish.isBumped}
-            expireDateTime={pastWish.expireDateTime}
-            bumpCallback={fetchPastWishes}
-          />
-        ))}
-      </Grid>
+      <>
+        <Grid
+          inline={true}
+          largeDesktop={{
+            columns: '1fr 1fr 1fr',
+          }}
+          largeMobile={{
+            columns: '1fr 1fr',
+          }}
+          rows="auto"
+          gap="20px"
+        >
+          {pastWishes.map((pastWish, index) => (
+            <BumpableWishCard
+              index={index}
+              key={pastWish.data().wishId}
+              wishId={pastWish.data().wishId}
+              name={pastWish.data().organization.name}
+              title={pastWish.data().title}
+              description={pastWish.data().description}
+              profileImageUrl={pastWish.data().user.profileImageUrl}
+              postedDateTime={pastWish.data().postedDateTime}
+              postHref={`/wishes/${pastWish.data().wishId}`}
+              isBumped={pastWish.data().isBumped}
+              expireDateTime={pastWish.data().expireDateTime}
+              bumpCallback={bumpCallback}
+              isMine={isMine}
+            />
+          ))}
+        </Grid>
+
+        {shouldSeeMore ? <SeeMoreButton /> : null}
+      </>
     );
   };
 
