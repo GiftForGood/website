@@ -55,7 +55,9 @@ const Wish = ({ wishId, wishDetails, npoDetails, user, prevHref, categoryName })
         <meta property="og:type" content="website" />
         <meta property="og:title" content="GiftForGood" />
         <meta property="og:description" content="Check out this wish from GiftForGood!" />
-        <meta property="og:image:secure" content={companyLogoImagePngPath} />
+        <meta property="og:image" content={companyLogoImagePngPath} />
+        <meta property="og:image:secure_url" content={companyLogoImagePngPath} />
+        <meta property="og:image:type" content="image/png" />
       </Head>
       <TopNavigationBar />
       <WishPage

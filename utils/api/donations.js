@@ -22,7 +22,7 @@ class DonationsAPI {
    * @param {number} validPeriodFromYear The valid date that the donation is valid from (year)
    * @param {number} validPeriodToDay The valid date that the donation is valid to (day)
    * @param {number} validPeriodToMonth The valid date that the donation is valid to (month)
-   * @param {number} validPeriodToYear The valid date that the donation is valid to (yes)
+   * @param {number} validPeriodToYear The valid date that the donation is valid to (year)
    * @param {string} dimensions The dimension text of the donated item
    * @param {array} locations A list of location text of the donation
    * @param {string} itemCondition The condition of the donated item
@@ -53,7 +53,7 @@ class DonationsAPI {
     // Input validation
     this._validateDate(validPeriodFromDay, validPeriodFromMonth, validPeriodFromYear);
     this._validateDate(validPeriodToDay, validPeriodToMonth, validPeriodToYear);
-    this._validateDateRanges(
+    this._validateDateRange(
       validPeriodFromDay,
       validPeriodFromMonth,
       validPeriodFromYear,
@@ -285,7 +285,7 @@ class DonationsAPI {
    * @param {number} validPeriodFromYear The valid date that the donation is valid from (year)
    * @param {number} validPeriodToDay The valid date that the donation is valid to (day)
    * @param {number} validPeriodToMonth The valid date that the donation is valid to (month)
-   * @param {number} validPeriodToYear The valid date that the donation is valid to (yes)
+   * @param {number} validPeriodToYear The valid date that the donation is valid to (year)
    * @param {string} dimensions The dimension text of the donated item
    * @param {array} locations A list of location text of the donation
    * @param {string} itemCondition The condition of the donated item
@@ -319,7 +319,7 @@ class DonationsAPI {
   ) {
     this._validateDate(validPeriodFromDay, validPeriodFromMonth, validPeriodFromYear);
     this._validateDate(validPeriodToDay, validPeriodToMonth, validPeriodToYear);
-    this._validateDateRanges(
+    this._validateDateRange(
       validPeriodFromDay,
       validPeriodFromMonth,
       validPeriodFromYear,
@@ -718,7 +718,7 @@ class DonationsAPI {
     }
   }
 
-  _validateDateRanges(fromDay, fromMonth, fromYear, toDay, toMonth, toYear) {
+  _validateDateRange(fromDay, fromMonth, fromYear, toDay, toMonth, toYear) {
     const fromDate = `${fromDay}-${fromMonth}-${fromYear}`;
     const toDate = `${toDay}-${toMonth}-${toYear}`;
 
@@ -738,14 +738,14 @@ class DonationsAPI {
   }
 
   _validateImageExtensions(images) {
-    const validExtensions = ['.jpg', 'jpeg', 'png'];
+    const validExtensions = ['.jpg', '.jpeg', '.png'];
 
     for (const image of images) {
       if (image == null) {
         throw new DonationError('invalid-image', 'provided image is null');
       }
 
-      const imageExt = path.extname(image.name);
+      const imageExt = path.extname(image.name).toLowerCase();
       if (!validExtensions.includes(imageExt)) {
         throw new DonationError(
           'invalid-image-extension',
