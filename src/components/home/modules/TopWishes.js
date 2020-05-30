@@ -114,6 +114,8 @@ const TopWishes = ({ numberOfPosts, numberOfCategories }) => {
               imageUrl={wish.user.profileImageUrl}
               postedDateTime={wish.postedDateTime}
               postHref={wishPostHref}
+              categoryId={category.id}
+              categoryName={category.name}
             />
           );
         })}

@@ -64,7 +64,7 @@ const PostDetailsHeader = ({
     if (navigator.share) {
       navigator
         .share({
-          text: `Check out this ${postType === wishes ? 'wish' : 'donation'} from GiftForGood! \n${postUrl}`,
+          text: postUrl,
         })
         .then(() => console.log('Successful share'))
         .catch((error) => console.log('Error sharing', error));
