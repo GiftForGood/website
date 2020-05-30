@@ -21,7 +21,7 @@ const Map = ({ lat, lng, npoOrgName, npoOrgAddress }) => {
         center: npoLocation,
       });
 
-      const contentString = `<h2>${npoOrgName}</h2><p style="padding: 0px 20px 20px 0px;">${npoOrgAddress}<b></p>`;
+      const contentString = `<h2 style="padding: 10px 20px 0px 20px;">${npoOrgName}</h2><p style="padding: 0px 20px 20px 20px;">${npoOrgAddress}<b></p>`;
 
       const infowindow = new google.maps.InfoWindow({
         content: contentString,
