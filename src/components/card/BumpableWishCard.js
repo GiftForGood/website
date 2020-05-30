@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import CardHeader from '../card/CardHeader';
-import { Stack, Text, Grid, Modal, ModalSection, ModalHeader, ModalFooter } from '@kiwicom/orbit-components/lib';
+import { Stack, Text, Grid, Modal, ModalSection, ModalHeader, ModalFooter, Badge } from '@kiwicom/orbit-components/lib';
 import { getTimeDifferenceFromNow } from '../../../utils/api/time';
 import styled, { css } from 'styled-components';
 import { useRouter } from 'next/router';
@@ -74,10 +74,14 @@ const CardDescriptionFooterContainer = styled.div`
 const ClickableDiv = styled.a`
   position: absolute;
   width: 100%;
-  height: 82%;
+  height: ${props => props.isMine ? "82" : "100"}%;
   top: 0;
   left: 0;
   z-index: 1;
+`;
+
+const BadgeWrapper = styled.div`
+  margin-bottom: 8px !important;
 `;
 
 const CardDescription = ({ title, description }) => {
@@ -89,6 +93,20 @@ const CardDescription = ({ title, description }) => {
         </Text>
       </ThreeLineTextContainer>
       <EightLineTextContainer>{description}</EightLineTextContainer>
+    </Stack>
+  );
+};
+
+const Tags = ({ categoryTags, wishId }) => {
+  return (
+    <Stack direction="row" wrap={true} spacing="condensed" desktop={{ spacing: 'natural' }}>
+      {categoryTags.map((category) => {
+        return (
+          <BadgeWrapper key={`${wishId}-${category}`}>
+            <Badge type="neutral">{category}</Badge>
+          </BadgeWrapper>
+        );
+      })}
     </Stack>
   );
 };
@@ -118,6 +136,7 @@ const WishCard = ({
   profileImageUrl,
   postedDateTime,
   postHref,
+  categoryTags = [],
   isBumped,
   expireDateTime,
   bumpCallback,
@@ -173,10 +192,12 @@ const WishCard = ({
               <Button fullWidth disabled={isBumped} onClick={onBumpCardClick}>
                 Bump
               </Button>
-            ) : null}
+            ) : (
+              <Tags categoryTags={categoryTags} wishId={wishId} />
+            )}
           </CardDescriptionFooterContainer>
         </Grid>
-        <ClickableDiv href={postHref} onClick={handleOnClickWishPost} />
+        <ClickableDiv href={postHref} onClick={handleOnClickWishPost} isMine={isMine}/>
       </CardContainer>
 
       {openBumpModal ? (

@@ -100,23 +100,27 @@ const PastWishesPanel = ({ isMine, userId }) => {
           rows="auto"
           gap="20px"
         >
-          {pastWishes.map((pastWish, index) => (
-            <BumpableWishCard
-              index={index}
-              key={pastWish.data().wishId}
-              wishId={pastWish.data().wishId}
-              name={pastWish.data().organization.name}
-              title={pastWish.data().title}
-              description={pastWish.data().description}
-              profileImageUrl={pastWish.data().user.profileImageUrl}
-              postedDateTime={pastWish.data().postedDateTime}
-              postHref={`/wishes/${pastWish.data().wishId}`}
-              isBumped={pastWish.data().isBumped}
-              expireDateTime={pastWish.data().expireDateTime}
-              bumpCallback={bumpCallback}
-              isMine={isMine}
-            />
-          ))}
+          {pastWishes.map((pastWish, index) => {
+            const categoryTags = pastWish.data().categories.map((category) => category.name);
+            return (
+              <BumpableWishCard
+                index={index}
+                key={pastWish.data().wishId}
+                wishId={pastWish.data().wishId}
+                name={pastWish.data().organization.name}
+                title={pastWish.data().title}
+                description={pastWish.data().description}
+                profileImageUrl={pastWish.data().user.profileImageUrl}
+                postedDateTime={pastWish.data().postedDateTime}
+                postHref={`/wishes/${pastWish.data().wishId}`}
+                categoryTags={categoryTags}
+                isBumped={pastWish.data().isBumped}
+                expireDateTime={pastWish.data().expireDateTime}
+                bumpCallback={bumpCallback}
+                isMine={isMine}
+              />
+            );
+          })}
         </Grid>
 
         {shouldSeeMore ? <SeeMoreButton /> : null}
