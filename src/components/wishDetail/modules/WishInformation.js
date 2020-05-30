@@ -12,6 +12,10 @@ const WishInformationBodyContainer = styled.div`
   `)};
 `;
 
+const BadgeWrapper = styled.div`
+  margin-bottom: 8px !important;
+`;
+
 const WishInformation = ({
   loginUserId,
   wishUserId,
@@ -26,7 +30,11 @@ const WishInformation = ({
 }) => {
   const CategoryTags = () => {
     return categoryTags.map((category) => {
-      return <Badge key={category}>{category}</Badge>;
+      return (
+        <BadgeWrapper key={category}>
+          <Badge>{category}</Badge>
+        </BadgeWrapper>
+      );
     });
   };
 
@@ -38,7 +46,7 @@ const WishInformation = ({
             <Heading type="title2">{title}</Heading>
             <Text>{description}</Text>
           </Stack>
-          <Stack direction="row">
+          <Stack direction="row" wrap="true">
             <CategoryTags />
           </Stack>
         </Stack>

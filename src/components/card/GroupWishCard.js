@@ -65,12 +65,17 @@ const CardContent = ({ name, imageUrl, title, description, postedDateTime }) => 
  * @param {string} imageUrl is the url to the avatar image of the NPO user
  * @param {string} postedDateTime is the time posted for wish in milliseconds
  * @param {string} postHref is the link url to direct users to after clicking the wish card
+ * @param {string} categoryId is the category id
+ * @param {string} categoryName is the category name of the wish currently displayed in
  */
-const GroupWishCard = ({ name, title, description, imageUrl, postedDateTime, postHref }) => {
+const GroupWishCard = ({ name, title, description, imageUrl, postedDateTime, postHref, categoryId, categoryName }) => {
   const router = useRouter();
   const handleOnClickWishPost = (event) => {
     event.preventDefault();
-    router.push(postHref);
+    router.push({
+      pathname: postHref,
+      query: { categoryId: categoryId, categoryName: categoryName },
+    });
   };
   return (
     <CardSection
