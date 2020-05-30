@@ -119,6 +119,8 @@ const Tags = ({ categoryTags, wishId }) => {
  * @param {string} postHref is the link url to direct users to after clicking the wish card
  * @param {string[]} categoryTags are the category names that the wish is under
  * @param {boolean} isBumped is whether the wish post is bumped
+ * @param {string} categoryId is the category id
+ * @param {string} categoryName is the category name of the wish currently displayed in
  */
 const WishCard = ({
   wishId,
@@ -130,12 +132,17 @@ const WishCard = ({
   postHref,
   categoryTags,
   isBumped,
+  categoryId,
+  categoryName,
 }) => {
   const timeAgo = getTimeDifferenceFromNow(postedDateTime);
   const router = useRouter();
   const handleOnClickWishPost = (event) => {
     event.preventDefault();
-    router.push(postHref);
+    router.push({
+      pathname: postHref,
+      query: { categoryId: categoryId, categoryName: categoryName },
+    });
   };
   return (
     <CardContainer>

@@ -115,6 +115,7 @@ const ViewAllWishesPage = ({ filterQuery }) => {
           postHref={postHref}
           categoryTags={categoryTags}
           isBumped={isBumped}
+          categoryName="All wishes"
         />
       );
     });
