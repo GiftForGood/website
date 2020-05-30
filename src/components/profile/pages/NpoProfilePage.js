@@ -3,6 +3,8 @@ import { Stack, Text } from '@kiwicom/orbit-components/lib';
 import Grid from '@kiwicom/orbit-components/lib/utils/Grid';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import styled, { css } from 'styled-components';
+import api from '../../../../utils/api';
+import useUser from '../../session/modules/useUser';
 
 import ProfileHeaderBar from '../modules/ProfileHeaderBar';
 import ReviewPanel from '../modules/ReviewPanel';
@@ -20,14 +22,28 @@ const Wrapper = styled.div`
 const NpoProfilePage = ({ userId }) => {
   const [isShowPastWishes, setIsShowPastWishes] = useState(true);
   const [isShowReviews, setIsShowReviews] = useState(false);
-  const [npo, setNpo] = useState(null);
   const [isMine, setIsMine] = useState(false);
+  const user = useUser();
+
+  const fetchUserInfo = () => {
+    api.users.getNPO(userId).then((userDoc) => {
+      if (userDoc.exists) {
+        setIsMine(isMyProfile(userDoc));
+      } else {
+        setIsMine(false);
+      }
+    });
+  };
+
+  const isMyProfile = (userDoc) => {
+    if (user) {
+      return userDoc.data().userId === user.userId;
+    }
+    return false;
+  };
 
   useEffect(() => {
-    // TODO: Check if the userId exists.
-    // TODO: Check if the profile belongs to me.
-    setNpo(null);
-    setIsMine(true);
+    fetchUserInfo();
   }, []);
 
   return (
