@@ -6,7 +6,7 @@ import SessionProvider from '../../src/components/session/modules/SessionProvide
 import Head from 'next/head';
 import { isAuthenticated } from '../../utils/authentication/authentication';
 import Error from 'next/error';
-import { companyLogoImagePath } from '../../utils/constants/imagePaths';
+import { companyLogoImagePngPath } from '../../utils/constants/imagePaths';
 const TopNavigationBar = dynamic(() => import('../../src/components/navbar/modules/TopNavigationBar'), {
   ssr: false,
 });
@@ -55,7 +55,7 @@ const Wish = ({ wishId, wishDetails, npoDetails, user, prevHref, categoryName })
         <meta property="og:type" content="website" />
         <meta property="og:title" content="GiftForGood" />
         <meta property="og:description" content="Check out this wish from GiftForGood!" />
-        <meta property="og:image:secure" content={companyLogoImagePath} />
+        <meta property="og:image:secure" content={companyLogoImagePngPath} />
       </Head>
       <TopNavigationBar />
       <WishPage
