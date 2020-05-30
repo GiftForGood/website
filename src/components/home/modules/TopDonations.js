@@ -120,7 +120,7 @@ const TopDonations = ({ numberOfPosts, numberOfCategories }) => {
                     postedDateTime={donation.postedDateTime}
                     coverImageUrl={donation.coverImageUrl}
                     postHref={donationPostHref}
-                    location={locations.join(', ')}
+                    locations={locations.join(', ')}
                   ></DonationCard>
                 );
               })}
