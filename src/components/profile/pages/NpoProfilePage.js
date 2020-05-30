@@ -18,8 +18,8 @@ const Wrapper = styled.div`
 `;
 
 const NpoProfilePage = ({ userId }) => {
-  const [isShowPastWishes, setIsShowPastWishes] = useState(false);
-  const [isShowReviews, setIsShowReviews] = useState(true);
+  const [isShowPastWishes, setIsShowPastWishes] = useState(true);
+  const [isShowReviews, setIsShowReviews] = useState(false);
   const [npo, setNpo] = useState(null);
   const [isMine, setIsMine] = useState(false);
 
@@ -43,7 +43,7 @@ const NpoProfilePage = ({ userId }) => {
             isMine={isMine}
           />
           {isShowReviews && <ReviewPanel />}
-          {isShowPastWishes && <PastWishesPanel isMine={isMine}/>}
+          {isShowPastWishes && <PastWishesPanel isMine={isMine} userId={userId} />}
         </Stack>
       </Grid>
     </Wrapper>
