@@ -20,6 +20,7 @@ const ProfilePanel = ({ user }) => {
         userRating={user ? user.reviewRating : ''}
         npoOrgAddress={user ? (user.organization ? user.organization.address : '') : ''}
         npoContact={user ? (user.organization ? user.organization.contact : '') : ''}
+        name={user ? user.name : ''}
         userType={npo}
       />
     </ProfilePanelWrapper>
