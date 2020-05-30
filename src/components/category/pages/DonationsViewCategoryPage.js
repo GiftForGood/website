@@ -52,7 +52,7 @@ const ViewCategoryPage = ({ categoryDetails, filterQuery }) => {
   const category = categoryDetails;
   const [filter, setFilter] = useState(filterQuery ? filterQuery : DonationsSortTypeConstant.TIMESTAMP); // set filter based on the filter obtained from url query
   const [allDonations, setAllDonations] = useState([]); // note that the donations are in terms of documents, use data() to get data within
-  const [hasAllLoaded, setHasAllLoaded] = useState(false);
+  const [shouldSeeMore, setShouldSeeMore] = useState(true);
   const [isButtonLoading, setIsButtonLoading] = useState(false);
   const [isPageLoading, setIsPageLoading] = useState(false);
   const [isDataMounted, setIsDataMounted] = useState(false); // to keep track when data is mounted on the page
@@ -67,9 +67,14 @@ const ViewCategoryPage = ({ categoryDetails, filterQuery }) => {
       // only set page loading to true when filter is modified
       setAllDonations([]);
       setIsPageLoading(true);
-      setHasAllLoaded(false);
+      setShouldSeeMore(true);
     }
     getNextBatchOfDonations(category.id, filter, null).then((newDonations) => {
+      const numberOfDocumentsReturned = newDonations.length;
+      if (numberOfDocumentsReturned < DONATIONS_BATCH_SIZE) {
+        // loaded all documents already, since the number of donations returned is less than batch size
+        setShouldSeeMore(false);
+      }
       setAllDonations(newDonations);
       setIsPageLoading(false);
       setIsDataMounted(true); // to show see more button & no donation message after page is mounted
@@ -83,24 +88,13 @@ const ViewCategoryPage = ({ categoryDetails, filterQuery }) => {
     return allDonations[allDonations.length - 1];
   };
 
-  /**
-   * Note that this function returns DONATIONS_BATCH_SIZE - 1 amount of documents,
-   * instead of DONATIONS_BATCH_SIZE, as the last document is to check whether we
-   * have loaded all donations.
-   */
   const getNextBatchOfDonations = async (categoryId, filter, lastQueriedDocument) => {
     // only time stamp should be reversed as it is from newest to oldest
     const isReverse = filter === DonationsSortTypeConstant.TIMESTAMP ? true : false;
     const rawDonations = await api.donations
       .getPendingDonationsForCategory(categoryId, filter, isReverse, lastQueriedDocument)
       .catch((err) => console.error(err));
-    const numberOfDocumentsReturned = rawDonations.docs.length;
-    if (numberOfDocumentsReturned < DONATIONS_BATCH_SIZE) {
-      // loaded all documents already, since the number of donation returned is less than batch size
-      setHasAllLoaded(true);
-      return rawDonations.docs;
-    }
-    return rawDonations.docs.slice(0, DONATIONS_BATCH_SIZE - 1);
+    return rawDonations.docs;
   };
 
   const displayAllDonations = () => {
@@ -141,7 +135,12 @@ const ViewCategoryPage = ({ categoryDetails, filterQuery }) => {
   const handleOnClickSeeMore = () => {
     setIsButtonLoading(true);
     getNextBatchOfDonations(category.id, filter, getLastQueriedDocument()).then((newDonations) => {
-      if (newDonations.length > 0) {
+      const numberOfDocumentsReturned = newDonations.length;
+      if (numberOfDocumentsReturned < DONATIONS_BATCH_SIZE) {
+        // loaded all documents already, since the number of donations returned is less than batch size
+        setShouldSeeMore(false);
+      }
+      if (numberOfDocumentsReturned > 0) {
         setAllDonations(allDonations.concat(newDonations));
       }
       setIsButtonLoading(false);
@@ -170,7 +169,7 @@ const ViewCategoryPage = ({ categoryDetails, filterQuery }) => {
           </PageLoadingContainer>
         )}
         <br />
-        {!hasAllLoaded && isDataMounted && (
+        {shouldSeeMore && isDataMounted && (
           <ButtonContainer>
             <Button asComponent={SeeMoreButton} onClick={handleOnClickSeeMore} loading={isButtonLoading}>
               <BlackText style={{ padding: '5px' }} size="medium">
@@ -188,7 +187,7 @@ const ViewCategoryPage = ({ categoryDetails, filterQuery }) => {
       <InfiniteScroll
         pageStart={0}
         loadMore={handleOnClickSeeMore}
-        hasMore={!hasAllLoaded}
+        hasMore={shouldSeeMore}
         loader={<Loading type="pageLoader" key={0} />}
       >
         <Grid
