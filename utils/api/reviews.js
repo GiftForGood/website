@@ -1,5 +1,6 @@
 import { db } from '../firebase';
 import { REVIEWS_BATCH_SIZE } from './constants';
+import { wishes, donations } from '../../utils/constants/postType';
 import ReviewError from './error/reviewError';
 
 const reviewsCollection = db.collection('reviews');
@@ -57,7 +58,7 @@ class ReviewsAPI {
 
     const post = {
       postId: wishId,
-      postType: 'wishes',
+      postType: wishes,
     };
 
     const reviewBy = {
@@ -112,7 +113,7 @@ class ReviewsAPI {
 
     const post = {
       postId: donationId,
-      postType: 'donations',
+      postType: donations,
     };
 
     const reviewBy = {
