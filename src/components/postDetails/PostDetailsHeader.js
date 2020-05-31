@@ -8,7 +8,6 @@ import Verified from '../session/modules/Verified';
 import { AlertCircle, Edit, CloseCircle, MenuKebab, ShareAndroid } from '@kiwicom/orbit-components/lib/icons';
 import { Button, Stack, Text, Popover, ButtonLink } from '@kiwicom/orbit-components/lib';
 import { useRouter } from 'next/router';
-import { wishes } from '../../../utils/constants/postType';
 
 const PostDetailsHeader = ({
   loginUserId,
@@ -23,7 +22,7 @@ const PostDetailsHeader = ({
   const router = useRouter();
   const isOwnPost = loginUserId === postUserId; // whether login user is the post owner
   const chatType = isOwnPost ? 'View Chats' : 'Chat';
-  const postUrl = `https://www.giftforgood.io/${postType}/${postId}`;
+  const postUrl = `https://www.giftforgood.io${router.asPath}`;
 
   const [isClosedPost, setIsClosedPost] = useState(postStatus === 'closed');
   const [showReportPostModal, setShowPostPostModal] = useState(false);
