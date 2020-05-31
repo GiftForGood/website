@@ -6,7 +6,8 @@ import SessionProvider from '../../src/components/session/modules/SessionProvide
 import Head from 'next/head';
 import { isAuthenticated } from '../../utils/authentication/authentication';
 import Error from 'next/error';
-import { companyLogoImagePngPath } from '../../utils/constants/imagePaths';
+import { ogImagePath } from '../../utils/constants/imagePaths';
+import { useRouter } from 'next/router';
 const TopNavigationBar = dynamic(() => import('../../src/components/navbar/modules/TopNavigationBar'), {
   ssr: false,
 });
@@ -15,12 +16,11 @@ export async function getServerSideProps({ params, req, res, query }) {
   const wishId = params.wishId;
   const prevHref = query.categoryId ? `/wishes/category/${query.categoryId}` : `/wishes/category`;
   const categoryName = query.categoryName ? query.categoryName : 'All wishes';
-  const wishDetails = await getWishDetails(wishId);
   let npoDetails = {}; // TODO remove & uncomment bottom when getNPO API is up
+  const [wishDetails, user] = await Promise.all([getWishDetails(wishId), isAuthenticated(req, res)]);
   if (Object.keys(wishDetails).length !== 0) {
     // npoDetails = await getNpoDetails(wishDetails.user.userId);
   }
-  let user = await isAuthenticated(req, res);
   return {
     props: {
       wishId,
@@ -44,6 +44,7 @@ const getNpoDetails = async (npoId) => {
 };
 
 const Wish = ({ wishId, wishDetails, npoDetails, user, prevHref, categoryName }) => {
+  const router = useRouter();
   if (Object.keys(wishDetails).length === 0) {
     return <Error statusCode={404} />;
   }
@@ -51,11 +52,13 @@ const Wish = ({ wishId, wishDetails, npoDetails, user, prevHref, categoryName })
     <SessionProvider user={user}>
       <Head>
         {/* meta property for sharing purposes */}
-        <meta property="og:url" content={'https://www.giftforgood.io/wishes/' + wishId} />
+        <meta property="og:url" content={`https://www.giftforgood.io${router.asPath}`} />
         <meta property="og:type" content="website" />
         <meta property="og:title" content="GiftForGood" />
         <meta property="og:description" content="Check out this wish from GiftForGood!" />
-        <meta property="og:image:secure" content={companyLogoImagePngPath} />
+        <meta property="og:image" content={ogImagePath} />
+        <meta property="og:image:secure_url" content={ogImagePath} />
+        <meta property="og:image:type" content="image/jpeg" />
       </Head>
       <TopNavigationBar />
       <WishPage
