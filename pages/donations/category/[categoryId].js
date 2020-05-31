@@ -10,8 +10,7 @@ const TopNavigationBar = dynamic(() => import('../../../src/components/navbar/mo
 });
 
 export async function getServerSideProps({ params, query, req, res }) {
-  const categoryDetails = await getCategoryDetails(params.categoryId);
-  let user = await isAuthenticated(req, res);
+  const [categoryDetails, user] = await Promise.all([getCategoryDetails(params.categoryId), isAuthenticated(req, res)]);
   return {
     props: {
       categoryDetails,

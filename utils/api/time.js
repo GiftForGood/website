@@ -6,5 +6,5 @@ export const getTimeDifferenceFromNow = (timeInMilliSeconds) => {
 };
 
 export const getFormattedDate = (timeInMilliSeconds) => {
-  return moment.unix(timeInMilliSeconds / 1000).format('DD/MM/YYYY');
+  return moment(timeInMilliSeconds).format('DD/MM/YYYY');
 };
