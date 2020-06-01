@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import { Button } from '@kiwicom/orbit-components/';
 import { colors } from '../../../utils/constants/colors';
 import useUser from '../session/modules/useUser';
+import Verified from '../session/modules/Verified';
+import { useRouter } from 'next/router';
 
 const CallToActionButtonStyle = styled.button`
   background: ${colors.donorBackground};
@@ -23,10 +25,14 @@ const CallToActionButtonStyle = styled.button`
 
 const CallToActionButton = ({ fullWidth }) => {
   const user = useUser();
+  const router = useRouter();
 
   const onButtonClick = () => {
-    //TODO: Add router to the create page
-    console.log('CTA clicked');
+    if (user.npo) {
+      router.push('/wishes/create');
+    } else if (user.donor) {
+      router.push('/donations/create');
+    }
   };
 
   if (!user) {
@@ -34,15 +40,19 @@ const CallToActionButton = ({ fullWidth }) => {
   }
 
   return (
-    <Button
-      fullWidth={fullWidth}
-      asComponent={CallToActionButtonStyle}
-      size="normal"
-      disabled={!user.emailVerified}
-      onClick={onButtonClick}
-    >
-      {user.donor ? 'Donate' : 'Post'}
-    </Button>
+    <Verified>
+      {({ isDisabled }) => (
+        <Button
+          fullWidth={fullWidth}
+          asComponent={CallToActionButtonStyle}
+          size="normal"
+          disabled={isDisabled}
+          onClick={onButtonClick}
+        >
+          {user.donor ? 'Donate' : 'Post'}
+        </Button>
+      )}
+    </Verified>
   );
 };
 
