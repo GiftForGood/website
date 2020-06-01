@@ -4,7 +4,6 @@ import * as path from 'path';
 import UserError from './error/userError';
 
 class UsersAPI {
-
   /**
    * Get a user type by its id
    * @param {string} id The user id to search by
