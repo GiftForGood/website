@@ -146,7 +146,7 @@ const WishCard = ({
   };
   return (
     <CardContainer>
-      <Grid style={{ height: '100%' }} rows="2fr 6fr 2fr" cols="1fr">
+      <Grid style={{ height: '100%', paddingLeft: '10px', paddingRight: '10px' }} rows="2fr 6fr 2fr" cols="1fr">
         <CardHeaderContainer>
           <CardHeader name={name} imageUrl={profileImageUrl} timeAgo={timeAgo} isBumped={isBumped} />
         </CardHeaderContainer>
