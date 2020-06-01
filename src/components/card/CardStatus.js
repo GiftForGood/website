@@ -1,6 +1,6 @@
 import React from 'react';
 import { colors } from '../../../utils/constants/colors';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 
 const CardStatusContainer = styled.div`
   display: flex;
@@ -11,7 +11,10 @@ const CardStatusContainer = styled.div`
 const CardStatusWrapper = styled.div`
   display: flex;
   background-color: ${(props) => getColor(props.status)};
-  padding: 5px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-left: 15px;
+  padding-right: 15px;
   color: white;
 `;
 
