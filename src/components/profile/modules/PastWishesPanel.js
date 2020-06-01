@@ -7,6 +7,8 @@ import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import SeeMoreButtonStyle from '../../buttons/SeeMoreButton';
 import BlackText from '../../text/BlackText';
 import { WISHES_BATCH_SIZE } from '../../../../utils/api/constants';
+import InfiniteScroll from 'react-infinite-scroller';
+import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 
 const GridSectionContainer = styled.div`
   margin-top: 20px;
@@ -31,6 +33,7 @@ const PastWishesPanel = ({ isMine, userId }) => {
   const [pastWishes, setPastWishes] = useState([]);
   const [shouldSeeMore, setShouldSeeMore] = useState(true);
   const [seeMoreIsLoading, setSeeMoreIsLoading] = useState(false);
+  const { isLargeMobile } = useMediaQuery();
 
   const fetchPastWishes = (lastQueriedDocument) => {
     api.wishes.getNPOWishes(userId, lastQueriedDocument).then((wishesDoc) => {
@@ -78,7 +81,38 @@ const PastWishesPanel = ({ isMine, userId }) => {
     );
   };
 
-  const GridWishes = () => {
+  const MobilePastWishes = () => {
+    if (pastWishes.length === 0) {
+      return (
+        <Stack justify="center" align="center" direction="column" grow>
+          <Loading dataTest="test" loading text="Please wait, fetching wishes..." type="pageLoader" />
+        </Stack>
+      );
+    }
+
+    return (
+      <InfiniteScroll
+        pageStart={0}
+        loadMore={onSeeMoreClicked}
+        hasMore={shouldSeeMore}
+        loader={<Loading type="pageLoader" key={0} />}
+      >
+        <Grid
+          inline={true}
+          largeMobile={{
+            columns: '1fr 1fr',
+          }}
+          rows="auto"
+          gap="20px"
+          columns="1fr"
+        >
+          <PastWishes/>
+        </Grid>
+      </InfiniteScroll>
+    );
+  };
+
+  const DesktopAndTabletPastWishes = () => {
     if (pastWishes.length === 0) {
       return (
         <Stack justify="center" align="center" direction="column" grow>
@@ -100,28 +134,7 @@ const PastWishesPanel = ({ isMine, userId }) => {
           rows="auto"
           gap="20px"
         >
-          {pastWishes.map((pastWish, index) => {
-            const categoryTags = pastWish.data().categories.map((category) => category.name);
-            return (
-              <BumpableWishCard
-                index={index}
-                key={pastWish.data().wishId}
-                wishId={pastWish.data().wishId}
-                name={pastWish.data().organization.name}
-                title={pastWish.data().title}
-                description={pastWish.data().description}
-                profileImageUrl={pastWish.data().user.profileImageUrl}
-                postedDateTime={pastWish.data().postedDateTime}
-                postHref={`/wishes/${pastWish.data().wishId}`}
-                categoryTags={categoryTags}
-                isBumped={pastWish.data().isBumped}
-                expireDateTime={pastWish.data().expireDateTime}
-                bumpCallback={bumpCallback}
-                isMine={isMine}
-                status={pastWish.data().status}
-              />
-            );
-          })}
+          <PastWishes />
         </Grid>
 
         {shouldSeeMore ? <SeeMoreButton /> : null}
@@ -129,12 +142,35 @@ const PastWishesPanel = ({ isMine, userId }) => {
     );
   };
 
+  const PastWishes = () => {
+    return pastWishes.map((pastWish, index) => {
+      const categoryTags = pastWish.data().categories.map((category) => category.name);
+      return (
+        <BumpableWishCard
+          index={index}
+          key={pastWish.data().wishId}
+          wishId={pastWish.data().wishId}
+          name={pastWish.data().organization.name}
+          title={pastWish.data().title}
+          description={pastWish.data().description}
+          profileImageUrl={pastWish.data().user.profileImageUrl}
+          postedDateTime={pastWish.data().postedDateTime}
+          postHref={`/wishes/${pastWish.data().wishId}`}
+          categoryTags={categoryTags}
+          isBumped={pastWish.data().isBumped}
+          expireDateTime={pastWish.data().expireDateTime}
+          bumpCallback={bumpCallback}
+          isMine={isMine}
+          status={pastWish.data().status}
+        />
+      );
+    });
+  };
+
   return (
     <div>
       <GridSectionContainer>
-        <WishesContainer>
-          <GridWishes />
-        </WishesContainer>
+        <WishesContainer>{isLargeMobile ? <DesktopAndTabletPastWishes /> : <MobilePastWishes />}</WishesContainer>
       </GridSectionContainer>
     </div>
   );
