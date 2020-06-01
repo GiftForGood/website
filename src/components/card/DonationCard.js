@@ -27,7 +27,7 @@ const CardContainer = styled.div`
 `;
 
 const CardHeaderContainer = styled.div`
-  padding: 10px;
+  padding: 10px 20px 10px 20px;
   display: flex;
 `;
 
@@ -51,7 +51,7 @@ const CardImage = styled.div`
 `;
 
 const CardDescriptionContainer = styled.div`
-  margin: 10px;
+  margin: 10px 20px 10px 20px;
   display: flex;
   flex-direction: column;
 `;
