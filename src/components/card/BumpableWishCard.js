@@ -240,6 +240,4 @@ const WishCard = ({
   );
 };
 
-
-
 export default WishCard;

@@ -36,4 +36,4 @@ const CardStatus = ({ status }) => {
   );
 };
 
-export default CardStatus
+export default CardStatus;

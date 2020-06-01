@@ -106,7 +106,7 @@ const PastWishesPanel = ({ isMine, userId }) => {
           gap="20px"
           columns="1fr"
         >
-          <PastWishes/>
+          <PastWishes />
         </Grid>
       </InfiniteScroll>
     );
