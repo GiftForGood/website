@@ -3,6 +3,7 @@ import useUser from '../../../components/session/modules/useUser';
 const Verified = (props) => {
   const user = useUser();
 
+  // user is initially null --> populated with user info. null should disable children.
   if (user === null) {
     return props.children({
       isDisabled: true,
