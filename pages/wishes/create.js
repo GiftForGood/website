@@ -10,12 +10,12 @@ const TopNavigationBar = dynamic(() => import('../../src/components/navbar/modul
 
 export async function getServerSideProps({ params, req, res, query }) {
   let user = await isAuthenticated(req, res);
-  isVerified(user.user, res, { Location: '/' });
-  isNpo(user.user, res, { Location: '/' });
   if (!user) {
     res.writeHead(302, { Location: '/' });
     res.end();
   }
+  isVerified(user.user, res, { Location: '/' });
+  isNpo(user.user, res, { Location: '/' });
   return {
     props: {
       user,
