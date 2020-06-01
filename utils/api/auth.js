@@ -58,7 +58,7 @@ class AuthAPI {
    * @param {number} contact The contact of the NPO
    * @param {string} email The email of the NPO
    * @param {string} password The password of the NPO
-   * @param {string} organizationId The organization id that the NPO belongs to
+   * @param {string} organization The organization name that the NPO belongs to
    * @param {string} registeredRegistrar The registrar the the NPO is registered with
    * @param {string} registrationNumber The registration number
    * @param {string} dayOfRegistration The date when the NPO is registered with the registrar (day)
@@ -66,6 +66,7 @@ class AuthAPI {
    * @param {string} yearOfRegistration The date when the NPO is registered with the registrar (day)
    * @param {string} proofImage The image of the proof
    * @param {string} activities The description of the type of activities that the NPO does
+   * @throws {AuthError}
    * @return {array} [token, userProfile, userDoc]
    *  token: JWT
    *  userProfile: The user profile
@@ -76,7 +77,7 @@ class AuthAPI {
     contact,
     email,
     password,
-    organizationId,
+    organization,
     registeredRegistrar,
     registrationNumber,
     dayOfRegistration,
@@ -89,12 +90,12 @@ class AuthAPI {
     await firebaseAuth.createUserWithEmailAndPassword(email, password);
     const token = await firebaseAuth.currentUser.getIdToken();
     const userProfile = firebaseAuth.currentUser;
-    const userDoc = await this._createNPO(userProfile, name, contact, organizationId);
+    const userDoc = await this._createNPO(userProfile, name, contact, organization);
     await this._createNPOVerificationData(
       userProfile,
       name,
       contact,
-      organizationId,
+      organization,
       registeredRegistrar,
       registrationNumber,
       dayOfRegistration,
@@ -120,7 +121,7 @@ class AuthAPI {
     await this._googleAuth();
     const token = await firebaseAuth.currentUser.getIdToken();
     const userProfile = firebaseAuth.currentUser;
-    const userDoc = await this._getDonorDoc(userProfile.uid);
+    const userDoc = await this._updateDonorLoginTime(userProfile.uid);
 
     return [token, userProfile, userDoc];
   }
@@ -140,7 +141,7 @@ class AuthAPI {
     await firebaseAuth.signInWithEmailAndPassword(email, password);
     const token = await firebaseAuth.currentUser.getIdToken();
     const userProfile = firebaseAuth.currentUser;
-    const userDoc = await this._getDonorDoc(userProfile.uid);
+    const userDoc = await this._updateDonorLoginTime(userProfile.uid);
 
     return [token, userProfile, userDoc];
   }
@@ -149,6 +150,7 @@ class AuthAPI {
    * Sign in a NPO
    * @param {string} email
    * @param {string} password
+   * @throws {FirebaseError}
    * @return {array} [token, userProfile, userDoc]
    *  token: JWT
    *  userProfile: The user profile
@@ -158,13 +160,14 @@ class AuthAPI {
     await firebaseAuth.signInWithEmailAndPassword(email, password);
     const token = await firebaseAuth.currentUser.getIdToken();
     const userProfile = firebaseAuth.currentUser;
-    const userDoc = await this._getNPODoc(userProfile.uid);
+    const userDoc = await this._updateNPOLoginTime(userProfile.uid);
 
     return [token, userProfile, userDoc];
   }
 
   /**
    * Send a verification email to the currently logged in user
+   * @throws {FirebaseError}
    */
   async sendVerificationEmail() {
     let url = FIREBASE_EMAIL_ACTION_URL + '/';
@@ -229,26 +232,24 @@ class AuthAPI {
     return newDonor.get();
   }
 
-  async _getDonorDoc(id) {
-    const snapshot = await donorsCollection.doc(id).get();
-    if (snapshot.empty) {
-      throw new AuthError('invalid-user', 'No such donor account');
-    }
+  async _updateDonorLoginTime(id) {
+    const userDoc = donorsCollection.doc(id)
 
-    return snapshot;
+    const data = {
+      lastLoggedInDateTime: Date.now()
+    };
+    await userDoc.update(data);
+
+    return userDoc.get();
   }
 
   async _doesDonorExist(id) {
-    let snapshot = await donorsCollection.doc(id).get();
-    if (snapshot.empty) {
-      return false;
-    }
-
-    return true;
+    const snapshot = await donorsCollection.doc(id).get();
+    return snapshot.exists;
   }
 
-  async _createNPO(userProfile, name, contact, organizationId) {
-    const organizationInfo = await this._getCategoryInfo(organizationId);
+  async _createNPO(userProfile, name, contact, organizationName) {
+    const organizationInfo = await this._getCategoryInfo(organizationName);
 
     const userId = userProfile.uid;
     const newNPO = nposCollection.doc(userId);
@@ -278,7 +279,7 @@ class AuthAPI {
     userProfile,
     name,
     contact,
-    organizationId,
+    organizationName,
     registeredRegistrar,
     registrationNumber,
     dayOfRegistration,
@@ -288,7 +289,7 @@ class AuthAPI {
     activities
   ) {
     const [organizationInfo, uploadedImageUrl] = await Promise.all([
-      this._getCategoryInfo(organizationId),
+      this._getCategoryInfo(organizationName),
       this._uploadNPOProofImage(userProfile.uid, proofImage),
     ]);
 
@@ -315,14 +316,15 @@ class AuthAPI {
     return newVerificationData;
   }
 
-  async _getNPODoc(id) {
-    const snapshot = await nposCollection.doc(id).get();
+  async _updateNPOLoginTime(id) {
+    const userDoc = nposCollection.doc(id);
 
-    if (snapshot.empty) {
-      throw new AuthError('invalid-user', 'No such NPO account');
-    }
+    const data = {
+      lastLoggedInDateTime: Date.now()
+    };
+    await userDoc.update(data);
 
-    return snapshot.docs[0];
+    return userDoc.get();
   }
 
   async _uploadNPOProofImage(npoId, proofFile) {
@@ -334,8 +336,8 @@ class AuthAPI {
     return proofFileRef.getDownloadURL();
   }
 
-  async _getCategoryInfo(id) {
-    const snapshot = await db.collection('npoOrganizations').where(id).get();
+  async _getCategoryInfo(name) {
+    const snapshot = await db.collection('npoOrganizations').where('name', '==', name).get();
 
     if (snapshot.empty) {
       return {};
