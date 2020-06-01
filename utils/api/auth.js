@@ -58,7 +58,7 @@ class AuthAPI {
    * @param {number} contact The contact of the NPO
    * @param {string} email The email of the NPO
    * @param {string} password The password of the NPO
-   * @param {string} organizationName The organization that the NPO belongs to
+   * @param {string} organizationId The organization id that the NPO belongs to
    * @param {string} registeredRegistrar The registrar the the NPO is registered with
    * @param {string} registrationNumber The registration number
    * @param {string} dayOfRegistration The date when the NPO is registered with the registrar (day)
@@ -76,7 +76,7 @@ class AuthAPI {
     contact,
     email,
     password,
-    organizationName,
+    organizationId,
     registeredRegistrar,
     registrationNumber,
     dayOfRegistration,
@@ -89,12 +89,12 @@ class AuthAPI {
     await firebaseAuth.createUserWithEmailAndPassword(email, password);
     const token = await firebaseAuth.currentUser.getIdToken();
     const userProfile = firebaseAuth.currentUser;
-    const userDoc = await this._createNPO(userProfile, name, contact, organizationName);
+    const userDoc = await this._createNPO(userProfile, name, contact, organizationId);
     await this._createNPOVerificationData(
       userProfile,
       name,
       contact,
-      organizationName,
+      organizationId,
       registeredRegistrar,
       registrationNumber,
       dayOfRegistration,
@@ -200,6 +200,7 @@ class AuthAPI {
     let name = userInfo.displayName;
     let profileImageUrl = userInfo.photoURL;
     if (userInfo.displayName == null) {
+      // No display name, take name from email
       const email = userInfo.email;
       name = email.substring(0, email.lastIndexOf('@'));
     }
@@ -223,20 +224,21 @@ class AuthAPI {
       lastLoggedInDateTime: timeNow,
     };
     await newDonor.set(data);
-    return newDonor;
+    
+    return newDonor.get();
   }
 
   async _getDonorDoc(id) {
-    const snapshot = await donorsCollection.where('userId', '==', id).get();
+    const snapshot = await donorsCollection.doc(id).get();
     if (snapshot.empty) {
       throw new AuthError('invalid-user', 'No such donor account');
     }
 
-    return snapshot.docs[0];
+    return snapshot;
   }
 
   async _doesDonorExist(id) {
-    let snapshot = await donorsCollection.where('userId', '==', id).get();
+    let snapshot = await donorsCollection.doc(id).get();
     if (snapshot.empty) {
       return false;
     }
@@ -244,34 +246,8 @@ class AuthAPI {
     return true;
   }
 
-  _validateNPOData(registeredRegistrar, proofImage) {
-    this._validateRegistrar(registeredRegistrar);
-    this._validateProofImage(proofImage);
-  }
-
-  _validateRegistrar(registeredRegistrar) {
-    const validRegistrar = [
-      AFFILIATED_NATIONAL_COUNCIL_OF_SOCIAL_SERVICE,
-      REGISTRY_OF_SOCIETIES,
-      COMMISSIONER_OF_CHARITIES,
-    ];
-
-    if (!validRegistrar.includes(registeredRegistrar)) {
-      throw new AuthError('invalid-arguments', registeredRegistrar + ' is not a valid registrar');
-    }
-  }
-
-  _validateProofImage(proofImage) {
-    const validExtensions = ['.pdf'];
-    const imageExt = path.extname(proofImage.name);
-
-    if (!validExtensions.includes(imageExt)) {
-      throw new AuthError('invalid-arguments', imageExt + ' is not a valid file ext');
-    }
-  }
-
-  async _createNPO(userProfile, name, contact, organizationName) {
-    const organizationInfo = await this._getCategoryInfo(organizationName);
+  async _createNPO(userProfile, name, contact, organizationId) {
+    const organizationInfo = await this._getCategoryInfo(organizationId);
 
     const userId = userProfile.uid;
     const newNPO = nposCollection.doc(userId);
@@ -293,14 +269,15 @@ class AuthAPI {
       lastLoggedInDateTime: timeNow,
     };
     await newNPO.set(data);
-    return newNPO;
+    
+    return newNPO.get()
   }
 
   async _createNPOVerificationData(
     userProfile,
     name,
     contact,
-    organizationName,
+    organizationId,
     registeredRegistrar,
     registrationNumber,
     dayOfRegistration,
@@ -309,11 +286,11 @@ class AuthAPI {
     proofImage,
     activities
   ) {
-    const [organizationInfo, uploadedImage] = await Promise.all([
-      this._getCategoryInfo(organizationName),
+    const [organizationInfo, uploadedImageUrl] = await Promise.all([
+      this._getCategoryInfo(organizationId),
       this._uploadNPOProofImage(userProfile.uid, proofImage),
     ]);
-    const imagePath = uploadedImage.metadata.fullPath;
+
     const dateOfRegistration = dayOfRegistration + '-' + monthOfRegistration + '-' + yearOfRegistration;
 
     const organization = {
@@ -321,7 +298,7 @@ class AuthAPI {
       registeredRegistrar: registeredRegistrar,
       registrationNumber: registrationNumber,
       dateOfRegistration: moment(dateOfRegistration, 'DD-MM-YYYY').valueOf(),
-      proofImageUrl: imagePath,
+      proofImageUrl: uploadedImageUrl,
       activities: activities,
     };
     const newVerificationData = db.collection('npoVerifications').doc(userProfile.uid);
@@ -337,7 +314,7 @@ class AuthAPI {
   }
 
   async _getNPODoc(id) {
-    const snapshot = await nposCollection.where('userId', '==', id).get();
+    const snapshot = await nposCollection.doc(id).get();
 
     if (snapshot.empty) {
       throw new AuthError('invalid-user', 'No such NPO account');
@@ -346,21 +323,49 @@ class AuthAPI {
     return snapshot.docs[0];
   }
 
-  async _uploadNPOProofImage(npoId, proofImage) {
-    const ext = path.extname(proofImage.name);
+  async _uploadNPOProofImage(npoId, proofFile) {
+    const ext = path.extname(proofFile.name);
     const storageRef = firebaseStorage.ref();
-    const proofImageRef = storageRef.child(`npos/${npoId}/proofs/${npoId}_proof_v1${ext}`);
-    return await proofImageRef.put(proofImage);
+    const proofFileRef = storageRef.child(`npos/${npoId}/proofs/${npoId}_proof_v1${ext}`);
+    await proofFileRef.put(proofFile);
+
+    return proofFileRef.getDownloadURL();
   }
 
-  async _getCategoryInfo(name) {
-    const snapshot = await db.collection('npoOrganizations').where('name', '==', name).get();
+  async _getCategoryInfo(id) {
+    const snapshot = await db.collection('npoOrganizations').where(id).get();
 
     if (snapshot.empty) {
       return {};
     }
 
     return snapshot.docs[0].data();
+  }
+
+  _validateNPOData(registeredRegistrar, proofImage) {
+    this._validateRegistrar(registeredRegistrar);
+    this._validateProofImage(proofImage);
+  }
+
+  _validateRegistrar(registeredRegistrar) {
+    const validRegistrar = [
+      AFFILIATED_NATIONAL_COUNCIL_OF_SOCIAL_SERVICE,
+      REGISTRY_OF_SOCIETIES,
+      COMMISSIONER_OF_CHARITIES,
+    ];
+
+    if (!validRegistrar.includes(registeredRegistrar)) {
+      throw new AuthError('invalid-arguments', registeredRegistrar + ' is not a valid registrar');
+    }
+  }
+
+  _validateProofImage(proofImage) {
+    const validExtensions = ['.pdf'];
+    const imageExt = path.extname(proofImage.name).toLowerCase();
+
+    if (!validExtensions.includes(imageExt)) {
+      throw new AuthError('invalid-arguments', imageExt + ' is not a valid file ext');
+    }
   }
 }
 
