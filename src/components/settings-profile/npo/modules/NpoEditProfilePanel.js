@@ -1,5 +1,14 @@
 import React from 'react';
-import { Button, InputField, Stack, Heading, Card, CardSection, TextLink } from '@kiwicom/orbit-components/lib';
+import {
+  Button,
+  InputField,
+  Stack,
+  Heading,
+  Card,
+  CardSection,
+  TextLink,
+  InputFile,
+} from '@kiwicom/orbit-components/lib';
 import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import { useFormik } from 'formik';
@@ -27,12 +36,14 @@ const NpoEditProfilePanel = () => {
     mobileNumber: Yup.string()
       .required('Required')
       .matches(/^[6|8|9]\d{7}$/, 'Phone number is not valid'),
+    profileImage: Yup.mixed().required('Required'),
   });
 
   const formik = useFormik({
     initialValues: {
       name: user ? user.name : '',
       contactNumber: user ? user.contactNumber : '',
+      profileImage: null,
     },
     validationSchema: validationSchema,
     enableReinitialize: true,
@@ -49,18 +60,28 @@ const NpoEditProfilePanel = () => {
     <Container>
       <Card>
         <CardSection>
-          <Stack spacing="loose">
-            <Heading>Edit Profile</Heading>
+          <form onSubmit={formik.handleSubmit}>
+            <Stack spacing="loose">
+              <Heading>Edit Profile</Heading>
 
-            <Stack>
-              <Heading type="title2">Profile Picture</Heading>
-              <ProfileAvatar imageUrl={user.profileImageUrl} height={100} width={100} />
-              <Button size="small">Upload picture</Button>
-            </Stack>
+              <Stack>
+                <Heading type="title2">Profile Picture</Heading>
+                <ProfileAvatar imageUrl={user.profileImageUrl} height={100} width={100} />
+                <InputFile
+                  buttonLabel="Upload picture"
+                  allowedFileTypes={['image/*']}
+                  {...formik.getFieldProps('profileImage')}
+                  error={formik.touched.profileImage && formik.errors.profileImage ? formik.errors.profileImage : ''}
+                  fileName={formik.values.profileImage ? formik.values.profileImage.name : ''}
+                  onChange={(event) => {
+                    formik.setFieldValue('profileImage', event.currentTarget.files[0]);
+                  }}
+                />
+              </Stack>
 
-            <Stack>
-              <Heading type="title2">Public Profile</Heading>
-              <form onSubmit={formik.handleSubmit}>
+              <Stack>
+                <Heading type="title2">Public Profile</Heading>
+
                 <Stack spacing="loose" spaceAfter="normal">
                   <InputField
                     disabled={formik.isSubmitting}
@@ -130,9 +151,9 @@ const NpoEditProfilePanel = () => {
                     Save changes
                   </Button>
                 </Stack>
-              </form>
+              </Stack>
             </Stack>
-          </Stack>
+          </form>
         </CardSection>
       </Card>
     </Container>
