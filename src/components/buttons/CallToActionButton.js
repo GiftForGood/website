@@ -32,7 +32,7 @@ const CallToActionButton = ({ fullWidth }) => {
       router.push('/wishes/create');
     } else if (user.donor) {
       router.push('/donations/create');
-    } 
+    }
   };
 
   if (!user) {
