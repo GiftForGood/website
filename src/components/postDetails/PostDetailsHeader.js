@@ -23,6 +23,7 @@ const PostDetailsHeader = ({
   const isOwnPost = loginUserId === postUserId; // whether login user is the post owner
   const chatType = isOwnPost ? 'View Chats' : 'Chat';
   const postUrl = `https://www.giftforgood.io${router.asPath}`;
+  const isCompletedPost = postStatus === 'completed';
 
   const [isClosedPost, setIsClosedPost] = useState(postStatus === 'closed');
   const [showReportPostModal, setShowPostPostModal] = useState(false);
@@ -103,7 +104,7 @@ const PostDetailsHeader = ({
                     type="secondary"
                     iconLeft={<Edit />}
                     href={editPostHref}
-                    disabled={isDisabled || isClosedPost}
+                    disabled={isDisabled || isClosedPost || isCompletedPost}
                   >
                     Edit post
                   </ButtonLink>
@@ -112,7 +113,7 @@ const PostDetailsHeader = ({
                     type="secondary"
                     iconLeft={<CloseCircle />}
                     onClick={handleClosePostModal}
-                    disabled={isDisabled || isClosedPost}
+                    disabled={isDisabled || isClosedPost || isCompletedPost}
                   >
                     Mark as closed
                   </ButtonLink>
@@ -123,7 +124,7 @@ const PostDetailsHeader = ({
                   type="secondary"
                   iconLeft={<AlertCircle />}
                   onClick={handleReportPostModal}
-                  disabled={isDisabled || isClosedPost}
+                  disabled={isDisabled || isClosedPost || isCompletedPost}
                 >
                   Report post
                 </ButtonLink>
@@ -158,7 +159,7 @@ const PostDetailsHeader = ({
             return (
               <>
                 <Button
-                  disabled={isDisabled}
+                  disabled={isDisabled || (chatType === 'Chat' && (isClosedPost || isCompletedPost)) ? true : false}
                   size="small"
                   asComponent={ChatButton}
                   onClick={handleOnClickChatBtn}
