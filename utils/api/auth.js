@@ -307,8 +307,10 @@ class AuthAPI {
     proofImage,
     activities
   ) {
-    const organizationInfo = await this._getCategoryInfo(organizationName);
-    const uploadedImage = await this._uploadNPOProofImage(userProfile.uid, proofImage);
+    const [organizationInfo, uploadedImage] = await Promise.all([
+      this._getCategoryInfo(organizationName),
+      this._uploadNPOProofImage(userProfile.uid, proofImage),
+    ]);
     const imagePath = uploadedImage.metadata.fullPath;
     const dateOfRegistration = dayOfRegistration + '-' + monthOfRegistration + '-' + yearOfRegistration;
 
