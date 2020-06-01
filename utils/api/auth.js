@@ -27,6 +27,8 @@ class AuthAPI {
     await this._googleAuth();
     const token = await firebaseAuth.currentUser.getIdToken();
     const userProfile = firebaseAuth.currentUser;
+
+    await this._validateDonor(userProfile);
     const userDoc = await this._createDonor(userProfile);
 
     return [token, userProfile, userDoc];
@@ -47,6 +49,8 @@ class AuthAPI {
     await firebaseAuth.createUserWithEmailAndPassword(email, password);
     const token = await firebaseAuth.currentUser.getIdToken();
     const userProfile = firebaseAuth.currentUser;
+
+    await this._validateDonor(userProfile);
     const userDoc = await this._createDonor(userProfile);
 
     return [token, userProfile, userDoc];
@@ -90,20 +94,24 @@ class AuthAPI {
     await firebaseAuth.createUserWithEmailAndPassword(email, password);
     const token = await firebaseAuth.currentUser.getIdToken();
     const userProfile = firebaseAuth.currentUser;
-    const userDoc = await this._createNPO(userProfile, name, contact, organization);
-    await this._createNPOVerificationData(
-      userProfile,
-      name,
-      contact,
-      organization,
-      registeredRegistrar,
-      registrationNumber,
-      dayOfRegistration,
-      monthOfRegistration,
-      yearOfRegistration,
-      proofImage,
-      activities
-    );
+
+    await this._validateNPO(userProfile);
+    const [userDoc, userVerificationData] = Promise.all([
+      this._createNPO(userProfile, name, contact, organization),
+      this._createNPOVerificationData(
+        userProfile,
+        name,
+        contact,
+        organization,
+        registeredRegistrar,
+        registrationNumber,
+        dayOfRegistration,
+        monthOfRegistration,
+        yearOfRegistration,
+        proofImage,
+        activities
+      ),
+    ]);
 
     return [token, userProfile, userDoc];
   }
@@ -150,6 +158,7 @@ class AuthAPI {
    * Sign in a NPO
    * @param {string} email
    * @param {string} password
+   * @throws {AuthError}
    * @throws {FirebaseError}
    * @return {array} [token, userProfile, userDoc]
    *  token: JWT
@@ -192,14 +201,6 @@ class AuthAPI {
   }
 
   async _createDonor(userInfo) {
-    if (userInfo == null) {
-      throw new AuthError('unable-to-create-user', 'No user profile');
-    }
-
-    if (await this._doesDonorExist(userInfo.uid)) {
-      throw new AuthError('unable-to-create-user', 'Donor account already exists');
-    }
-
     let name = userInfo.displayName;
     let profileImageUrl = userInfo.photoURL;
     if (userInfo.displayName == null) {
@@ -228,15 +229,15 @@ class AuthAPI {
       lastLoggedInDateTime: timeNow,
     };
     await newDonor.set(data);
-    
+
     return newDonor.get();
   }
 
   async _updateDonorLoginTime(id) {
-    const userDoc = donorsCollection.doc(id)
+    const userDoc = donorsCollection.doc(id);
 
     const data = {
-      lastLoggedInDateTime: Date.now()
+      lastLoggedInDateTime: Date.now(),
     };
     await userDoc.update(data);
 
@@ -271,8 +272,8 @@ class AuthAPI {
       lastLoggedInDateTime: timeNow,
     };
     await newNPO.set(data);
-    
-    return newNPO.get()
+
+    return newNPO.get();
   }
 
   async _createNPOVerificationData(
@@ -301,7 +302,7 @@ class AuthAPI {
       registrationNumber: registrationNumber,
       dateOfRegistration: moment(dateOfRegistration, 'DD-MM-YYYY').valueOf(),
       proofImageUrl: uploadedImageUrl,
-      proofImageVersion: 1, 
+      proofImageVersion: 1,
       activities: activities,
     };
     const newVerificationData = db.collection('npoVerifications').doc(userProfile.uid);
@@ -313,14 +314,20 @@ class AuthAPI {
       isVerifiedByAdmin: false,
     };
     await newVerificationData.set(data);
-    return newVerificationData;
+
+    return newVerificationData.get();
+  }
+
+  async _doesNPOExist(id) {
+    const snapshot = await nposCollection.doc(id).get();
+    return snapshot.exists;
   }
 
   async _updateNPOLoginTime(id) {
     const userDoc = nposCollection.doc(id);
 
     const data = {
-      lastLoggedInDateTime: Date.now()
+      lastLoggedInDateTime: Date.now(),
     };
     await userDoc.update(data);
 
@@ -344,6 +351,34 @@ class AuthAPI {
     }
 
     return snapshot.docs[0].data();
+  }
+
+  async _validateDonor(userInfo) {
+    if (userInfo == null) {
+      throw new AuthError('unable-to-create-user', 'No user profile');
+    }
+
+    if (await this._doesDonorExist(userInfo.uid)) {
+      throw new AuthError('unable-to-create-user', 'Donor account already exists');
+    }
+
+    if (await this._doesNPOExist(userInfo.uid)) {
+      throw new AuthError('unable-to-create-user', 'User already sign up as a NPO');
+    }
+  }
+
+  async _validateNPO(userInfo) {
+    if (userInfo == null) {
+      throw new AuthError('unable-to-create-user', 'No user profile');
+    }
+
+    if (await this._doesNPOExist(userInfo.uid)) {
+      throw new AuthError('unable-to-create-user', 'NPO account already exists');
+    }
+
+    if (await this._doesDonorExist(userInfo.uid)) {
+      throw new AuthError('unable-to-create-user', 'User already sign up as a Donor');
+    }
   }
 
   _validateNPOData(registeredRegistrar, proofImage) {
