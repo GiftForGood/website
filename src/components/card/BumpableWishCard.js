@@ -8,6 +8,7 @@ import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import Button from '@kiwicom/orbit-components/lib/Button';
 import moment from 'moment';
 import api from '../../../utils/api';
+import CardStatus from './CardStatus';
 
 const CardContainer = styled.div`
   display: flex;
@@ -30,7 +31,10 @@ const CardContainer = styled.div`
 `;
 
 const CardHeaderContainer = styled.div`
-  padding: 10px;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-top: 10px;
+  padding-bottom: 10px;
   display: flex;
 `;
 
@@ -60,6 +64,8 @@ const CardDescriptionContainer = styled.div`
   margin: 10px;
   display: flex;
   flex-direction: column;
+  padding-left: 10px;
+  padding-right: 10px;
 `;
 
 const CardDescriptionFooterContainer = styled.div`
@@ -69,6 +75,8 @@ const CardDescriptionFooterContainer = styled.div`
   `)}
   display: flex;
   align-items: center;
+  padding-left: 10px;
+  padding-right: 10px;
 `;
 
 const ClickableDiv = styled.a`
@@ -126,6 +134,7 @@ const Tags = ({ categoryTags, wishId }) => {
  * @param {string} expireDateTime is the expire date time of the post
  * @param {function} bumpCallback is to update the caller past wishes
  * @param {boolean} isMine is to know if the card belongs to the user
+ * @param {string} status is the status of the post
  */
 const WishCard = ({
   index,
@@ -141,6 +150,7 @@ const WishCard = ({
   expireDateTime,
   bumpCallback,
   isMine,
+  status,
 }) => {
   const [openBumpModal, setOpenBumpModal] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -180,13 +190,17 @@ const WishCard = ({
   return (
     <>
       <CardContainer>
-        <Grid style={{ height: '100%', paddingLeft: '10px', paddingRight: '10px' }} rows="2fr 6fr 2fr" cols="1fr">
+        <Grid style={{ height: '100%' }} rows={status !== 'pending' ? '2fr 0.5fr 6fr 2fr' : '2fr 6fr 2fr'} cols="1fr">
           <CardHeaderContainer>
             <CardHeader name={name} imageUrl={profileImageUrl} timeAgo={timeAgo} isBumped={isBumped} />
           </CardHeaderContainer>
+
+          {status !== 'pending' ? <CardStatus status={status} /> : null}
+
           <CardDescriptionContainer>
             <CardDescription title={title} description={description} />
           </CardDescriptionContainer>
+
           <CardDescriptionFooterContainer>
             {isMine ? (
               <Button fullWidth disabled={isBumped} onClick={onBumpCardClick}>
@@ -225,5 +239,7 @@ const WishCard = ({
     </>
   );
 };
+
+
 
 export default WishCard;

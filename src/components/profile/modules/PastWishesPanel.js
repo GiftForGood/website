@@ -118,6 +118,7 @@ const PastWishesPanel = ({ isMine, userId }) => {
                 expireDateTime={pastWish.data().expireDateTime}
                 bumpCallback={bumpCallback}
                 isMine={isMine}
+                status={pastWish.data().status}
               />
             );
           })}

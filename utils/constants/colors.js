@@ -25,4 +25,6 @@ export const colors = {
   chatButtonHoverActive: '#31A2D6',
   chatButtonFocus: '#138CC8',
   ratingStarBackground: '#ED5555',
+  closedTagBackground: '#ED5555',
+  completedTagBackground: '#4DB6AC',
 };
