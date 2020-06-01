@@ -55,3 +55,19 @@ export function isDonor(user, res, destination = {}) {
     return null;
   }
 }
+
+/**
+ * Checks if an user is a NPO
+ * @param {array} userTypes containing the user types
+ */
+export const containsNPO = (userTypes) => {
+  return userTypes.type.includes('npo');
+};
+
+/**
+ * Checks if an user is a Donor
+ * @param {array} userTypes containing the user types
+ */
+export const containsDonor = (userTypes) => {
+  return userTypes.type.includes('donor');
+};
