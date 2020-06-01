@@ -216,6 +216,7 @@ class AuthAPI {
       profileImageUrl: profileImageUrl,
       numberOfReviews: 0,
       donor: true,
+      isCorporatePartner: false,
       reviewRating: 0,
       hasAcceptedTermsOfService: true,
       isBlocked: false,
@@ -299,6 +300,7 @@ class AuthAPI {
       registrationNumber: registrationNumber,
       dateOfRegistration: moment(dateOfRegistration, 'DD-MM-YYYY').valueOf(),
       proofImageUrl: uploadedImageUrl,
+      proofImageVersion: 1, 
       activities: activities,
     };
     const newVerificationData = db.collection('npoVerifications').doc(userProfile.uid);
