@@ -9,6 +9,7 @@ import Button from '@kiwicom/orbit-components/lib/Button';
 import moment from 'moment';
 import api from '../../../utils/api';
 import CardStatus from './CardStatus';
+import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 
 const CardContainer = styled.div`
   display: flex;
@@ -49,14 +50,14 @@ const ThreeLineTextContainer = styled.div`
   -webkit-box-orient: vertical;
 `;
 
-const EightLineTextContainer = styled.div`
+const LineTextContainer = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
   line-height: 1.5em;
-  max-height: 12em;
+  max-height: ${(props) => (props.isTablet ? '12em' : '10.5em')};
   font-size: 14px;
-  -webkit-line-clamp: 8;
+  -webkit-line-clamp: ${(props) => (props.isTablet ? '7' : '8')};
   -webkit-box-orient: vertical;
 `;
 
@@ -93,6 +94,8 @@ const BadgeWrapper = styled.div`
 `;
 
 const CardDescription = ({ title, description }) => {
+  const { isTablet } = useMediaQuery();
+
   return (
     <Stack direction="column" spacing="tight">
       <ThreeLineTextContainer>
@@ -100,7 +103,7 @@ const CardDescription = ({ title, description }) => {
           {title}
         </Text>
       </ThreeLineTextContainer>
-      <EightLineTextContainer>{description}</EightLineTextContainer>
+      <LineTextContainer isTablet={isTablet}>{description}</LineTextContainer>
     </Stack>
   );
 };
@@ -154,9 +157,9 @@ const WishCard = ({
 }) => {
   const [openBumpModal, setOpenBumpModal] = useState(false);
   const [loading, setLoading] = useState(false);
-
   const timeAgo = getTimeDifferenceFromNow(postedDateTime);
   const router = useRouter();
+
   const handleOnClickWishPost = (event) => {
     event.preventDefault();
     router.push(postHref);

@@ -17,9 +17,18 @@ const GridSectionContainer = styled.div`
 const WishesContainer = styled.div`
   width: fit-content;
   margin: 0 auto;
+
   ${media.largeMobile(css`
     margin: 0;
     width: 100%;
+  `)}
+
+  ${media.tablet(css`
+    margin-left: 30px;
+  `)}
+
+  ${media.desktop(css`
+    margin: 0;
   `)}
 `;
 
