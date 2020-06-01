@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { Button } from '@kiwicom/orbit-components/';
 import { colors } from '../../../utils/constants/colors';
 import useUser from '../session/modules/useUser';
+import Verified from '../session/modules/Verified';
 
 const CallToActionButtonStyle = styled.button`
   background: ${colors.donorBackground};
@@ -34,15 +35,19 @@ const CallToActionButton = ({ fullWidth }) => {
   }
 
   return (
-    <Button
-      fullWidth={fullWidth}
-      asComponent={CallToActionButtonStyle}
-      size="normal"
-      disabled={!user.emailVerified}
-      onClick={onButtonClick}
-    >
-      {user.donor ? 'Donate' : 'Post'}
-    </Button>
+    <Verified>
+      {({ isDisabled }) => (
+        <Button
+          fullWidth={fullWidth}
+          asComponent={CallToActionButtonStyle}
+          size="normal"
+          disabled={isDisabled}
+          onClick={onButtonClick}
+        >
+          {user.donor ? 'Donate' : 'Post'}
+        </Button>
+      )}
+    </Verified>
   );
 };
 

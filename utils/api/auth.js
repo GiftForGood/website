@@ -213,6 +213,7 @@ class AuthAPI {
       userId: userInfo.uid,
       name: name,
       profileImageUrl: profileImageUrl,
+      donor: true,
       reviewRating: 0,
       hasAcceptedTermsOfService: true,
       isBlocked: false,
@@ -279,6 +280,7 @@ class AuthAPI {
       name: name,
       contactNumber: contact,
       profileImageUrl: '',
+      npo: true,
       organization: organizationInfo,
       reviewRating: 0,
       isVerifiedByAdmin: false,
@@ -305,8 +307,10 @@ class AuthAPI {
     proofImage,
     activities
   ) {
-    const organizationInfo = await this._getCategoryInfo(organizationName);
-    const uploadedImage = await this._uploadNPOProofImage(userProfile.uid, proofImage);
+    const [organizationInfo, uploadedImage] = await Promise.all([
+      this._getCategoryInfo(organizationName),
+      this._uploadNPOProofImage(userProfile.uid, proofImage),
+    ]);
     const imagePath = uploadedImage.metadata.fullPath;
     const dateOfRegistration = dayOfRegistration + '-' + monthOfRegistration + '-' + yearOfRegistration;
 
