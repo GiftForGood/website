@@ -7,21 +7,23 @@ import {
   COMMISSIONER_OF_CHARITIES,
   AFFILIATED_NATIONAL_COUNCIL_OF_SOCIAL_SERVICE,
 } from '../constants/npoRegisteredRegistrar.js';
-import AuthError from './error/authError';
 import { FIREBASE_EMAIL_ACTION_URL } from '../constants/siteUrl';
+import { DONOR, NPO } from '../constants/usersType';
+import AuthError from './error/authError';
 
 const donorsCollection = db.collection('donors');
 const nposCollection = db.collection('npos');
+const usersCollection = db.collection('users');
 
 class AuthAPI {
   /**
    * Register a donor with Google
    * @throws {FirebaseError}
    * @throws {AuthError}
-   * @return {array} [token, userProfile, userDoc]
+   * @return {array} [token, userProfile, donorDoc]
    *  token: JWT
    *  userProfile: The user profile
-   *  userDoc: Firebase document that contains the userInfo in the db
+   *  donorDoc: Firebase document that contains the userInfo in the db
    */
   async registerDonorWithGoogle() {
     await this._googleAuth();
@@ -29,9 +31,12 @@ class AuthAPI {
     const userProfile = firebaseAuth.currentUser;
 
     await this._validateDonor(userProfile);
-    const userDoc = await this._createDonor(userProfile);
+    const [donorDoc, userDoc] = await Promise.all([
+      this._createDonor(userProfile),
+      this._createUser(userProfile.uid, DONOR),
+    ]);
 
-    return [token, userProfile, userDoc];
+    return [token, userProfile, donorDoc];
   }
 
   /**
@@ -40,10 +45,10 @@ class AuthAPI {
    * @param {string} password
    * @throws {FirebaseError}
    * @throws {AuthError}
-   * @return {array} [token, userProfile, userDoc]
+   * @return {array} [token, userProfile, donorDoc]
    *  token: JWT
    *  userProfile: The user profile
-   *  userDoc: Firebase document that contains the userInfo in the db
+   *  donorDoc: Firebase document that contains the userInfo in the db
    */
   async registerDonorWithEmailAndPassword(email, password) {
     await firebaseAuth.createUserWithEmailAndPassword(email, password);
@@ -51,9 +56,12 @@ class AuthAPI {
     const userProfile = firebaseAuth.currentUser;
 
     await this._validateDonor(userProfile);
-    const userDoc = await this._createDonor(userProfile);
+    const [donorDoc, userDoc] = await Promise.all([
+      this._createDonor(userProfile),
+      this._createUser(userProfile.uid, DONOR),
+    ]);
 
-    return [token, userProfile, userDoc];
+    return [token, userProfile, donorDoc];
   }
 
   /**
@@ -71,10 +79,10 @@ class AuthAPI {
    * @param {string} proofImage The image of the proof
    * @param {string} activities The description of the type of activities that the NPO does
    * @throws {AuthError}
-   * @return {array} [token, userProfile, userDoc]
+   * @return {array} [token, userProfile, npoDoc]
    *  token: JWT
    *  userProfile: The user profile
-   *  userDoc: Firebase document that contains the userInfo in the db
+   *  npoDoc: Firebase document that contains the userInfo in the db
    */
   async registerNPO(
     name,
@@ -96,7 +104,7 @@ class AuthAPI {
     const userProfile = firebaseAuth.currentUser;
 
     await this._validateNPO(userProfile);
-    const [userDoc, userVerificationData] = Promise.all([
+    const [npoDoc, userVerificationData, userDoc] = await Promise.all([
       this._createNPO(userProfile, name, contact, organization),
       this._createNPOVerificationData(
         userProfile,
@@ -111,27 +119,28 @@ class AuthAPI {
         proofImage,
         activities
       ),
+      this._createUser(userProfile.uid, NPO),
     ]);
 
-    return [token, userProfile, userDoc];
+    return [token, userProfile, npoDoc];
   }
 
   /**
    * Sign in a donor with Google
    * @throws {FirebaseError}
    * @throws {AuthError}
-   * @return {array} [token, userProfile, userDoc]
+   * @return {array} [token, userProfile, donorDoc]
    *  token: JWT
    *  userProfile: The user profile
-   *  userDoc: Firebase document that contains the userInfo in the db
+   *  donorDoc: Firebase document that contains the userInfo in the db
    */
   async loginDonorWithGoogle() {
     await this._googleAuth();
     const token = await firebaseAuth.currentUser.getIdToken();
     const userProfile = firebaseAuth.currentUser;
-    const userDoc = await this._updateDonorLoginTime(userProfile.uid);
+    const donorDoc = await this._updateDonorLoginTime(userProfile.uid);
 
-    return [token, userProfile, userDoc];
+    return [token, userProfile, donorDoc];
   }
 
   /**
@@ -140,18 +149,18 @@ class AuthAPI {
    * @param {string} password
    * @throws {FirebaseError}
    * @throws {AuthError}
-   * @return {array} [token, userProfile, userDoc]
+   * @return {array} [token, userProfile, donorDoc]
    *  token: JWT
    *  userProfile: The user profile
-   *  userDoc: Firebase document that contains the userInfo in the db
+   *  donorDoc: Firebase document that contains the userInfo in the db
    */
   async loginDonorWithEmailAndPassword(email, password) {
     await firebaseAuth.signInWithEmailAndPassword(email, password);
     const token = await firebaseAuth.currentUser.getIdToken();
     const userProfile = firebaseAuth.currentUser;
-    const userDoc = await this._updateDonorLoginTime(userProfile.uid);
+    const donorDoc = await this._updateDonorLoginTime(userProfile.uid);
 
-    return [token, userProfile, userDoc];
+    return [token, userProfile, donorDoc];
   }
 
   /**
@@ -351,6 +360,16 @@ class AuthAPI {
     }
 
     return snapshot.docs[0].data();
+  }
+
+  async _createUser(id, type) {
+    const newUser = usersCollection.doc(id);
+    const data = {
+      type: [type],
+    };
+    await newUser.set(data);
+
+    return newUser.get();
   }
 
   async _validateDonor(userInfo) {
