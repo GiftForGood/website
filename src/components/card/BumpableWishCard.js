@@ -177,7 +177,7 @@ const WishCard = ({
   const onBumpClicked = () => {
     setLoading(true);
     api.wishes
-      .bumpWish(wishId)
+      .bump(wishId)
       .then((updatedWish) => {
         setOpenBumpModal(false);
         bumpCallback(index, updatedWish);

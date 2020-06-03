@@ -18,7 +18,7 @@ const ClosePostModal = ({ postId, postType, onClose, setIsClosedPost }) => {
   const postToFirestore = async (closePostReason) => {
     try {
       if (isWishPost) {
-        const wishDoc = await api.wishes.closeWish(postId, closePostReason);
+        const wishDoc = await api.wishes.close(postId, closePostReason);
       } else {
         const donationDoc = await api.donations.closeDonation(postId, closePostReason);
       }

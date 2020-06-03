@@ -162,7 +162,7 @@ class WishesAPI {
    * @throws {FirebaseError}
    * @return {object} A firebase document of the wish info
    */
-  async getWish(id) {
+  async get(id) {
     return wishesCollection.doc(id).get();
   }
 
@@ -259,7 +259,7 @@ class WishesAPI {
    * @throws {FirebaseError}
    * @return {object} A firebase document of the updated wish
    */
-  async updateWish(id, title, description, categories) {
+  async update(id, title, description, categories) {
     const wishInfo = await this._getWishInfo(id);
     if (typeof wishInfo === 'undefined') {
       throw new WishError('invalid-wish-id', 'wish does not exist');
@@ -291,7 +291,7 @@ class WishesAPI {
    * @throws {FirebaseError}
    * @return {object} A firebase document of the bumped wish
    */
-  async bumpWish(id) {
+  async bump(id) {
     const wishInfo = await this._getWishInfo(id);
     if (typeof wishInfo === 'undefined') {
       throw new WishError('invalid-wish-id', 'wish does not exist');
@@ -328,7 +328,7 @@ class WishesAPI {
    * @throws {FirebaseError}
    * @return {object} A firebase document of the closed wish
    */
-  async closeWish(id, reason) {
+  async close(id, reason) {
     const wishInfo = await this._getWishInfo(id);
     if (typeof wishInfo === 'undefined') {
       throw new WishError('invalid-wish-id', 'wish does not exist');
@@ -362,7 +362,7 @@ class WishesAPI {
    * @throws {FirebaseError}
    * @return {object} A firebase document of the completed wish
    */
-  async completeWish(id, donorId) {
+  async complete(id, donorId) {
     const [wishInfo, donorInfo] = await Promise.all([this._getWishInfo(id), this._getDonorInfo(donorId)]);
     if (typeof wishInfo === 'undefined') {
       throw new WishError('invalid-wish-id', 'wish does not exist');
