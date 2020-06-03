@@ -37,7 +37,7 @@ export const getLocations = async (locations) => {
   }
 
   return locationDetails;
-}; 
+};
 
 export const getUpdatedLocations = async (existingLocations, updatedLocations) => {
   let locations = [];
@@ -58,4 +58,4 @@ export const getUpdatedLocations = async (existingLocations, updatedLocations) =
   const newLocations = await getLocations(locationsToQuery);
 
   return locations.concat(newLocations);
-}
+};

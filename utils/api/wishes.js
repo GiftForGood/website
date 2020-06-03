@@ -3,7 +3,13 @@ import { WISHES_BATCH_SIZE } from './constants';
 import { TIMESTAMP, NPO_NAME } from '../constants/wishesSortType';
 import { PENDING, CLOSED, COMPLETED } from '../constants/postStatus';
 import { getLocations, getUpdatedLocations } from './common/location';
-import { getAllCategoryInfos, getUpdatedCategoryInfos } from './common/categories';
+import {
+  getCategoryInfo,
+  getAllCategoryInfos,
+  getUpdatedCategoryInfos,
+  getCustomPostCategoryInfo,
+  getCustomPostCategoryInfos,
+} from './common/categories';
 import WishError from './error/wishError';
 const moment = require('moment');
 
@@ -24,11 +30,13 @@ class WishesAPI {
     let userInfo = {};
     let organizationInfo = {};
 
-    const [categoryInfos, locationInfos, allUserInfo] = await Promise.all([
+    const [allCategoryInfos, locationInfos, allUserInfo] = await Promise.all([
       getAllCategoryInfos(categories),
       getLocations(locations),
       this._getCurrentUserInfo(),
     ]);
+
+    const categoryInfos = getCustomPostCategoryInfos(allCategoryInfos);
 
     userInfo.userId = allUserInfo.userId;
     userInfo.userName = allUserInfo.name;
@@ -73,7 +81,8 @@ class WishesAPI {
    * @return {array} A list of firebase document of the top n pending wishes
    */
   async getTopNPendingWishesForCategory(categoryId, n) {
-    const categoryInfo = await this._getCategoryInfo(categoryId);
+    const allCategoryInfo = await getCategoryInfo(categoryId);
+    const categoryInfo = getCustomPostCategoryInfo(allCategoryInfo);
     return wishesCollection
       .where('categories', 'array-contains', categoryInfo)
       .where('status', '==', PENDING)
@@ -103,11 +112,7 @@ class WishesAPI {
 
     if (lastQueriedDocument == null) {
       // First page
-      return wishesCollection
-        .where('status', '==', PENDING)
-        .orderBy(orderBy, sortOrder)
-        .limit(WISHES_BATCH_SIZE)
-        .get();
+      return wishesCollection.where('status', '==', PENDING).orderBy(orderBy, sortOrder).limit(WISHES_BATCH_SIZE).get();
     } else {
       // Subsequent pages
       return wishesCollection
@@ -138,7 +143,8 @@ class WishesAPI {
       sortOrder = 'desc';
     }
 
-    const categoryInfo = await this._getCategoryInfo(categoryId);
+    const allCategoryInfo = await getCategoryInfo(categoryId);
+    const categoryInfo = getCustomPostCategoryInfo(allCategoryInfo);
 
     if (lastQueriedDocument == null) {
       // First page
@@ -270,10 +276,12 @@ class WishesAPI {
       throw new WishError('invalid-wish-status', 'only can update a pending wish');
     }
 
-    const [categoryInfos, locationInfos] = await Promise.all([
+    const [allCategoryInfos, locationInfos] = await Promise.all([
       getUpdatedCategoryInfos(wishInfo.categories, categories),
-      getUpdatedLocations(wishInfo.locations, locations)
-    ]) 
+      getUpdatedLocations(wishInfo.locations, locations),
+    ]);
+
+    const categoryInfos = getCustomPostCategoryInfos(allCategoryInfos);
 
     const data = {
       title: title,
@@ -396,7 +404,7 @@ class WishesAPI {
 
   async _getNPOInfo(id) {
     const snapshot = await db.collection('npos').doc(id).get();
-    
+
     if (!snapshot.exists) {
       throw new WishError('invalid-npo-id', 'npo does not exist');
     }
@@ -419,16 +427,6 @@ class WishesAPI {
 
     if (!snapshot.exists) {
       throw new WishError('invalid-wish-id', 'wish does not exist');
-    }
-
-    return snapshot.data();
-  }
-
-  async _getCategoryInfo(id) {
-    const snapshot = await db.collection('categories').doc(id).get();
-
-    if (!snapshot.exists) {
-      throw new WishError('invalid-category-id', 'category does not exist');
     }
 
     return snapshot.data();
