@@ -302,7 +302,7 @@ class WishesAPI {
     }
 
     const updateTime = Date.now();
-    const newExpiryDateTime = moment(wishInfo.expiryDateTime).add(1, 'week').valueOf();
+    const newExpiryDateTime = moment(wishInfo.expireDateTime).add(1, 'week').valueOf();
     const wishUpdateInfo = {
       expireDateTime: newExpiryDateTime,
       lastActionByUserDateTime: updateTime,
@@ -315,7 +315,7 @@ class WishesAPI {
 
     let wishDoc = wishesCollection.doc(id);
     await wishDoc.update(wishUpdateInfo);
-    wishDoc.collection('bump').add(bumpInfo);
+    wishDoc.collection('bumps').add(bumpInfo);
 
     return wishDoc.get();
   }
