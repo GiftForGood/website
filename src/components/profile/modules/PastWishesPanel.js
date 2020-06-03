@@ -42,18 +42,25 @@ const PastWishesPanel = ({ isMine, userId }) => {
   const [pastWishes, setPastWishes] = useState([]);
   const [shouldSeeMore, setShouldSeeMore] = useState(true);
   const [seeMoreIsLoading, setSeeMoreIsLoading] = useState(false);
+  const [pageIsLoading, setPageIsLoading] = useState(true);
   const { isLargeMobile } = useMediaQuery();
 
   const fetchPastWishes = (lastQueriedDocument) => {
-    api.wishes.getNPOWishes(userId, lastQueriedDocument).then((wishesDoc) => {
-      const numberOfDocumentsReturned = wishesDoc.docs.length;
-      if (numberOfDocumentsReturned < WISHES_BATCH_SIZE) {
-        // loaded all documents already, since the number of wishes returned is less than batch size
-        setShouldSeeMore(false);
-      }
-      setPastWishes([...pastWishes, ...wishesDoc.docs]);
-      setSeeMoreIsLoading(false);
-    });
+    setPageIsLoading(true);
+    api.wishes
+      .getNPOWishes(userId, lastQueriedDocument)
+      .then((wishesDoc) => {
+        const numberOfDocumentsReturned = wishesDoc.docs.length;
+        if (numberOfDocumentsReturned < WISHES_BATCH_SIZE) {
+          // loaded all documents already, since the number of wishes returned is less than batch size
+          setShouldSeeMore(false);
+        }
+        setPastWishes([...pastWishes, ...wishesDoc.docs]);
+        setSeeMoreIsLoading(false);
+      })
+      .finally(() => {
+        setPageIsLoading(false);
+      });
   };
 
   useEffect(() => {
@@ -91,7 +98,7 @@ const PastWishesPanel = ({ isMine, userId }) => {
   };
 
   const MobilePastWishes = () => {
-    if (pastWishes.length === 0) {
+    if (pastWishes.length === 0 && pageIsLoading) {
       return (
         <Stack justify="center" align="center" direction="column" grow>
           <Loading dataTest="test" loading text="Please wait, fetching wishes..." type="pageLoader" />
@@ -122,14 +129,13 @@ const PastWishesPanel = ({ isMine, userId }) => {
   };
 
   const DesktopAndTabletPastWishes = () => {
-    if (pastWishes.length === 0) {
+    if (pastWishes.length === 0 && pageIsLoading) {
       return (
         <Stack justify="center" align="center" direction="column" grow>
           <Loading dataTest="test" loading text="Please wait, fetching wishes..." type="pageLoader" />
         </Stack>
       );
     }
-
     return (
       <>
         <Grid

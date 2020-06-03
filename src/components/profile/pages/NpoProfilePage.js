@@ -46,7 +46,7 @@ const NpoProfilePage = ({ userId }) => {
 
   useEffect(() => {
     fetchUserInfo();
-  }, []);
+  }, [user]);
 
   return (
     <Wrapper>
