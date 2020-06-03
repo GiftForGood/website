@@ -10,7 +10,6 @@ import { WISHES_BATCH_SIZE } from '../../../../utils/api/constants';
 import InfiniteScroll from 'react-infinite-scroller';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 
-
 const GridSectionContainer = styled.div`
   margin-top: 20px;
 `;
@@ -47,18 +46,21 @@ const PastWishesPanel = ({ isMine, userId }) => {
   const { isLargeMobile } = useMediaQuery();
 
   const fetchPastWishes = (lastQueriedDocument) => {
-    setPageIsLoading(true)
-    api.wishes.getNPOWishes(userId, lastQueriedDocument).then((wishesDoc) => {
-      const numberOfDocumentsReturned = wishesDoc.docs.length;
-      if (numberOfDocumentsReturned < WISHES_BATCH_SIZE) {
-        // loaded all documents already, since the number of wishes returned is less than batch size
-        setShouldSeeMore(false);
-      }
-      setPastWishes([...pastWishes, ...wishesDoc.docs]);
-      setSeeMoreIsLoading(false);
-    }).finally(() => {
-      setPageIsLoading(false)
-    })
+    setPageIsLoading(true);
+    api.wishes
+      .getNPOWishes(userId, lastQueriedDocument)
+      .then((wishesDoc) => {
+        const numberOfDocumentsReturned = wishesDoc.docs.length;
+        if (numberOfDocumentsReturned < WISHES_BATCH_SIZE) {
+          // loaded all documents already, since the number of wishes returned is less than batch size
+          setShouldSeeMore(false);
+        }
+        setPastWishes([...pastWishes, ...wishesDoc.docs]);
+        setSeeMoreIsLoading(false);
+      })
+      .finally(() => {
+        setPageIsLoading(false);
+      });
   };
 
   useEffect(() => {
