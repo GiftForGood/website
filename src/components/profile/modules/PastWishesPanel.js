@@ -106,6 +106,14 @@ const PastWishesPanel = ({ isMine, userId }) => {
       );
     }
 
+    if (pastWishes.length === 0) {
+      return (
+        <Stack justify="center" align="center" direction="column" grow>
+          <BlackText size="medium">No wishes posted yet.</BlackText>
+        </Stack>
+      );
+    }
+
     return (
       <InfiniteScroll
         pageStart={0}
@@ -136,6 +144,15 @@ const PastWishesPanel = ({ isMine, userId }) => {
         </Stack>
       );
     }
+
+    if (pastWishes.length === 0) {
+      return (
+        <Stack justify="center" align="center" direction="column" grow>
+          <BlackText size="medium">No wishes posted yet.</BlackText>
+        </Stack>
+      );
+    }
+
     return (
       <>
         <Grid

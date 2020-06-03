@@ -47,7 +47,7 @@ const DonorProfilePage = ({ userId }) => {
 
   useEffect(() => {
     fetchUserInfo();
-  }, []);
+  }, [user]);
 
   return (
     <Wrapper>

@@ -41,19 +41,26 @@ const ButtonContainer = styled.div`
 const PastDonationsPanel = ({ isMine, userId }) => {
   const [pastDonations, setPastDonations] = useState([]);
   const [shouldSeeMore, setShouldSeeMore] = useState(true);
+  const [pageIsLoading, setPageIsLoading] = useState(true);
   const [seeMoreIsLoading, setSeeMoreIsLoading] = useState(false);
   const { isLargeMobile } = useMediaQuery();
 
   const fetchPastDonations = (lastQueriedDocument) => {
-    api.donations.getDonorDonations(userId, lastQueriedDocument).then((donationsDoc) => {
-      const numberOfDocumentsReturned = donationsDoc.docs.length;
-      if (numberOfDocumentsReturned < DONATIONS_BATCH_SIZE) {
-        // loaded all documents already, since the number of wishes returned is less than batch size
-        setShouldSeeMore(false);
-      }
-      setPastDonations([...pastDonations, ...donationsDoc.docs]);
-      setSeeMoreIsLoading(false);
-    });
+    setPageIsLoading(true);
+    api.donations
+      .getDonorDonations(userId, lastQueriedDocument)
+      .then((donationsDoc) => {
+        const numberOfDocumentsReturned = donationsDoc.docs.length;
+        if (numberOfDocumentsReturned < DONATIONS_BATCH_SIZE) {
+          // loaded all documents already, since the number of wishes returned is less than batch size
+          setShouldSeeMore(false);
+        }
+        setPastDonations([...pastDonations, ...donationsDoc.docs]);
+        setSeeMoreIsLoading(false);
+      })
+      .finally(() => {
+        setPageIsLoading(false);
+      });
   };
 
   useEffect(() => {
@@ -85,10 +92,18 @@ const PastDonationsPanel = ({ isMine, userId }) => {
   };
 
   const MobilePastDonations = () => {
+    if (pastDonations.length === 0 && pageIsLoading) {
+      return (
+        <Stack justify="center" align="center" direction="column" grow>
+          <Loading dataTest="test" loading text="Please wait, fetching donations..." type="pageLoader" />
+        </Stack>
+      );
+    }
+
     if (pastDonations.length === 0) {
       return (
         <Stack justify="center" align="center" direction="column" grow>
-          <Loading dataTest="test" loading text="Please wait, fetching wishes..." type="pageLoader" />
+          <BlackText size="medium">No donations posted yet.</BlackText>
         </Stack>
       );
     }
@@ -116,10 +131,18 @@ const PastDonationsPanel = ({ isMine, userId }) => {
   };
 
   const DesktopAndTabletPastDonations = () => {
-    if (pastDonations.length === 0) {
+    if (pastDonations.length === 0 && pageIsLoading) {
       return (
         <Stack justify="center" align="center" direction="column" grow>
           <Loading dataTest="test" loading text="Please wait, fetching donations..." type="pageLoader" />
+        </Stack>
+      );
+    }
+
+    if (pastDonations.length === 0) {
+      return (
+        <Stack justify="center" align="center" direction="column" grow>
+          <BlackText size="medium">No donations posted yet.</BlackText>
         </Stack>
       );
     }
@@ -160,19 +183,17 @@ const PastDonationsPanel = ({ isMine, userId }) => {
       const postHref = `/donations/${donationId}`;
       return (
         <DonationCard
-          index={index}
           key={donationId}
-          wishId={donationId}
           name={user.userName}
           title={title}
           description={description}
           profileImageUrl={user.profileImageUrl}
           postedDateTime={postedDateTime}
           postHref={postHref}
-          profileImageUrl={profileImageUrl}
           coverImageUrl={coverImageUrl}
           status={status}
-          locations={locationNames}
+          location={locationNames}
+          validPeriod="dummy period"
         />
       );
     });
