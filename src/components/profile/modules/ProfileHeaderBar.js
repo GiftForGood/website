@@ -45,16 +45,6 @@ const ProfileHeaderBar = ({ isShowPastWishes, isShowReviews, setIsShowPastWishes
           <Stack direction="row" spacing="comfy" shrink>
             <TextLink
               type="secondary"
-              asComponent={isShowReviews ? selectedLink : unselectedLink}
-              onClick={() => {
-                setIsShowReviews(true);
-                setIsShowPastWishes(false);
-              }}
-            >
-              Reviews
-            </TextLink>
-            <TextLink
-              type="secondary"
               asComponent={isShowPastWishes ? selectedLink : unselectedLink}
               onClick={() => {
                 setIsShowReviews(false);
@@ -62,6 +52,16 @@ const ProfileHeaderBar = ({ isShowPastWishes, isShowReviews, setIsShowPastWishes
               }}
             >
               Past Wishes
+            </TextLink>
+            <TextLink
+              type="secondary"
+              asComponent={isShowReviews ? selectedLink : unselectedLink}
+              onClick={() => {
+                setIsShowReviews(true);
+                setIsShowPastWishes(false);
+              }}
+            >
+              Reviews
             </TextLink>
           </Stack>
 
