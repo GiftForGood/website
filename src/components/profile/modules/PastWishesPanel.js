@@ -10,6 +10,7 @@ import { WISHES_BATCH_SIZE } from '../../../../utils/api/constants';
 import InfiniteScroll from 'react-infinite-scroller';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 
+
 const GridSectionContainer = styled.div`
   margin-top: 20px;
 `;
@@ -42,9 +43,11 @@ const PastWishesPanel = ({ isMine, userId }) => {
   const [pastWishes, setPastWishes] = useState([]);
   const [shouldSeeMore, setShouldSeeMore] = useState(true);
   const [seeMoreIsLoading, setSeeMoreIsLoading] = useState(false);
+  const [pageIsLoading, setPageIsLoading] = useState(true);
   const { isLargeMobile } = useMediaQuery();
 
   const fetchPastWishes = (lastQueriedDocument) => {
+    setPageIsLoading(true)
     api.wishes.getNPOWishes(userId, lastQueriedDocument).then((wishesDoc) => {
       const numberOfDocumentsReturned = wishesDoc.docs.length;
       if (numberOfDocumentsReturned < WISHES_BATCH_SIZE) {
@@ -53,7 +56,9 @@ const PastWishesPanel = ({ isMine, userId }) => {
       }
       setPastWishes([...pastWishes, ...wishesDoc.docs]);
       setSeeMoreIsLoading(false);
-    });
+    }).finally(() => {
+      setPageIsLoading(false)
+    })
   };
 
   useEffect(() => {
@@ -91,10 +96,18 @@ const PastWishesPanel = ({ isMine, userId }) => {
   };
 
   const MobilePastWishes = () => {
-    if (pastWishes.length === 0) {
+    if (pastWishes.length === 0 && pageIsLoading) {
       return (
         <Stack justify="center" align="center" direction="column" grow>
           <Loading dataTest="test" loading text="Please wait, fetching wishes..." type="pageLoader" />
+        </Stack>
+      );
+    }
+
+    if (pastWishes.length === 0) {
+      return (
+        <Stack justify="center" align="center" direction="column" grow>
+          <BlackText size="medium">No wishes posted yet.</BlackText>
         </Stack>
       );
     }
@@ -122,10 +135,18 @@ const PastWishesPanel = ({ isMine, userId }) => {
   };
 
   const DesktopAndTabletPastWishes = () => {
-    if (pastWishes.length === 0) {
+    if (pastWishes.length === 0 && pageIsLoading) {
       return (
         <Stack justify="center" align="center" direction="column" grow>
           <Loading dataTest="test" loading text="Please wait, fetching wishes..." type="pageLoader" />
+        </Stack>
+      );
+    }
+
+    if (pastWishes.length === 0) {
+      return (
+        <Stack justify="center" align="center" direction="column" grow>
+          <BlackText size="medium">No wishes posted yet.</BlackText>
         </Stack>
       );
     }
