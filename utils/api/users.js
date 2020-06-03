@@ -5,6 +5,15 @@ import UserError from './error/userError';
 
 class UsersAPI {
   /**
+   * Get a user type by its id
+   * @param {string} id The user id to search by
+   * @return {object} A firebase document of the user type info
+   */
+  async getUserType(id) {
+    return db.collection('users').doc(id).get();
+  }
+
+  /**
    * Get a NPO info by its id
    * @param {string} id The NPO id to search by
    * @return {object} A firebase document of the NPO info

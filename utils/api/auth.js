@@ -7,29 +7,36 @@ import {
   COMMISSIONER_OF_CHARITIES,
   AFFILIATED_NATIONAL_COUNCIL_OF_SOCIAL_SERVICE,
 } from '../constants/npoRegisteredRegistrar.js';
-import AuthError from './error/authError';
 import { FIREBASE_EMAIL_ACTION_URL } from '../constants/siteUrl';
+import { DONOR, NPO } from '../constants/usersType';
+import AuthError from './error/authError';
 
 const donorsCollection = db.collection('donors');
 const nposCollection = db.collection('npos');
+const usersCollection = db.collection('users');
 
 class AuthAPI {
   /**
    * Register a donor with Google
    * @throws {FirebaseError}
    * @throws {AuthError}
-   * @return {array} [token, userProfile, userDoc]
+   * @return {array} [token, userProfile, donorDoc]
    *  token: JWT
    *  userProfile: The user profile
-   *  userDoc: Firebase document that contains the userInfo in the db
+   *  donorDoc: Firebase document that contains the userInfo in the db
    */
   async registerDonorWithGoogle() {
     await this._googleAuth();
     const token = await firebaseAuth.currentUser.getIdToken();
     const userProfile = firebaseAuth.currentUser;
-    const userDoc = await this._createDonor(userProfile);
 
-    return [token, userProfile, userDoc];
+    await this._validateDonor(userProfile);
+    const [donorDoc, userDoc] = await Promise.all([
+      this._createDonor(userProfile),
+      this._createUser(userProfile.uid, DONOR),
+    ]);
+
+    return [token, userProfile, donorDoc];
   }
 
   /**
@@ -38,18 +45,23 @@ class AuthAPI {
    * @param {string} password
    * @throws {FirebaseError}
    * @throws {AuthError}
-   * @return {array} [token, userProfile, userDoc]
+   * @return {array} [token, userProfile, donorDoc]
    *  token: JWT
    *  userProfile: The user profile
-   *  userDoc: Firebase document that contains the userInfo in the db
+   *  donorDoc: Firebase document that contains the userInfo in the db
    */
   async registerDonorWithEmailAndPassword(email, password) {
     await firebaseAuth.createUserWithEmailAndPassword(email, password);
     const token = await firebaseAuth.currentUser.getIdToken();
     const userProfile = firebaseAuth.currentUser;
-    const userDoc = await this._createDonor(userProfile);
 
-    return [token, userProfile, userDoc];
+    await this._validateDonor(userProfile);
+    const [donorDoc, userDoc] = await Promise.all([
+      this._createDonor(userProfile),
+      this._createUser(userProfile.uid, DONOR),
+    ]);
+
+    return [token, userProfile, donorDoc];
   }
 
   /**
@@ -58,7 +70,7 @@ class AuthAPI {
    * @param {number} contact The contact of the NPO
    * @param {string} email The email of the NPO
    * @param {string} password The password of the NPO
-   * @param {string} organizationName The organization that the NPO belongs to
+   * @param {string} organization The organization name that the NPO belongs to
    * @param {string} registeredRegistrar The registrar the the NPO is registered with
    * @param {string} registrationNumber The registration number
    * @param {string} dayOfRegistration The date when the NPO is registered with the registrar (day)
@@ -66,17 +78,18 @@ class AuthAPI {
    * @param {string} yearOfRegistration The date when the NPO is registered with the registrar (day)
    * @param {string} proofImage The image of the proof
    * @param {string} activities The description of the type of activities that the NPO does
-   * @return {array} [token, userProfile, userDoc]
+   * @throws {AuthError}
+   * @return {array} [token, userProfile, npoDoc]
    *  token: JWT
    *  userProfile: The user profile
-   *  userDoc: Firebase document that contains the userInfo in the db
+   *  npoDoc: Firebase document that contains the userInfo in the db
    */
   async registerNPO(
     name,
     contact,
     email,
     password,
-    organizationName,
+    organization,
     registeredRegistrar,
     registrationNumber,
     dayOfRegistration,
@@ -89,40 +102,45 @@ class AuthAPI {
     await firebaseAuth.createUserWithEmailAndPassword(email, password);
     const token = await firebaseAuth.currentUser.getIdToken();
     const userProfile = firebaseAuth.currentUser;
-    const userDoc = await this._createNPO(userProfile, name, contact, organizationName);
-    await this._createNPOVerificationData(
-      userProfile,
-      name,
-      contact,
-      organizationName,
-      registeredRegistrar,
-      registrationNumber,
-      dayOfRegistration,
-      monthOfRegistration,
-      yearOfRegistration,
-      proofImage,
-      activities
-    );
 
-    return [token, userProfile, userDoc];
+    await this._validateNPO(userProfile);
+    const [npoDoc, userVerificationData, userDoc] = await Promise.all([
+      this._createNPO(userProfile, name, contact, organization),
+      this._createNPOVerificationData(
+        userProfile,
+        name,
+        contact,
+        organization,
+        registeredRegistrar,
+        registrationNumber,
+        dayOfRegistration,
+        monthOfRegistration,
+        yearOfRegistration,
+        proofImage,
+        activities
+      ),
+      this._createUser(userProfile.uid, NPO),
+    ]);
+
+    return [token, userProfile, npoDoc];
   }
 
   /**
    * Sign in a donor with Google
    * @throws {FirebaseError}
    * @throws {AuthError}
-   * @return {array} [token, userProfile, userDoc]
+   * @return {array} [token, userProfile, donorDoc]
    *  token: JWT
    *  userProfile: The user profile
-   *  userDoc: Firebase document that contains the userInfo in the db
+   *  donorDoc: Firebase document that contains the userInfo in the db
    */
   async loginDonorWithGoogle() {
     await this._googleAuth();
     const token = await firebaseAuth.currentUser.getIdToken();
     const userProfile = firebaseAuth.currentUser;
-    const userDoc = await this._getDonorDoc(userProfile.uid);
+    const donorDoc = await this._updateDonorLoginTime(userProfile.uid);
 
-    return [token, userProfile, userDoc];
+    return [token, userProfile, donorDoc];
   }
 
   /**
@@ -131,24 +149,26 @@ class AuthAPI {
    * @param {string} password
    * @throws {FirebaseError}
    * @throws {AuthError}
-   * @return {array} [token, userProfile, userDoc]
+   * @return {array} [token, userProfile, donorDoc]
    *  token: JWT
    *  userProfile: The user profile
-   *  userDoc: Firebase document that contains the userInfo in the db
+   *  donorDoc: Firebase document that contains the userInfo in the db
    */
   async loginDonorWithEmailAndPassword(email, password) {
     await firebaseAuth.signInWithEmailAndPassword(email, password);
     const token = await firebaseAuth.currentUser.getIdToken();
     const userProfile = firebaseAuth.currentUser;
-    const userDoc = await this._getDonorDoc(userProfile.uid);
+    const donorDoc = await this._updateDonorLoginTime(userProfile.uid);
 
-    return [token, userProfile, userDoc];
+    return [token, userProfile, donorDoc];
   }
 
   /**
    * Sign in a NPO
    * @param {string} email
    * @param {string} password
+   * @throws {AuthError}
+   * @throws {FirebaseError}
    * @return {array} [token, userProfile, userDoc]
    *  token: JWT
    *  userProfile: The user profile
@@ -158,13 +178,14 @@ class AuthAPI {
     await firebaseAuth.signInWithEmailAndPassword(email, password);
     const token = await firebaseAuth.currentUser.getIdToken();
     const userProfile = firebaseAuth.currentUser;
-    const userDoc = await this._getNPODoc(userProfile.uid);
+    const userDoc = await this._updateNPOLoginTime(userProfile.uid);
 
     return [token, userProfile, userDoc];
   }
 
   /**
    * Send a verification email to the currently logged in user
+   * @throws {FirebaseError}
    */
   async sendVerificationEmail() {
     let url = FIREBASE_EMAIL_ACTION_URL + '/';
@@ -189,17 +210,10 @@ class AuthAPI {
   }
 
   async _createDonor(userInfo) {
-    if (userInfo == null) {
-      throw new AuthError('unable-to-create-user', 'No user profile');
-    }
-
-    if (await this._doesDonorExist(userInfo.uid)) {
-      throw new AuthError('unable-to-create-user', 'Donor account already exists');
-    }
-
     let name = userInfo.displayName;
     let profileImageUrl = userInfo.photoURL;
     if (userInfo.displayName == null) {
+      // No display name, take name from email
       const email = userInfo.email;
       name = email.substring(0, email.lastIndexOf('@'));
     }
@@ -213,7 +227,9 @@ class AuthAPI {
       userId: userInfo.uid,
       name: name,
       profileImageUrl: profileImageUrl,
+      numberOfReviews: 0,
       donor: true,
+      isCorporatePartner: false,
       reviewRating: 0,
       hasAcceptedTermsOfService: true,
       isBlocked: false,
@@ -222,25 +238,166 @@ class AuthAPI {
       lastLoggedInDateTime: timeNow,
     };
     await newDonor.set(data);
-    return newDonor;
+
+    return newDonor.get();
   }
 
-  async _getDonorDoc(id) {
-    const snapshot = await donorsCollection.where('userId', '==', id).get();
-    if (snapshot.empty) {
-      throw new AuthError('invalid-user', 'No such donor account');
-    }
+  async _updateDonorLoginTime(id) {
+    const userDoc = donorsCollection.doc(id);
 
-    return snapshot.docs[0];
+    const data = {
+      lastLoggedInDateTime: Date.now(),
+    };
+    await userDoc.update(data);
+
+    return userDoc.get();
   }
 
   async _doesDonorExist(id) {
-    let snapshot = await donorsCollection.where('userId', '==', id).get();
+    const snapshot = await donorsCollection.doc(id).get();
+    return snapshot.exists;
+  }
+
+  async _createNPO(userProfile, name, contact, organizationName) {
+    const organizationInfo = await this._getCategoryInfo(organizationName);
+
+    const userId = userProfile.uid;
+    const newNPO = nposCollection.doc(userId);
+    const timeNow = Date.now();
+    const data = {
+      userId: userId,
+      name: name,
+      contactNumber: contact,
+      profileImageUrl: '',
+      npo: true,
+      organization: organizationInfo,
+      numberOfReviews: 0,
+      reviewRating: 0,
+      isVerifiedByAdmin: false,
+      hasAcceptedTermsOfService: true,
+      isBlocked: false,
+      isForcedRefreshRequired: false,
+      joinedDateTime: timeNow,
+      lastLoggedInDateTime: timeNow,
+    };
+    await newNPO.set(data);
+
+    return newNPO.get();
+  }
+
+  async _createNPOVerificationData(
+    userProfile,
+    name,
+    contact,
+    organizationName,
+    registeredRegistrar,
+    registrationNumber,
+    dayOfRegistration,
+    monthOfRegistration,
+    yearOfRegistration,
+    proofImage,
+    activities
+  ) {
+    const [organizationInfo, uploadedImageUrl] = await Promise.all([
+      this._getCategoryInfo(organizationName),
+      this._uploadNPOProofImage(userProfile.uid, proofImage),
+    ]);
+
+    const dateOfRegistration = dayOfRegistration + '-' + monthOfRegistration + '-' + yearOfRegistration;
+
+    const organization = {
+      ...organizationInfo,
+      registeredRegistrar: registeredRegistrar,
+      registrationNumber: registrationNumber,
+      dateOfRegistration: moment(dateOfRegistration, 'DD-MM-YYYY').valueOf(),
+      proofImageUrl: uploadedImageUrl,
+      proofImageVersion: 1,
+      activities: activities,
+    };
+    const newVerificationData = db.collection('npoVerifications').doc(userProfile.uid);
+    const data = {
+      userId: userProfile.uid,
+      name: name,
+      contactNumber: contact,
+      organization: organization,
+      isVerifiedByAdmin: false,
+    };
+    await newVerificationData.set(data);
+
+    return newVerificationData.get();
+  }
+
+  async _doesNPOExist(id) {
+    const snapshot = await nposCollection.doc(id).get();
+    return snapshot.exists;
+  }
+
+  async _updateNPOLoginTime(id) {
+    const userDoc = nposCollection.doc(id);
+
+    const data = {
+      lastLoggedInDateTime: Date.now(),
+    };
+    await userDoc.update(data);
+
+    return userDoc.get();
+  }
+
+  async _uploadNPOProofImage(npoId, proofFile) {
+    const ext = path.extname(proofFile.name);
+    const storageRef = firebaseStorage.ref();
+    const proofFileRef = storageRef.child(`npos/${npoId}/proofs/${npoId}_proof_v1${ext}`);
+    await proofFileRef.put(proofFile);
+
+    return proofFileRef.getDownloadURL();
+  }
+
+  async _getCategoryInfo(name) {
+    const snapshot = await db.collection('npoOrganizations').where('name', '==', name).get();
+
     if (snapshot.empty) {
-      return false;
+      return {};
     }
 
-    return true;
+    return snapshot.docs[0].data();
+  }
+
+  async _createUser(id, type) {
+    const newUser = usersCollection.doc(id);
+    const data = {
+      type: [type],
+    };
+    await newUser.set(data);
+
+    return newUser.get();
+  }
+
+  async _validateDonor(userInfo) {
+    if (userInfo == null) {
+      throw new AuthError('unable-to-create-user', 'No user profile');
+    }
+
+    if (await this._doesDonorExist(userInfo.uid)) {
+      throw new AuthError('unable-to-create-user', 'Donor account already exists');
+    }
+
+    if (await this._doesNPOExist(userInfo.uid)) {
+      throw new AuthError('unable-to-create-user', 'User already sign up as a NPO');
+    }
+  }
+
+  async _validateNPO(userInfo) {
+    if (userInfo == null) {
+      throw new AuthError('unable-to-create-user', 'No user profile');
+    }
+
+    if (await this._doesNPOExist(userInfo.uid)) {
+      throw new AuthError('unable-to-create-user', 'NPO account already exists');
+    }
+
+    if (await this._doesDonorExist(userInfo.uid)) {
+      throw new AuthError('unable-to-create-user', 'User already sign up as a Donor');
+    }
   }
 
   _validateNPOData(registeredRegistrar, proofImage) {
@@ -262,103 +419,11 @@ class AuthAPI {
 
   _validateProofImage(proofImage) {
     const validExtensions = ['.pdf'];
-    const imageExt = path.extname(proofImage.name);
+    const imageExt = path.extname(proofImage.name).toLowerCase();
 
     if (!validExtensions.includes(imageExt)) {
       throw new AuthError('invalid-arguments', imageExt + ' is not a valid file ext');
     }
-  }
-
-  async _createNPO(userProfile, name, contact, organizationName) {
-    const organizationInfo = await this._getCategoryInfo(organizationName);
-
-    const userId = userProfile.uid;
-    const newNPO = nposCollection.doc(userId);
-    const timeNow = Date.now();
-    const data = {
-      userId: userId,
-      name: name,
-      contactNumber: contact,
-      profileImageUrl: '',
-      npo: true,
-      organization: organizationInfo,
-      reviewRating: 0,
-      isVerifiedByAdmin: false,
-      hasAcceptedTermsOfService: true,
-      isBlocked: false,
-      isForcedRefreshRequired: false,
-      joinedDateTime: timeNow,
-      lastLoggedInDateTime: timeNow,
-    };
-    await newNPO.set(data);
-    return newNPO;
-  }
-
-  async _createNPOVerificationData(
-    userProfile,
-    name,
-    contact,
-    organizationName,
-    registeredRegistrar,
-    registrationNumber,
-    dayOfRegistration,
-    monthOfRegistration,
-    yearOfRegistration,
-    proofImage,
-    activities
-  ) {
-    const [organizationInfo, uploadedImage] = await Promise.all([
-      this._getCategoryInfo(organizationName),
-      this._uploadNPOProofImage(userProfile.uid, proofImage),
-    ]);
-    const imagePath = uploadedImage.metadata.fullPath;
-    const dateOfRegistration = dayOfRegistration + '-' + monthOfRegistration + '-' + yearOfRegistration;
-
-    const organization = {
-      ...organizationInfo,
-      registeredRegistrar: registeredRegistrar,
-      registrationNumber: registrationNumber,
-      dateOfRegistration: moment(dateOfRegistration, 'DD-MM-YYYY').valueOf(),
-      proofImageUrl: imagePath,
-      activities: activities,
-    };
-    const newVerificationData = db.collection('npoVerifications').doc(userProfile.uid);
-    const data = {
-      userId: userProfile.uid,
-      name: name,
-      contactNumber: contact,
-      organization: organization,
-      isVerifiedByAdmin: false,
-    };
-    await newVerificationData.set(data);
-    return newVerificationData;
-  }
-
-  async _getNPODoc(id) {
-    const snapshot = await nposCollection.where('userId', '==', id).get();
-
-    if (snapshot.empty) {
-      throw new AuthError('invalid-user', 'No such NPO account');
-    }
-
-    return snapshot.docs[0];
-  }
-
-  async _uploadNPOProofImage(npoId, proofImage) {
-    const ext = path.extname(proofImage.name);
-    const storageRef = firebaseStorage.ref();
-    const proofImageRef = storageRef.child(`npos/${npoId}/proofs/${npoId}_proof_v1${ext}`);
-    return await proofImageRef.put(proofImage);
-  }
-
-  async _getCategoryInfo(name) {
-    const snapshot = await db.collection('npoOrganizations').where('name', '==', name).get();
-
-    if (snapshot.empty) {
-      return {};
-    }
-
-    return snapshot.docs[0].data();
   }
 }
 

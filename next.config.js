@@ -1,6 +1,7 @@
 const Dotenv = require('dotenv-webpack');
+const withImages = require('next-images');
 
-module.exports = {
+module.exports = withImages({
   webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
     // Add the new plugin to the existing webpack plugins
     config.plugins.push(new Dotenv({ silent: true }));
@@ -27,4 +28,4 @@ module.exports = {
     FIREBASE_ADMIN_CERT_PROVIDER_URL: process.env.FIREBASE_ADMIN_CERT_PROVIDER_URL,
     FIREBASE_ADMIN_CERT: process.env.FIREBASE_ADMIN_CERT,
   },
-};
+});
