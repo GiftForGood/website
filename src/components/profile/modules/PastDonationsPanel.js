@@ -193,7 +193,6 @@ const PastDonationsPanel = ({ isMine, userId }) => {
           coverImageUrl={coverImageUrl}
           status={status}
           location={locationNames}
-          validPeriod="dummy period"
         />
       );
     });

@@ -6,6 +6,8 @@ import styled, { css } from 'styled-components';
 import { defaultPostImagePath } from '../../../utils/constants/imagePaths';
 import { useRouter } from 'next/router';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
+import CardStatus from './CardStatus';
+import { donations } from '../../../utils/constants/postType';
 
 const CardContainer = styled.div`
   display: flex;
@@ -70,36 +72,6 @@ const ClickableDiv = styled.a`
   z-index: 1;
 `;
 
-const DonationStatusContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  width: 100%;
-  position: absolute;
-  bottom: 0;
-`;
-
-const DonationStatusWrapper = styled.div`
-  display: flex;
-  background-color: ${(props) => getColor(props.status)};
-  padding-top: 5px;
-  padding-bottom: 5px;
-  padding-left: 15px;
-  padding-right: 15px;
-  color: white;
-`;
-
-const getColor = (status) => {
-  switch (status) {
-    case 'completed':
-      return colors.completedTagBackground;
-    case 'closed':
-      return colors.closedTagBackground;
-    default:
-      return 'black';
-  }
-};
-
 const CardDescription = ({ title, description }) => {
   return (
     <Stack direction="column" spacing="tight">
@@ -117,14 +89,6 @@ const CardDescriptionFooter = ({ validPeriod, location }) => {
       <GreyText size="small">Valid period: {validPeriod || '10/05/2020 - 10/05/2021'}</GreyText>
       <GreyText size="small">Location: {location}</GreyText>
     </>
-  );
-};
-
-const DonationStatus = ({ status }) => {
-  return (
-    <DonationStatusContainer>
-      <DonationStatusWrapper status={status}>{status.toUpperCase()}</DonationStatusWrapper>
-    </DonationStatusContainer>
   );
 };
 
@@ -168,7 +132,7 @@ const DonationCard = ({
         <CardImageContainer>
           <CardImage imageUrl={coverImageUrl || defaultPostImagePath} />
           {/* status label will only be shown if status is provided and it is not pending */}
-          {status != null && status != 'pending' && <DonationStatus status={status} />}
+          {status != null && status != 'pending' && <CardStatus status={status} cardType={donations} />}
         </CardImageContainer>
         <CardDescriptionContainer>
           <CardDescription title={title} description={description} />

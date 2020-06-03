@@ -1,11 +1,21 @@
 import React from 'react';
 import { colors } from '../../../utils/constants/colors';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
+import { donations } from '../../../utils/constants/postType';
 
 const CardStatusContainer = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
+  ${(props) => {
+    if (props.cardType === donations) {
+      return css`
+        width: 100%;
+        position: absolute;
+        bottom: 0;
+      `;
+    }
+  }}
 `;
 
 const CardStatusWrapper = styled.div`
@@ -28,9 +38,9 @@ const getColor = (status) => {
       return 'black';
   }
 };
-const CardStatus = ({ status }) => {
+const CardStatus = ({ status, cardType }) => {
   return (
-    <CardStatusContainer>
+    <CardStatusContainer cardType={cardType}>
       <CardStatusWrapper status={status}>{status.toUpperCase()}</CardStatusWrapper>
     </CardStatusContainer>
   );
