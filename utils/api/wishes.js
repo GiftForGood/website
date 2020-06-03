@@ -182,14 +182,14 @@ class WishesAPI {
       // First page
       return wishesCollection
         .where('user.userId', '==', npoId)
-        .orderBy('postedDateTime', 'desc')
+        .orderBy('lastActionByUserDateTime', 'desc')
         .limit(WISHES_BATCH_SIZE)
         .get();
     } else {
       // Subsequent pages
       return wishesCollection
         .where('user.userId', '==', npoId)
-        .orderBy('postedDateTime', 'desc')
+        .orderBy('lastActionByUserDateTime', 'desc')
         .startAfter(lastQueriedDocument)
         .limit(WISHES_BATCH_SIZE)
         .get();
@@ -210,7 +210,7 @@ class WishesAPI {
       return wishesCollection
         .where('user.userId', '==', npoId)
         .where('status', '==', status.toLowerCase())
-        .orderBy('postedDateTime', 'desc')
+        .orderBy('lastActionByUserDateTime', 'desc')
         .limit(WISHES_BATCH_SIZE)
         .get();
     } else {
@@ -218,7 +218,7 @@ class WishesAPI {
       return wishesCollection
         .where('user.userId', '==', npoId)
         .where('status', '==', status.toLowerCase())
-        .orderBy('postedDateTime', 'desc')
+        .orderBy('lastActionByUserDateTime', 'desc')
         .startAfter(lastQueriedDocument)
         .limit(WISHES_BATCH_SIZE)
         .get();
