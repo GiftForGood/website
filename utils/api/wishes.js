@@ -1,6 +1,7 @@
 import { db, firebaseAuth } from '../firebase';
 import { WISHES_BATCH_SIZE } from './constants';
 import { TIMESTAMP, NPO_NAME } from '../constants/wishesSortType';
+import { PENDING, CLOSED, COMPLETED } from '../constants/postStatus';
 import { getLocations, getUpdatedLocations } from './common/location';
 import { getAllCategoryInfos, getUpdatedCategoryInfos } from './common/categories';
 import WishError from './error/wishError';
@@ -43,7 +44,7 @@ class WishesAPI {
       description: description,
       categories: categoryInfos,
       locations: locationInfos,
-      status: 'pending',
+      status: PENDING,
       user: userInfo,
       organization: organizationInfo,
       postedDateTime: timeNow,
@@ -75,7 +76,7 @@ class WishesAPI {
     const categoryInfo = await this._getCategoryInfo(categoryId);
     return wishesCollection
       .where('categories', 'array-contains', categoryInfo)
-      .where('status', '==', 'pending')
+      .where('status', '==', PENDING)
       .orderBy('lastActionByUserDateTime', 'desc')
       .limit(n)
       .get();
@@ -103,14 +104,14 @@ class WishesAPI {
     if (lastQueriedDocument == null) {
       // First page
       return wishesCollection
-        .where('status', '==', 'pending')
+        .where('status', '==', PENDING)
         .orderBy(orderBy, sortOrder)
         .limit(WISHES_BATCH_SIZE)
         .get();
     } else {
       // Subsequent pages
       return wishesCollection
-        .where('status', '==', 'pending')
+        .where('status', '==', PENDING)
         .orderBy(orderBy, sortOrder)
         .startAfter(lastQueriedDocument)
         .limit(WISHES_BATCH_SIZE)
@@ -143,7 +144,7 @@ class WishesAPI {
       // First page
       return wishesCollection
         .where('categories', 'array-contains', categoryInfo)
-        .where('status', '==', 'pending')
+        .where('status', '==', PENDING)
         .orderBy(orderBy, sortOrder)
         .limit(WISHES_BATCH_SIZE)
         .get();
@@ -151,7 +152,7 @@ class WishesAPI {
       // Subsequent pages
       return wishesCollection
         .where('categories', 'array-contains', categoryInfo)
-        .where('status', '==', 'pending')
+        .where('status', '==', PENDING)
         .orderBy(orderBy, sortOrder)
         .startAfter(lastQueriedDocument)
         .limit(WISHES_BATCH_SIZE)
@@ -235,7 +236,7 @@ class WishesAPI {
     if (lastQueriedDocument == null) {
       // First page
       return wishesCollection
-        .where('status', '==', 'completed')
+        .where('status', '==', COMPLETED)
         .where('completed.donorUserId', '==', donorId)
         .orderBy('postedDateTime', 'desc')
         .limit(WISHES_BATCH_SIZE)
@@ -243,7 +244,7 @@ class WishesAPI {
     } else {
       // Subsequent pages
       return wishesCollection
-        .where('status', '==', 'completed')
+        .where('status', '==', COMPLETED)
         .where('completed.donorUserId', '==', donorId)
         .orderBy('postedDateTime', 'desc')
         .startAfter(lastQueriedDocument)
@@ -265,7 +266,7 @@ class WishesAPI {
    */
   async update(id, title, description, categories, locations) {
     const wishInfo = await this._getWishInfo(id);
-    if (wishInfo.status !== 'pending') {
+    if (wishInfo.status !== PENDING) {
       throw new WishError('invalid-wish-status', 'only can update a pending wish');
     }
 
@@ -297,7 +298,7 @@ class WishesAPI {
    */
   async bump(id) {
     const wishInfo = await this._getWishInfo(id);
-    if (wishInfo.status !== 'pending') {
+    if (wishInfo.status !== PENDING) {
       throw new WishError('invalid-wish-status', 'only can update a pending wish');
     }
 
@@ -330,14 +331,14 @@ class WishesAPI {
    */
   async close(id, reason) {
     const wishInfo = await this._getWishInfo(id);
-    if (wishInfo.status !== 'pending') {
+    if (wishInfo.status !== PENDING) {
       throw new WishError('invalid-wish-status', 'only can update a pending wish');
     }
 
     const updateTime = Date.now();
     const data = {
       updatedDateTime: updateTime,
-      status: 'closed',
+      status: CLOSED,
       closed: {
         reason: reason,
         dateTime: updateTime,
@@ -360,14 +361,14 @@ class WishesAPI {
    */
   async complete(id, donorId) {
     const [wishInfo, donorInfo] = await Promise.all([this._getWishInfo(id), this._getDonorInfo(donorId)]);
-    if (wishInfo.status !== 'pending') {
+    if (wishInfo.status !== PENDING) {
       throw new WishError('invalid-wish-status', 'only can update a pending wish');
     }
 
     const updateTime = Date.now();
     const data = {
       updatedDateTime: updateTime,
-      status: 'completed',
+      status: COMPLETED,
       completed: {
         donorUserId: donorInfo.userId,
         donorName: donorInfo.name,
