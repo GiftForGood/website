@@ -13,7 +13,7 @@ const ProfileAvatar = ({ imageUrl, height, width }) => {
   return (
     <>
       {imageUrl ? (
-        <CircularImage src={imageUrl} />
+        <CircularImage src={imageUrl} height={height} width={width}/>
       ) : (
         <CircularImage src={accountCircle} height={height} width={width} />
       )}

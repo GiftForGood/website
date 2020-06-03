@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Button,
   InputField,
@@ -8,6 +8,7 @@ import {
   CardSection,
   TextLink,
   InputFile,
+  Alert,
 } from '@kiwicom/orbit-components/lib';
 import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
@@ -15,6 +16,9 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import useUser from '../../../session/modules/useUser';
 import ProfileAvatar from '../../../imageContainers/ProfileAvatar';
+import api from '../../../../../utils/api';
+import { useRouter } from 'next/router';
+import SaveChangesButton from '../../../buttons/SaveChangesButton';
 
 const Container = styled.div`
   width: 100%;
@@ -30,13 +34,46 @@ const Container = styled.div`
 
 const NpoEditProfilePanel = () => {
   const user = useUser();
+  const [profileImage, setProfileImage] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+
+  const [alertTitle, setAlertTitle] = useState('');
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertType, setAlertType] = useState('');
+  const [alertDescription, setAlertDescription] = useState('');
+
+  const displayAlert = (title, description, type) => {
+    setShowAlert(true);
+    setAlertTitle(title);
+    setAlertDescription(description);
+    setAlertType(type);
+  };
+
+  const handleFormSubmission = async (values) => {
+    setIsLoading(true);
+    setShowAlert(false);
+    const name = values.name;
+    const contact = values.contactNumber;
+    const profileImage = values.profileImage;
+    try {
+      const npoDoc = await api.users.updateNPO(name, contact, profileImage);
+      console.log('npo', npoDoc.data());
+      setIsLoading(false);
+      router.reload();
+    } catch (error) {
+      setIsLoading(true);
+      formik.setSubmitting(false);
+      displayAlert('Error', error.message, 'critical');
+    }
+  };
 
   const validationSchema = Yup.object().shape({
     name: Yup.string().required('Required'),
-    mobileNumber: Yup.string()
+    contactNumber: Yup.string()
       .required('Required')
       .matches(/^[6|8|9]\d{7}$/, 'Phone number is not valid'),
-    profileImage: Yup.mixed().required('Required'),
+    profileImage: Yup.mixed(),
   });
 
   const formik = useFormik({
@@ -45,12 +82,23 @@ const NpoEditProfilePanel = () => {
       contactNumber: user ? user.contactNumber : '',
       profileImage: null,
     },
-    validationSchema: validationSchema,
     enableReinitialize: true,
+    validationSchema: validationSchema,
     onSubmit: (values) => {
-      // handleFormSubmission(values);
+      handleFormSubmission(values);
     },
   });
+
+  useEffect(() => {
+    if (formik.values.profileImage) {
+      const file = formik.values.profileImage;
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        setProfileImage(ev.target.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  }, [formik]);
 
   if (!user) {
     return null;
@@ -66,7 +114,7 @@ const NpoEditProfilePanel = () => {
 
               <Stack>
                 <Heading type="title2">Profile Picture</Heading>
-                <ProfileAvatar imageUrl={user.profileImageUrl} height={100} width={100} />
+                <ProfileAvatar imageUrl={profileImage || user.profileImageUrl} height={100} width={100} />
                 <InputFile
                   buttonLabel="Upload picture"
                   allowedFileTypes={['image/*']}
@@ -85,22 +133,22 @@ const NpoEditProfilePanel = () => {
                 <Stack spacing="loose" spaceAfter="normal">
                   <InputField
                     disabled={formik.isSubmitting}
+                    {...formik.getFieldProps('name')}
                     label="Your Name"
                     name="name"
                     placeholder="Your full name"
                     error={formik.touched.name && formik.errors.name ? formik.errors.name : ''}
-                    {...formik.getFieldProps('name')}
                   />
 
                   <InputField
                     disabled={formik.isSubmitting}
+                    {...formik.getFieldProps('contactNumber')}
                     label="Your Contact"
                     name="contactNumber"
                     placeholder="Your contact"
                     error={
                       formik.touched.contactNumber && formik.errors.contactNumber ? formik.errors.contactNumber : ''
                     }
-                    {...formik.getFieldProps('contactNumber')}
                   />
 
                   <InputField
@@ -147,11 +195,23 @@ const NpoEditProfilePanel = () => {
                     value={user.organization.website}
                   />
 
-                  <Button submit fullWidth={true} disabled={formik.isSubmitting || !formik.dirty}>
+                  <Button
+                    asComponent={SaveChangesButton}
+                    submit
+                    fullWidth={true}
+                    disabled={formik.isSubmitting || !formik.dirty}
+                    loading={isLoading}
+                  >
                     Save changes
                   </Button>
                 </Stack>
               </Stack>
+              
+              {showAlert ? (
+                <Alert icon title={alertTitle} type={alertType}>
+                  {alertDescription}
+                </Alert>
+              ) : null}
             </Stack>
           </form>
         </CardSection>
