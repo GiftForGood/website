@@ -70,6 +70,36 @@ const ClickableDiv = styled.a`
   z-index: 1;
 `;
 
+const DonationStatusContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+`;
+
+const DonationStatusWrapper = styled.div`
+  display: flex;
+  background-color: ${(props) => getColor(props.status)};
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-left: 15px;
+  padding-right: 15px;
+  color: white;
+`;
+
+const getColor = (status) => {
+  switch (status) {
+    case 'completed':
+      return colors.completedTagBackground;
+    case 'closed':
+      return colors.closedTagBackground;
+    default:
+      return 'black';
+  }
+};
+
 const CardDescription = ({ title, description }) => {
   return (
     <Stack direction="column" spacing="tight">
@@ -90,6 +120,14 @@ const CardDescriptionFooter = ({ validPeriod, location }) => {
   );
 };
 
+const DonationStatus = ({ status }) => {
+  return (
+    <DonationStatusContainer>
+      <DonationStatusWrapper status={status}>{status.toUpperCase()}</DonationStatusWrapper>
+    </DonationStatusContainer>
+  );
+};
+
 /**
  *
  * @param {string} name is the donor's user name
@@ -100,6 +138,7 @@ const CardDescriptionFooter = ({ validPeriod, location }) => {
  * @param {string} postedDateTime is the time posted for donation in milliseconds
  * @param {string} postHref is the link url to direct users to after clicking the donation card
  * @param {string} location is the location of the donation post
+ * @param {string} status is the current status of the donation post, if not provided, the status won't be shown in card
  * @param {string} validPeriod is the validity period of the donation post
  */
 const DonationCard = ({
@@ -111,6 +150,7 @@ const DonationCard = ({
   postedDateTime,
   postHref,
   location,
+  status = null,
   validPeriod,
 }) => {
   const timeAgo = getTimeDifferenceFromNow(postedDateTime);
@@ -125,7 +165,11 @@ const DonationCard = ({
         <CardHeaderContainer>
           <CardHeader name={name} imageUrl={profileImageUrl} timeAgo={timeAgo} />
         </CardHeaderContainer>
-        <CardImage imageUrl={coverImageUrl || defaultPostImagePath} />
+        <CardImageContainer>
+          <CardImage imageUrl={coverImageUrl || defaultPostImagePath} />
+          {/* status label will only be shown if status is provided and it is not pending */}
+          {status != null && status != 'pending' && <DonationStatus status={status} />}
+        </CardImageContainer>
         <CardDescriptionContainer>
           <CardDescription title={title} description={description} />
           <CardDescriptionFooterContainer>

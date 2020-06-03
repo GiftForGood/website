@@ -12,7 +12,7 @@ const ProfileDetails = ({ profileImageUrl, npoOrgName, userRating, npoOrgAddress
       <ProfileAvatar imageUrl={profileImageUrl} height={120} width={120} />
       <Stack direction="column" spacing="tight" justify="start">
         <Heading type="title2">{name}</Heading>
-        <Text weight="bold">{npoOrgName}</Text>
+        {isNpo && <Text weight="bold">{npoOrgName}</Text>}
         <RatingStars rating={userRating} size="small" color={colors.ratingStarBackground} showEmpty />
         {isNpo && <Text>{npoOrgAddress}</Text>}
       </Stack>
