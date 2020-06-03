@@ -24,9 +24,6 @@ class WishesAPI {
     const allUserInfoPromise = this._getCurrentUserInfo();
     const [categoriesInfo, allUserInfo] = await Promise.all([categoriesInfoPromise, allUserInfoPromise]);
 
-    if (typeof allUserInfo === 'undefined') {
-      throw new WishError('invalid-current-user');
-    }
     userInfo.userId = allUserInfo.userId;
     userInfo.userName = allUserInfo.name;
     userInfo.profileImageUrl = allUserInfo.profileImageUrl;
@@ -261,10 +258,6 @@ class WishesAPI {
    */
   async update(id, title, description, categories) {
     const wishInfo = await this._getWishInfo(id);
-    if (typeof wishInfo === 'undefined') {
-      throw new WishError('invalid-wish-id', 'wish does not exist');
-    }
-
     if (wishInfo.status !== 'pending') {
       throw new WishError('invalid-wish-status', 'only can update a pending wish');
     }
@@ -293,10 +286,6 @@ class WishesAPI {
    */
   async bump(id) {
     const wishInfo = await this._getWishInfo(id);
-    if (typeof wishInfo === 'undefined') {
-      throw new WishError('invalid-wish-id', 'wish does not exist');
-    }
-
     if (wishInfo.status !== 'pending') {
       throw new WishError('invalid-wish-status', 'only can update a pending wish');
     }
@@ -330,10 +319,6 @@ class WishesAPI {
    */
   async close(id, reason) {
     const wishInfo = await this._getWishInfo(id);
-    if (typeof wishInfo === 'undefined') {
-      throw new WishError('invalid-wish-id', 'wish does not exist');
-    }
-
     if (wishInfo.status !== 'pending') {
       throw new WishError('invalid-wish-status', 'only can update a pending wish');
     }
@@ -364,13 +349,6 @@ class WishesAPI {
    */
   async complete(id, donorId) {
     const [wishInfo, donorInfo] = await Promise.all([this._getWishInfo(id), this._getDonorInfo(donorId)]);
-    if (typeof wishInfo === 'undefined') {
-      throw new WishError('invalid-wish-id', 'wish does not exist');
-    }
-    if (typeof donorInfo === 'undefined') {
-      throw new WishError('invalid-donor-id', 'donor does not exist');
-    }
-
     if (wishInfo.status !== 'pending') {
       throw new WishError('invalid-wish-status', 'only can update a pending wish');
     }
@@ -397,7 +375,7 @@ class WishesAPI {
     const user = firebaseAuth.currentUser;
 
     if (user == null) {
-      return {};
+      throw new WishError('invalid-current-user');
     }
 
     const userId = user.uid;
@@ -406,21 +384,41 @@ class WishesAPI {
 
   async _getNPOInfo(id) {
     const snapshot = await db.collection('npos').doc(id).get();
+    
+    if (!snapshot.exists) {
+      throw new WishError('invalid-npo-id', 'npo does not exist');
+    }
+
     return snapshot.data();
   }
 
   async _getDonorInfo(id) {
     const snapshot = await db.collection('donors').doc(id).get();
+
+    if (!snapshot.exists) {
+      throw new WishError('invalid-donor-id', 'donor does not exist');
+    }
+
     return snapshot.data();
   }
 
   async _getWishInfo(id) {
     const snapshot = await wishesCollection.doc(id).get();
+
+    if (!snapshot.exists) {
+      throw new WishError('invalid-wish-id', 'wish does not exist');
+    }
+
     return snapshot.data();
   }
 
   async _getCategoryInfo(id) {
     const snapshot = await db.collection('categories').doc(id).get();
+
+    if (!snapshot.exists) {
+      throw new WishError('invalid-category-id', 'category does not exist');
+    }
+
     return snapshot.data();
   }
 
@@ -429,8 +427,7 @@ class WishesAPI {
       return this._getCategoryInfo(categoryId);
     });
 
-    const categoriesInfo = await Promise.all(categoriesPromise);
-    return categoriesInfo.filter((categoryInfo) => typeof categoryInfo !== 'undefined');
+    return await Promise.all(categoriesPromise);
   }
 
   async _getWishCategoriesInfo(existingCategories, updatedCategoriesId) {
