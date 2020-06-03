@@ -39,7 +39,7 @@ const AccountButton = ({ onNotificationClick, onLogoutClick, user }) => {
     <Popover
       content={
         <Stack direction="column" spacing="extraTight">
-          <ButtonLink transparent type="secondary" href="/profile">
+          <ButtonLink transparent type="secondary" href={`/profile/${user.userId}`}>
             View Profile
           </ButtonLink>
           <ButtonLink transparent type="secondary" href="/settings">
