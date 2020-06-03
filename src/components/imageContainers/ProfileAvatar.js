@@ -9,7 +9,7 @@ const CircularImage = styled.img`
   object-fit: cover;
 `;
 
-const Avatar = ({ imageUrl, height, width }) => {
+const ProfileAvatar = ({ imageUrl, height, width }) => {
   return (
     <>
       {imageUrl ? (
@@ -21,4 +21,4 @@ const Avatar = ({ imageUrl, height, width }) => {
   );
 };
 
-export default Avatar;
+export default ProfileAvatar;
