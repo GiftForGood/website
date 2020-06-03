@@ -1,3 +1,4 @@
+import { npo, donor } from '../constants/userType';
 /**
  * Checks if a user is a NPO
  *  user: A user from isAuthenticated
@@ -55,3 +56,25 @@ export function isDonor(user, res, destination = {}) {
     return null;
   }
 }
+
+/**
+ * Checks if an user is a NPO
+ * @param {array} userTypes containing the user types
+ */
+export const containsNPO = (userTypes) => {
+  if (userTypes === null) {
+    return false;
+  }
+  return userTypes.type.includes(npo);
+};
+
+/**
+ * Checks if an user is a Donor
+ * @param {array} userTypes containing the user types
+ */
+export const containsDonor = (userTypes) => {
+  if (userTypes === null) {
+    return false;
+  }
+  return userTypes.type.includes(donor);
+};
