@@ -206,7 +206,7 @@ const NpoEditProfilePanel = () => {
                   </Button>
                 </Stack>
               </Stack>
-              
+
               {showAlert ? (
                 <Alert icon title={alertTitle} type={alertType}>
                   {alertDescription}

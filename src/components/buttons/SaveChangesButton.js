@@ -3,7 +3,7 @@ import { colors } from '../../../utils/constants/colors';
 
 const SaveChangesButton = styled.button`
   background: ${colors.saveChangesBackground};
- 
+
   :active {
     background: ${colors.saveChangesHoverActive};
   }
