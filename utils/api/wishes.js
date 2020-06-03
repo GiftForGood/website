@@ -1,6 +1,8 @@
 import { db, firebaseAuth } from '../firebase';
 import { WISHES_BATCH_SIZE } from './constants';
 import { TIMESTAMP, NPO_NAME } from '../constants/wishesSortType';
+import { getLocations, getUpdatedLocations } from './common/location';
+import { getAllCategoryInfos, getUpdatedCategoryInfos } from './common/categories';
 import WishError from './error/wishError';
 const moment = require('moment');
 
@@ -12,17 +14,20 @@ class WishesAPI {
    * @param {string} title The wish title text
    * @param {string} description The wish description text
    * @param {array} categories A list of categories id that the wish belongs to
+   * @param {array} locations A list of locations text that the wish belongs to
    * @throws {WishError}
    * @throws {FirebaseError}
    * @return {object} A firebase document of the created wish
    */
-  async create(title, description, categories) {
+  async create(title, description, categories, locations) {
     let userInfo = {};
     let organizationInfo = {};
 
-    const categoriesInfoPromise = this._getAllCategoriesInfo(categories);
-    const allUserInfoPromise = this._getCurrentUserInfo();
-    const [categoriesInfo, allUserInfo] = await Promise.all([categoriesInfoPromise, allUserInfoPromise]);
+    const [categoryInfos, locationInfos, allUserInfo] = await Promise.all([
+      getAllCategoryInfos(categories),
+      getLocations(locations),
+      this._getCurrentUserInfo(),
+    ]);
 
     userInfo.userId = allUserInfo.userId;
     userInfo.userName = allUserInfo.name;
@@ -32,11 +37,12 @@ class WishesAPI {
     let newWish = wishesCollection.doc();
     const timeNow = Date.now();
     const expiryDateTime = moment(timeNow).add(1, 'month').valueOf();
-    let data = {
+    const data = {
       wishId: newWish.id,
       title: title,
       description: description,
-      categories: categoriesInfo,
+      categories: categoryInfos,
+      locations: locationInfos,
       status: 'pending',
       user: userInfo,
       organization: organizationInfo,
@@ -252,22 +258,27 @@ class WishesAPI {
    * @param {string} title The wish title text
    * @param {string} description The wish description text
    * @param {array} categories A list of categories id that the wish belongs to
+   * @param {array} locations A list of locations text that the wish belongs to
    * @throws {WishError}
    * @throws {FirebaseError}
    * @return {object} A firebase document of the updated wish
    */
-  async update(id, title, description, categories) {
+  async update(id, title, description, categories, locations) {
     const wishInfo = await this._getWishInfo(id);
     if (wishInfo.status !== 'pending') {
       throw new WishError('invalid-wish-status', 'only can update a pending wish');
     }
 
-    const categoriesInfo = await this._getWishCategoriesInfo(wishInfo.categories, categories);
+    const [categoryInfos, locationInfos] = await Promise.all([
+      getUpdatedCategoryInfos(wishInfo.categories, categories),
+      getUpdatedLocations(wishInfo.locations, locations)
+    ]) 
 
     const data = {
       title: title,
       description: description,
-      categories: categoriesInfo,
+      categories: categoryInfos,
+      locations: locationInfos,
       updatedDateTime: Date.now(),
     };
 
@@ -420,36 +431,6 @@ class WishesAPI {
     }
 
     return snapshot.data();
-  }
-
-  async _getAllCategoriesInfo(categoriesId) {
-    const categoriesPromise = categoriesId.map((categoryId) => {
-      return this._getCategoryInfo(categoryId);
-    });
-
-    return await Promise.all(categoriesPromise);
-  }
-
-  async _getWishCategoriesInfo(existingCategories, updatedCategoriesId) {
-    let categoriesInfo = [];
-    let newCategoriesIdToQuery = [];
-
-    for (const id of updatedCategoriesId) {
-      let categoryInfo = existingCategories.find((category) => category.id === id);
-
-      if (typeof categoryInfo === 'undefined') {
-        newCategoriesIdToQuery.push(id);
-      } else {
-        categoriesInfo.push(categoryInfo);
-      }
-    }
-
-    const newCategoriesPromise = newCategoriesIdToQuery.map((categoryId) => {
-      return this._getCategoryInfo(categoryId);
-    });
-    const newCategoriesInfo = await Promise.all(newCategoriesPromise);
-
-    return [...categoriesInfo, ...newCategoriesInfo];
   }
 
   _validateOrderBy(orderByType) {
