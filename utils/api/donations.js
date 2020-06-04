@@ -460,7 +460,7 @@ class DonationsAPI {
     const snapshot = await db.collection('donors').doc(id).get();
 
     if (!snapshot.exists) {
-      throw new DonationError('invalid-donor-id', 'donar does not exist')
+      throw new DonationError('invalid-donor-id', 'donar does not exist');
     }
 
     return snapshot.data();
