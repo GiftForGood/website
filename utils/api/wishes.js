@@ -1,6 +1,15 @@
 import { db, firebaseAuth } from '../firebase';
 import { WISHES_BATCH_SIZE } from './constants';
-import { TIMESTAMP, NPO_NAME } from '../constants/wishesSortType';
+import { TIMESTAMP, NPO_NAME, POSTED_TIMESTAMP } from '../constants/wishesSortType';
+import { PENDING, CLOSED, COMPLETED } from '../constants/postStatus';
+import { getLocations, getUpdatedLocations } from './common/location';
+import {
+  getCategoryInfo,
+  getAllCategoryInfos,
+  getUpdatedCategoryInfos,
+  getCustomPostCategoryInfo,
+  getCustomPostCategoryInfos,
+} from './common/categories';
 import WishError from './error/wishError';
 const moment = require('moment');
 
@@ -12,21 +21,23 @@ class WishesAPI {
    * @param {string} title The wish title text
    * @param {string} description The wish description text
    * @param {array} categories A list of categories id that the wish belongs to
+   * @param {array} locations A list of locations text that the wish belongs to
    * @throws {WishError}
    * @throws {FirebaseError}
    * @return {object} A firebase document of the created wish
    */
-  async create(title, description, categories) {
+  async create(title, description, categories, locations) {
     let userInfo = {};
     let organizationInfo = {};
 
-    const categoriesInfoPromise = this._getAllCategoriesInfo(categories);
-    const allUserInfoPromise = this._getCurrentUserInfo();
-    const [categoriesInfo, allUserInfo] = await Promise.all([categoriesInfoPromise, allUserInfoPromise]);
+    const [allCategoryInfos, locationInfos, allUserInfo] = await Promise.all([
+      getAllCategoryInfos(categories),
+      getLocations(locations),
+      this._getCurrentUserInfo(),
+    ]);
 
-    if (typeof allUserInfo === 'undefined') {
-      throw new WishError('invalid-current-user');
-    }
+    const categoryInfos = getCustomPostCategoryInfos(allCategoryInfos);
+
     userInfo.userId = allUserInfo.userId;
     userInfo.userName = allUserInfo.name;
     userInfo.profileImageUrl = allUserInfo.profileImageUrl;
@@ -35,12 +46,13 @@ class WishesAPI {
     let newWish = wishesCollection.doc();
     const timeNow = Date.now();
     const expiryDateTime = moment(timeNow).add(1, 'month').valueOf();
-    let data = {
+    const data = {
       wishId: newWish.id,
       title: title,
       description: description,
-      categories: categoriesInfo,
-      status: 'pending',
+      categories: categoryInfos,
+      locations: locationInfos,
+      status: PENDING,
       user: userInfo,
       organization: organizationInfo,
       postedDateTime: timeNow,
@@ -69,11 +81,12 @@ class WishesAPI {
    * @return {array} A list of firebase document of the top n pending wishes
    */
   async getTopNPendingWishesForCategory(categoryId, n) {
-    const categoryInfo = await this._getCategoryInfo(categoryId);
+    const allCategoryInfo = await getCategoryInfo(categoryId);
+    const categoryInfo = getCustomPostCategoryInfo(allCategoryInfo);
     return wishesCollection
       .where('categories', 'array-contains', categoryInfo)
-      .where('status', '==', 'pending')
-      .orderBy('lastActionByUserDateTime', 'desc')
+      .where('status', '==', PENDING)
+      .orderBy(TIMESTAMP, 'desc')
       .limit(n)
       .get();
   }
@@ -99,15 +112,11 @@ class WishesAPI {
 
     if (lastQueriedDocument == null) {
       // First page
-      return wishesCollection
-        .where('status', '==', 'pending')
-        .orderBy(orderBy, sortOrder)
-        .limit(WISHES_BATCH_SIZE)
-        .get();
+      return wishesCollection.where('status', '==', PENDING).orderBy(orderBy, sortOrder).limit(WISHES_BATCH_SIZE).get();
     } else {
       // Subsequent pages
       return wishesCollection
-        .where('status', '==', 'pending')
+        .where('status', '==', PENDING)
         .orderBy(orderBy, sortOrder)
         .startAfter(lastQueriedDocument)
         .limit(WISHES_BATCH_SIZE)
@@ -134,13 +143,14 @@ class WishesAPI {
       sortOrder = 'desc';
     }
 
-    const categoryInfo = await this._getCategoryInfo(categoryId);
+    const allCategoryInfo = await getCategoryInfo(categoryId);
+    const categoryInfo = getCustomPostCategoryInfo(allCategoryInfo);
 
     if (lastQueriedDocument == null) {
       // First page
       return wishesCollection
         .where('categories', 'array-contains', categoryInfo)
-        .where('status', '==', 'pending')
+        .where('status', '==', PENDING)
         .orderBy(orderBy, sortOrder)
         .limit(WISHES_BATCH_SIZE)
         .get();
@@ -148,7 +158,7 @@ class WishesAPI {
       // Subsequent pages
       return wishesCollection
         .where('categories', 'array-contains', categoryInfo)
-        .where('status', '==', 'pending')
+        .where('status', '==', PENDING)
         .orderBy(orderBy, sortOrder)
         .startAfter(lastQueriedDocument)
         .limit(WISHES_BATCH_SIZE)
@@ -162,7 +172,7 @@ class WishesAPI {
    * @throws {FirebaseError}
    * @return {object} A firebase document of the wish info
    */
-  async getWish(id) {
+  async get(id) {
     return wishesCollection.doc(id).get();
   }
 
@@ -178,14 +188,14 @@ class WishesAPI {
       // First page
       return wishesCollection
         .where('user.userId', '==', npoId)
-        .orderBy('postedDateTime', 'desc')
+        .orderBy(TIMESTAMP, 'desc')
         .limit(WISHES_BATCH_SIZE)
         .get();
     } else {
       // Subsequent pages
       return wishesCollection
         .where('user.userId', '==', npoId)
-        .orderBy('postedDateTime', 'desc')
+        .orderBy(TIMESTAMP, 'desc')
         .startAfter(lastQueriedDocument)
         .limit(WISHES_BATCH_SIZE)
         .get();
@@ -206,7 +216,7 @@ class WishesAPI {
       return wishesCollection
         .where('user.userId', '==', npoId)
         .where('status', '==', status.toLowerCase())
-        .orderBy('postedDateTime', 'desc')
+        .orderBy(TIMESTAMP, 'desc')
         .limit(WISHES_BATCH_SIZE)
         .get();
     } else {
@@ -214,7 +224,7 @@ class WishesAPI {
       return wishesCollection
         .where('user.userId', '==', npoId)
         .where('status', '==', status.toLowerCase())
-        .orderBy('postedDateTime', 'desc')
+        .orderBy(TIMESTAMP, 'desc')
         .startAfter(lastQueriedDocument)
         .limit(WISHES_BATCH_SIZE)
         .get();
@@ -232,17 +242,17 @@ class WishesAPI {
     if (lastQueriedDocument == null) {
       // First page
       return wishesCollection
-        .where('status', '==', 'completed')
+        .where('status', '==', COMPLETED)
         .where('completed.donorUserId', '==', donorId)
-        .orderBy('postedDateTime', 'desc')
+        .orderBy(POSTED_TIMESTAMP, 'desc')
         .limit(WISHES_BATCH_SIZE)
         .get();
     } else {
       // Subsequent pages
       return wishesCollection
-        .where('status', '==', 'completed')
+        .where('status', '==', COMPLETED)
         .where('completed.donorUserId', '==', donorId)
-        .orderBy('postedDateTime', 'desc')
+        .orderBy(POSTED_TIMESTAMP, 'desc')
         .startAfter(lastQueriedDocument)
         .limit(WISHES_BATCH_SIZE)
         .get();
@@ -255,26 +265,29 @@ class WishesAPI {
    * @param {string} title The wish title text
    * @param {string} description The wish description text
    * @param {array} categories A list of categories id that the wish belongs to
+   * @param {array} locations A list of locations text that the wish belongs to
    * @throws {WishError}
    * @throws {FirebaseError}
    * @return {object} A firebase document of the updated wish
    */
-  async updateWish(id, title, description, categories) {
+  async update(id, title, description, categories, locations) {
     const wishInfo = await this._getWishInfo(id);
-    if (typeof wishInfo === 'undefined') {
-      throw new WishError('invalid-wish-id', 'wish does not exist');
-    }
-
-    if (wishInfo.status !== 'pending') {
+    if (wishInfo.status !== PENDING) {
       throw new WishError('invalid-wish-status', 'only can update a pending wish');
     }
 
-    const categoriesInfo = await this._getWishCategoriesInfo(wishInfo.categories, categories);
+    const [allCategoryInfos, locationInfos] = await Promise.all([
+      getUpdatedCategoryInfos(wishInfo.categories, categories),
+      getUpdatedLocations(wishInfo.locations, locations),
+    ]);
+
+    const categoryInfos = getCustomPostCategoryInfos(allCategoryInfos);
 
     const data = {
       title: title,
       description: description,
-      categories: categoriesInfo,
+      categories: categoryInfos,
+      locations: locationInfos,
       updatedDateTime: Date.now(),
     };
 
@@ -291,13 +304,9 @@ class WishesAPI {
    * @throws {FirebaseError}
    * @return {object} A firebase document of the bumped wish
    */
-  async bumpWish(id) {
+  async bump(id) {
     const wishInfo = await this._getWishInfo(id);
-    if (typeof wishInfo === 'undefined') {
-      throw new WishError('invalid-wish-id', 'wish does not exist');
-    }
-
-    if (wishInfo.status !== 'pending') {
+    if (wishInfo.status !== PENDING) {
       throw new WishError('invalid-wish-status', 'only can update a pending wish');
     }
 
@@ -328,20 +337,16 @@ class WishesAPI {
    * @throws {FirebaseError}
    * @return {object} A firebase document of the closed wish
    */
-  async closeWish(id, reason) {
+  async close(id, reason) {
     const wishInfo = await this._getWishInfo(id);
-    if (typeof wishInfo === 'undefined') {
-      throw new WishError('invalid-wish-id', 'wish does not exist');
-    }
-
-    if (wishInfo.status !== 'pending') {
+    if (wishInfo.status !== PENDING) {
       throw new WishError('invalid-wish-status', 'only can update a pending wish');
     }
 
     const updateTime = Date.now();
     const data = {
       updatedDateTime: updateTime,
-      status: 'closed',
+      status: CLOSED,
       closed: {
         reason: reason,
         dateTime: updateTime,
@@ -362,23 +367,16 @@ class WishesAPI {
    * @throws {FirebaseError}
    * @return {object} A firebase document of the completed wish
    */
-  async completeWish(id, donorId) {
+  async complete(id, donorId) {
     const [wishInfo, donorInfo] = await Promise.all([this._getWishInfo(id), this._getDonorInfo(donorId)]);
-    if (typeof wishInfo === 'undefined') {
-      throw new WishError('invalid-wish-id', 'wish does not exist');
-    }
-    if (typeof donorInfo === 'undefined') {
-      throw new WishError('invalid-donor-id', 'donor does not exist');
-    }
-
-    if (wishInfo.status !== 'pending') {
+    if (wishInfo.status !== PENDING) {
       throw new WishError('invalid-wish-status', 'only can update a pending wish');
     }
 
     const updateTime = Date.now();
     const data = {
       updatedDateTime: updateTime,
-      status: 'completed',
+      status: COMPLETED,
       completed: {
         donorUserId: donorInfo.userId,
         donorName: donorInfo.name,
@@ -397,7 +395,7 @@ class WishesAPI {
     const user = firebaseAuth.currentUser;
 
     if (user == null) {
-      return {};
+      throw new WishError('invalid-current-user');
     }
 
     const userId = user.uid;
@@ -406,53 +404,32 @@ class WishesAPI {
 
   async _getNPOInfo(id) {
     const snapshot = await db.collection('npos').doc(id).get();
+
+    if (!snapshot.exists) {
+      throw new WishError('invalid-npo-id', 'npo does not exist');
+    }
+
     return snapshot.data();
   }
 
   async _getDonorInfo(id) {
     const snapshot = await db.collection('donors').doc(id).get();
+
+    if (!snapshot.exists) {
+      throw new WishError('invalid-donor-id', 'donor does not exist');
+    }
+
     return snapshot.data();
   }
 
   async _getWishInfo(id) {
     const snapshot = await wishesCollection.doc(id).get();
-    return snapshot.data();
-  }
 
-  async _getCategoryInfo(id) {
-    const snapshot = await db.collection('categories').doc(id).get();
-    return snapshot.data();
-  }
-
-  async _getAllCategoriesInfo(categoriesId) {
-    const categoriesPromise = categoriesId.map((categoryId) => {
-      return this._getCategoryInfo(categoryId);
-    });
-
-    const categoriesInfo = await Promise.all(categoriesPromise);
-    return categoriesInfo.filter((categoryInfo) => typeof categoryInfo !== 'undefined');
-  }
-
-  async _getWishCategoriesInfo(existingCategories, updatedCategoriesId) {
-    let categoriesInfo = [];
-    let newCategoriesIdToQuery = [];
-
-    for (const id of updatedCategoriesId) {
-      let categoryInfo = existingCategories.find((category) => category.id === id);
-
-      if (typeof categoryInfo === 'undefined') {
-        newCategoriesIdToQuery.push(id);
-      } else {
-        categoriesInfo.push(categoryInfo);
-      }
+    if (!snapshot.exists) {
+      throw new WishError('invalid-wish-id', 'wish does not exist');
     }
 
-    const newCategoriesPromise = newCategoriesIdToQuery.map((categoryId) => {
-      return this._getCategoryInfo(categoryId);
-    });
-    const newCategoriesInfo = await Promise.all(newCategoriesPromise);
-
-    return [...categoriesInfo, ...newCategoriesInfo];
+    return snapshot.data();
   }
 
   _validateOrderBy(orderByType) {
