@@ -42,7 +42,7 @@ const AccountButton = ({ onNotificationClick, onLogoutClick, user }) => {
           <ButtonLink transparent type="secondary" href={`/profile/${user.userId}`}>
             View Profile
           </ButtonLink>
-          <ButtonLink transparent type="secondary" href="/settings">
+          <ButtonLink transparent type="secondary" href="/settings/profile">
             Settings
           </ButtonLink>
           <ButtonLink transparent type="secondary" onClick={onNotificationClick}>

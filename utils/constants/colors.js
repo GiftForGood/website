@@ -27,4 +27,7 @@ export const colors = {
   ratingStarBackground: '#ED5555',
   closedTagBackground: '#ED5555',
   completedTagBackground: '#4DB6AC',
+  saveChangesBackground: '#4db6ac',
+  saveChangesHoverActive: '#35ada0',
+  saveChangesFocus: '#16a595',
 };

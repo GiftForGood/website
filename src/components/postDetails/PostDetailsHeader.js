@@ -8,6 +8,7 @@ import Verified from '../session/modules/Verified';
 import { AlertCircle, Edit, CloseCircle, MenuKebab, ShareAndroid } from '@kiwicom/orbit-components/lib/icons';
 import { Button, Stack, Text, Popover, ButtonLink } from '@kiwicom/orbit-components/lib';
 import { useRouter } from 'next/router';
+import { completed, closed } from '../../../utils/constants/postStatus';
 
 const PostDetailsHeader = ({
   loginUserId,
@@ -23,8 +24,9 @@ const PostDetailsHeader = ({
   const isOwnPost = loginUserId === postUserId; // whether login user is the post owner
   const chatType = isOwnPost ? 'View Chats' : 'Chat';
   const postUrl = `https://www.giftforgood.io${router.asPath}`;
+  const isCompletedPost = postStatus === completed;
 
-  const [isClosedPost, setIsClosedPost] = useState(postStatus === 'closed');
+  const [isClosedPost, setIsClosedPost] = useState(postStatus === closed);
   const [showReportPostModal, setShowPostPostModal] = useState(false);
   const [showClosePostModal, setShowClosePostModal] = useState(false);
   const [showSharePostModal, setShowSharePostModal] = useState(false);
@@ -103,7 +105,7 @@ const PostDetailsHeader = ({
                     type="secondary"
                     iconLeft={<Edit />}
                     href={editPostHref}
-                    disabled={isDisabled || isClosedPost}
+                    disabled={isDisabled || isClosedPost || isCompletedPost}
                   >
                     Edit post
                   </ButtonLink>
@@ -112,7 +114,7 @@ const PostDetailsHeader = ({
                     type="secondary"
                     iconLeft={<CloseCircle />}
                     onClick={handleClosePostModal}
-                    disabled={isDisabled || isClosedPost}
+                    disabled={isDisabled || isClosedPost || isCompletedPost}
                   >
                     Mark as closed
                   </ButtonLink>
@@ -123,7 +125,7 @@ const PostDetailsHeader = ({
                   type="secondary"
                   iconLeft={<AlertCircle />}
                   onClick={handleReportPostModal}
-                  disabled={isDisabled || isClosedPost}
+                  disabled={isDisabled || isClosedPost || isCompletedPost}
                 >
                   Report post
                 </ButtonLink>
@@ -158,7 +160,7 @@ const PostDetailsHeader = ({
             return (
               <>
                 <Button
-                  disabled={isDisabled}
+                  disabled={isDisabled || (chatType === 'Chat' && (isClosedPost || isCompletedPost)) ? true : false}
                   size="small"
                   asComponent={ChatButton}
                   onClick={handleOnClickChatBtn}

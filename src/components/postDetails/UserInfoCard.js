@@ -1,5 +1,5 @@
 import React from 'react';
-import Avatar from '../imageContainers/Avatar';
+import ProfileAvatar from '../imageContainers/ProfileAvatar';
 import KiwicomGuarantee from '@kiwicom/orbit-components/lib/icons/KiwicomGuarantee';
 import styled from 'styled-components';
 import { colors } from '../../../utils/constants/colors';
@@ -77,7 +77,7 @@ const UserInfoCard = ({
   const AvatarDetails = () => {
     return (
       <Stack direction="column" shrink inline align="center" spacing="extraTight">
-        <Avatar size="80px" imageUrl={profileImageUrl} />
+        <ProfileAvatar height="80px" width="80px" imageUrl={profileImageUrl} />
         <RatingStars rating={postUserReviewRating} size="small" color={colors.ratingStarBackground} showEmpty />
       </Stack>
     );
