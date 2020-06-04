@@ -62,7 +62,8 @@ const CreateWishPanel = () => {
       let title = values.title;
       let description = values.description;
       let categoryIds = values.categories.map((category) => category.id);
-      const wishDoc = await api.wishes.create(title, description, categoryIds);
+      let locations = [values.location];
+      const wishDoc = await api.wishes.create(title, description, categoryIds, locations);
       let wishId = wishDoc.data().wishId;
       router.push(`/wishes/${wishId}`);
     } catch (error) {
@@ -87,6 +88,7 @@ const CreateWishPanel = () => {
       .required('Required')
       .min(1, 'A category must be provided')
       .max(3, 'Only 3 selected categories allowed'),
+    location: Yup.string().required('Required'),
   });
 
   const formik = useFormik({
@@ -94,6 +96,7 @@ const CreateWishPanel = () => {
       title: '',
       description: '',
       categories: [],
+      location: '',
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -235,8 +238,8 @@ const CreateWishPanel = () => {
                   help={'Your wish will be automatically removed after this date.'}
                 />
 
-                <GooglePlacesAutoCompleteField label={'Centre Location'} />
-                
+                <GooglePlacesAutoCompleteField label={'Centre Location'} formik={formik} />
+
                 {isDesktop ? null : <LivePreviewPanel />}
 
                 <Button fullWidth submit asComponent={RedButton} disabled={formik.isSubmitting} loading={isLoading}>

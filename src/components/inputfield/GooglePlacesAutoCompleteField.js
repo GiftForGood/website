@@ -30,22 +30,7 @@ const unloadScript = () => {
   window.google = {};
 };
 
-function handleScriptLoad(updateQuery, autoCompleteRef) {
-  autoComplete = new window.google.maps.places.Autocomplete(autoCompleteRef.current, {
-    componentRestrictions: { country: 'sg' },
-  });
-  autoComplete.setFields(['address_components', 'formatted_address']);
-  autoComplete.addListener('place_changed', () => handlePlaceSelect(updateQuery));
-}
-
-async function handlePlaceSelect(updateQuery) {
-  const addressObject = autoComplete.getPlace();
-  const query = addressObject.formatted_address;
-  updateQuery(query);
-  console.log(addressObject);
-}
-
-const SearchLocationInput = ({ label }) => {
+const SearchLocationInput = ({ label, formik }) => {
   const [query, setQuery] = useState('');
   const autoCompleteRef = useRef(null);
 
@@ -57,13 +42,32 @@ const SearchLocationInput = ({ label }) => {
     };
   }, []);
 
+  const handleScriptLoad = (updateQuery, autoCompleteRef) => {
+    autoComplete = new window.google.maps.places.Autocomplete(autoCompleteRef.current, {
+      componentRestrictions: { country: 'sg' },
+    });
+    autoComplete.setFields(['address_components', 'formatted_address']);
+    autoComplete.addListener('place_changed', () => handlePlaceSelect(updateQuery));
+  };
+
+  const handlePlaceSelect = async (updateQuery) => {
+    const addressObject = autoComplete.getPlace();
+    const { formatted_address } = addressObject;
+    updateQuery(formatted_address);
+    formik.setFieldValue('location', formatted_address);
+  };
+
   return (
     <InputField
+    disabled={formik.isSubmitting}
       label={label}
       ref={autoCompleteRef}
-      onChange={(event) => setQuery(event.target.value)}
-      placeholder="xyz"
+      onChange={(event) => {
+        setQuery(event.target.value);
+      }}
+      placeholder=""
       value={query}
+      error={formik.touched.location && formik.errors.location ? formik.errors.location : ''}
     />
   );
 };
