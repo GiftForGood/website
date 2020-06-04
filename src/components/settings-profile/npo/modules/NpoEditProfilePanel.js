@@ -53,9 +53,9 @@ const NpoEditProfilePanel = () => {
   const handleFormSubmission = async (values) => {
     setIsLoading(true);
     setShowAlert(false);
-    const { name, contact, profileImage } = values;
+    const { name, contactNumber, profileImage } = values;
     try {
-      const npoDoc = await api.users.updateNPO(name, contact, profileImage);
+      const npoDoc = await api.users.updateNPO(name, contactNumber, profileImage);
       setIsLoading(false);
       router.reload();
     } catch (error) {
