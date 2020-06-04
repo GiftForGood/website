@@ -4,7 +4,6 @@ import { db, firebaseAuth, firebaseStorage } from '../firebase';
 import * as moment from 'moment';
 import * as path from 'path';
 import { DONATIONS_BATCH_SIZE } from './constants';
-import { GEO_LOCATION_URL } from '../constants/thirdPartyAPIUrl';
 import { NEW, USED } from '../constants/itemCondition';
 import { TIMESTAMP } from '../constants/donationsSortType';
 import { PENDING, CLOSED, COMPLETED } from '../constants/postStatus';
@@ -137,7 +136,7 @@ class DonationsAPI {
     return donationsCollection
       .where('categories', 'array-contains', categoryInfo)
       .where('status', '==', PENDING)
-      .orderBy('postedDateTime', 'desc')
+      .orderBy(TIMESTAMP, 'desc')
       .limit(n)
       .get();
   }
@@ -241,14 +240,14 @@ class DonationsAPI {
       // First page
       return donationsCollection
         .where('user.userId', '==', donorId)
-        .orderBy('postedDateTime', 'desc')
+        .orderBy(TIMESTAMP, 'desc')
         .limit(DONATIONS_BATCH_SIZE)
         .get();
     } else {
       // Subsequent pages
       return donationsCollection
         .where('user.userId', '==', donorId)
-        .orderBy('postedDateTime', 'desc')
+        .orderBy(TIMESTAMP, 'desc')
         .startAfter(lastQueriedDocument)
         .limit(DONATIONS_BATCH_SIZE)
         .get();
@@ -269,7 +268,7 @@ class DonationsAPI {
       return donationsCollection
         .where('user.userId', '==', donorId)
         .where('status', '==', status.toLowerCase())
-        .orderBy('postedDateTime', 'desc')
+        .orderBy(TIMESTAMP, 'desc')
         .limit(DONATIONS_BATCH_SIZE)
         .get();
     } else {
@@ -277,7 +276,7 @@ class DonationsAPI {
       return donationsCollection
         .where('user.userId', '==', donorId)
         .where('status', '==', status.toLowerCase())
-        .orderBy('postedDateTime', 'desc')
+        .orderBy(TIMESTAMP, 'desc')
         .startAfter(lastQueriedDocument)
         .limit(DONATIONS_BATCH_SIZE)
         .get();
