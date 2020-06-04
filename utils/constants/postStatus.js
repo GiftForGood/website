@@ -1,3 +1,3 @@
-export const pending = 'pending';
-export const completed = 'completed';
-export const closed = 'closed';
+export const PENDING = 'pending';
+export const CLOSED = 'closed';
+export const COMPLETED = 'completed';
