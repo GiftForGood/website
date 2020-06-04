@@ -19,7 +19,7 @@ export async function getServerSideProps({ params, req, res, query }) {
   };
 }
 
-const WishesHome = ({ user }) => {
+const SettingsProfilePage = ({ user }) => {
   return (
     <SessionProvider user={user}>
       <TopNavigationBar />
@@ -28,4 +28,4 @@ const WishesHome = ({ user }) => {
   );
 };
 
-export default WishesHome;
+export default SettingsProfilePage;
