@@ -24,6 +24,7 @@ const AccountImageRounded = styled.img`
   border-radius: 24px;
   width: 24px;
   height: 24px;
+  object-fit: cover;
 `;
 
 const AccountImage = ({ src }) => {
