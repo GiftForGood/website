@@ -8,8 +8,7 @@ import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import Button from '@kiwicom/orbit-components/lib/Button';
 import moment from 'moment';
 import api from '../../../utils/api';
-import { wishes } from '../../../utils/constants/postType';
-import CardStatus from './CardStatus';
+import WishCardStatus from './WishCardStatus';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 
 const CardContainer = styled.div`
@@ -199,7 +198,7 @@ const WishCard = ({
             <CardHeader name={name} imageUrl={profileImageUrl} timeAgo={timeAgo} isBumped={isBumped} />
           </CardHeaderContainer>
 
-          {status !== 'pending' ? <CardStatus status={status} cardType={wishes} /> : null}
+          {status !== 'pending' ? <WishCardStatus status={status} /> : null}
 
           <CardDescriptionContainer>
             <CardDescription title={title} description={description} />

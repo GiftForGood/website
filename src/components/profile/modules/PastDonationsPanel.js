@@ -168,7 +168,7 @@ const PastDonationsPanel = ({ isMine, userId }) => {
     );
   };
   const PastDonations = () => {
-    return pastDonations.map((pastDonation, index) => {
+    return pastDonations.map((pastDonation) => {
       const {
         donationId,
         user,
@@ -192,7 +192,7 @@ const PastDonationsPanel = ({ isMine, userId }) => {
           postHref={postHref}
           coverImageUrl={coverImageUrl}
           status={status}
-          location={locationNames}
+          locations={locationNames}
         />
       );
     });

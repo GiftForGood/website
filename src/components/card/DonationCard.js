@@ -6,8 +6,7 @@ import styled, { css } from 'styled-components';
 import { defaultPostImagePath } from '../../../utils/constants/imagePaths';
 import { useRouter } from 'next/router';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
-import CardStatus from './CardStatus';
-import { donations } from '../../../utils/constants/postType';
+import DonationCardStatus from './DonationCardStatus';
 
 const CardContainer = styled.div`
   display: flex;
@@ -47,6 +46,7 @@ const TwoLineTextContainer = styled.div`
 const CardImageContainer = styled.div`
   height: 100%;
   width: 100%;
+  position: relative;
 `;
 
 const CardImage = styled.div`
@@ -137,7 +137,7 @@ const DonationCard = ({
         <CardImageContainer>
           <CardImage imageUrl={coverImageUrl || defaultPostImagePath} />
           {/* status label will only be shown if status is provided and it is not pending */}
-          {status != null && status != 'pending' && <CardStatus status={status} cardType={donations} />}
+          {status != null && status != 'pending' && <DonationCardStatus status={status} />}
         </CardImageContainer>
         <CardDescriptionContainer>
           <CardDescription title={title} description={description} />
