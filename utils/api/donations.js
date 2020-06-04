@@ -7,6 +7,7 @@ import { DONATIONS_BATCH_SIZE } from './constants';
 import { GEO_LOCATION_URL } from '../constants/thirdPartyAPIUrl';
 import { NEW, USED } from '../constants/itemCondition';
 import { TIMESTAMP } from '../constants/donationsSortType';
+import { PENDING, CLOSED, COMPLETED } from '../constants/postStatus';
 import DonationError from './error/donationsError';
 
 const donationsCollection = db.collection('donations');
@@ -91,7 +92,7 @@ class DonationsAPI {
       donationId: newDonation.id,
       title: title,
       description: description,
-      status: 'pending',
+      status: PENDING,
       categories: categoryInfos,
       user: userInfo,
       imageUrls: imageUrls,
@@ -127,7 +128,7 @@ class DonationsAPI {
     const categoryInfo = await this._getCategoryInfo(categoryId);
     return donationsCollection
       .where('categories', 'array-contains', categoryInfo)
-      .where('status', '==', 'pending')
+      .where('status', '==', PENDING)
       .orderBy('postedDateTime', 'desc')
       .limit(n)
       .get();
@@ -154,14 +155,14 @@ class DonationsAPI {
     if (lastQueriedDocument == null) {
       // First page
       return donationsCollection
-        .where('status', '==', 'pending')
+        .where('status', '==', PENDING)
         .orderBy(orderBy, sortOrder)
         .limit(DONATIONS_BATCH_SIZE)
         .get();
     } else {
       // Subsequent pages
       return donationsCollection
-        .where('status', '==', 'pending')
+        .where('status', '==', PENDING)
         .orderBy(orderBy, sortOrder)
         .startAfter(lastQueriedDocument)
         .limit(DONATIONS_BATCH_SIZE)
@@ -194,7 +195,7 @@ class DonationsAPI {
       // First page
       return donationsCollection
         .where('categories', 'array-contains', categoryInfo)
-        .where('status', '==', 'pending')
+        .where('status', '==', PENDING)
         .orderBy(orderBy, sortOrder)
         .limit(DONATIONS_BATCH_SIZE)
         .get();
@@ -202,7 +203,7 @@ class DonationsAPI {
       // Subsequent pages
       return donationsCollection
         .where('categories', 'array-contains', categoryInfo)
-        .where('status', '==', 'pending')
+        .where('status', '==', PENDING)
         .orderBy(orderBy, sortOrder)
         .startAfter(lastQueriedDocument)
         .limit(DONATIONS_BATCH_SIZE)
@@ -336,7 +337,7 @@ class DonationsAPI {
       throw new DonationError('invalid-donation-id', 'donation does not exist');
     }
 
-    if (donationInfo.status !== 'pending') {
+    if (donationInfo.status !== PENDING) {
       throw new DonationError('invalid-donation-status', 'only can update a pending donation');
     }
 
@@ -383,14 +384,14 @@ class DonationsAPI {
       throw new DonationError('invalid-donation-id', 'donation does not exist');
     }
 
-    if (donationInfo.status !== 'pending') {
+    if (donationInfo.status !== PENDING) {
       throw new DonationError('invalid-donation-status', 'Only can close a pending donation');
     }
 
     const updateTime = Date.now();
     const data = {
       updatedDateTime: updateTime,
-      status: 'closed',
+      status: CLOSED,
       closed: {
         reason: reason,
         dateTime: updateTime,
@@ -420,7 +421,7 @@ class DonationsAPI {
       throw new DonationError('invalid-npo-id', `npo does not exist`);
     }
 
-    if (donationInfo.status !== 'pending') {
+    if (donationInfo.status !== PENDING) {
       throw new DonationError('invalid-donation-status', 'Only can complete a pending donation');
     }
 
@@ -432,7 +433,7 @@ class DonationsAPI {
     const updateTime = Date.now();
     const data = {
       updatedDateTime: updateTime,
-      status: 'completed',
+      status: COMPLETED,
       completed: {
         npoUserId: npoInfo.userId,
         organization: organizationInfo,
