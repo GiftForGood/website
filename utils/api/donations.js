@@ -84,9 +84,6 @@ class DonationsAPI {
 
     const categoryInfos = getCustomPostCategoryInfos(allCategoryInfos);
 
-    if (typeof allUserInfo === 'undefined') {
-      throw new DonationError('invalid-current-user');
-    }
     userInfo.userId = allUserInfo.userId;
     userInfo.userName = allUserInfo.name;
     userInfo.profileImageUrl = allUserInfo.profileImageUrl;
@@ -345,10 +342,6 @@ class DonationsAPI {
     this._validateCoverImageAndUpdateImages(coverImage, images);
 
     const donationInfo = await this._getDonationInfo(id);
-    if (typeof donationInfo === 'undefined') {
-      throw new DonationError('invalid-donation-id', 'donation does not exist');
-    }
-
     if (donationInfo.status !== PENDING) {
       throw new DonationError('invalid-donation-status', 'only can update a pending donation');
     }
@@ -356,7 +349,7 @@ class DonationsAPI {
     const validPeriodFromDate = `${validPeriodFromDay}-${validPeriodFromMonth}-${validPeriodFromYear}`;
     const validPeriodToDate = `${validPeriodToDay}-${validPeriodToMonth}-${validPeriodToYear}`;
 
-    const [categoryInfos, locationInfos, [coverImageUrl, imageUrls]] = await Promise.all([
+    const [allCategoryInfos, locationInfos, [coverImageUrl, imageUrls]] = await Promise.all([
       getUpdatedCategoryInfos(donationInfo.categories, categories),
       getUpdatedLocations(donationInfo.locations, locations),
       this._getDonationImages(donationInfo.user.userId, donationInfo.donationId, images, coverImage),
@@ -394,10 +387,6 @@ class DonationsAPI {
    */
   async close(id, reason) {
     const donationInfo = await this._getDonationInfo(id);
-    if (typeof donationInfo === 'undefined') {
-      throw new DonationError('invalid-donation-id', 'donation does not exist');
-    }
-
     if (donationInfo.status !== PENDING) {
       throw new DonationError('invalid-donation-status', 'Only can close a pending donation');
     }
@@ -428,13 +417,6 @@ class DonationsAPI {
    */
   async complete(id, npoId) {
     const [donationInfo, npoInfo] = await Promise.all([this._getDonationInfo(id), this._getNPOInfo(npoId)]);
-    if (typeof donationInfo === 'undefined') {
-      throw new DonationError('invalid-donation-id', 'donation does not exist');
-    }
-    if (typeof npoInfo === 'undefined') {
-      throw new DonationError('invalid-npo-id', `npo does not exist`);
-    }
-
     if (donationInfo.status !== PENDING) {
       throw new DonationError('invalid-donation-status', 'Only can complete a pending donation');
     }
@@ -467,7 +449,7 @@ class DonationsAPI {
     const user = firebaseAuth.currentUser;
 
     if (user == null) {
-      return {};
+      throw new DonationError('invalid-current-user');
     }
 
     const userId = user.uid;
@@ -476,16 +458,31 @@ class DonationsAPI {
 
   async _getDonorInfo(id) {
     const snapshot = await db.collection('donors').doc(id).get();
+
+    if (!snapshot.exists) {
+      throw new DonationError('invalid-donor-id', 'donar does not exist')
+    }
+
     return snapshot.data();
   }
 
   async _getDonationInfo(id) {
     const snapshot = await donationsCollection.doc(id).get();
+
+    if (!snapshot.exists) {
+      throw new DonationError('invalid-donation-id', 'donation does not exist');
+    }
+
     return snapshot.data();
   }
 
   async _getNPOInfo(id) {
     const snapshot = await db.collection('npos').doc(id).get();
+
+    if (!snapshot.exists) {
+      throw new DonationError('invalid-npo-id', `npo does not exist`);
+    }
+
     return snapshot.data();
   }
 
