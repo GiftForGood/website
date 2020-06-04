@@ -630,7 +630,7 @@ class DonationsAPI {
     const today = moment();
 
     if (!dateMoment.isValid()) {
-      throw new DonationError('invalid-date', `${date} is not valid`);
+      throw new DonationError('invalid-date', `${date} is not valid date`);
     }
 
     if (dateMoment.diff(today, 'days') < 0) {
