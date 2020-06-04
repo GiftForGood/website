@@ -28,6 +28,7 @@ import LivePreviewPanel from './livePreviewPanel';
 import { useRouter } from 'next/router';
 
 import { getExpireWishDate } from '../../../../utils/api/time';
+import GooglePlacesAutoCompleteField from '../../inputfield/GooglePlacesAutoCompleteField';
 
 const Container = styled.div`
   min-width: 300px;
@@ -231,9 +232,11 @@ const CreateWishPanel = () => {
                   name="expireAt"
                   placeholder="Expire at"
                   value={getExpireWishDate()}
-                  help={"Your wish will be automatically removed after this date."}
+                  help={'Your wish will be automatically removed after this date.'}
                 />
 
+                <GooglePlacesAutoCompleteField label={'Centre Location'} />
+                
                 {isDesktop ? null : <LivePreviewPanel />}
 
                 <Button fullWidth submit asComponent={RedButton} disabled={formik.isSubmitting} loading={isLoading}>
