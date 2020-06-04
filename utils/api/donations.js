@@ -77,10 +77,12 @@ class DonationsAPI {
     const validPeriodFromDate = `${validPeriodFromDay}-${validPeriodFromMonth}-${validPeriodFromYear}`;
     const validPeriodToDate = `${validPeriodToDay}-${validPeriodToMonth}-${validPeriodToYear}`;
 
-    const [categoryInfos, allUserInfo] = await Promise.all([
+    const [allCategoryInfos, allUserInfo] = await Promise.all([
       getAllCategoryInfos(categories),
       this._getCurrentUserInfo(),
     ]);
+
+    const categoryInfos = getCustomPostCategoryInfos(allCategoryInfos);
 
     if (typeof allUserInfo === 'undefined') {
       throw new DonationError('invalid-current-user');
@@ -133,7 +135,8 @@ class DonationsAPI {
    * @returns {array} A list of firebase document of the top n pending donations
    */
   async getTopNPendingDonationsForCategory(categoryId, n) {
-    const categoryInfo = await getCategoryInfo(categoryId);
+    const allCategoryInfo = await getCategoryInfo(categoryId);
+    const categoryInfo = getCustomPostCategoryInfo(allCategoryInfo);
     return donationsCollection
       .where('categories', 'array-contains', categoryInfo)
       .where('status', '==', PENDING)
@@ -197,7 +200,8 @@ class DonationsAPI {
       sortOrder = 'desc';
     }
 
-    const categoryInfo = await getCategoryInfo(categoryId);
+    const allCategoryInfo = await getCategoryInfo(categoryId);
+    const categoryInfo = getCustomPostCategoryInfo(allCategoryInfo);
 
     if (lastQueriedDocument == null) {
       // First page
@@ -357,6 +361,8 @@ class DonationsAPI {
       getUpdatedLocations(donationInfo.locations, locations),
       this._getDonationImages(donationInfo.user.userId, donationInfo.donationId, images, coverImage),
     ]);
+
+    const categoryInfos = getCustomPostCategoryInfos(allCategoryInfos);
 
     const data = {
       title: title,
