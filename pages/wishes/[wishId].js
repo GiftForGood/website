@@ -34,7 +34,7 @@ export async function getServerSideProps({ params, req, res, query }) {
 }
 
 const getWishDetails = async (wishId) => {
-  const rawWish = await api.wishes.getWish(wishId).catch((err) => console.error(err));
+  const rawWish = await api.wishes.get(wishId).catch((err) => console.error(err));
   return rawWish.data() ? rawWish.data() : {};
 };
 
