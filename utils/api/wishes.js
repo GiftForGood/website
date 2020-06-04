@@ -1,6 +1,6 @@
 import { db, firebaseAuth } from '../firebase';
 import { WISHES_BATCH_SIZE } from './constants';
-import { TIMESTAMP, NPO_NAME } from '../constants/wishesSortType';
+import { TIMESTAMP, NPO_NAME, POSTED_TIMESTAMP } from '../constants/wishesSortType';
 import { PENDING, CLOSED, COMPLETED } from '../constants/postStatus';
 import { getLocations, getUpdatedLocations } from './common/location';
 import {
@@ -86,7 +86,7 @@ class WishesAPI {
     return wishesCollection
       .where('categories', 'array-contains', categoryInfo)
       .where('status', '==', PENDING)
-      .orderBy('lastActionByUserDateTime', 'desc')
+      .orderBy(TIMESTAMP, 'desc')
       .limit(n)
       .get();
   }
@@ -188,14 +188,14 @@ class WishesAPI {
       // First page
       return wishesCollection
         .where('user.userId', '==', npoId)
-        .orderBy('lastActionByUserDateTime', 'desc')
+        .orderBy(TIMESTAMP, 'desc')
         .limit(WISHES_BATCH_SIZE)
         .get();
     } else {
       // Subsequent pages
       return wishesCollection
         .where('user.userId', '==', npoId)
-        .orderBy('lastActionByUserDateTime', 'desc')
+        .orderBy(TIMESTAMP, 'desc')
         .startAfter(lastQueriedDocument)
         .limit(WISHES_BATCH_SIZE)
         .get();
@@ -216,7 +216,7 @@ class WishesAPI {
       return wishesCollection
         .where('user.userId', '==', npoId)
         .where('status', '==', status.toLowerCase())
-        .orderBy('lastActionByUserDateTime', 'desc')
+        .orderBy(TIMESTAMP, 'desc')
         .limit(WISHES_BATCH_SIZE)
         .get();
     } else {
@@ -224,7 +224,7 @@ class WishesAPI {
       return wishesCollection
         .where('user.userId', '==', npoId)
         .where('status', '==', status.toLowerCase())
-        .orderBy('lastActionByUserDateTime', 'desc')
+        .orderBy(TIMESTAMP, 'desc')
         .startAfter(lastQueriedDocument)
         .limit(WISHES_BATCH_SIZE)
         .get();
@@ -244,7 +244,7 @@ class WishesAPI {
       return wishesCollection
         .where('status', '==', COMPLETED)
         .where('completed.donorUserId', '==', donorId)
-        .orderBy('postedDateTime', 'desc')
+        .orderBy(POSTED_TIMESTAMP, 'desc')
         .limit(WISHES_BATCH_SIZE)
         .get();
     } else {
@@ -252,7 +252,7 @@ class WishesAPI {
       return wishesCollection
         .where('status', '==', COMPLETED)
         .where('completed.donorUserId', '==', donorId)
-        .orderBy('postedDateTime', 'desc')
+        .orderBy(POSTED_TIMESTAMP, 'desc')
         .startAfter(lastQueriedDocument)
         .limit(WISHES_BATCH_SIZE)
         .get();
