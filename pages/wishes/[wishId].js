@@ -16,10 +16,10 @@ export async function getServerSideProps({ params, req, res, query }) {
   const wishId = params.wishId;
   const prevHref = query.categoryId ? `/wishes/category/${query.categoryId}` : `/wishes/category`;
   const categoryName = query.categoryName ? query.categoryName : 'All wishes';
-  let npoDetails = {}; // TODO remove & uncomment bottom when getNPO API is up
+  let npoDetails = {};
   const [wishDetails, user] = await Promise.all([getWishDetails(wishId), isAuthenticated(req, res)]);
   if (Object.keys(wishDetails).length !== 0) {
-    // npoDetails = await getNpoDetails(wishDetails.user.userId);
+    npoDetails = await getNpoDetails(wishDetails.user.userId);
   }
   return {
     props: {
