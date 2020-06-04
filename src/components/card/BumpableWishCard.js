@@ -9,7 +9,7 @@ import Button from '@kiwicom/orbit-components/lib/Button';
 import moment from 'moment';
 import api from '../../../utils/api';
 import WishCardStatus from './WishCardStatus';
-import { pending } from '../../../utils/constants/postStatus';
+import { PENDING } from '../../../utils/constants/postStatus';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 
 const CardContainer = styled.div`
@@ -194,12 +194,12 @@ const WishCard = ({
   return (
     <>
       <CardContainer>
-        <Grid style={{ height: '100%' }} rows={status !== pending ? '2fr 0.5fr 6fr 2fr' : '2fr 6fr 2fr'} cols="1fr">
+        <Grid style={{ height: '100%' }} rows={status !== PENDING ? '2fr 0.5fr 6fr 2fr' : '2fr 6fr 2fr'} cols="1fr">
           <CardHeaderContainer>
             <CardHeader name={name} imageUrl={profileImageUrl} timeAgo={timeAgo} isBumped={isBumped} />
           </CardHeaderContainer>
 
-          {status !== pending ? <WishCardStatus status={status} /> : null}
+          {status !== PENDING ? <WishCardStatus status={status} /> : null}
 
           <CardDescriptionContainer>
             <CardDescription title={title} description={description} />

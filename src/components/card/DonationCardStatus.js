@@ -1,7 +1,7 @@
 import React from 'react';
 import { colors } from '../../../utils/constants/colors';
 import styled from 'styled-components';
-import { completed, closed } from '../../../utils/constants/postStatus';
+import { COMPLETED, CLOSED } from '../../../utils/constants/postStatus';
 
 const CardStatusContainer = styled.div`
   display: flex;
@@ -24,9 +24,9 @@ const CardStatusWrapper = styled.div`
 
 const getColor = (status) => {
   switch (status) {
-    case completed:
+    case COMPLETED:
       return colors.completedTagBackground;
-    case closed:
+    case CLOSED:
       return colors.closedTagBackground;
     default:
       return 'black';
