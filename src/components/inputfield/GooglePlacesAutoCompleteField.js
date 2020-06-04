@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { InputField } from '@kiwicom/orbit-components/lib';
 import { GOOGLE_PLACE_AUTOCOMPLETE_URL } from '../../../utils/constants/thirdPartyAPIUrl';
-import useLocalStorage  from '../../../utils/hooks/useLocalStorage';
+import useLocalStorage from '../../../utils/hooks/useLocalStorage';
 
 let autoComplete;
 
@@ -58,7 +58,7 @@ const SearchLocationInput = ({ label, formik, storeLocally, help }) => {
     updateQuery(formatted_address);
     formik.setFieldValue('location', formatted_address);
     if (storeLocally) {
-      setLocation(formatted_address)
+      setLocation(formatted_address);
     }
   };
 

@@ -33,4 +33,4 @@ export const getFormattedDate = (timeInMilliSeconds) => {
 export const getExpireWishDate = () => {
   let currentDateTime = Date.now();
   return moment(currentDateTime).add(1, 'month').format('DD MMM YYYY');
-}
+};
