@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { InputField } from '@kiwicom/orbit-components/lib';
 import { GOOGLE_PLACE_AUTOCOMPLETE_URL } from '../../../utils/constants/thirdPartyAPIUrl';
+import useLocalStorage  from '../../../utils/hooks/useLocalStorage';
 
 let autoComplete;
 
@@ -30,9 +31,10 @@ const unloadScript = () => {
   window.google = {};
 };
 
-const SearchLocationInput = ({ label, formik }) => {
+const SearchLocationInput = ({ label, formik, storeLocally, help }) => {
   const [query, setQuery] = useState('');
   const autoCompleteRef = useRef(null);
+  const [location, setLocation] = useLocalStorage('location_wish', '');
 
   useEffect(() => {
     loadScript(GOOGLE_PLACE_AUTOCOMPLETE_URL, () => handleScriptLoad(setQuery, autoCompleteRef));
@@ -55,19 +57,23 @@ const SearchLocationInput = ({ label, formik }) => {
     const { formatted_address } = addressObject;
     updateQuery(formatted_address);
     formik.setFieldValue('location', formatted_address);
+    if (storeLocally) {
+      setLocation(formatted_address)
+    }
   };
 
   return (
     <InputField
-    disabled={formik.isSubmitting}
+      disabled={formik.isSubmitting}
       label={label}
       ref={autoCompleteRef}
       onChange={(event) => {
         setQuery(event.target.value);
       }}
       placeholder=""
-      value={query}
+      value={location || query}
       error={formik.touched.location && formik.errors.location ? formik.errors.location : ''}
+      help={help}
     />
   );
 };

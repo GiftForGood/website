@@ -238,7 +238,7 @@ const CreateWishPanel = () => {
                   help={'Your wish will be automatically removed after this date.'}
                 />
 
-                <GooglePlacesAutoCompleteField label={'Centre Location'} formik={formik} />
+                <GooglePlacesAutoCompleteField label={'Centre Location'} formik={formik} storeLocally={true} help={'The most recently used address will be stored on device.'}/>
 
                 {isDesktop ? null : <LivePreviewPanel />}
 
