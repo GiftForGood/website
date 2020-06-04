@@ -27,6 +27,8 @@ import { setTitle, setDescription, setAllCategories } from '../actions';
 import LivePreviewPanel from './livePreviewPanel';
 import { useRouter } from 'next/router';
 
+import { getExpireWishDate } from '../../../../utils/api/time';
+
 const Container = styled.div`
   min-width: 300px;
   width: 100%;
@@ -222,6 +224,15 @@ const CreateWishPanel = () => {
                     }
                   />
                 </Popover>
+
+                <InputField
+                  disabled={true}
+                  label="Expire at"
+                  name="expireAt"
+                  placeholder="Expire at"
+                  value={getExpireWishDate()}
+                  help={"Your wish will be automatically removed after this date."}
+                />
 
                 {isDesktop ? null : <LivePreviewPanel />}
 
