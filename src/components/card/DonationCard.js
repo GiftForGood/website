@@ -81,11 +81,11 @@ const CardDescription = ({ title, description }) => {
   );
 };
 
-const CardDescriptionFooter = ({ validPeriod, location }) => {
+const CardDescriptionFooter = ({ validPeriod, locations }) => {
   return (
     <>
       <GreyText size="small">Valid period: {validPeriod || '10/05/2020 - 10/05/2021'}</GreyText>
-      <GreyText size="small">Location: {location}</GreyText>
+      <GreyText size="small">Locations: {locations}</GreyText>
     </>
   );
 };
@@ -99,7 +99,7 @@ const CardDescriptionFooter = ({ validPeriod, location }) => {
  * @param {string} coverImageUrl is the url to the cover image of the donation post
  * @param {string} postedDateTime is the time posted for donation in milliseconds
  * @param {string} postHref is the link url to direct users to after clicking the donation card
- * @param {string} location is the location of the donation post
+ * @param {string} locations is the location names of the donation post
  * @param {string} validPeriod is the validity period of the donation post
  */
 const DonationCard = ({
@@ -110,7 +110,7 @@ const DonationCard = ({
   coverImageUrl,
   postedDateTime,
   postHref,
-  location,
+  locations,
   validPeriod,
 }) => {
   const timeAgo = getTimeDifferenceFromNow(postedDateTime);
@@ -129,7 +129,7 @@ const DonationCard = ({
         <CardDescriptionContainer>
           <CardDescription title={title} description={description} />
           <CardDescriptionFooterContainer>
-            <CardDescriptionFooter validPeriod={validPeriod} location={location} />
+            <CardDescriptionFooter validPeriod={validPeriod} locations={locations} />
           </CardDescriptionFooterContainer>
         </CardDescriptionContainer>
       </Grid>
