@@ -25,3 +25,7 @@ export const getTimeDifferenceFromNow = (timeInMilliSeconds) => {
   let momentTime = moment(timeInMilliSeconds);
   return momentTime.fromNow();
 };
+
+export const getFormattedDate = (timeInMilliSeconds) => {
+  return moment(timeInMilliSeconds).format('DD/MM/YYYY');
+};
