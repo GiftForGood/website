@@ -4,9 +4,17 @@ import { db, firebaseAuth, firebaseStorage } from '../firebase';
 import * as moment from 'moment';
 import * as path from 'path';
 import { DONATIONS_BATCH_SIZE } from './constants';
-import { GEO_LOCATION_URL } from '../constants/thirdPartyAPIUrl';
 import { NEW, USED } from '../constants/itemCondition';
 import { TIMESTAMP } from '../constants/donationsSortType';
+import { PENDING, CLOSED, COMPLETED } from '../constants/postStatus';
+import { getLocations, getUpdatedLocations } from './common/location';
+import {
+  getCategoryInfo,
+  getAllCategoryInfos,
+  getUpdatedCategoryInfos,
+  getCustomPostCategoryInfo,
+  getCustomPostCategoryInfos,
+} from './common/categories';
 import DonationError from './error/donationsError';
 
 const donationsCollection = db.collection('donations');
@@ -68,14 +76,13 @@ class DonationsAPI {
     const validPeriodFromDate = `${validPeriodFromDay}-${validPeriodFromMonth}-${validPeriodFromYear}`;
     const validPeriodToDate = `${validPeriodToDay}-${validPeriodToMonth}-${validPeriodToYear}`;
 
-    const [categoryInfos, allUserInfo] = await Promise.all([
-      this._getAllCategoryInfos(categories),
+    const [allCategoryInfos, allUserInfo] = await Promise.all([
+      getAllCategoryInfos(categories),
       this._getCurrentUserInfo(),
     ]);
 
-    if (typeof allUserInfo === 'undefined') {
-      throw new DonationError('invalid-current-user');
-    }
+    const categoryInfos = getCustomPostCategoryInfos(allCategoryInfos);
+
     userInfo.userId = allUserInfo.userId;
     userInfo.userName = allUserInfo.name;
     userInfo.profileImageUrl = allUserInfo.profileImageUrl;
@@ -83,7 +90,7 @@ class DonationsAPI {
     let newDonation = donationsCollection.doc();
     const [[coverImageUrl, imageUrls], locationInfos] = await Promise.all([
       this._uploadImages(userInfo.userId, newDonation.id, images, coverImage),
-      this._getLocations(locations),
+      getLocations(locations),
     ]);
 
     const timeNow = Date.now();
@@ -91,7 +98,7 @@ class DonationsAPI {
       donationId: newDonation.id,
       title: title,
       description: description,
-      status: 'pending',
+      status: PENDING,
       categories: categoryInfos,
       user: userInfo,
       imageUrls: imageUrls,
@@ -124,11 +131,12 @@ class DonationsAPI {
    * @returns {array} A list of firebase document of the top n pending donations
    */
   async getTopNPendingDonationsForCategory(categoryId, n) {
-    const categoryInfo = await this._getCategoryInfo(categoryId);
+    const allCategoryInfo = await getCategoryInfo(categoryId);
+    const categoryInfo = getCustomPostCategoryInfo(allCategoryInfo);
     return donationsCollection
       .where('categories', 'array-contains', categoryInfo)
-      .where('status', '==', 'pending')
-      .orderBy('postedDateTime', 'desc')
+      .where('status', '==', PENDING)
+      .orderBy(TIMESTAMP, 'desc')
       .limit(n)
       .get();
   }
@@ -154,14 +162,14 @@ class DonationsAPI {
     if (lastQueriedDocument == null) {
       // First page
       return donationsCollection
-        .where('status', '==', 'pending')
+        .where('status', '==', PENDING)
         .orderBy(orderBy, sortOrder)
         .limit(DONATIONS_BATCH_SIZE)
         .get();
     } else {
       // Subsequent pages
       return donationsCollection
-        .where('status', '==', 'pending')
+        .where('status', '==', PENDING)
         .orderBy(orderBy, sortOrder)
         .startAfter(lastQueriedDocument)
         .limit(DONATIONS_BATCH_SIZE)
@@ -188,13 +196,14 @@ class DonationsAPI {
       sortOrder = 'desc';
     }
 
-    const categoryInfo = await this._getCategoryInfo(categoryId);
+    const allCategoryInfo = await getCategoryInfo(categoryId);
+    const categoryInfo = getCustomPostCategoryInfo(allCategoryInfo);
 
     if (lastQueriedDocument == null) {
       // First page
       return donationsCollection
         .where('categories', 'array-contains', categoryInfo)
-        .where('status', '==', 'pending')
+        .where('status', '==', PENDING)
         .orderBy(orderBy, sortOrder)
         .limit(DONATIONS_BATCH_SIZE)
         .get();
@@ -202,7 +211,7 @@ class DonationsAPI {
       // Subsequent pages
       return donationsCollection
         .where('categories', 'array-contains', categoryInfo)
-        .where('status', '==', 'pending')
+        .where('status', '==', PENDING)
         .orderBy(orderBy, sortOrder)
         .startAfter(lastQueriedDocument)
         .limit(DONATIONS_BATCH_SIZE)
@@ -231,14 +240,14 @@ class DonationsAPI {
       // First page
       return donationsCollection
         .where('user.userId', '==', donorId)
-        .orderBy('postedDateTime', 'desc')
+        .orderBy(TIMESTAMP, 'desc')
         .limit(DONATIONS_BATCH_SIZE)
         .get();
     } else {
       // Subsequent pages
       return donationsCollection
         .where('user.userId', '==', donorId)
-        .orderBy('postedDateTime', 'desc')
+        .orderBy(TIMESTAMP, 'desc')
         .startAfter(lastQueriedDocument)
         .limit(DONATIONS_BATCH_SIZE)
         .get();
@@ -259,7 +268,7 @@ class DonationsAPI {
       return donationsCollection
         .where('user.userId', '==', donorId)
         .where('status', '==', status.toLowerCase())
-        .orderBy('postedDateTime', 'desc')
+        .orderBy(TIMESTAMP, 'desc')
         .limit(DONATIONS_BATCH_SIZE)
         .get();
     } else {
@@ -267,7 +276,7 @@ class DonationsAPI {
       return donationsCollection
         .where('user.userId', '==', donorId)
         .where('status', '==', status.toLowerCase())
-        .orderBy('postedDateTime', 'desc')
+        .orderBy(TIMESTAMP, 'desc')
         .startAfter(lastQueriedDocument)
         .limit(DONATIONS_BATCH_SIZE)
         .get();
@@ -332,22 +341,20 @@ class DonationsAPI {
     this._validateCoverImageAndUpdateImages(coverImage, images);
 
     const donationInfo = await this._getDonationInfo(id);
-    if (typeof donationInfo === 'undefined') {
-      throw new DonationError('invalid-donation-id', 'donation does not exist');
-    }
-
-    if (donationInfo.status !== 'pending') {
+    if (donationInfo.status !== PENDING) {
       throw new DonationError('invalid-donation-status', 'only can update a pending donation');
     }
 
     const validPeriodFromDate = `${validPeriodFromDay}-${validPeriodFromMonth}-${validPeriodFromYear}`;
     const validPeriodToDate = `${validPeriodToDay}-${validPeriodToMonth}-${validPeriodToYear}`;
 
-    const [categoryInfos, locationInfos, [coverImageUrl, imageUrls]] = await Promise.all([
-      this._getDonationCategoryInfos(donationInfo.categories, categories),
-      this._getDonationLocations(donationInfo.locations, locations),
+    const [allCategoryInfos, locationInfos, [coverImageUrl, imageUrls]] = await Promise.all([
+      getUpdatedCategoryInfos(donationInfo.categories, categories),
+      getUpdatedLocations(donationInfo.locations, locations),
       this._getDonationImages(donationInfo.user.userId, donationInfo.donationId, images, coverImage),
     ]);
+
+    const categoryInfos = getCustomPostCategoryInfos(allCategoryInfos);
 
     const data = {
       title: title,
@@ -379,18 +386,14 @@ class DonationsAPI {
    */
   async close(id, reason) {
     const donationInfo = await this._getDonationInfo(id);
-    if (typeof donationInfo === 'undefined') {
-      throw new DonationError('invalid-donation-id', 'donation does not exist');
-    }
-
-    if (donationInfo.status !== 'pending') {
+    if (donationInfo.status !== PENDING) {
       throw new DonationError('invalid-donation-status', 'Only can close a pending donation');
     }
 
     const updateTime = Date.now();
     const data = {
       updatedDateTime: updateTime,
-      status: 'closed',
+      status: CLOSED,
       closed: {
         reason: reason,
         dateTime: updateTime,
@@ -413,14 +416,7 @@ class DonationsAPI {
    */
   async complete(id, npoId) {
     const [donationInfo, npoInfo] = await Promise.all([this._getDonationInfo(id), this._getNPOInfo(npoId)]);
-    if (typeof donationInfo === 'undefined') {
-      throw new DonationError('invalid-donation-id', 'donation does not exist');
-    }
-    if (typeof npoInfo === 'undefined') {
-      throw new DonationError('invalid-npo-id', `npo does not exist`);
-    }
-
-    if (donationInfo.status !== 'pending') {
+    if (donationInfo.status !== PENDING) {
       throw new DonationError('invalid-donation-status', 'Only can complete a pending donation');
     }
 
@@ -432,7 +428,7 @@ class DonationsAPI {
     const updateTime = Date.now();
     const data = {
       updatedDateTime: updateTime,
-      status: 'completed',
+      status: COMPLETED,
       completed: {
         npoUserId: npoInfo.userId,
         organization: organizationInfo,
@@ -452,7 +448,7 @@ class DonationsAPI {
     const user = firebaseAuth.currentUser;
 
     if (user == null) {
-      return {};
+      throw new DonationError('invalid-current-user');
     }
 
     const userId = user.uid;
@@ -461,30 +457,31 @@ class DonationsAPI {
 
   async _getDonorInfo(id) {
     const snapshot = await db.collection('donors').doc(id).get();
+
+    if (!snapshot.exists) {
+      throw new DonationError('invalid-donor-id', 'donar does not exist');
+    }
+
     return snapshot.data();
   }
 
   async _getDonationInfo(id) {
     const snapshot = await donationsCollection.doc(id).get();
-    return snapshot.data();
-  }
 
-  async _getAllCategoryInfos(categoriesId) {
-    const categoriesPromise = categoriesId.map((categoryId) => {
-      return this._getCategoryInfo(categoryId);
-    });
+    if (!snapshot.exists) {
+      throw new DonationError('invalid-donation-id', 'donation does not exist');
+    }
 
-    const categoriesInfo = await Promise.all(categoriesPromise);
-    return categoriesInfo.filter((categoryInfo) => typeof categoryInfo !== 'undefined');
-  }
-
-  async _getCategoryInfo(id) {
-    const snapshot = await db.collection('categories').doc(id).get();
     return snapshot.data();
   }
 
   async _getNPOInfo(id) {
     const snapshot = await db.collection('npos').doc(id).get();
+
+    if (!snapshot.exists) {
+      throw new DonationError('invalid-npo-id', `npo does not exist`);
+    }
+
     return snapshot.data();
   }
 
@@ -533,84 +530,6 @@ class DonationsAPI {
     const storageRef = firebaseStorage.ref();
     const imageRef = storageRef.child(`donors/${userId}/donations/${donationId}/${imageName}`);
     imageRef.delete();
-  }
-
-  async _getLocations(locations) {
-    let locationDetails = [];
-
-    const locationPromises = locations.map((location) => {
-      return axios.get(`${GEO_LOCATION_URL}?address=${location}&key=${process.env.FIREBASE_API_KEY}`);
-    });
-
-    try {
-      const results = await Promise.all(locationPromises);
-
-      for (let i = 0; i < results.length; i++) {
-        if (results[i].status != 200) {
-          continue;
-        }
-
-        if (results[i].data.status !== 'OK') {
-          continue;
-        }
-
-        const fullAddress = results[i].data.results[0]['formatted_address'];
-        const lat = results[i].data.results[0]['geometry']['location']['lat'];
-        const long = results[i].data.results[0]['geometry']['location']['lng'];
-
-        const locationDetail = {
-          name: locations[i],
-          fullAddress: fullAddress,
-          latitude: lat,
-          longitude: long,
-        };
-        locationDetails.push(locationDetail);
-      }
-    } catch (error) {
-      throw new DonationError('invalid-location', 'invalid location/s');
-    }
-
-    return locationDetails;
-  }
-
-  async _getDonationCategoryInfos(existingCategories, updatedCategoryIds) {
-    let categoryInfos = [];
-    let newCategoryIdsToQuery = [];
-
-    for (const id of updatedCategoryIds) {
-      let categoryInfo = existingCategories.find((category) => category.id === id);
-
-      if (typeof categoryInfo === 'undefined') {
-        newCategoryIdsToQuery.push(id);
-      } else {
-        categoryInfos.push(categoryInfo);
-      }
-    }
-
-    const newCategoryInfos = await this._getAllCategoryInfos(newCategoryIdsToQuery);
-
-    return [...categoryInfos, ...newCategoryInfos];
-  }
-
-  async _getDonationLocations(existingLocations, updatedLocations) {
-    let locations = [];
-    let locationsToQuery = [];
-
-    for (const location of updatedLocations) {
-      const locationIndex = existingLocations.findIndex((existingLocation) => {
-        return existingLocation.name === location;
-      });
-
-      if (locationIndex === -1) {
-        locationsToQuery.push(location);
-      } else {
-        locations.push(existingLocations[locationIndex]);
-      }
-    }
-
-    const newLocations = await this._getLocations(locationsToQuery);
-
-    return [...locations, ...newLocations];
   }
 
   async _getDonationImages(userId, donationId, updatedImages, coverImage) {
@@ -710,7 +629,7 @@ class DonationsAPI {
     const today = moment();
 
     if (!dateMoment.isValid()) {
-      throw new DonationError('invalid-date', `${date} is not valid`);
+      throw new DonationError('invalid-date', `${date} is not valid date`);
     }
 
     if (dateMoment.diff(today, 'days') < 0) {

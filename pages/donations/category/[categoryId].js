@@ -22,10 +22,10 @@ export async function getServerSideProps({ params, query, req, res }) {
 
 const getCategoryDetails = async (categoryId) => {
   const rawCategory = await api.categories.getById(categoryId).catch((err) => console.error(err));
-  if (rawCategory.docs.length === 0) {
+  if (!rawCategory.exists) {
     return {};
   }
-  return rawCategory.docs[0].data();
+  return rawCategory.data();
 };
 
 const ViewCategory = ({ categoryDetails, filterQuery, user }) => {
