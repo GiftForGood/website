@@ -173,21 +173,6 @@ const CreateWishPanel = () => {
           <CardSection expanded>
             <form onSubmit={formik.handleSubmit}>
               <Stack spacing="extraLoose">
-                <Alert icon title="How long will my post stay on the platform?">
-                  Your wish will stay on the platform for 1 month. You can choose to{' '}
-                  <Tooltip
-                    content={
-                      <div>
-                        Bumping will extend your post by <b>1 more week</b> and bring your wish to the top of the list
-                        temporarily.
-                      </div>
-                    }
-                    preferredPosition="left"
-                  >
-                    <TextLink>bump</TextLink>
-                  </Tooltip>{' '}
-                  it once any time after you have posted it.
-                </Alert>
                 <Heading>Create a wish</Heading>
                 <InputField
                   disabled={formik.isSubmitting}
