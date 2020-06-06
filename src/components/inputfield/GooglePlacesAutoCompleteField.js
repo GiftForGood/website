@@ -44,6 +44,7 @@ const GooglePlacesAutoComepleteField = ({ label, formik, storeLocally, help }) =
   const [location, setLocation] = useLocalStorage('location_wish', '');
 
   useEffect(() => {
+    formik.setFieldValue('location', location);
     loadScript(GOOGLE_PLACE_AUTOCOMPLETE_URL, () => handleScriptLoad(setQuery, autoCompleteRef));
 
     return function cleanup() {
