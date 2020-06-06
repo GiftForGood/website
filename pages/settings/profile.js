@@ -4,7 +4,7 @@ import { isAuthenticated } from '../../utils/authentication/authentication';
 import dynamic from 'next/dynamic';
 import NpoSettingProfilePage from '../../src/components/settings-profile/npo/pages/NpoSettingProfilePage';
 import DonorSettingProfilePage from '../../src/components/settings-profile/donor/pages/DonorSettingProfilePage';
-import { isNpo, isDonor } from '../../utils/authentication/userType';
+import { isNpoUser, isDonorUser } from '../../utils/authentication/userType';
 
 const TopNavigationBar = dynamic(() => import('../../src/components/navbar/modules/TopNavigationBar'), { ssr: false });
 
@@ -25,7 +25,7 @@ const SettingsProfilePage = ({ user }) => {
   return (
     <SessionProvider user={user}>
       <TopNavigationBar />
-      {isNpo(user.user) ? <NpoSettingProfilePage /> : isDonor(user.user) ? <DonorSettingProfilePage /> : null}
+      {isNpoUser(user.user) ? <NpoSettingProfilePage /> : isDonorUser(user.user) ? <DonorSettingProfilePage /> : null}
     </SessionProvider>
   );
 };
