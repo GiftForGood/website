@@ -82,7 +82,6 @@ const RegisterNpoDetails = () => {
       displayAlert('Successfully Registered!', `A verification email has been sent to ${user.email}`, 'success');
       let response = await client.post('/api/sessionLogin', { token });
       if (response.status === 200) {
-        setIsLoading(false);
         router.push('/');
       } else {
         throw response.error;
