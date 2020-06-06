@@ -48,8 +48,7 @@ const RegisterDonor = () => {
       displayAlert('Successfully Registered!', `A verification email has been sent to ${user.email}`, 'success');
       let response = await client.post('/api/sessionLogin', { token });
       if (response.status === 200) {
-        setIsLoading(false);
-        router.push('/', { shallow: false });
+        router.push('/');
       } else {
         throw response.error;
       }
@@ -75,8 +74,7 @@ const RegisterDonor = () => {
       const [token, user, userDoc] = await api.auth.registerDonorWithGoogle();
       let response = await client.post('/api/sessionLogin', { token });
       if (response.status === 200) {
-        setGoogleLoading(false);
-        router.push('/', { shallow: false });
+        router.push('/');
       } else {
         throw response.error;
       }
