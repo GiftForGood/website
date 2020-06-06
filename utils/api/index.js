@@ -6,6 +6,7 @@ import ReportsAPI from './reports';
 import ReviewsAPI from './reviews';
 import UsersAPI from './users';
 import WishesAPI from './wishes';
+import BannersAPI from './banners';
 import TermsAndConditionsAPI from './termsandconditions';
 
 class API {
@@ -17,6 +18,7 @@ class API {
   reviews = new ReviewsAPI();
   users = new UsersAPI();
   wishes = new WishesAPI();
+  banners = new BannersAPI();
   termsandconditions = new TermsAndConditionsAPI();
 }
 
