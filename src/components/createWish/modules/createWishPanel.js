@@ -12,6 +12,7 @@ import {
   ListChoice,
   TextLink,
   Alert,
+  Tooltip,
 } from '@kiwicom/orbit-components/lib';
 import { useDispatch } from 'react-redux';
 import { useFormik } from 'formik';
@@ -25,6 +26,9 @@ import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 import { setTitle, setDescription, setAllCategories } from '../actions';
 import LivePreviewPanel from './livePreviewPanel';
 import { useRouter } from 'next/router';
+
+import { getExpireWishDate } from '../../../../utils/api/time';
+import GooglePlacesAutoCompleteField from '../../inputfield/GooglePlacesAutoCompleteField';
 
 const Container = styled.div`
   min-width: 300px;
@@ -58,7 +62,8 @@ const CreateWishPanel = () => {
       let title = values.title;
       let description = values.description;
       let categoryIds = values.categories.map((category) => category.id);
-      const wishDoc = await api.wishes.create(title, description, categoryIds);
+      let locations = [values.location];
+      const wishDoc = await api.wishes.create(title, description, categoryIds, locations);
       let wishId = wishDoc.data().wishId;
       router.push(`/wishes/${wishId}`);
     } catch (error) {
@@ -83,6 +88,7 @@ const CreateWishPanel = () => {
       .required('Required')
       .min(1, 'A category must be provided')
       .max(3, 'Only 3 selected categories allowed'),
+    location: Yup.string().required('Required'),
   });
 
   const formik = useFormik({
@@ -90,6 +96,7 @@ const CreateWishPanel = () => {
       title: '',
       description: '',
       categories: [],
+      location: '',
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -206,6 +213,22 @@ const CreateWishPanel = () => {
                     }
                   />
                 </Popover>
+
+                <InputField
+                  disabled={true}
+                  label="Expire at"
+                  name="expireAt"
+                  placeholder="Expire at"
+                  value={getExpireWishDate()}
+                  help={'Your wish will be automatically removed after this date.'}
+                />
+
+                <GooglePlacesAutoCompleteField
+                  label={'Centre Location'}
+                  formik={formik}
+                  storeLocally={true}
+                  help={'The most recently used address will be stored on device.'}
+                />
 
                 {isDesktop ? null : <LivePreviewPanel />}
 
