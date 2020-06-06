@@ -45,7 +45,6 @@ const LoginNpo = () => {
       let userData = userDoc.data();
       let response = await client.post('/api/sessionLogin', { token });
       if (response.status === 200) {
-        setIsLoading(false);
         router.push('/');
       } else {
         throw response.error;
