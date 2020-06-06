@@ -31,7 +31,14 @@ const unloadScript = () => {
   window.google = {};
 };
 
-const SearchLocationInput = ({ label, formik, storeLocally, help }) => {
+/**
+ * The field that has google places auto complete. 
+ * @param {string} label is the label of the InputField 
+ * @param {object} formik is the formik object that is used with this InputField. formik sets the field `location` for the field. It is required to have `location` in your initial values.
+ * @param {boolean} storeLocally is to set if the location is stored locally on device
+ * @param {string} help is the help label of the InputField
+ */
+const GooglePlacesAutoComepleteField = ({ label, formik, storeLocally, help }) => {
   const [query, setQuery] = useState('');
   const autoCompleteRef = useRef(null);
   const [location, setLocation] = useLocalStorage('location_wish', '');
@@ -78,4 +85,4 @@ const SearchLocationInput = ({ label, formik, storeLocally, help }) => {
   );
 };
 
-export default SearchLocationInput;
+export default GooglePlacesAutoComepleteField;
