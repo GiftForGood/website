@@ -49,7 +49,7 @@ const RegisterDonor = () => {
       let response = await client.post('/api/sessionLogin', { token });
       if (response.status === 200) {
         setIsLoading(false);
-        router.push('/', { shallow: false });
+        router.push('/');
       } else {
         throw response.error;
       }
@@ -76,7 +76,7 @@ const RegisterDonor = () => {
       let response = await client.post('/api/sessionLogin', { token });
       if (response.status === 200) {
         setGoogleLoading(false);
-        router.push('/', { shallow: false });
+        router.push('/');
       } else {
         throw response.error;
       }
