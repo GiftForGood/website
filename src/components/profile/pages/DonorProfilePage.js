@@ -4,13 +4,13 @@ import Grid from '@kiwicom/orbit-components/lib/utils/Grid';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import styled, { css } from 'styled-components';
 import api from '../../../../utils/api';
-import { npo as npoProfileType } from '../../../../utils/constants/userType';
+import { donor as donorProfileType } from '../../../../utils/constants/userType';
 import useUser from '../../session/modules/useUser';
 
 import ProfileHeaderBar from '../modules/ProfileHeaderBar';
 import ReviewPanel from '../modules/ReviewPanel';
 import ProfilePanel from '../modules/ProfilePanel';
-import PastWishesPanel from '../modules/PastWishesPanel';
+import PastDonationsPanel from '../modules/PastDonationsPanel';
 
 const Wrapper = styled.div`
   margin: 0 auto;
@@ -20,18 +20,18 @@ const Wrapper = styled.div`
   padding-bottom: 30px;
 `;
 
-const NpoProfilePage = ({ userId }) => {
-  const [isShowPastWishes, setIsShowPastWishes] = useState(true);
+const DonorProfilePage = ({ userId }) => {
+  const [isShowPastDonations, setIsShowPastDonations] = useState(true);
   const [isShowReviews, setIsShowReviews] = useState(false);
   const [isMine, setIsMine] = useState(false);
-  const [npo, setNpo] = useState(null);
+  const [donor, setDonor] = useState(null);
   const user = useUser();
 
   const fetchUserInfo = () => {
-    api.users.getNPO(userId).then((userDoc) => {
+    api.users.getDonor(userId).then((userDoc) => {
       if (userDoc.exists) {
         setIsMine(isMyProfile(userDoc));
-        setNpo(userDoc.data());
+        setDonor(userDoc.data());
       } else {
         setIsMine(false);
       }
@@ -52,22 +52,22 @@ const NpoProfilePage = ({ userId }) => {
   return (
     <Wrapper>
       <Grid desktop={{ columns: '1fr 5fr' }}>
-        <ProfilePanel user={npo} />
+        <ProfilePanel user={donor} />
         <Stack>
           <ProfileHeaderBar
-            profileType={npoProfileType}
-            isShowPastPosts={isShowPastWishes}
+            profileType={donorProfileType}
+            isShowPastPosts={isShowPastDonations}
             isShowReviews={isShowReviews}
-            setIsShowPastPosts={setIsShowPastWishes}
+            setIsShowPastPosts={setIsShowPastDonations}
             setIsShowReviews={setIsShowReviews}
             isMine={isMine}
           />
           {isShowReviews && <ReviewPanel />}
-          {isShowPastWishes && <PastWishesPanel isMine={isMine} userId={userId} />}
+          {isShowPastDonations && <PastDonationsPanel isMine={isMine} userId={userId} />}
         </Stack>
       </Grid>
     </Wrapper>
   );
 };
 
-export default NpoProfilePage;
+export default DonorProfilePage;
