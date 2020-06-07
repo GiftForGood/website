@@ -1,25 +1,25 @@
-import { db } from '../firebase';
+import { db, firebaseAuth, firebaseStorage } from '../firebase';
+import { wishes, donations } from '../constants/postType';
+import ChatError from './error/chatError';
+
+const chatsCollection = db.collection('chats');
 
 class ChatsAPI {
   /**
    * Create a chat for a wish
    * @param {string} wishId The id of the wish
-   * @param {string} npoId The id of the NPO
-   * @param {string} donorId The id of the donor
    * @throws {FirebaseError}
    * @returns {object} A firebase document of the created chat
    */
-  async createChatForWish(wishId, npoId, donorId) {}
+  async createChatForWish(wishId) {}
 
   /**
    * Create a chat for a donation
    * @param {string} donationId The id of the donation
-   * @param {string} npoId The id of the NPO
-   * @param {string} donorId The id of the donor
-   * @throws {ChatError}
+   * @throws {FirebaseError}
    * @returns {object} A firebase document of the created chat
    */
-  async createChatForDonation(donationId, npoId, donorId) {}
+  async createChatForDonation(donationId) {}
 
   /**
    * Get a batch of chats for a NPO. Does not include chat messages, only the chat that belongs to the NPO. Only return results of USER_CHATS_BATCH_SIZE
@@ -40,10 +40,28 @@ class ChatsAPI {
   async getChatsForDonor(id, lastQueriedDocument) {}
 
   /**
+   * Subscribe to chats belonging to a NPO. Does not include chat messages
+   * @param {string} id The id of the NPO
+   * @return {function} The subscriber function. Needed to unsubscribe from the listener
+   */
+  async subscribeToChatForNPO(id) {}
+
+  /**
+   * Subscribe to chats belonging to a donor. Does nto include chat messages
+   * @param {string} id The id of the donor
+   * @return {function} The subscriber function. Needed to unsubscribe from the listener
+   */
+  async subscribeToChatForDonor(id) {}
+
+  /**
+   * Unsubscribe from chats.  
+   * @param {function} func The subscriber function
+   */
+  async unsubscribeToChat(func) {}
+
+  /**
    * Create a chat message for a wish without an existing chat. It will create a new chat and add the chat message within it
    * @param {string} wishId The id of the wish
-   * @param {string} npoId The id of the NPO
-   * @param {string} donorId The id of the donor
    * @param {string} contentType The type of the message
    * @param {string/object} content The content of the message
    *  string: Represent a text, link or a calendar text
@@ -52,13 +70,11 @@ class ChatsAPI {
    * @throws {FirebaseError}
    * @return {object} A firebase document of the created chat message
    */
-  async createChatMessageForWish(wishId, npoId, donorId, contentType, content, senderId) {}
+  async createChatMessageForWish(wishId, contentType, content, senderId) {}
 
   /**
    * Create a chat message for a donation without an existing chat. It will create a new chat and add the chat message within it
    * @param {string} donationId The id of the donation
-   * @param {string} npoId The id of the NPO
-   * @param {string} donorId The id of the donor
    * @param {string} contentType The type of the message
    * @param {string/object} content The content of the message
    *  string: Represent a text, link or a calendar text
@@ -67,7 +83,7 @@ class ChatsAPI {
    * @throws {FirebaseError}
    * @return {object} A firebase document of the created chat message
    */
-  async createChatMessageForDonation(donationId, npoId, donorId, contentType, content, senderId) {}
+  async createChatMessageForDonation(donationId, contentType, content, senderId) {}
 
   /**
    * Create a chat message
@@ -105,17 +121,17 @@ class ChatsAPI {
   async getChatMessages(id, lastQueriedDocument) {}
 
   /**
-   * Subscribe to a chat
+   * Subscribe to messages belonging a chat
    * @param {string} id The id of the chat
    * @return {function} The subscriber function. Needed to unsubscribe from the listener
    */
-  async subscribeToChat(id) {}
+  async subscribeToChatMessages(id) {}
 
   /**
-   * Unsubscribe from a chat
+   * Unsubscribe from messages belonging to a chat 
    * @param {function} func The subscriber function
    */
-  async unsubscribeFromChat(func) {}
+  async unsubscribeFromChatMessages(func) {}
 }
 
 export default ChatsAPI;
