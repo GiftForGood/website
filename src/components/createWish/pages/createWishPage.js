@@ -43,7 +43,7 @@ const CreateWishPage = ({ wish, mode }) => {
   return (
     <Container>
       <Wrapper>
-        <CreateWishPanel wish={wish} mode={mode}/>
+        <CreateWishPanel wish={wish} mode={mode} />
         {isDesktop ? <LivePreviewPanel /> : null}
       </Wrapper>
     </Container>

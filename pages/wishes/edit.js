@@ -8,7 +8,6 @@ import dynamic from 'next/dynamic';
 import api from '../../utils/api';
 import Error from 'next/error';
 
-
 const TopNavigationBar = dynamic(() => import('../../src/components/navbar/modules/TopNavigationBar'), { ssr: false });
 
 export async function getServerSideProps({ params, req, res, query }) {
@@ -26,27 +25,26 @@ export async function getServerSideProps({ params, req, res, query }) {
   if (wishDoc.exists) {
     wish = wishDoc.data();
   }
-  if (user && wish && user.user.userId === wish.user.userId) { // checks if the wish is mine.
+  if (user && wish && user.user.userId === wish.user.userId) {
+    // checks if the wish is mine.
     isMine = true;
   }
   return {
     props: {
       user,
       wish,
-      isMine
+      isMine,
     },
   };
 }
 
-
 const CreateWishes = ({ user, wish, isMine }) => {
- 
   return (
     <SessionProvider user={user}>
       <TopNavigationBar />
       {wish ? null : <Error statusCode={404} />}
       {isMine ? null : <Error statusCode={404} />}
-      {wish && isMine && <CreateWishPage wish={wish} mode='edit'/>}
+      {wish && isMine && <CreateWishPage wish={wish} mode="edit" />}
     </SessionProvider>
   );
 };

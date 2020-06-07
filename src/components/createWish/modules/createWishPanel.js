@@ -35,7 +35,7 @@ const Container = styled.div`
 `;
 
 const CreateWishPanel = ({ wish, mode }) => {
-  console.log(wish)
+  console.log(wish);
   const dispatch = useDispatch();
   const router = useRouter();
   const { isDesktop } = useMediaQuery();
@@ -283,7 +283,7 @@ const CreateWishPanel = ({ wish, mode }) => {
                 {isDesktop ? null : <LivePreviewPanel />}
 
                 <Button fullWidth submit asComponent={RedButton} disabled={formik.isSubmitting} loading={isLoading}>
-                  {mode === 'create' ? "Post it" : "Update"}
+                  {mode === 'create' ? 'Post it' : 'Update'}
                 </Button>
               </Stack>
             </form>

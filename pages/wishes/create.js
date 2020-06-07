@@ -27,7 +27,7 @@ const CreateWishes = ({ user }) => {
   return (
     <SessionProvider user={user}>
       <TopNavigationBar />
-      <CreateWishPage  mode='create'/>
+      <CreateWishPage mode="create" />
     </SessionProvider>
   );
 };
