@@ -37,13 +37,13 @@ const Wrapper = styled.div`
   `)}
 `;
 
-const CreateWishPage = () => {
+const CreateWishPage = ({ wish, mode }) => {
   const { isDesktop } = useMediaQuery();
 
   return (
     <Container>
       <Wrapper>
-        <CreateWishPanel />
+        <CreateWishPanel wish={wish} mode={mode}/>
         {isDesktop ? <LivePreviewPanel /> : null}
       </Wrapper>
     </Container>

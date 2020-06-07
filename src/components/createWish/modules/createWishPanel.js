@@ -12,7 +12,6 @@ import {
   ListChoice,
   TextLink,
   Alert,
-  Tooltip,
 } from '@kiwicom/orbit-components/lib';
 import { useDispatch } from 'react-redux';
 import { useFormik } from 'formik';
@@ -27,7 +26,7 @@ import { setTitle, setDescription, setAllCategories } from '../actions';
 import LivePreviewPanel from './livePreviewPanel';
 import { useRouter } from 'next/router';
 
-import { getExpireWishDate } from '../../../../utils/api/time';
+import { getExpireWishDate, getExpireWishDateFormat } from '../../../../utils/api/time';
 import GooglePlacesAutoCompleteField from '../../inputfield/GooglePlacesAutoCompleteField';
 
 const Container = styled.div`
@@ -35,12 +34,14 @@ const Container = styled.div`
   width: 100%;
 `;
 
-const CreateWishPanel = () => {
+const CreateWishPanel = ({ wish, mode }) => {
+  console.log(wish)
   const dispatch = useDispatch();
   const router = useRouter();
   const { isDesktop } = useMediaQuery();
   const [categories, setCategories] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
+  const [editWish, setEditWish] = useState(null);
 
   const [alertTitle, setAlertTitle] = useState('');
   const [showAlert, setShowAlert] = useState(false);
@@ -56,6 +57,14 @@ const CreateWishPanel = () => {
   };
 
   const handleFormSubmission = async (values) => {
+    if (mode === 'create') {
+      handleCreateWish(values);
+    } else if (mode === 'edit') {
+      handleUpdateWish(values);
+    }
+  };
+
+  const handleCreateWish = async (values) => {
     try {
       setShowAlert(false);
       setIsLoading(true);
@@ -64,6 +73,30 @@ const CreateWishPanel = () => {
       let categoryIds = values.categories.map((category) => category.id);
       let locations = [values.location];
       const wishDoc = await api.wishes.create(title, description, categoryIds, locations);
+      let wishId = wishDoc.data().wishId;
+      router.push(`/wishes/${wishId}`);
+    } catch (error) {
+      console.error(error);
+      setIsLoading(false);
+      formik.setSubmitting(false);
+      if (error.code === 'wish/invalid-current-user') {
+        displayAlert('Invalid current user', error.message, 'critical');
+      } else {
+        displayAlert('Error', error.message, 'critical');
+      }
+    }
+  };
+
+  const handleUpdateWish = async (values) => {
+    try {
+      setShowAlert(false);
+      setIsLoading(true);
+      let id = wish.wishId;
+      let title = values.title;
+      let description = values.description;
+      let categoryIds = values.categories.map((category) => category.id);
+      let locations = [values.location];
+      const wishDoc = await api.wishes.update(id, title, description, categoryIds, locations);
       let wishId = wishDoc.data().wishId;
       router.push(`/wishes/${wishId}`);
     } catch (error) {
@@ -92,13 +125,14 @@ const CreateWishPanel = () => {
   });
 
   const formik = useFormik({
-    initialValues: {
+    initialValues: editWish || {
       title: '',
       description: '',
       categories: [],
       location: '',
     },
     validationSchema: validationSchema,
+    enableReinitialize: true,
     onSubmit: (values) => {
       handleFormSubmission(values);
     },
@@ -114,6 +148,7 @@ const CreateWishPanel = () => {
     });
   };
 
+  // Used to update LivePreviewPanel
   useEffect(() => {
     if (formik) {
       dispatch(setTitle(formik.values.title));
@@ -122,9 +157,24 @@ const CreateWishPanel = () => {
     }
   }, [formik, dispatch]);
 
+  // Used to fetch all categories
   useEffect(() => {
     fetchCategories();
   }, []);
+
+  // Used to edit wishes
+  useEffect(() => {
+    if (wish) {
+      let editWish = {
+        title: wish.title,
+        description: wish.description,
+        categories: wish.categories,
+        location: wish.locations[0].fullAddress,
+      };
+      setEditWish(editWish);
+      setSelectedCategories(wish.categories);
+    }
+  }, [wish]);
 
   const onChoiceClicked = (category) => {
     // Allow only 3 categories
@@ -219,7 +269,7 @@ const CreateWishPanel = () => {
                   label="Expire at"
                   name="expireAt"
                   placeholder="Expire at"
-                  value={getExpireWishDate()}
+                  value={wish ? getExpireWishDateFormat(wish.expireDateTime) : getExpireWishDate()}
                   help={'Your wish will be automatically removed after this date.'}
                 />
 
@@ -233,7 +283,7 @@ const CreateWishPanel = () => {
                 {isDesktop ? null : <LivePreviewPanel />}
 
                 <Button fullWidth submit asComponent={RedButton} disabled={formik.isSubmitting} loading={isLoading}>
-                  Post it
+                  {mode === 'create' ? "Post it" : "Update"}
                 </Button>
               </Stack>
             </form>

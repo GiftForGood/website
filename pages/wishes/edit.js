@@ -40,11 +40,13 @@ export async function getServerSideProps({ params, req, res, query }) {
 
 
 const CreateWishes = ({ user, wish, isMine }) => {
+ 
   return (
     <SessionProvider user={user}>
       <TopNavigationBar />
       {wish ? null : <Error statusCode={404} />}
-      <CreateWishPage />
+      {isMine ? null : <Error statusCode={404} />}
+      {wish && isMine && <CreateWishPage wish={wish} mode='edit'/>}
     </SessionProvider>
   );
 };
