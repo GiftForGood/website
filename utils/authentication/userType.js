@@ -1,4 +1,16 @@
 import { npo, donor } from '../constants/userType';
+
+/**
+ * Checks if a user is a NPO
+ *  user: A user from isAuthenticated
+ */
+export function isNpoUser(user) {
+  if (user.npo) {
+    return true;
+  }
+  return false;
+}
+
 /**
  * Checks if a user is a NPO
  *  user: A user from isAuthenticated
@@ -26,6 +38,18 @@ export function isNpo(user, res, destination = {}) {
     res.end();
     return null;
   }
+}
+
+/**
+ * Checks if a user is a Donor
+ *  user: A user from isAuthenticated
+ */
+export function isDonorUser(user) {
+  // Donor
+  if (user.donor) {
+    return true;
+  }
+  return false;
 }
 
 /**
