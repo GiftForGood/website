@@ -35,7 +35,6 @@ const Container = styled.div`
 `;
 
 const CreateWishPanel = ({ wish, mode }) => {
-  console.log(wish);
   const dispatch = useDispatch();
   const router = useRouter();
   const { isDesktop } = useMediaQuery();
