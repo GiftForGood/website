@@ -2,10 +2,10 @@ import { db } from '../firebase';
 
 class ChatsAPI {
   /**
-   * Create a chat for a wish 
+   * Create a chat for a wish
    * @param {string} wishId The id of the wish
    * @param {string} npoId The id of the NPO
-   * @param {string} donorId The id of the donor 
+   * @param {string} donorId The id of the donor
    * @throws {FirebaseError}
    * @returns {object} A firebase document of the created chat
    */
@@ -15,7 +15,7 @@ class ChatsAPI {
    * Create a chat for a donation
    * @param {string} donationId The id of the donation
    * @param {string} npoId The id of the NPO
-   * @param {string} donorId The id of the donor 
+   * @param {string} donorId The id of the donor
    * @throws {ChatError}
    * @returns {object} A firebase document of the created chat
    */
@@ -23,7 +23,7 @@ class ChatsAPI {
 
   /**
    * Get a batch of chats for a NPO. Does not include chat messages, only the chat that belongs to the NPO. Only return results of USER_CHATS_BATCH_SIZE
-   * @param {string} id The id of the NPO 
+   * @param {string} id The id of the NPO
    * @param {object} lastQueriedDocument The last queried firebase document to start the query after. If the field is not given, the query will start from the first document
    * @throws {FirebaseError}
    * @return {array} A list of firebase document of chats belonging to a NPO
@@ -32,7 +32,7 @@ class ChatsAPI {
 
   /**
    * Get a batch of chats for a donor. Does not include chat messages, only the chat that belongs to the donor. Only return results of USER_CHATS_BATCH_SIZE
-   * @param {string} id The id of the donor 
+   * @param {string} id The id of the donor
    * @param {object} lastQueriedDocument The last queried firebase document to start the query after. If the field is not given, the query will start from the first document
    * @throws {FirebaseError}
    * @return {array} A list of firebase document of chats belonging to a donor
@@ -43,7 +43,7 @@ class ChatsAPI {
    * Create a chat message for a wish without an existing chat. It will create a new chat and add the chat message within it
    * @param {string} wishId The id of the wish
    * @param {string} npoId The id of the NPO
-   * @param {string} donorId The id of the donor 
+   * @param {string} donorId The id of the donor
    * @param {string} contentType The type of the message
    * @param {string/object} content The content of the message
    *  string: Represent a text, link or a calendar text
@@ -58,7 +58,7 @@ class ChatsAPI {
    * Create a chat message for a donation without an existing chat. It will create a new chat and add the chat message within it
    * @param {string} donationId The id of the donation
    * @param {string} npoId The id of the NPO
-   * @param {string} donorId The id of the donor 
+   * @param {string} donorId The id of the donor
    * @param {string} contentType The type of the message
    * @param {string/object} content The content of the message
    *  string: Represent a text, link or a calendar text
@@ -83,7 +83,7 @@ class ChatsAPI {
   async createChatMessage(id, contentType, content, senderId) {}
 
   /**
-   * Create create chat messages of the same content type. 
+   * Create create chat messages of the same content type.
    * @param {string} id The id of the chat that tbe message belongs to
    * @param {string} contentType The type of the message
    * @param {string/object} contents A list of content of the messages
@@ -107,7 +107,7 @@ class ChatsAPI {
   /**
    * Subscribe to a chat
    * @param {string} id The id of the chat
-   * @return {function} The subscriber function. Needed to unsubscribe from the listener 
+   * @return {function} The subscriber function. Needed to unsubscribe from the listener
    */
   async subscribeToChat(id) {}
 
