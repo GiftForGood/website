@@ -31,7 +31,8 @@ const LivePreviewPanel = () => {
 
           <Stack align="center" justify="center">
             <WishCard
-              name={user.name}
+              name={user.organization.name}
+              profileImageUrl={user.profileImageUrl}
               title={title}
               description={description}
               postedDateTime={Date.now()}
