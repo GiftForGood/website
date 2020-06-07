@@ -29,3 +29,8 @@ export const getTimeDifferenceFromNow = (timeInMilliSeconds) => {
 export const getFormattedDate = (timeInMilliSeconds) => {
   return moment(timeInMilliSeconds).format('DD/MM/YYYY');
 };
+
+export const getExpireWishDate = () => {
+  let currentDateTime = Date.now();
+  return moment(currentDateTime).add(1, 'month').format('DD MMM YYYY');
+};
