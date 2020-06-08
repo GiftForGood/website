@@ -25,6 +25,7 @@
     "react-dom": "^16.13.1",
     "react-infinite-scroller": "^1.2.4",
     "react-redux": "^7.2.0",
+    "react-responsive-carousel": "^3.2.7",
     "react-scripts": "3.4.0",
     "redux": "^4.0.5",
     "redux-logger": "^3.0.6",

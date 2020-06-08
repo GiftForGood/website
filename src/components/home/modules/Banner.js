@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import SearchBar from '../../search/SearchBar';
 import styled, { css } from 'styled-components';
 import { wishesBannerImagePath, donationsBannerImagePath } from '../../../../utils/constants/imagePaths';
 import { wishesHomePageDetails, donationsHomePageDetails } from '../../../../utils/constants/homePageDetails';
+import api from '../../../../utils/api/';
+import { Grid } from '@kiwicom/orbit-components/lib';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
+import BannerCarousel from './BannerCarousel';
 
 const TitleArea = styled.div`
   position: absolute;
@@ -35,53 +38,44 @@ const BannerContentContainer = styled.div`
   margin: 0 auto;
 `;
 
-const BannerImageContainer = styled.div`
-  width: 100%;
-  height: 100%;
+// only display when it is desktop
+const AdvertisementContainer = styled.div`
   position: relative;
-  background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url(${(props) => props.src});
-  background-size: cover;
-  background-position: center;
-`;
-
-const SearchBarContainer = styled.div`
-  position: absolute;
-  top: 70%;
-  width: 70%;
+  height: 100%;
+  width: 100%;
+  display: none;
   ${media.desktop(css`
-    top: 65%;
-    width: 50%;
+    display: inherit;
   `)};
-  left: 50%;
-  max-width: 960px;
-  min-width: 15rem;
-  transform: translate(-50%, -50%);
 `;
 
-const BannerText = ({ title, subTitle }) => {
-  return (
-    <TitleArea>
-      <Title>{title}</Title>
-      <SubTitle>{subTitle}</SubTitle>
-    </TitleArea>
-  );
-};
+const BannerContainer = styled.div`
+  ${media.desktop(css`
+    width: 90vw;
+  `)};
+  max-width: 1280px;
+  margin: 0 auto;
+  height: 100%;
+`;
 
 /**
  * @param {string} type can be donation or wish type
  */
 const Banner = ({ type }) => {
-  const bannerImagePath = type === 'donation' ? donationsBannerImagePath : wishesBannerImagePath;
-  const { bannerTitle, bannerSubtitle } = type === 'donation' ? donationsHomePageDetails : wishesHomePageDetails;
   return (
-    <BannerImageContainer src={bannerImagePath}>
-      <BannerContentContainer>
-        <BannerText title={bannerTitle} subTitle={bannerSubtitle} />
-        <SearchBarContainer>
-          <SearchBar />
-        </SearchBarContainer>
-      </BannerContentContainer>
-    </BannerImageContainer>
+    <BannerContainer>
+      <Grid
+        style={{ height: '100%', width: '100%' }}
+        columns="1fr"
+        desktop={{
+          columns: '2fr 1fr',
+          columnGap: '25px',
+        }}
+      >
+        <BannerCarousel />
+        <AdvertisementContainer></AdvertisementContainer>
+      </Grid>
+    </BannerContainer>
   );
 };
 

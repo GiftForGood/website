@@ -9,6 +9,9 @@ import { donationsHomePageDetails } from '../../../../utils/constants/homePageDe
 
 const HomePageContainer = styled.div`
   display: flex;
+  ${media.desktop(css`
+    margin-top: 30px;
+  `)};
 `;
 
 const ResponsiveTitle = styled.div`
@@ -57,7 +60,7 @@ const DonationsHomePage = () => {
         rowGap="25px"
         columns="1fr"
         desktop={{
-          rows: '3fr 1fr auto',
+          rows: '2fr 1fr auto',
           rowGap: '30px',
         }}
       >

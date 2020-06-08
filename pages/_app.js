@@ -5,6 +5,7 @@ import { ThemeProvider, createGlobalStyle } from 'styled-components';
 import { Provider } from 'react-redux';
 import { createWrapper } from 'next-redux-wrapper';
 import store from '../store';
+import 'react-responsive-carousel/lib/styles/carousel.min.css';
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -19,6 +20,10 @@ const GlobalStyle = createGlobalStyle`
 
   #scrollableCategory::-webkit-scrollbar, .scrollableDonation::-webkit-scrollbar {
     display: none;
+  }
+
+  .control-dots {
+    padding-inline-start: 0px; 
   }
 `;
 
