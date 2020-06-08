@@ -50,6 +50,10 @@ const BannerCarousel = () => {
     });
   }, []);
 
+  if (bannerImages.length === 0) {
+    return null;
+  }
+
   return (
     <Carousel
       showThumbs={false}
@@ -64,6 +68,7 @@ const BannerCarousel = () => {
         hasPrev && <CarouselBannerButton direction="left" onClickHandler={onClickHandler} size="normal" />
       }
       showArrows={isDesktop}
+      stopOnHover
     >
       {bannerImages.map((bannerImage) => {
         const { imageUrl, link, index } = bannerImage;
