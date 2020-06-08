@@ -214,6 +214,7 @@ const CreateDonationPanel = () => {
                   formik={formik}
                   storeLocally={true}
                   help={'The most recently used address will be stored on device.'}
+                  key={'location_donation'}
                 />
 
                 <ChoiceGroup
