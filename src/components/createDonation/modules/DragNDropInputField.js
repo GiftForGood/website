@@ -1,27 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Button,
-  InputField,
-  Stack,
-  Heading,
-  Tag,
-  Card,
-  CardSection,
-  Textarea,
-  Popover,
-  ListChoice,
-  TextLink,
-  Alert,
-  Tooltip,
-  InputGroup,
-  Select,
-  Text,
-  Radio,
-  ChoiceGroup,
-} from '@kiwicom/orbit-components/lib';
 import styled from 'styled-components';
 import { useDropzone } from 'react-dropzone';
-
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { MAXIMUM_ALLOWED_PHOTOS } from '../../../../utils/constants/donorUploadPhoto';
 
@@ -37,6 +16,7 @@ const getColor = (props) => {
   }
   return '#eeeeee';
 };
+
 const DragNDropContainer = styled.div`
   flex: 1;
   display: flex;
@@ -76,7 +56,25 @@ const Image = styled.img`
   object-position: center;
 `;
 
-const DragNDropInputField = ({ onChange }) => {
+const Text = styled.p`
+  margin: 8px auto;
+`;
+
+const Error = styled(Text)`
+  font-size: 12px;
+  color: #d21c1c;
+  font-weight: 500;
+  line-height: 16px;
+  width: 100%;
+  margin-top: 2px;
+  top: 100%;
+  max-height: 16px;
+  font-family: 'Roboto', -apple-system, '.SFNSText-Regular', 'San Francisco', 'Segoe UI', 'Helvetica Neue',
+    'Lucida Grande', sans-serif;
+  margin-bottom: 40px;
+`;
+
+const DragNDropInputField = ({ onChange, error }) => {
   const { acceptedFiles, getRootProps, getInputProps, isDragActive, isDragAccept, isDragReject } = useDropzone({
     accept: 'image/*',
   });
@@ -95,6 +93,7 @@ const DragNDropInputField = ({ onChange }) => {
       if (allowedRemainingImages > 0) {
         const allowedImages = acceptedImages.splice(0, allowedRemainingImages);
         setSelectedImages([...selectedImages, ...allowedImages]);
+        onChange([...selectedImages, ...allowedImages]);
       }
     }
   };
@@ -134,6 +133,7 @@ const DragNDropInputField = ({ onChange }) => {
         <input {...getInputProps()} />
         <p>Drag 'n' drop up to {MAXIMUM_ALLOWED_PHOTOS} photos, or click to select photos</p>
       </DragNDropContainer>
+      {error && <Error>{error}</Error>}
 
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId="droppable" direction="horizontal">

@@ -25,15 +25,18 @@ import * as Yup from 'yup';
 import { months } from '../../../../utils/constants/month';
 import GooglePlacesAutoCompleteField from '../../inputfield/GooglePlacesAutoCompleteField';
 import api from '../../../../utils/api';
-
 import DragNDropInputField from './DragNDropInputField';
+import moment from 'moment';
+import RedButton from '../../buttons/RedButton';
 
 const Container = styled.div`
   min-width: 300px;
   width: 100%;
 `;
 
-const CreateDonationPanel = () => {
+const currentYear = moment().year();
+
+const CreateDonationPanel = ({ mode }) => {
   const [categories, setCategories] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
 
@@ -43,6 +46,67 @@ const CreateDonationPanel = () => {
       setCategories(categories);
     });
   };
+
+  const validationSchema = Yup.object().shape({
+    title: Yup.string()
+      .required('Required')
+      .min(1, 'A title must be provided')
+      .max(140, 'Title too long and exceeds 140 character limit'),
+    description: Yup.string().required('Required'),
+    categories: Yup.array()
+      .required('Required')
+      .min(1, 'A category must be provided')
+      .max(3, 'Only 3 selected categories allowed'),
+    location: Yup.string().required('Required'),
+    validFromDay: Yup.number()
+      .min(1, 'Day must be in the range 1-31')
+      .max(31, 'Day must be in the range 1-31')
+      .positive('Day must be in the range 1-31')
+      .integer('No decimal values allowed')
+      .required('Required'),
+    validFromMonth: Yup.string().required('Required'),
+    validFromYear: Yup.number()
+      .min(1900, `Year must be in the range 1900-${currentYear}`)
+      .max(currentYear, `Year must be in the range 1900-${currentYear}`)
+      .required('Required'),
+    validToDay: Yup.number()
+      .min(1, 'Day must be in the range 1-31')
+      .max(31, 'Day must be in the range 1-31')
+      .positive('Day must be in the range 1-31')
+      .integer('No decimal values allowed')
+      .required('Required'),
+    validToMonth: Yup.string().required('Required'),
+    validToYear: Yup.number()
+      .min(1900, `Year must be in the range 1900-${currentYear}`)
+      .max(currentYear, `Year must be in the range 1900-${currentYear}`)
+      .required('Required'),
+    dimensions: Yup.string(),
+    itemCondition: Yup.string().required('Required'),
+    customValidFromValidation: Yup.boolean().test('Date Checker', 'Invalid Date', function (val) {
+      const { validFromDay, validFromMonth, validFromYear } = this.parent;
+      if (validFromDay === undefined || validFromMonth === undefined || validFromYear === undefined) {
+        return true;
+      }
+      let combineDate = validFromDay + '-' + validFromMonth + '-' + validFromYear;
+      let date = moment(combineDate, 'D-MM-YYYY', true);
+      let valid = date.isValid();
+      return valid;
+    }),
+    customValidToValidation: Yup.boolean().test('Date Checker', 'Invalid Date', function (val) {
+      const { validToDay, validToMonth, validToYear } = this.parent;
+      if (validToDay === undefined || validToMonth === undefined || validToYear === undefined) {
+        return true;
+      }
+      let combineDate = validToDay + '-' + validToMonth + '-' + validToYear;
+      let date = moment(combineDate, 'D-MM-YYYY', true);
+      let valid = date.isValid();
+      return valid;
+    }),
+    selectedImages: Yup.array()
+      .required('Required')
+      .min(1, 'An image must be provided')
+      .max(4, 'Only 4 selected images allowed'),
+  });
 
   const formik = useFormik({
     initialValues: {
@@ -60,8 +124,9 @@ const CreateDonationPanel = () => {
       categories: [],
       selectedImages: [],
     },
-    //validationSchema: validationSchema,
+    validationSchema: validationSchema,
     onSubmit: (values) => {
+      console.log('formik', values);
       //handleFormSubmission(values);
     },
   });
@@ -112,12 +177,17 @@ const CreateDonationPanel = () => {
 
   return (
     <>
-      <DragNDropInputField />
+      <DragNDropInputField
+        onChange={(selectedImages) => {
+          formik.setFieldValue('selectedImages', selectedImages);
+        }}
+        error={formik.touched.selectedImages && formik.errors.selectedImages ? formik.errors.selectedImages : ''}
+      />
 
       <Container>
         <Card>
           <CardSection expanded>
-            <form>
+            <form onSubmit={formik.handleSubmit}>
               <Stack spacing="extraLoose">
                 <InputField
                   disabled={formik.isSubmitting}
@@ -147,7 +217,7 @@ const CreateDonationPanel = () => {
                         ? formik.errors.validFromDay ||
                           formik.errors.validFromMonth ||
                           formik.errors.validFromYear ||
-                          formik.errors.customDateValidation
+                          formik.errors.customValidFromValidation
                         : ''
                     }
                     required
@@ -178,7 +248,7 @@ const CreateDonationPanel = () => {
                         ? formik.errors.validToDay ||
                           formik.errors.validToMonth ||
                           formik.errors.validToYear ||
-                          formik.errors.customDateValidation
+                          formik.errors.customValidToValidation
                         : ''
                     }
                     required
@@ -214,7 +284,7 @@ const CreateDonationPanel = () => {
                   formik={formik}
                   storeLocally={true}
                   help={'The most recently used address will be stored on device.'}
-                  key={'location_donation'}
+                  storageKey={'location_donation'}
                 />
 
                 <ChoiceGroup
@@ -226,10 +296,8 @@ const CreateDonationPanel = () => {
                     formik.setFieldValue('itemCondition', event.target.value);
                   }}
                 >
-                  <Stack direction="row">
-                    <Radio label="New" value={'New'} checked={'New' === formik.values.itemCondition} />
-                    <Radio label="Used" value={'Used'} checked={'Used' === formik.values.itemCondition} />
-                  </Stack>
+                  <Radio label="New" value={'New'} checked={'New' === formik.values.itemCondition} />
+                  <Radio label="Used" value={'Used'} checked={'Used' === formik.values.itemCondition} />
                 </ChoiceGroup>
 
                 <Popover content={<CategoryListChoices />} noPadding preferredPosition="bottom" width="250px">
@@ -246,6 +314,9 @@ const CreateDonationPanel = () => {
                     }
                   />
                 </Popover>
+                <Button fullWidth submit asComponent={RedButton} disabled={formik.isSubmitting}>
+                  Post it
+                </Button>
               </Stack>
             </form>
           </CardSection>

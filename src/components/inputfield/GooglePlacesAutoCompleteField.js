@@ -39,10 +39,10 @@ const unloadScript = () => {
  * @param {string} help is the help label of the InputField
  * @param {string} key is the key to storeLocally using localStorage
  */
-const GooglePlacesAutoComepleteField = ({ label, formik, storeLocally, help, key }) => {
+const GooglePlacesAutoComepleteField = ({ label, formik, storeLocally, help, storageKey }) => {
   const [query, setQuery] = useState('');
   const autoCompleteRef = useRef(null);
-  const [location, setLocation] = useLocalStorage(key, '');
+  const [location, setLocation] = useLocalStorage(storageKey, '');
 
   useEffect(() => {
     formik.setFieldValue('location', location);
