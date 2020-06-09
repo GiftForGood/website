@@ -2,10 +2,12 @@ import React from 'react';
 import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import CreateDonationPanel from '../modules/createDonationPanel';
+import { Heading } from '@kiwicom/orbit-components/lib';
 
 const Container = styled.div`
   display: flex;
   justify-content: center;
+  flex-direction: column;
 
   max-width: 1280px;
   margin-top: 25px;
@@ -34,9 +36,17 @@ const Wrapper = styled.div`
   `)}
 `;
 
+const HeadingWrapper = styled.div`
+  margin-left: 20px;
+`;
+
 const CreateWishPage = () => {
   return (
     <Container>
+      <HeadingWrapper>
+        <Heading>What are you donating today?</Heading>
+      </HeadingWrapper>
+
       <Wrapper>
         <CreateDonationPanel />
       </Wrapper>
