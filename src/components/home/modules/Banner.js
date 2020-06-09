@@ -1,42 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import SearchBar from '../../search/SearchBar';
+import React from 'react';
 import styled, { css } from 'styled-components';
-import { wishesBannerImagePath, donationsBannerImagePath } from '../../../../utils/constants/imagePaths';
-import { wishesHomePageDetails, donationsHomePageDetails } from '../../../../utils/constants/homePageDetails';
-import api from '../../../../utils/api/';
 import { Grid } from '@kiwicom/orbit-components/lib';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import BannerCarousel from './BannerCarousel';
-
-const TitleArea = styled.div`
-  position: absolute;
-  color: white;
-  left: 50%;
-  top: 35%;
-  width: 70%;
-  ${media.desktop(css`
-    top: 40%;
-    width: 50%;
-  `)};
-  transform: translate(-50%, -50%);
-`;
-
-const Title = styled.div`
-  font-size: calc(14px + 1vw);
-  font-weight: bold;
-`;
-
-const SubTitle = styled.div`
-  font-size: calc(14px + 0.5vw);
-  margin-top: 10px;
-`;
-
-const BannerContentContainer = styled.div`
-  position: relative;
-  height: 100%;
-  width: 100%;
-  margin: 0 auto;
-`;
 
 // only display when it is desktop
 const AdvertisementContainer = styled.div`

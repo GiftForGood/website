@@ -26,15 +26,6 @@ const ClickableDiv = styled.a`
   z-index: 1;
 `;
 
-const BannerText = ({ title, subTitle }) => {
-  return (
-    <TitleArea>
-      <Title>{title}</Title>
-      <SubTitle>{subTitle}</SubTitle>
-    </TitleArea>
-  );
-};
-
 const getAllBannerImages = async () => {
   const bannerSnapshot = await api.banners.getAll().catch((err) => console.error(err));
   return bannerSnapshot.docs.map((bannerDoc) => bannerDoc.data());
