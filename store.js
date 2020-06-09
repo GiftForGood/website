@@ -15,7 +15,7 @@ const rootReducer = combineReducers({
   login: loginReducer,
   session: sessionReducer,
   createWish: createWishReducer,
-  createDonation: createDonationReducer
+  createDonation: createDonationReducer,
 });
 
 const middlewares = [thunk];

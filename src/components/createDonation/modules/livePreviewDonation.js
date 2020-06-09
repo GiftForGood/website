@@ -42,7 +42,7 @@ const LivePreviewDonation = () => {
               postedDateTime={Date.now()}
               postHref={''}
               locations={location}
-              validPeriod={validFrom + " - " + validTo}
+              validPeriod={validFrom + ' - ' + validTo}
             />
           </Stack>
         </Stack>

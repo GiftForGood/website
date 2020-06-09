@@ -3,16 +3,13 @@ import {
   Button,
   InputField,
   Stack,
-  Heading,
   Tag,
   Card,
   CardSection,
   Textarea,
   Popover,
   ListChoice,
-  TextLink,
   Alert,
-  Tooltip,
   InputGroup,
   Select,
   Radio,
@@ -104,9 +101,7 @@ const CreateDonationPanel = ({ mode }) => {
     });
   };
 
-  const handleFormSubmission = async (values) => {
-  
-  };
+  const handleFormSubmission = async (values) => {};
 
   const validationSchema = Yup.object().shape({
     title: Yup.string()
@@ -359,7 +354,7 @@ const CreateDonationPanel = ({ mode }) => {
                         ? formik.errors.validFromDay ||
                           formik.errors.validFromMonth ||
                           formik.errors.validFromYear ||
-                          formik.errors.customValidFromValidation || 
+                          formik.errors.customValidFromValidation ||
                           formik.errors.customValidFromValidationMoreThanZeroDayFromToday ||
                           formik.errors.customValidateDateRange
                         : ''
@@ -392,7 +387,7 @@ const CreateDonationPanel = ({ mode }) => {
                           formik.errors.validToMonth ||
                           formik.errors.validToYear ||
                           formik.errors.customValidToValidation ||
-                          formik.errors.customValidToValidationMoreThanZeroDayFromToday || 
+                          formik.errors.customValidToValidationMoreThanZeroDayFromToday ||
                           formik.errors.customValidateDateRange
                         : ''
                     }
