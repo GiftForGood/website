@@ -106,7 +106,7 @@ const ImagePanel = ({ images }) => {
 
   return (
     <>
-      <DisplayImageContainer id="test">
+      <DisplayImageContainer>
         <CarouselBannerButton direction="left" size="normal" onClickHandler={handlePrevClick} />
         <Image src={displayImage} />
         <CarouselBannerButton direction="right" size="normal" onClickHandler={handleNextClick} />
