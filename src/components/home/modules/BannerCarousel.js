@@ -3,7 +3,7 @@ import styled, { css } from 'styled-components';
 import api from '../../../../utils/api/';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
-import CarouselBannerButton from '../../buttons/CarouselBannerButton';
+import CarouselScrollButton from '../../buttons/CarouselScrollButton';
 import { Carousel } from 'react-responsive-carousel';
 
 const BannerImage = styled.img`
@@ -62,10 +62,10 @@ const BannerCarousel = () => {
       infiniteLoop
       interval={5000}
       renderArrowNext={(onClickHandler, hasNext, label) =>
-        hasNext && <CarouselBannerButton direction="right" onClickHandler={onClickHandler} size="normal" />
+        hasNext && <CarouselScrollButton direction="right" onClickHandler={onClickHandler} size="normal" />
       }
       renderArrowPrev={(onClickHandler, hasPrev, label) =>
-        hasPrev && <CarouselBannerButton direction="left" onClickHandler={onClickHandler} size="normal" />
+        hasPrev && <CarouselScrollButton direction="left" onClickHandler={onClickHandler} size="normal" />
       }
       showArrows={isDesktop}
       stopOnHover

@@ -29,21 +29,16 @@ const CarouselArrow = styled.div`
  *
  * @param {string} size can be small, normal or large
  * @param {string} direction can be left or right
- * @param {string} scrollableId is the html id of the scrollable component that is scrolled when clicking on button
+ * @param {string} onClickHandler is the event to fire when button is clicked
  */
-const CarouselScrollButton = ({ size, direction, scrollableId }) => {
-  // current it scrolls based on the scrollable's client width
-  const getScrollableWidth = () => document.getElementById(scrollableId).clientWidth;
-  const handleScrollLeft = () => (document.getElementById(scrollableId).scrollLeft -= getScrollableWidth());
-  const handleScrollRight = () => (document.getElementById(scrollableId).scrollLeft += getScrollableWidth());
-
+const CarouselScrollButton = ({ size, direction, onClickHandler }) => {
   return (
     <CarouselArrow direction={direction}>
       <Button
         circled
         iconLeft={direction === 'left' ? <ChevronLeft /> : <ChevronRight />}
         asComponent={CarouselButton}
-        onClick={direction === 'left' ? handleScrollLeft : handleScrollRight}
+        onClick={onClickHandler}
         type="white"
         size={size}
       />
