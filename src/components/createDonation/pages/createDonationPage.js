@@ -2,7 +2,7 @@ import React from 'react';
 import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import CreateDonationPanel from '../modules/createDonationPanel';
-import { Heading } from '@kiwicom/orbit-components/lib';
+import { Heading, Alert, Stack } from '@kiwicom/orbit-components/lib';
 
 const Container = styled.div`
   display: flex;
@@ -38,13 +38,24 @@ const Wrapper = styled.div`
 
 const HeadingWrapper = styled.div`
   margin-left: 20px;
+  margin-right: 20px;
+
+  ${media.largeMobile(css`
+    margin-right: 0;
+  `)}
 `;
 
 const CreateWishPage = () => {
   return (
     <Container>
       <HeadingWrapper>
-        <Heading>What are you donating today?</Heading>
+        <Stack spacing="loose">
+          <Heading>What are you donating today?</Heading>
+          <Alert icon title="Some additional information" type="info">
+            As a donor, you are <b>encouraged</b> to cover the delivery cost (if there is) to the specified location.
+            This is to encourage donations of good and usable items to the beneficiaries or organizations.
+          </Alert>
+        </Stack>
       </HeadingWrapper>
 
       <Wrapper>
