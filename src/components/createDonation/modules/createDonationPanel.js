@@ -28,15 +28,24 @@ import api from '../../../../utils/api';
 import DragNDropInputField from './DragNDropInputField';
 import moment from 'moment';
 import RedButton from '../../buttons/RedButton';
+import LivePreviewDonation from './livePreviewDonation';
+import { useDispatch } from 'react-redux';
+import { setTitle, setDescription, setAllCategories, setCoverImage, setLocation, setValidFrom, setValidTo} from '../actions';
 
 const Container = styled.div`
   min-width: 300px;
   width: 100%;
 `;
 
+const LeftPanelContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
 const currentYear = moment().year();
 
 const CreateDonationPanel = ({ mode }) => {
+  const dispatch = useDispatch();
   const [categories, setCategories] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
 
@@ -135,6 +144,18 @@ const CreateDonationPanel = ({ mode }) => {
     fetchCategories();
   }, []);
 
+  useEffect(() => {
+    if (formik) {
+      dispatch(setTitle(formik.values.title));
+      dispatch(setDescription(formik.values.description));
+      dispatch(setAllCategories(formik.values.categories));
+      dispatch(setCoverImage(formik.values.selectedImages[0]));
+      dispatch(setLocation(formik.values.location));
+      dispatch(setValidFrom(formik.values.validFromDay + "/" + formik.values.validFromMonth + "/" + formik.values.validFromYear));
+      dispatch(setValidTo(formik.values.validToDay + "/" + formik.values.validToMonth + "/" + formik.values.validToYear));
+    }
+  }, [formik, dispatch]);
+
   const onChoiceClicked = (category) => {
     // Allow only 3 categories
     if (!selectedCategories.includes(category) && selectedCategories.length <= 2) {
@@ -177,12 +198,15 @@ const CreateDonationPanel = ({ mode }) => {
 
   return (
     <>
-      <DragNDropInputField
-        onChange={(selectedImages) => {
-          formik.setFieldValue('selectedImages', selectedImages);
-        }}
-        error={formik.touched.selectedImages && formik.errors.selectedImages ? formik.errors.selectedImages : ''}
-      />
+      <LeftPanelContainer>
+        <DragNDropInputField
+          onChange={(selectedImages) => {
+            formik.setFieldValue('selectedImages', selectedImages);
+          }}
+          error={formik.touched.selectedImages && formik.errors.selectedImages ? formik.errors.selectedImages : ''}
+        />
+        <LivePreviewDonation />
+      </LeftPanelContainer>
 
       <Container>
         <Card>

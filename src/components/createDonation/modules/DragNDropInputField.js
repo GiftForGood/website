@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { useDropzone } from 'react-dropzone';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { MAXIMUM_ALLOWED_PHOTOS } from '../../../../utils/constants/donorUploadPhoto';
-import { Text, Button, ButtonPrimitive } from '@kiwicom/orbit-components/lib';
+import { Text, ButtonPrimitive } from '@kiwicom/orbit-components/lib';
 import { v4 as uuidv4 } from 'uuid';
 import Remove from '@kiwicom/orbit-components/lib/icons/Remove';
 
@@ -40,6 +40,7 @@ const Container = styled.div`
   padding: 20px;
   max-width: 500px;
   min-width: 500px;
+  min-height: 300px;
 `;
 
 const HorizontalImagesContainer = styled.div`
