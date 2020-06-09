@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import { useDropzone } from 'react-dropzone';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { MAXIMUM_ALLOWED_PHOTOS } from '../../../../utils/constants/donorUploadPhoto';
+import { Text } from '@kiwicom/orbit-components/lib';
+import { v4 as uuidv4 } from 'uuid';
 
 const getColor = (props) => {
   if (props.isDragAccept) {
@@ -48,19 +50,11 @@ const DraggableImageContainer = styled.div`
   ${(props) => props.draggableStyle}
 `;
 
-const Image = styled.img`
-  margin: 10px;
-  height: 100px;
-  width: 100px;
-  object-fit: cover;
-  object-position: center;
-`;
-
-const Text = styled.p`
+const NormalText = styled.p`
   margin: 8px auto;
 `;
 
-const Error = styled(Text)`
+const Error = styled(NormalText)`
   font-size: 12px;
   color: #d21c1c;
   font-weight: 500;
@@ -73,6 +67,33 @@ const Error = styled(Text)`
     'Lucida Grande', sans-serif;
   margin-bottom: 40px;
 `;
+
+const ImageWrapper = styled.img`
+  margin: 10px;
+  height: 100px;
+  width: 100px;
+  object-fit: cover;
+  object-position: center;
+`;
+
+const CoverTextWrapper = styled.div`
+  margin-left: 10px;
+  margin-right: 10px;
+  background-color: black;
+  border-radius: 5px;
+`;
+const Image = ({ src, isCoverImage }) => {
+  return (
+    <>
+      <ImageWrapper src={src} />
+      {isCoverImage ? (
+        <CoverTextWrapper>
+          <Text type="white" align="center">Cover</Text>
+        </CoverTextWrapper>
+      ) : null}
+    </>
+  );
+};
 
 const DragNDropInputField = ({ onChange, error }) => {
   const { acceptedFiles, getRootProps, getInputProps, isDragActive, isDragAccept, isDragReject } = useDropzone({
@@ -87,7 +108,7 @@ const DragNDropInputField = ({ onChange, error }) => {
       const acceptedImages = acceptedFiles.map((file) =>
         Object.assign(file, {
           preview: URL.createObjectURL(file),
-          id: `item-${file.lastModified}`,
+          id: uuidv4(),
         })
       );
       if (allowedRemainingImages > 0) {
@@ -149,7 +170,7 @@ const DragNDropInputField = ({ onChange, error }) => {
                       isDragging={snapshot.isDragging}
                       draggableStyle={provided.draggableProps.style}
                     >
-                      <Image src={item.preview} />
+                      <Image src={item.preview} isCoverImage={index === 0} />
                     </DraggableImageContainer>
                   )}
                 </Draggable>
