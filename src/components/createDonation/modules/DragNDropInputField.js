@@ -39,10 +39,13 @@ const DragNDropContainer = styled.div`
 
 const Container = styled.div`
   padding: 20px;
-  min-height: 300px;
 
   ${media.largeMobile(css`
     min-width: 500px;
+  `)};
+
+  ${media.desktop(css`
+    min-height: 300px;
   `)};
 `;
 

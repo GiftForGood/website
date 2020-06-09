@@ -249,8 +249,20 @@ const CreateDonationPanel = ({ mode }) => {
                   {...formik.getFieldProps('description')}
                 />
 
-                <Stack direction="row">
+                <Stack
+                  direction="column"
+                  mediumMobile={{
+                    direction: 'column',
+                  }}
+                  largeMobile={{
+                    direction: 'column',
+                  }}
+                  tablet={{
+                    direction: 'row',
+                  }}
+                >
                   <InputGroup
+                    flex={['0 0 60px', '1 1 100%', '0 0 90px']}
                     label="Valid From"
                     error={
                       formik.touched.validFromDay || formik.touched.validFromMonth || formik.touched.validFromYear
@@ -279,10 +291,9 @@ const CreateDonationPanel = ({ mode }) => {
                     />
                   </InputGroup>
 
-                  <Text>To</Text>
-
                   <InputGroup
-                    label="Valid To"
+                    flex={['0 0 60px', '1 1 100%', '0 0 90px']}
+                    label="To"
                     error={
                       formik.touched.validToDay || formik.touched.validToMonth || formik.touched.validToYear
                         ? formik.errors.validToDay ||
@@ -354,6 +365,8 @@ const CreateDonationPanel = ({ mode }) => {
                     }
                   />
                 </Popover>
+
+                {isDesktop ? null : <LivePreviewDonation />}
                 <Button fullWidth submit asComponent={RedButton} disabled={formik.isSubmitting}>
                   Post it
                 </Button>
