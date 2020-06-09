@@ -7,18 +7,19 @@ import { MAXIMUM_ALLOWED_PHOTOS } from '../../../../utils/constants/donorUploadP
 import { Text, ButtonPrimitive } from '@kiwicom/orbit-components/lib';
 import { v4 as uuidv4 } from 'uuid';
 import Remove from '@kiwicom/orbit-components/lib/icons/Remove';
+import { colors } from '../../../../utils/constants/colors';
 
 const getColor = (props) => {
   if (props.isDragAccept) {
-    return '#00e676';
+    return colors.dragDropAccept;
   }
   if (props.isDragReject) {
-    return '#ff1744';
+    return colors.dragDropReject;
   }
   if (props.isDragActive) {
-    return '#2196f3';
+    return colors.dragDropActive;
   }
-  return '#eeeeee';
+  return colors.dragDropDefault;
 };
 
 const DragNDropContainer = styled.div`
