@@ -30,7 +30,16 @@ import moment from 'moment';
 import RedButton from '../../buttons/RedButton';
 import LivePreviewDonation from './livePreviewDonation';
 import { useDispatch } from 'react-redux';
-import { setTitle, setDescription, setAllCategories, setCoverImage, setLocation, setValidFrom, setValidTo} from '../actions';
+import {
+  setTitle,
+  setDescription,
+  setAllCategories,
+  setCoverImage,
+  setLocation,
+  setValidFrom,
+  setValidTo,
+} from '../actions';
+import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 
 const Container = styled.div`
   min-width: 300px;
@@ -48,6 +57,7 @@ const CreateDonationPanel = ({ mode }) => {
   const dispatch = useDispatch();
   const [categories, setCategories] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
+  const { isDesktop } = useMediaQuery();
 
   const fetchCategories = () => {
     api.categories.getAll().then((categoriesDocs) => {
@@ -151,8 +161,14 @@ const CreateDonationPanel = ({ mode }) => {
       dispatch(setAllCategories(formik.values.categories));
       dispatch(setCoverImage(formik.values.selectedImages[0]));
       dispatch(setLocation(formik.values.location));
-      dispatch(setValidFrom(formik.values.validFromDay + "/" + formik.values.validFromMonth + "/" + formik.values.validFromYear));
-      dispatch(setValidTo(formik.values.validToDay + "/" + formik.values.validToMonth + "/" + formik.values.validToYear));
+      dispatch(
+        setValidFrom(
+          formik.values.validFromDay + '/' + formik.values.validFromMonth + '/' + formik.values.validFromYear
+        )
+      );
+      dispatch(
+        setValidTo(formik.values.validToDay + '/' + formik.values.validToMonth + '/' + formik.values.validToYear)
+      );
     }
   }, [formik, dispatch]);
 
@@ -205,7 +221,7 @@ const CreateDonationPanel = ({ mode }) => {
           }}
           error={formik.touched.selectedImages && formik.errors.selectedImages ? formik.errors.selectedImages : ''}
         />
-        <LivePreviewDonation />
+        {isDesktop ? <LivePreviewDonation /> : null}
       </LeftPanelContainer>
 
       <Container>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
+import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import { useDropzone } from 'react-dropzone';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { MAXIMUM_ALLOWED_PHOTOS } from '../../../../utils/constants/donorUploadPhoto';
@@ -38,9 +39,11 @@ const DragNDropContainer = styled.div`
 
 const Container = styled.div`
   padding: 20px;
-  max-width: 500px;
-  min-width: 500px;
   min-height: 300px;
+
+  ${media.largeMobile(css`
+    min-width: 500px;
+  `)};
 `;
 
 const HorizontalImagesContainer = styled.div`
