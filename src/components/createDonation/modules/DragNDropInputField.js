@@ -3,8 +3,9 @@ import styled from 'styled-components';
 import { useDropzone } from 'react-dropzone';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { MAXIMUM_ALLOWED_PHOTOS } from '../../../../utils/constants/donorUploadPhoto';
-import { Text } from '@kiwicom/orbit-components/lib';
+import { Text, Button, ButtonPrimitive } from '@kiwicom/orbit-components/lib';
 import { v4 as uuidv4 } from 'uuid';
+import Remove from '@kiwicom/orbit-components/lib/icons/Remove';
 
 const getColor = (props) => {
   if (props.isDragAccept) {
@@ -76,22 +77,41 @@ const ImageWrapper = styled.img`
   object-position: center;
 `;
 
+const DeleteWrapper = styled.div`
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  margin: 12px;
+`;
+
 const CoverTextWrapper = styled.div`
   margin-left: 10px;
   margin-right: 10px;
   background-color: black;
   border-radius: 5px;
+
+  width: 100px;
 `;
-const Image = ({ src, isCoverImage }) => {
+
+const ImageContainer = styled.div`
+  position: relative;
+`;
+const Image = ({ src, onDeleteClick }) => {
   return (
-    <>
+    <ImageContainer>
       <ImageWrapper src={src} />
-      {isCoverImage ? (
-        <CoverTextWrapper>
-          <Text type="white" align="center">Cover</Text>
-        </CoverTextWrapper>
-      ) : null}
-    </>
+      <DeleteWrapper>
+        <ButtonPrimitive
+          circled
+          iconLeft={<Remove />}
+          height="26px"
+          icons={{ width: '14px' }}
+          backgroundActive={'#CAD4DE'}
+          boxShadowActive={`inset 0 0 6px 3px rgba(37,42,49,0.08)`}
+          onClick={onDeleteClick}
+        />
+      </DeleteWrapper>
+    </ImageContainer>
   );
 };
 
@@ -148,6 +168,12 @@ const DragNDropInputField = ({ onChange, error }) => {
     return result;
   };
 
+  const onDeleteClick = (index) => {
+    let cloneSelectedImages = [...selectedImages];
+    cloneSelectedImages.splice(index, 1);
+    setSelectedImages(cloneSelectedImages);
+  };
+
   return (
     <Container>
       <DragNDropContainer {...getRootProps({ isDragActive, isDragAccept, isDragReject })}>
@@ -170,7 +196,7 @@ const DragNDropInputField = ({ onChange, error }) => {
                       isDragging={snapshot.isDragging}
                       draggableStyle={provided.draggableProps.style}
                     >
-                      <Image src={item.preview} isCoverImage={index === 0} />
+                      <Image src={item.preview} onDeleteClick={() => onDeleteClick(index)} />
                     </DraggableImageContainer>
                   )}
                 </Draggable>
@@ -180,6 +206,14 @@ const DragNDropInputField = ({ onChange, error }) => {
           )}
         </Droppable>
       </DragDropContext>
+
+      {selectedImages.length > 0 ? (
+        <CoverTextWrapper>
+          <Text type="white" align="center">
+            Cover
+          </Text>
+        </CoverTextWrapper>
+      ) : null}
     </Container>
   );
 };
