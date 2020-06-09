@@ -1,4 +1,4 @@
-import { db, firebaseAuth } from '../firebase';
+import { db, firebaseAuth, firebase } from '../firebase';
 import * as path from 'path';
 import { v4 as uuidv4 } from 'uuid';
 import { USER_CHATS_BATCH_SIZE, CHAT_MESSAGES_BATCH_SIZE } from './constants';
@@ -119,7 +119,7 @@ class ChatsAPI {
     const chatInfo = await this._createChatForWish(wishInfo, npoInfo, donorInfo);
     // Assumes that only donor can start a conversation on a wish
     const chatMessage = await this._createChatMessages(chatInfo.id, donorInfo, contentType, content);
-    this._updateChatLastMessage(chatInfo.id, donor, chatMessage.data());
+    this._updateChat(chatInfo.id, donor, 1, chatMessage.data());
 
     return chatMessages;
   }
@@ -149,8 +149,9 @@ class ChatsAPI {
     const chatInfo = await this._createChatForWish(wishInfo, npoInfo, donorInfo);
     // Assumes that only donor can start a conversation on a wish
     const chatMessages = await this._createChatMessages(chatInfo.id, donorInfo, contentType, contents);
+    const numberOfMessages = chatMessages.length;
     const lastChatMessage = chatMessages[chatMessages.length - 1].data();
-    this._updateChatLastMessage(chatInfo.id, donor, lastChatMessage);
+    this._updateChat(chatInfo.id, donor, numberOfMessages, lastChatMessage);
 
     return chatMessage;
   }
@@ -180,7 +181,7 @@ class ChatsAPI {
     const chatInfo = await this._createChatForDonation(donationInfo, npoInfo, donorInfo);
     // Assumes that only npo can start a conversation on a donation
     const chatMessage = await this._createChatMessage(chatInfo.id, npoInfo, contentType, content);
-    this._updateChatLastMessage(chatInfo.id, donor, chatMessage.data());
+    this._updateChat(chatInfo.id, donor, 1, chatMessage.data());
 
     return chatMessage;
   }
@@ -210,8 +211,9 @@ class ChatsAPI {
     const chatInfo = await this._createChatForDonation(donationInfo, npoInfo, donorInfo);
     // Assumes that only npo can start a conversation on a donation
     const chatMessages = await this._createChatMessages(chatInfo.id, npoInfo, contentType, contents);
+    const numberOfMessages = chatMessages.length;
     const lastChatMessage = chatMessages[chatMessages.length - 1].data();
-    this._updateChatLastMessage(chatInfo.id, donor, lastChatMessage);
+    this._updateChat(chatInfo.id, donor, numberOfMessages, lastChatMessage);
 
     return chatMessages;
   }
@@ -251,7 +253,7 @@ class ChatsAPI {
     }
 
     const chatMessage = await this._createChatMessage(id, userInfo, contentType, content);
-    this._updateChatLastMessage(id, userType, chatMessage.data());
+    this._updateChat(id, userType, 1, chatMessage.data());
 
     return chatMessage;
   }
@@ -291,8 +293,9 @@ class ChatsAPI {
     }
 
     const chatMessages = await this._createChatMessages(id, userInfo, contentType, contents);
+    const numberOfMessages = chatMessages.length;
     const lastChatMessage = chatMessages[chatMessages.length - 1].data();
-    this._updateChatLastMessage(id, userType, lastChatMessage);
+    this._updateChat(id, userType, numberOfMessages, lastChatMessage);
 
     return chatMessages;
   }
@@ -455,16 +458,27 @@ class ChatsAPI {
     return chatMessageDoc.get();
   }
 
-  async _updateChatLastMessage(chatId, senderType, message) {
+  async _updateChat(chatId, senderType, numberOfMessages, message) {
     const lastMessage = {
       dateTime: message.dateTime,
       content: message.content,
       contentType: message.contentType,
     };
 
+    let receiverType;
+    if (senderType === npo) {
+      receiverType = donor;
+    } else if (senderType === donor) {
+      receiverType = npo;
+    } else {
+      throw new ChatError('invalid-user-type');
+    }
+
     const lastActiveDateTimeField = `${senderType}.lastActiveDateTime`;
+    const receiverUnreadCountField = `${receiverType}.unreadCount`;
     const data = {
       [lastActiveDateTimeField]: message.dateTime,
+      [receiverUnreadCountField]: firebase.firestore.FieldValue.increment(numberOfMessages),
       lastMessage: lastMessage,
     };
 
