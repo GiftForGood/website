@@ -65,6 +65,16 @@ class ChatsAPI {
   }
 
   /**
+   * Get a chat by id. Does not include the chat messages
+   * @param {string} id The chat id
+   * @throws {FirebaseError}
+   * @return {object} A firebase document of the chat
+   */
+  async getChat(id) {
+    return chatsCollection.doc(id).get();
+  }
+
+  /**
    * Subscribe to chats belonging to a NPO. Does not include chat messages
    * @param {string} id The id of the NPO
    * @return {function} The subscriber function. Needed to unsubscribe from the listener
@@ -118,7 +128,7 @@ class ChatsAPI {
    * Create chat messages for a wish of the same content type without an existing chat. It will create a new chat and add the chat messages within it
    * @param {string} wishId The id of the wish
    * @param {string} contentType The type of the message
-   * @param {array} contents A list of content of the messages
+   * @param {array} contents A list of content of the messages. Messages are created in the order in the list
    *  string: Represent a text, link or a calendar text
    *  object: Represent a file or and image
    * @throws {ChatError}
@@ -179,7 +189,7 @@ class ChatsAPI {
    * Create chat messages for a donation of the same content type without an existing chat. It will create a new chat and add the chat messages within it
    * @param {string} donationId The id of the donation
    * @param {string} contentType The type of the message
-   * @param {array} contents A list of contents of the messages
+   * @param {array} contents A list of contents of the messages. Messages are created in the order in the list
    *  string: Represent a text, link or a calendar text
    *  object: Represent a file or and image
    * @throws {ChatError}
@@ -213,22 +223,79 @@ class ChatsAPI {
    * @param {string/object} content The content of the message
    *  string: Represent a text, link or a calendar text
    *  object: Represent a file or and image
+   * @throws {ChatError}
    * @throws {FirebaseError}
    * @return {object} A firebase document of the created chat message
    */
-  async createChatMessage(id, contentType, content) {}
+  async createChatMessage(id, contentType, content) {
+    this._validateContentType(contentType);
+    this._validateContents(contentType, [content]);
+    if (contentType === IMAGE) {
+      this._validateImageExtensions([content]);
+    }
+
+    const userId = firebaseAuth.currentUser.uid;
+    const userTypeInfo = await this._getCurrentUserInfo();
+    const userTypes = userTypeInfo.type;
+
+    let userInfo;
+    let userType;
+    if (userTypes.includes(npo)) {
+      userInfo = await this._getNPOInfo(userId);
+      userType = npo;
+    } else if (userTypes.includes(donor)) {
+      userInfo = await this._getDonorInfo(userId);
+      userType = donor;
+    } else {
+      throw new ChatError('invalid-user-type');
+    }
+
+    const chatMessage = await this._createChatMessage(id, userInfo, contentType, content);
+    this._updateChatLastMessage(id, userType, chatMessage.data());
+
+    return chatMessage;
+  }
 
   /**
    * Create create chat messages of the same content type.
    * @param {string} id The id of the chat that tbe message belongs to
    * @param {string} contentType The type of the message
-   * @param {array} contents A list of content of the messages
+   * @param {array} contents A list of content of the messages. Messages are created in the order in the list
    *  string: Represent a text, link or a calendar text
    *  object: Represent a file or and image
+   * @throws {ChatError}
    * @throws {FirebaseError}
    * @return {array} A list of firebase document of the created chat messages
    */
-  async createChatMessages(id, contentType, contents) {}
+  async createChatMessages(id, contentType, contents) {
+    this._validateContentType(contentType);
+    this._validateContents(contentType, contents);
+    if (contentType === IMAGE) {
+      this._validateImageExtensions(contents);
+    }
+
+    const userId = firebaseAuth.currentUser.uid;
+    const userTypeInfo = await this._getCurrentUserInfo();
+    const userTypes = userTypeInfo.type;
+
+    let userInfo;
+    let userType;
+    if (userTypes.includes(npo)) {
+      userInfo = await this._getNPOInfo(userId);
+      userType = npo;
+    } else if (userTypes.includes(donor)) {
+      userInfo = await this._getDonorInfo(userId);
+      userType = donor;
+    } else {
+      throw new ChatError('invalid-user-type');
+    }
+
+    const chatMessages = await this._createChatMessages(id, userInfo, contentType, contents);
+    const lastChatMessage = chatMessages[chatMessages.length - 1].data();
+    this._updateChatLastMessage(id, userType, lastChatMessage);
+
+    return chatMessages;
+  }
 
   /**
    * Get a batch of messages belonging to a chat. The messages returned are sort in reversed timestamp. Only return results of CHAT_MESSAGES_BATCH_SIZE
@@ -237,7 +304,26 @@ class ChatsAPI {
    * @throws {FirebaseError}
    * @return {array} A list of firebase document of chat messages belonging to a chat
    */
-  async getChatMessages(id, lastQueriedDocument = null) {}
+  async getChatMessages(id, lastQueriedDocument = null) {
+    if (lastQueriedDocument == null) {
+      // First page
+      return chatsCollection
+        .doc(id)
+        .collection('chatHistory')
+        .orderBy('dateTime', 'desc')
+        .limit(CHAT_MESSAGES_BATCH_SIZE)
+        .get();
+    } else {
+      // Subsequent pages
+      return chatsCollection
+        .doc(id)
+        .collection('chatHistory')
+        .orderBy('dateTime', 'desc')
+        .startAfter(lastQueriedDocument)
+        .limit(CHAT_MESSAGES_BATCH_SIZE)
+        .get();
+    }
+  }
 
   /**
    * Subscribe to messages belonging a chat
@@ -285,8 +371,8 @@ class ChatsAPI {
     const data = {
       chatId: newChat.id,
       post: chatPost,
-      npo: chatNPO,
-      donor: chatDonor,
+      [npo]: chatNPO,
+      [donor]: chatDonor,
     };
     await newChat.set(data);
 
@@ -326,8 +412,8 @@ class ChatsAPI {
     const data = {
       chatId: newChat.id,
       post: chatPost,
-      npo: chatNPO,
-      donor: chatDonor,
+      [npo]: chatNPO,
+      [donor]: chatDonor,
     };
     await newChat.set(data);
 
@@ -376,13 +462,7 @@ class ChatsAPI {
       contentType: message.contentType,
     };
 
-    // In the case where constant change, it will not affect the sender type here
-    let sender = 'npo';
-    if (senderType === donor) {
-      sender = 'donor';
-    }
-
-    const lastActiveDateTimeField = `${sender}.lastActiveDateTime`;
+    const lastActiveDateTimeField = `${senderType}.lastActiveDateTime`;
     const data = {
       [lastActiveDateTimeField]: message.dateTime,
       lastMessage: lastMessage,
@@ -407,6 +487,27 @@ class ChatsAPI {
     });
 
     return await Promise.all(imagesPromise);
+  }
+
+  async _getCurrentUserInfo() {
+    const user = firebaseAuth.currentUser;
+
+    if (user == null) {
+      throw new ChatError('invalid-user-id');
+    }
+
+    const userId = user.uid;
+    return this._getUserTypeInfo(userId);
+  }
+
+  async _getUserTypeInfo(id) {
+    const snapshot = await db.collection('users').doc(id).get();
+
+    if (!snapshot.exists) {
+      throw new ChatError('invalid-user-id', 'user does not exist');
+    }
+
+    return snapshot.data();
   }
 
   async _getCurrentNPOInfo() {
