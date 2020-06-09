@@ -15,7 +15,6 @@ import {
   Tooltip,
   InputGroup,
   Select,
-  Text,
   Radio,
   ChoiceGroup,
 } from '@kiwicom/orbit-components/lib';
@@ -40,6 +39,8 @@ import {
   setValidTo,
 } from '../actions';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
+import { toast } from 'react-toastify';
+import ToastContainer from '../../toast/ToastContainer';
 
 const Container = styled.div`
   min-width: 300px;
@@ -374,6 +375,8 @@ const CreateDonationPanel = ({ mode }) => {
             </form>
           </CardSection>
         </Card>
+
+        <ToastContainer position="bottom-left" autoClose={4000} hideProgressBar={true} closeButton={false}/>
       </Container>
     </>
   );
