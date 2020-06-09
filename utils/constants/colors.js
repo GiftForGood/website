@@ -34,4 +34,8 @@ export const colors = {
   dragDropReject: '#ff1744',
   dragDropActive: '#2196f3',
   dragDropDefault: '#eeeeee',
+  dragDropBackground: '#fafafa',
+  dragDropText: '#bdbdbd',
+  dragDropErrorText: '#d21c1c',
+  dndBackgroundActive: '#CAD4DE'
 };

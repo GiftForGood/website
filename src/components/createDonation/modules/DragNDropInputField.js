@@ -32,8 +32,8 @@ const DragNDropContainer = styled.div`
   border-radius: 2px;
   border-color: ${(props) => getColor(props)};
   border-style: dashed;
-  background-color: #fafafa;
-  color: #bdbdbd;
+  background-color: ${colors.dragDropBackground};
+  color: ${colors.dragDropText};
   outline: none;
   transition: border 0.24s ease-in-out;
 `;
@@ -65,7 +65,7 @@ const NormalText = styled.p`
 
 const Error = styled(NormalText)`
   font-size: 12px;
-  color: #d21c1c;
+  color: ${colors.dragDropErrorText};
   font-weight: 500;
   line-height: 16px;
   width: 100%;
@@ -114,7 +114,7 @@ const Image = ({ src, onDeleteClick }) => {
           iconLeft={<Remove />}
           height="26px"
           icons={{ width: '14px' }}
-          backgroundActive={'#CAD4DE'}
+          backgroundActive={colors.dndBackgroundActive}
           boxShadowActive={`inset 0 0 6px 3px rgba(37,42,49,0.08)`}
           onClick={onDeleteClick}
         />
