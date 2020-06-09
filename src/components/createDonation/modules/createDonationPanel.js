@@ -54,17 +54,58 @@ const LeftPanelContainer = styled.div`
 
 const currentYear = moment().year();
 
+const validateDate = (day, month, year) => {
+  const date = `${day}-${month}-${year}`;
+  const dateMoment = moment(date, 'DD-MM-YYYY');
+  const today = moment();
+
+  if (dateMoment.diff(today, 'days') < 0) {
+    return false;
+  }
+  return true;
+};
+
+const validateDateRange = (fromDay, fromMonth, fromYear, toDay, toMonth, toYear) => {
+  const fromDate = `${fromDay}-${fromMonth}-${fromYear}`;
+  const toDate = `${toDay}-${toMonth}-${toYear}`;
+
+  const fromDateMoment = moment(fromDate, 'DD-MM-YYYY');
+  const toDateMoment = moment(toDate, 'DD-MM-YYYY');
+
+  if (toDateMoment.diff(fromDateMoment, 'days') < 1) {
+    return false;
+  }
+  return true;
+};
+
 const CreateDonationPanel = ({ mode }) => {
   const dispatch = useDispatch();
   const [categories, setCategories] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const { isDesktop } = useMediaQuery();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [alertTitle, setAlertTitle] = useState('');
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertType, setAlertType] = useState('');
+  const [alertDescription, setAlertDescription] = useState('');
+
+  const displayAlert = (title, description, type) => {
+    setShowAlert(true);
+    setAlertTitle(title);
+    setAlertDescription(description);
+    setAlertType(type);
+  };
 
   const fetchCategories = () => {
     api.categories.getAll().then((categoriesDocs) => {
       const categories = categoriesDocs.docs.map((categoryDoc) => categoryDoc.data());
       setCategories(categories);
     });
+  };
+
+  const handleFormSubmission = async (values) => {
+  
   };
 
   const validationSchema = Yup.object().shape({
@@ -85,10 +126,7 @@ const CreateDonationPanel = ({ mode }) => {
       .integer('No decimal values allowed')
       .required('Required'),
     validFromMonth: Yup.string().required('Required'),
-    validFromYear: Yup.number()
-      .min(1900, `Year must be in the range 1900-${currentYear}`)
-      .max(currentYear, `Year must be in the range 1900-${currentYear}`)
-      .required('Required'),
+    validFromYear: Yup.number().min(currentYear, `Year must start from ${currentYear}`).required('Required'),
     validToDay: Yup.number()
       .min(1, 'Day must be in the range 1-31')
       .max(31, 'Day must be in the range 1-31')
@@ -97,8 +135,8 @@ const CreateDonationPanel = ({ mode }) => {
       .required('Required'),
     validToMonth: Yup.string().required('Required'),
     validToYear: Yup.number()
-      .min(1900, `Year must be in the range 1900-${currentYear}`)
-      .max(currentYear, `Year must be in the range 1900-${currentYear}`)
+      .min(currentYear, `Year must start from ${currentYear}`)
+
       .required('Required'),
     dimensions: Yup.string(),
     itemCondition: Yup.string().required('Required'),
@@ -122,6 +160,57 @@ const CreateDonationPanel = ({ mode }) => {
       let valid = date.isValid();
       return valid;
     }),
+    customValidFromValidationMoreThanZeroDayFromToday: Yup.boolean().test(
+      'More Than 0 day from Today',
+      `Date is before today's date`,
+      function (val) {
+        const { validFromDay, validFromMonth, validFromYear } = this.parent;
+        if (validFromDay === undefined || validFromMonth === undefined || validFromYear === undefined) {
+          return true;
+        }
+        let isValidDate = validateDate(validFromDay, validFromMonth, validFromYear);
+        return isValidDate;
+      }
+    ),
+    customValidToValidationMoreThanZeroDayFromToday: Yup.boolean().test(
+      'More Than 0 day from Today',
+      `Date is before today's date`,
+      function (val) {
+        const { validToDay, validToMonth, validToYear } = this.parent;
+        if (validToDay === undefined || validToMonth === undefined || validToYear === undefined) {
+          return true;
+        }
+        let isValidDate = validateDate(validToDay, validToMonth, validToYear);
+        return isValidDate;
+      }
+    ),
+    customValidateDateRange: Yup.boolean().test(
+      'Valid Date Range',
+      'The valid period needs to be at least 1 day',
+      function (val) {
+        const { validFromDay, validFromMonth, validFromYear, validToDay, validToMonth, validToYear } = this.parent;
+        if (
+          validFromDay === undefined ||
+          validFromMonth === undefined ||
+          validFromYear === undefined ||
+          validToDay === undefined ||
+          validToMonth === undefined ||
+          validToYear === undefined
+        ) {
+          return true;
+        }
+
+        let isValidDateRange = validateDateRange(
+          validFromDay,
+          validFromMonth,
+          validFromYear,
+          validToDay,
+          validToMonth,
+          validToYear
+        );
+        return isValidDateRange;
+      }
+    ),
     selectedImages: Yup.array()
       .required('Required')
       .min(1, 'An image must be provided')
@@ -270,7 +359,9 @@ const CreateDonationPanel = ({ mode }) => {
                         ? formik.errors.validFromDay ||
                           formik.errors.validFromMonth ||
                           formik.errors.validFromYear ||
-                          formik.errors.customValidFromValidation
+                          formik.errors.customValidFromValidation || 
+                          formik.errors.customValidFromValidationMoreThanZeroDayFromToday ||
+                          formik.errors.customValidateDateRange
                         : ''
                     }
                     required
@@ -300,7 +391,9 @@ const CreateDonationPanel = ({ mode }) => {
                         ? formik.errors.validToDay ||
                           formik.errors.validToMonth ||
                           formik.errors.validToYear ||
-                          formik.errors.customValidToValidation
+                          formik.errors.customValidToValidation ||
+                          formik.errors.customValidToValidationMoreThanZeroDayFromToday || 
+                          formik.errors.customValidateDateRange
                         : ''
                     }
                     required
@@ -368,15 +461,21 @@ const CreateDonationPanel = ({ mode }) => {
                 </Popover>
 
                 {isDesktop ? null : <LivePreviewDonation />}
-                <Button fullWidth submit asComponent={RedButton} disabled={formik.isSubmitting}>
+                <Button fullWidth submit asComponent={RedButton} disabled={formik.isSubmitting} loading={isLoading}>
                   Post it
                 </Button>
               </Stack>
             </form>
+
+            {showAlert ? (
+              <Alert icon title={alertTitle} type={alertType}>
+                {alertDescription}
+              </Alert>
+            ) : null}
           </CardSection>
         </Card>
 
-        <ToastContainer position="bottom-left" autoClose={4000} hideProgressBar={true} closeButton={false}/>
+        <ToastContainer position="bottom-left" autoClose={4000} hideProgressBar={true} closeButton={false} />
       </Container>
     </>
   );
