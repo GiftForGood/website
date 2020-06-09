@@ -60,7 +60,7 @@ const BannerCarousel = () => {
       showStatus={false}
       autoPlay
       infiniteLoop
-      interval={5000}
+      interval={3000}
       renderArrowNext={(onClickHandler, hasNext, label) =>
         hasNext && <CarouselScrollButton direction="right" onClickHandler={onClickHandler} size="normal" />
       }
