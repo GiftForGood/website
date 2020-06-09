@@ -126,6 +126,7 @@ const ViewAllDonationsPage = ({ filterQuery }) => {
           postHref={postHref}
           locations={locations.map((location) => location.name).join(', ')}
           validPeriod={validPeriod}
+          categoryName="All donations"
         />
       );
     });

@@ -9,6 +9,9 @@ import { AlertCircle, Edit, CloseCircle, MenuKebab, ShareAndroid } from '@kiwico
 import { Button, Stack, Text, Popover, ButtonLink } from '@kiwicom/orbit-components/lib';
 import { useRouter } from 'next/router';
 import { COMPLETED, CLOSED } from '../../../utils/constants/postStatus';
+import { donations } from '../../../utils/constants/postType';
+import RatingStars from '../ratingStars';
+import { colors } from '../../../utils/constants/colors';
 
 const PostDetailsHeader = ({
   loginUserId,
@@ -19,6 +22,7 @@ const PostDetailsHeader = ({
   postId,
   postStatus,
   postType,
+  postUserReviewRating,
 }) => {
   const router = useRouter();
   const isOwnPost = loginUserId === postUserId; // whether login user is the post owner
@@ -146,7 +150,11 @@ const PostDetailsHeader = ({
         <Avatar imageUrl={profileImageUrl} />
         <Stack direction="column" shrink spacing="none">
           <Text>{postUserName}</Text>
-          <Text>{npoOrgName}</Text>
+          {postType === donations ? (
+            <RatingStars rating={postUserReviewRating} size="small" color={colors.ratingStarBackground} showEmpty />
+          ) : (
+            <Text>{npoOrgName}</Text>
+          )}
         </Stack>
       </Stack>
     );

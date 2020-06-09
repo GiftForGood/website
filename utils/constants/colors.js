@@ -30,4 +30,5 @@ export const colors = {
   saveChangesBackground: '#4db6ac',
   saveChangesHoverActive: '#35ada0',
   saveChangesFocus: '#16a595',
+  separatorBackground: '#eff2f5',
 };

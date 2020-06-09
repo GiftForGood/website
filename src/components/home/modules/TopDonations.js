@@ -121,6 +121,8 @@ const TopDonations = ({ numberOfPosts, numberOfCategories }) => {
                     coverImageUrl={donation.coverImageUrl}
                     postHref={donationPostHref}
                     locations={locations.join(', ')}
+                    categoryId={category.id}
+                    categoryName={category.name}
                   ></DonationCard>
                 );
               })}
