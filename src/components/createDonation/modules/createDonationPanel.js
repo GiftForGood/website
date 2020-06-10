@@ -38,6 +38,7 @@ import {
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 import { toast } from 'react-toastify';
 import ToastContainer from '../../toast/ToastContainer';
+import { useRouter } from 'next/router';
 
 const Container = styled.div`
   min-width: 300px;
@@ -77,6 +78,7 @@ const validateDateRange = (fromDay, fromMonth, fromYear, toDay, toMonth, toYear)
 
 const CreateDonationPanel = ({ mode }) => {
   const dispatch = useDispatch();
+  const router = useRouter();
   const [categories, setCategories] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const { isDesktop } = useMediaQuery();
@@ -101,7 +103,62 @@ const CreateDonationPanel = ({ mode }) => {
     });
   };
 
-  const handleFormSubmission = async (values) => {};
+  const handleFormSubmission = async (values) => {
+    if (mode === 'create') {
+      handleCreateDonation(values);
+    }
+  };
+
+  const handleCreateDonation = async (values) => {
+    try {
+      setShowAlert(false);
+      setIsLoading(true);
+      const {
+        title,
+        description,
+        validFromDay,
+        validFromMonth,
+        validFromYear,
+        validToDay,
+        validToMonth,
+        validToYear,
+        dimensions,
+        location,
+        itemCondition,
+        categories,
+        selectedImages,
+      } = values;
+      const coverImage = selectedImages[0];
+      const categoryIds = categories.map((category) => category.id);
+      const donationDoc = await api.donations.create(
+        title,
+        description,
+        categoryIds,
+        validFromDay,
+        validFromMonth,
+        validFromYear,
+        validToDay,
+        validToMonth,
+        validToYear,
+        dimensions,
+        [location],
+        itemCondition,
+        coverImage,
+        selectedImages
+      );
+      const donationId = donationDoc.data().donationId;
+      router.push(`/donations/${donationId}`);
+    } catch (error) {
+      console.error(error);
+      setIsLoading(false);
+      formik.setSubmitting(false);
+      if (error.code === 'donation/invalid-current-user') {
+        displayAlert('Invalid current user', error.message, 'critical');
+      } else {
+        displayAlert('Error', error.message, 'critical');
+      }
+    }
+  };
 
   const validationSchema = Yup.object().shape({
     title: Yup.string()
@@ -231,7 +288,7 @@ const CreateDonationPanel = ({ mode }) => {
     validationSchema: validationSchema,
     onSubmit: (values) => {
       console.log('formik', values);
-      //handleFormSubmission(values);
+      handleFormSubmission(values);
     },
   });
 
@@ -302,6 +359,7 @@ const CreateDonationPanel = ({ mode }) => {
       <LeftPanelContainer>
         <DragNDropInputField
           onChange={(selectedImages) => {
+            console.log('onChange')
             formik.setFieldValue('selectedImages', selectedImages);
           }}
           error={formik.touched.selectedImages && formik.errors.selectedImages ? formik.errors.selectedImages : ''}

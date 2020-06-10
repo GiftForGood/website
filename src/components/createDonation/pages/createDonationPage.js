@@ -59,7 +59,7 @@ const CreateWishPage = () => {
       </HeadingWrapper>
 
       <Wrapper>
-        <CreateDonationPanel />
+        <CreateDonationPanel mode="create"/>
       </Wrapper>
     </Container>
   );
