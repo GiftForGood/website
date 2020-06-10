@@ -153,7 +153,7 @@ const CreateWishPanel = ({ wish, mode }) => {
       dispatch(setTitle(formik.values.title));
       dispatch(setDescription(formik.values.description));
       dispatch(setAllCategories(formik.values.categories));
-      dispatch(setPostedDateTime(wish ? wish.postedDateTime : Date.now()))
+      dispatch(setPostedDateTime(wish ? wish.postedDateTime : Date.now()));
     }
   }, [formik, dispatch]);
 
