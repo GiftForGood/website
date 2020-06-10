@@ -8,6 +8,7 @@ import GreySubtleButton from '../../buttons/GreySubtleButton';
 import DonationCard from '../../card/DonationCard';
 import CarouselScrollButton from '../../buttons/CarouselScrollButton';
 import Desktop from '@kiwicom/orbit-components/lib/Desktop';
+import { getFormattedDate } from '../../../../utils/api/time';
 
 const CategoryHeader = styled.div`
   align-items: center;
@@ -113,6 +114,9 @@ const TopDonations = ({ numberOfPosts, numberOfCategories }) => {
                 const locations = donation.locations.map((location) => {
                   return location.name;
                 });
+                const validPeriod = `${getFormattedDate(donation.validPeriodFrom)} - ${getFormattedDate(
+                  donation.validPeriodTo
+                )}`;
                 return (
                   <DonationCard
                     key={donation.donationId}
@@ -123,6 +127,7 @@ const TopDonations = ({ numberOfPosts, numberOfCategories }) => {
                     postedDateTime={donation.postedDateTime}
                     coverImageUrl={donation.coverImageUrl}
                     postHref={donationPostHref}
+                    validPeriod={validPeriod}
                     locations={locations.join(', ')}
                   ></DonationCard>
                 );
