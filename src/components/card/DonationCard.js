@@ -6,6 +6,8 @@ import styled, { css } from 'styled-components';
 import { defaultPostImagePath } from '../../../utils/constants/imagePaths';
 import { useRouter } from 'next/router';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
+import { PENDING } from '../../../utils/constants/postStatus';
+import DonationCardStatus from './DonationCardStatus';
 
 const CardContainer = styled.div`
   display: flex;
@@ -40,6 +42,12 @@ const TwoLineTextContainer = styled.div`
   font-size: 14px;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
+`;
+
+const CardImageContainer = styled.div`
+  height: 100%;
+  width: 100%;
+  position: relative;
 `;
 
 const CardImage = styled.div`
@@ -100,6 +108,7 @@ const CardDescriptionFooter = ({ validPeriod, locations }) => {
  * @param {string} postedDateTime is the time posted for donation in milliseconds
  * @param {string} postHref is the link url to direct users to after clicking the donation card
  * @param {string} locations is the location names of the donation post
+ * @param {string} status is the current status of the donation post, if not provided, the status won't be shown in card
  * @param {string} validPeriod is the validity period of the donation post
  */
 const DonationCard = ({
@@ -111,6 +120,7 @@ const DonationCard = ({
   postedDateTime,
   postHref,
   locations,
+  status = null,
   validPeriod,
 }) => {
   const timeAgo = getTimeDifferenceFromNow(postedDateTime);
@@ -125,7 +135,11 @@ const DonationCard = ({
         <CardHeaderContainer>
           <CardHeader name={name} imageUrl={profileImageUrl} timeAgo={timeAgo} />
         </CardHeaderContainer>
-        <CardImage imageUrl={coverImageUrl || defaultPostImagePath} />
+        <CardImageContainer>
+          <CardImage imageUrl={coverImageUrl || defaultPostImagePath} />
+          {/* status label will only be shown if status is provided and it is not pending */}
+          {status != null && status != PENDING && <DonationCardStatus status={status} />}
+        </CardImageContainer>
         <CardDescriptionContainer>
           <CardDescription title={title} description={description} />
           <CardDescriptionFooterContainer>
