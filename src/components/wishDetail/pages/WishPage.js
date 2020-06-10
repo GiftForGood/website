@@ -48,12 +48,7 @@ const WishPage = ({ wishId, wishDetails, npoDetails, user, prevHref, categoryNam
       </Desktop>
       <Grid desktop={{ columns: '1fr 1fr', gap: '10px' }}>
         <LeftPanel id="map">
-          <Map
-            lat={wish.organization.latitude}
-            lng={wish.organization.longitude}
-            npoOrgName={wish.organization.name}
-            npoOrgAddress={wish.organization.address}
-          />
+          <Map npoOrgName={wish.organization.name} locations={wish.locations} />
         </LeftPanel>
         <RightPanel>
           <WishInformation
