@@ -9,6 +9,9 @@ import { wishesHomePageDetails } from '../../../../utils/constants/homePageDetai
 
 const WishesHomePageContainer = styled.div`
   display: flex;
+  ${media.desktop(css`
+    margin-top: 30px;
+  `)};
 `;
 
 const ResponsiveTitle = styled.div`
@@ -56,7 +59,7 @@ const WishesHomePage = () => {
         rowGap="25px"
         columns="1fr"
         desktop={{
-          rows: '3fr 1fr auto',
+          rows: '2fr 1fr auto',
           rowGap: '30px',
         }}
       >

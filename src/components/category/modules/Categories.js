@@ -71,16 +71,21 @@ const Categories = ({ type }) => {
     );
   };
 
+  const scrollableId = 'scrollableCategory';
+  const getScrollableWidth = () => document.getElementById(scrollableId).clientWidth;
+  const handleScrollLeft = () => (document.getElementById(scrollableId).scrollLeft -= getScrollableWidth());
+  const handleScrollRight = () => (document.getElementById(scrollableId).scrollLeft += getScrollableWidth());
+
   return (
     <RowOfCategoriesContainer>
       <Desktop>
-        <CarouselScrollButton size="small" direction="left" scrollableId="scrollableCategory" />
+        <CarouselScrollButton size="small" direction="left" onClickHandler={handleScrollLeft} />
       </Desktop>
       <ScrollableRow id="scrollableCategory">
         <RowOfCategories />
       </ScrollableRow>
       <Desktop>
-        <CarouselScrollButton size="small" direction="right" scrollableId="scrollableCategory" />
+        <CarouselScrollButton size="small" direction="right" onClickHandler={handleScrollRight} />
       </Desktop>
     </RowOfCategoriesContainer>
   );
