@@ -85,6 +85,9 @@ const TopDonations = ({ numberOfPosts, numberOfCategories }) => {
       event.preventDefault();
       router.push(categoryHref);
     };
+    const getScrollableWidth = () => document.getElementById(category.id).clientWidth;
+    const handleScrollLeft = () => (document.getElementById(category.id).scrollLeft -= getScrollableWidth());
+    const handleScrollRight = () => (document.getElementById(category.id).scrollLeft += getScrollableWidth());
     return (
       <TopDonationCardsContainer key={category.id}>
         <CategoryHeader>
@@ -101,7 +104,7 @@ const TopDonations = ({ numberOfPosts, numberOfCategories }) => {
         </CategoryHeader>
         <CarouselContainer>
           <Desktop>
-            <CarouselScrollButton direction="left" size="normal" scrollableId={category.id} />
+            <CarouselScrollButton direction="left" size="normal" onClickHandler={handleScrollLeft} />
           </Desktop>
           <DonationsRow id={category.id} className="scrollableDonation">
             <Stack direction="row" align="start" spacing="extraLoose">
@@ -127,7 +130,7 @@ const TopDonations = ({ numberOfPosts, numberOfCategories }) => {
             </Stack>
           </DonationsRow>
           <Desktop>
-            <CarouselScrollButton direction="right" size="normal" scrollableId={category.id} />
+            <CarouselScrollButton direction="right" size="normal" onClickHandler={handleScrollRight} />
           </Desktop>
         </CarouselContainer>
       </TopDonationCardsContainer>

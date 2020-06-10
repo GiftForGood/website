@@ -3,7 +3,7 @@ import { Stack, Heading, Text, Alert, Tooltip, TextLink } from '@kiwicom/orbit-c
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import WishCard from '../../card/WishCard';
-import { getTitle, getDescription, getCategories } from '../selectors';
+import { getTitle, getDescription, getCategories, getPostedDateTime } from '../selectors';
 import useUser from '../../session/modules/useUser';
 
 const Container = styled.div`
@@ -14,6 +14,7 @@ const LivePreviewPanel = () => {
   const title = useSelector(getTitle);
   const description = useSelector(getDescription);
   const categories = useSelector(getCategories);
+  const postedDateTime = useSelector(getPostedDateTime);
   const user = useUser();
 
   if (!user) {
@@ -35,7 +36,7 @@ const LivePreviewPanel = () => {
               profileImageUrl={user.profileImageUrl}
               title={title}
               description={description}
-              postedDateTime={Date.now()}
+              postedDateTime={postedDateTime}
               postHref={''}
               categoryTags={categories.map((category) => category.name)}
               isBumped={false}

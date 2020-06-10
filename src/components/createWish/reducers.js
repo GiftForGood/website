@@ -2,6 +2,7 @@ const initialState = {
   title: '',
   description: '',
   categories: [],
+  postedDateTime: '',
 };
 
 const createWishReducer = (state = initialState, action) => {
@@ -28,6 +29,12 @@ const createWishReducer = (state = initialState, action) => {
       return {
         ...state,
         categories: action.categories,
+      };
+
+    case 'create-wish/SET_POSTED_DATE_TIME':
+      return {
+        ...state,
+        postedDateTime: action.postedDateTime,
       };
     default:
       return state;
