@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import { Stack } from '@kiwicom/orbit-components/lib';
-import CarouselBannerButton from '../../buttons/CarouselBannerButton';
+import CarouselScrollButton from '../../buttons/CarouselScrollButton';
 
 const DisplayImageContainer = styled.div`
   height: 100vw;
@@ -107,9 +107,9 @@ const ImagePanel = ({ images }) => {
   return (
     <>
       <DisplayImageContainer>
-        <CarouselBannerButton direction="left" size="normal" onClickHandler={handlePrevClick} />
+        <CarouselScrollButton direction="left" size="normal" onClickHandler={handlePrevClick} />
         <Image src={displayImage} />
-        <CarouselBannerButton direction="right" size="normal" onClickHandler={handleNextClick} />
+        <CarouselScrollButton direction="right" size="normal" onClickHandler={handleNextClick} />
       </DisplayImageContainer>
       <Stack direction="row" desktop={{ justify: images.length === 4 ? 'between' : 'start' }}>
         <Thumbnails />
