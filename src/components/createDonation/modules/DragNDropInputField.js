@@ -152,9 +152,8 @@ const DragNDropInputField = ({ onChange, error }) => {
   }, [acceptedFiles]);
 
   useEffect(() => {
-    onChange(selectedImages);    
+    onChange(selectedImages);
   }, [selectedImages]);
-
 
   const onDragEnd = (result) => {
     if (!result.destination) {

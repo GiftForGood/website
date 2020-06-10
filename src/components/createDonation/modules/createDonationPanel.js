@@ -358,7 +358,7 @@ const CreateDonationPanel = ({ mode }) => {
       <LeftPanelContainer>
         <DragNDropInputField
           onChange={(selectedImages) => {
-            console.log('onChange')
+            console.log('onChange');
             formik.setFieldValue('selectedImages', selectedImages);
           }}
           error={formik.touched.selectedImages && formik.errors.selectedImages ? formik.errors.selectedImages : ''}

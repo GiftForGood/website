@@ -37,5 +37,5 @@ export const colors = {
   dragDropBackground: '#fafafa',
   dragDropText: '#bdbdbd',
   dragDropErrorText: '#d21c1c',
-  dndBackgroundActive: '#CAD4DE'
+  dndBackgroundActive: '#CAD4DE',
 };
