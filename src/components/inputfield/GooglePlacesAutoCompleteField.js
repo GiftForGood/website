@@ -79,7 +79,7 @@ const GooglePlacesAutoComepleteField = ({ label, formik, storeLocally, help }) =
         setQuery(event.target.value);
       }}
       placeholder=""
-      value={location || query}
+      value={query || location}
       error={formik.touched.location && formik.errors.location ? formik.errors.location : ''}
       help={help}
     />
