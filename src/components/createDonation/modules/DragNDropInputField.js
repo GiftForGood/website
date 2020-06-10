@@ -142,7 +142,7 @@ const DragNDropInputField = ({ onChange, error }) => {
       if (allowedRemainingImages > 0) {
         const allowedImages = acceptedImages.splice(0, allowedRemainingImages);
         setSelectedImages([...selectedImages, ...allowedImages]);
-        onChange([...selectedImages, ...allowedImages]);
+        //onChange([...selectedImages, ...allowedImages]);
       }
     }
   };
@@ -151,13 +151,10 @@ const DragNDropInputField = ({ onChange, error }) => {
     populateSelectedImages();
   }, [acceptedFiles]);
 
-  useEffect(
-    () => () => {
-      // Make sure to revoke the data uris to avoid memory leaks
-      selectedImages.forEach((file) => URL.revokeObjectURL(file.preview));
-    },
-    [selectedImages]
-  );
+  useEffect(() => {
+    onChange(selectedImages);    
+  }, [selectedImages]);
+
 
   const onDragEnd = (result) => {
     if (!result.destination) {
