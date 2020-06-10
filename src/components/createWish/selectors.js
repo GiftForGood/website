@@ -13,3 +13,7 @@ export function getDescription(state) {
 export function getCategories(state) {
   return getLocalState(state).categories;
 }
+
+export function getPostedDateTime(state) {
+  return getLocalState(state).postedDateTime;
+}

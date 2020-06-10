@@ -22,7 +22,7 @@ import RedButton from '../../buttons/RedButton';
 import styled from 'styled-components';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 
-import { setTitle, setDescription, setAllCategories } from '../actions';
+import { setTitle, setDescription, setAllCategories, setPostedDateTime } from '../actions';
 import LivePreviewPanel from './livePreviewPanel';
 import { useRouter } from 'next/router';
 
@@ -153,6 +153,7 @@ const CreateWishPanel = ({ wish, mode }) => {
       dispatch(setTitle(formik.values.title));
       dispatch(setDescription(formik.values.description));
       dispatch(setAllCategories(formik.values.categories));
+      dispatch(setPostedDateTime(wish ? wish.postedDateTime : Date.now()))
     }
   }, [formik, dispatch]);
 
