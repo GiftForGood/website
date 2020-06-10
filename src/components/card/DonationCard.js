@@ -93,7 +93,7 @@ const CardDescription = ({ title, description }) => {
 const CardDescriptionFooter = ({ validPeriod, locations }) => {
   return (
     <>
-      <GreyText size="small">Valid period: {validPeriod || '10/05/2020 - 10/05/2021'}</GreyText>
+      <GreyText size="small">Valid period: {validPeriod || 'N.A.'}</GreyText>
       <GreyText size="small">Locations: {locations}</GreyText>
     </>
   );

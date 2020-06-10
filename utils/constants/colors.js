@@ -38,4 +38,5 @@ export const colors = {
   dragDropText: '#bdbdbd',
   dragDropErrorText: '#d21c1c',
   dndBackgroundActive: '#CAD4DE',
+  bannerBackground: '#ffffff',
 };

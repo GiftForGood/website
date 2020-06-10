@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { GOOGLE_MAP_URL } from '../../../../utils/constants/thirdPartyAPIUrl';
 
-const Map = ({ lat, lng, npoOrgName, npoOrgAddress }) => {
+const Map = ({ npoOrgName, locations }) => {
   useEffect(() => {
     // create the script tag, set the appropriate attributes
     var script = document.createElement('script');
@@ -11,32 +11,38 @@ const Map = ({ lat, lng, npoOrgName, npoOrgAddress }) => {
 
     // attach your callback function to the `window` object
     window.initMap = function () {
-      const npoLocation = {
-        lat: parseFloat(lat),
-        lng: parseFloat(lng),
+      // center the map according to center lat, lng of Singapore if there are more than 1 marker
+      const centerLocation = {
+        lat: locations.length > 1 ? 1.3521 : locations[0].latitude,
+        lng: locations.length > 1 ? 103.8198 : locations[0].longitude,
       };
 
       const map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 16, // determines the magnification level of the map
-        center: npoLocation,
+        zoom: locations.length > 1 ? 11 : 16, // determines the magnification level of the map
+        center: centerLocation,
       });
 
-      const contentString = `<h2 style="padding: 0px 20px 0px 20px;">${npoOrgName}</h2><p style="padding: 0px 20px 0px 20px;">${npoOrgAddress}<b></p>`;
+      locations.map((location, index) => {
+        const contentString = `<h2 style="padding: 0px 20px 0px 20px;">${npoOrgName}</h2><p style="padding: 0px 20px 0px 20px;">${location.name}<b></p>`;
 
-      const infowindow = new google.maps.InfoWindow({
-        content: contentString,
+        const infowindow = new google.maps.InfoWindow({
+          content: contentString,
+        });
+
+        const marker = new google.maps.Marker({
+          position: { lat: location.latitude, lng: location.longitude },
+          map: map,
+        });
+
+        marker.addListener('click', function () {
+          infowindow.open(map, marker);
+        });
+
+        // only the first location infowindow will be opened if there are more than 1 marker
+        if (index === 0) {
+          infowindow.open(map, marker);
+        }
       });
-
-      const marker = new google.maps.Marker({
-        position: npoLocation,
-        map: map,
-      });
-
-      marker.addListener('click', function () {
-        infowindow.open(map, marker);
-      });
-
-      infowindow.open(map, marker);
     };
 
     // append the 'script' element to 'body'
