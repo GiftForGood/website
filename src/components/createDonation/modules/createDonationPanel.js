@@ -287,7 +287,6 @@ const CreateDonationPanel = ({ mode }) => {
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      console.log('formik', values);
       handleFormSubmission(values);
     },
   });
