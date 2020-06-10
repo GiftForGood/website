@@ -37,11 +37,12 @@ const unloadScript = () => {
  * @param {object} formik is the formik object that is used with this InputField. formik sets the field `location` for the field. It is required to have `location` in your initial values.
  * @param {boolean} storeLocally is to set if the location is stored locally on device
  * @param {string} help is the help label of the InputField
+ * @param {string} key is the key to storeLocally using localStorage
  */
-const GooglePlacesAutoComepleteField = ({ label, formik, storeLocally, help }) => {
+const GooglePlacesAutoComepleteField = ({ label, formik, storeLocally, help, storageKey }) => {
   const [query, setQuery] = useState('');
   const autoCompleteRef = useRef(null);
-  const [location, setLocation] = useLocalStorage('location_wish', '');
+  const [location, setLocation] = useLocalStorage(storageKey, '');
 
   useEffect(() => {
     formik.setFieldValue('location', location);

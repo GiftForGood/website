@@ -6,6 +6,7 @@ import { Provider } from 'react-redux';
 import { createWrapper } from 'next-redux-wrapper';
 import { colors } from '../utils/constants/colors';
 import store from '../store';
+import 'react-toastify/dist/ReactToastify.css';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 
 const GlobalStyle = createGlobalStyle`
