@@ -185,14 +185,14 @@ const CreateDonationPanel = ({ mode, donation }) => {
         selectedImages,
       } = values;
       const id = donation.donationId;
-      
+
       const categoryIds = categories.map((category) => category.id);
       const images = selectedImages.map((img) => {
         if (img.lastModified === undefined) {
-          return img.preview
+          return img.preview;
         }
         return img;
-      })
+      });
       const coverImage = images[0];
       const donationDoc = await api.donations.update(
         id,
@@ -224,8 +224,6 @@ const CreateDonationPanel = ({ mode, donation }) => {
       }
     }
   };
-
-
 
   const validationSchema = Yup.object().shape({
     title: Yup.string()
