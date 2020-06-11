@@ -55,9 +55,7 @@ const HorizontalImagesContainer = styled.div`
   overflow: auto;
 `;
 
-const DraggableImageContainer = styled.div`
-  ${(props) => props.draggableStyle}
-`;
+const DraggableImageContainer = styled.div``;
 
 const NormalText = styled.p`
   margin: 8px auto;
@@ -158,11 +156,11 @@ const DragNDropInputField = ({ onChange, error, initialImages = null }) => {
     if (initialImages) {
       let initial = initialImages.map((imageUrl) => ({
         preview: imageUrl,
-        id: uuidv4()
-      }))
-      setSelectedImages(initial)
+        id: uuidv4(),
+      }));
+      setSelectedImages(initial);
     }
-  }, [initialImages])
+  }, [initialImages]);
 
   const onDragEnd = (result) => {
     if (!result.destination) {
