@@ -44,7 +44,7 @@ export const getDay = (timeInMilliSeconds) => {
 }
 
 export const getMonth = (timeInMilliSeconds) => {
-  return moment(timeInMilliSeconds).format('MMM');
+  return moment(timeInMilliSeconds).format('MM');
 }
 
 export const getYear = (timeInMilliSeconds) => {
