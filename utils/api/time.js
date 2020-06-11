@@ -38,3 +38,17 @@ export const getExpireWishDate = () => {
 export const getExpireWishDateFormat = (timeInMilliSeconds) => {
   return moment(timeInMilliSeconds).format('DD MMM YYYY');
 };
+
+export const getDay = (timeInMilliSeconds) => {
+  return moment(timeInMilliSeconds).format('DD');
+}
+
+export const getMonth = (timeInMilliSeconds) => {
+  return moment(timeInMilliSeconds).format('MMM');
+}
+
+export const getYear = (timeInMilliSeconds) => {
+  return moment(timeInMilliSeconds).format('YYYY');
+}
+
+
