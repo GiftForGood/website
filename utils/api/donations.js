@@ -560,7 +560,7 @@ class DonationsAPI {
           return existingImageInfo.url == image;
         });
 
-        if (typeof existingImageIndex === -1) {
+        if (existingImageIndex === -1) {
           throw new DonationError('invalid-image-url', 'the image url should be an existing image url');
         }
 

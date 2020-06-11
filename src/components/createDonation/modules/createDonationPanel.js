@@ -109,6 +109,8 @@ const CreateDonationPanel = ({ mode, donation }) => {
   const handleFormSubmission = async (values) => {
     if (mode === 'create') {
       handleCreateDonation(values);
+    } else if (mode === 'edit') {
+      handleEditDonation(values);
     }
   };
 
@@ -162,6 +164,68 @@ const CreateDonationPanel = ({ mode, donation }) => {
       }
     }
   };
+
+  const handleEditDonation = async (values) => {
+    try {
+      setShowAlert(false);
+      setIsLoading(true);
+      const {
+        title,
+        description,
+        validFromDay,
+        validFromMonth,
+        validFromYear,
+        validToDay,
+        validToMonth,
+        validToYear,
+        dimensions,
+        location,
+        itemCondition,
+        categories,
+        selectedImages,
+      } = values;
+      const id = donation.donationId;
+      
+      const categoryIds = categories.map((category) => category.id);
+      const images = selectedImages.map((img) => {
+        if (img.lastModified === undefined) {
+          return img.preview
+        }
+        return img;
+      })
+      const coverImage = images[0];
+      const donationDoc = await api.donations.update(
+        id,
+        title,
+        description,
+        categoryIds,
+        validFromDay,
+        validFromMonth,
+        validFromYear,
+        validToDay,
+        validToMonth,
+        validToYear,
+        dimensions,
+        [location],
+        itemCondition,
+        coverImage,
+        images
+      );
+      const donationId = donationDoc.data().donationId;
+      router.push(`/donations/${donationId}`);
+    } catch (error) {
+      console.error(error);
+      setIsLoading(false);
+      formik.setSubmitting(false);
+      if (error.code === 'donation/invalid-current-user') {
+        displayAlert('Invalid current user', error.message, 'critical');
+      } else {
+        displayAlert('Error', error.message, 'critical');
+      }
+    }
+  };
+
+
 
   const validationSchema = Yup.object().shape({
     title: Yup.string()
