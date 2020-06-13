@@ -1,20 +1,32 @@
-import React, { useState } from 'react';
-import { Button, Text } from '@kiwicom/orbit-components/lib';
-import CalendarModal from '../src/components/calendar/modules/CalendarModal';
+import React from 'react';
+import dynamic from 'next/dynamic';
+import SessionProvider from '../src/components/session/modules/SessionProvider';
+import { isAuthenticated } from '../utils/authentication/authentication';
+import ChatPage from '../src/components/chat/pages/ChatPage';
+const TopNavigationBar = dynamic(() => import('../src/components/navbar/modules/TopNavigationBar'), {
+  ssr: false,
+});
 
-const ChatPage = () => {
-  const [showModal, setShowModal] = useState(false);
+export async function getServerSideProps({ params, req, res, query }) {
+  const user = await isAuthenticated(req, res);
+  if (!user) {
+    res.writeHead(302, { Location: '/' });
+    res.end();
+  }
+  return {
+    props: {
+      user,
+    },
+  };
+}
 
-  const handleShowModal = () => setShowModal(true);
-  const handleCloseModal = () => setShowModal(false);
-
+const Chat = ({ user }) => {
   return (
-    <div>
-      <Text as="p">Welcome to Chat Page!</Text>
-      <Button onClick={handleShowModal}>Suggest Dates</Button>
-      <CalendarModal onShow={showModal} onHide={handleCloseModal} />
-    </div>
+    <SessionProvider user={user}>
+      <TopNavigationBar />
+      <ChatPage user={user} />
+    </SessionProvider>
   );
 };
 
-export default ChatPage;
+export default Chat;
