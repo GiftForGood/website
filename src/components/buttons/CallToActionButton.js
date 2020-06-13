@@ -62,7 +62,7 @@ const CallToActionButton = ({ fullWidth, rounded }) => {
       {({ isDisabled }) => (
         <Button
           fullWidth={fullWidth}
-          asComponent={rounded ? BottomCallToActionButtonStyle : CallToActionButtonStyle }
+          asComponent={rounded ? BottomCallToActionButtonStyle : CallToActionButtonStyle}
           size="normal"
           disabled={isDisabled}
           onClick={onButtonClick}
