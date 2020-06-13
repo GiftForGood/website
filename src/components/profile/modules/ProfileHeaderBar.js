@@ -4,6 +4,7 @@ import EditProfileButton from '../../buttons/EditProfileButton';
 import { useRouter } from 'next/router';
 import { Button, Stack, TextLink, Separator } from '@kiwicom/orbit-components/lib';
 import { colors } from '../../../../utils/constants/colors';
+import { donor, npo } from '../../../../utils/constants/userType';
 
 const HeaderBarContainer = styled.div`
   padding: 0px 25px 0px 30px;
@@ -29,7 +30,14 @@ const selectedLink = styled.a`
   }
 `;
 
-const ProfileHeaderBar = ({ isShowPastWishes, isShowReviews, setIsShowPastWishes, setIsShowReviews, isMine }) => {
+const ProfileHeaderBar = ({
+  profileType,
+  isShowPastPosts,
+  isShowReviews,
+  setIsShowPastPosts,
+  setIsShowReviews,
+  isMine,
+}) => {
   const router = useRouter();
 
   const handleOnClickEditProfileBtn = (event) => {
@@ -45,20 +53,20 @@ const ProfileHeaderBar = ({ isShowPastWishes, isShowReviews, setIsShowPastWishes
           <Stack direction="row" spacing="comfy" shrink>
             <TextLink
               type="secondary"
-              asComponent={isShowPastWishes ? selectedLink : unselectedLink}
+              asComponent={isShowPastPosts ? selectedLink : unselectedLink}
               onClick={() => {
                 setIsShowReviews(false);
-                setIsShowPastWishes(true);
+                setIsShowPastPosts(true);
               }}
             >
-              Past Wishes
+              {profileType === npo ? 'Past Wishes' : 'Past Donations'}
             </TextLink>
             <TextLink
               type="secondary"
               asComponent={isShowReviews ? selectedLink : unselectedLink}
               onClick={() => {
                 setIsShowReviews(true);
-                setIsShowPastWishes(false);
+                setIsShowPastPosts(false);
               }}
             >
               Reviews

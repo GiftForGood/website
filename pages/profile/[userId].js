@@ -4,8 +4,9 @@ import NpoProfilePage from '../../src/components/profile/pages/NpoProfilePage';
 import SessionProvider from '../../src/components/session/modules/SessionProvider';
 import { isAuthenticated } from '../../utils/authentication/authentication';
 import api from '../../utils/api';
-import { containsNPO } from '../../utils/authentication/userType';
+import { containsNPO, containsDonor } from '../../utils/authentication/userType';
 import Error from 'next/error';
+import DonorProfilePage from '../../src/components/profile/pages/DonorProfilePage';
 const TopNavigationBar = dynamic(() => import('../../src/components/navbar/modules/TopNavigationBar'), {
   ssr: false,
 });
@@ -27,7 +28,11 @@ const Profile = ({ user, userId, userTypes }) => {
     <SessionProvider user={user}>
       <TopNavigationBar />
       {userTypes ? null : <Error statusCode={404} />}
-      {containsNPO(userTypes) ? <NpoProfilePage userId={userId} /> : null}
+      {containsNPO(userTypes) ? (
+        <NpoProfilePage userId={userId} />
+      ) : containsDonor(userTypes) ? (
+        <DonorProfilePage userId={userId} />
+      ) : null}
     </SessionProvider>
   );
 };

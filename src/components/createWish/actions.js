@@ -25,3 +25,10 @@ export function setAllCategories(categories) {
     categories,
   };
 }
+
+export function setPostedDateTime(postedDateTime) {
+  return {
+    type: 'create-wish/SET_POSTED_DATE_TIME',
+    postedDateTime,
+  };
+}
