@@ -1,15 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Text, Grid, Stack, Separator } from '@kiwicom/orbit-components/lib';
-import CalendarModal from '../../calendar/modules/CalendarModal';
 import ChatDialogUserRow from './ChatDialogUserRow';
 import ChatDialogViewPostRow from './ChatDialogViewPostRow';
 import ChatDialogMessages from './ChatDialogMessages';
 import ChatDialogInputRow from './ChatDialogInputRow';
+import BlackText from '../../text/BlackText';
 import api from '../../../../utils/api';
 import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 
-const ChatDialogContainer = styled.div``;
+const ChatDialogContainer = styled.div`
+  width: 100%;
+  height: 100%;
+`;
+
+const MessageContainer = styled.div`
+  width: fit-content;
+  margin: 0 auto;
+  margin-top: 40vh;
+`;
 
 const listOfChatMessages = [
   {
@@ -145,15 +154,27 @@ const dummyUser = {
   rating: 4,
 };
 
-const ChatDialog = () => {
+const ChatDialogTabletAndDesktop = ({ selectedChatId }) => {
   const [chatMessages, setChatMessages] = useState([]);
 
   useEffect(() => {
-    setChatMessages(listOfChatMessages);
-  }, []);
+    /**
+     * TODO: load the corresponding chat messages according to the selectedChatId
+     */
+    if (selectedChatId != null) {
+      setChatMessages(listOfChatMessages);
+    }
+  }, [selectedChatId]);
 
-  if (chatMessages.length === 0) {
-    return <div>No messages sent yet.</div>;
+  // no chat selected yet
+  if (selectedChatId == null) {
+    return (
+      <ChatDialogContainer>
+        <MessageContainer>
+          <BlackText>Select a chat to view the messages.</BlackText>
+        </MessageContainer>
+      </ChatDialogContainer>
+    );
   }
 
   return (
@@ -172,4 +193,4 @@ const ChatDialog = () => {
   );
 };
 
-export default ChatDialog;
+export default ChatDialogTabletAndDesktop;

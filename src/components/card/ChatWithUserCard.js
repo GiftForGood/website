@@ -54,17 +54,30 @@ const AvatarName = ({ name }) => {
 };
 
 /**
- *
+ * @param {string} chatId is the unique id of the chat
  * @param {string} profileImageUrl is the url of the opposite user's profile image
  * @param {string} name is the opposite user's name
  * @param {string} postTitle is the title of the post that the chat is for
  * @param {string} lastMessage is the previous last message of this chat
  * @param {string} lastMessageDate is the date of the previous last message of this chat in milliseconds
+ * @param {function} setSelectedChat is the handler to execute when click on the user card
  */
-const ChatWithUserCard = ({ profileImageUrl, name, postTitle, lastMessage, lastMessageDateInMs }) => {
+const ChatWithUserCard = ({
+  chatId,
+  profileImageUrl,
+  name,
+  postTitle,
+  lastMessage,
+  lastMessageDateInMs,
+  setSelectedChatId,
+}) => {
   const lastMessageDate = getFormattedDate(lastMessageDateInMs);
   return (
-    <Tile onClick={function () {}}>
+    <Tile
+      onClick={function () {
+        setSelectedChatId(chatId);
+      }}
+    >
       <Stack direction="row">
         <AvatarContainer>
           <ProfileAvatar imageUrl={profileImageUrl} width={30} height={30} />

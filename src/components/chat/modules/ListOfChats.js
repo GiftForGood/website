@@ -9,7 +9,7 @@ import { colors } from '../../../../utils/constants/colors';
 const ListOfChatsContainer = styled.div`
   min-width: 200px;
   ${media.tablet(css`
-    min-width: 250px;
+    min-width: 300px;
   `)}
   ${media.desktop(css`
     min-width: 350px;
@@ -112,16 +112,12 @@ const listOfChats = [
   },
 ];
 
-const ListOfChats = () => {
+const ListOfChats = ({ setSelectedChatId }) => {
   const [chats, setChats] = useState([]);
 
   useEffect(() => {
     setChats(listOfChats);
   }, []);
-
-  if (chats.length === 0) {
-    return null;
-  }
 
   return (
     <ListOfChatsContainer>
@@ -132,11 +128,13 @@ const ListOfChats = () => {
             return (
               <ChatWithUserCard
                 key={index}
+                chatId={index} // initial dummy value
                 name={name}
                 lastMessage={lastMessage}
                 profileImageUrl={profileImageUrl}
                 postTitle={postTitle}
                 lastMessageDateInMs={lastMessageDate}
+                setSelectedChatId={setSelectedChatId}
               />
             );
           })}

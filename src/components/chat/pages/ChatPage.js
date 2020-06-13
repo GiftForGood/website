@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Grid, Stack } from '@kiwicom/orbit-components/lib';
 import ListOfChats from '../modules/ListOfChats';
-import ChatDialog from '../modules/ChatDialog';
+import ChatDialogTabletAndDesktop from '../modules/ChatDialogTabletAndDesktop';
+import ChatDialogMobile from '../modules/ChatDialogMobile';
 import api from '../../../../utils/api';
 import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
@@ -13,6 +14,7 @@ const ChatPageContainer = styled.div`
 `;
 
 const ChatPage = ({ user }) => {
+  const [selectedChatId, setSelectedChatId] = useState(null);
   const { isTablet } = useMediaQuery();
   const navBarOffsetHeight = user
     ? NAVBAR_HEIGHT.DESKTOP
@@ -27,9 +29,9 @@ const ChatPage = ({ user }) => {
 
   const ChatPageTabletAndDesktop = () => {
     return (
-      <Grid style={gridContainerStyle} columns="1fr 3fr" rows="1fr">
-        <ListOfChats />
-        <ChatDialog />
+      <Grid style={gridContainerStyle} columns="1fr 3fr">
+        <ListOfChats setSelectedChatId={setSelectedChatId} />
+        <ChatDialogTabletAndDesktop selectedChatId={selectedChatId} />
       </Grid>
     );
   };
@@ -37,7 +39,11 @@ const ChatPage = ({ user }) => {
   const ChatPageMobile = () => {
     return (
       <Grid style={gridContainerStyle} columns="1fr">
-        <ListOfChats />
+        {selectedChatId == null ? (
+          <ListOfChats setSelectedChatId={setSelectedChatId} />
+        ) : (
+          <ChatDialogMobile selectedChatId={selectedChatId} setSelectedChatId={setSelectedChatId} />
+        )}
       </Grid>
     );
   };

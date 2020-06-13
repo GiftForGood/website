@@ -11,8 +11,12 @@ import GreyText from '../../text/GreyText';
 
 const MessageContainer = styled.div`
   width: 100%;
-  min-height: 55vh;
-  max-height: 55vh;
+  min-height: 45vh;
+  max-height: 45vh;
+  ${media.tablet(css`
+    min-height: 55vh;
+    max-height: 55vh;
+  `)}
   position: relative;
   overflow-y: scroll;
   overflow-x: hidden;

@@ -9,6 +9,7 @@ const InputRowContainer = styled.div`
   width: 95%;
   margin: 0 auto;
   margin-top: 15px;
+  margin-bottom: 15px;
 `;
 
 /**

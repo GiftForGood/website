@@ -34,7 +34,7 @@ const ChatDialogUserRow = ({ name, profileImageUrl, rating }) => {
   const handleCompletePost = () => console.log('complete post');
   return (
     <CardSection>
-      <Stack direction="row" justify="between" align="center">
+      <Stack tablet={{ direction: 'row', justify: 'between', align: 'center' }} direction="column">
         <AvatarContainer>
           <Stack direction="row" align="center">
             <ProfileAvatar imageUrl={profileImageUrl} />
