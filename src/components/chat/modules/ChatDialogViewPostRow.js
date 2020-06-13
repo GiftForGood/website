@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import { donations, wishes } from '../../../../utils/constants/postType';
 import { CardSection } from '@kiwicom/orbit-components/lib/Card';
 import SeePostButton from '../../../components/buttons/ChatSeePostButton';
+import router from 'next/router';
 
 const TextContainer = styled.div`
   width: fit-content;
@@ -17,7 +18,10 @@ const TextContainer = styled.div`
  * @param {string} postId is the id of the post
  */
 const ChatDialogViewPostRow = ({ postType, postId, postTitle }) => {
-  const handleSeePost = () => console.log('see post');
+  const handleSeePost = (event) => {
+    event.preventDefault();
+    router.push(`/${postType}/${postId}`);
+  };
   return (
     <CardSection>
       <Stack direction="row" justify="between" align="center">

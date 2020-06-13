@@ -34,7 +34,7 @@ const ChatDialogUserRow = ({ name, profileImageUrl, rating }) => {
   const handleCompletePost = () => console.log('complete post');
   return (
     <CardSection>
-      <Stack tablet={{ direction: 'row', justify: 'between', align: 'center' }} direction="column">
+      <Stack direction="row" justify="between" align="center">
         <AvatarContainer>
           <Stack direction="row" align="center">
             <ProfileAvatar imageUrl={profileImageUrl} />
@@ -45,7 +45,7 @@ const ChatDialogUserRow = ({ name, profileImageUrl, rating }) => {
           </Stack>
         </AvatarContainer>
         <ButtonsContainer>
-          <Stack direction="row" spacing="condensed">
+          <Stack tablet={{ direction: 'row', spacing: 'condensed' }} direction="column" spacing="tight" align="end">
             <Button size="small" onClick={handleShowSuggestDateModal} asComponent={SuggestDateButton}>
               Suggest Dates
             </Button>

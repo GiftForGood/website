@@ -154,7 +154,7 @@ const dummyUser = {
   rating: 4,
 };
 
-const ChatDialogTabletAndDesktop = ({ selectedChatId, setSelectedChatId }) => {
+const ChatDialogMobile = ({ selectedChatId, setSelectedChatId, navBarHeight }) => {
   const [chatMessages, setChatMessages] = useState([]);
 
   useEffect(() => {
@@ -194,11 +194,11 @@ const ChatDialogTabletAndDesktop = ({ selectedChatId, setSelectedChatId }) => {
           profileImageUrl={dummyUser.profileImageUrl}
         />
         <ChatDialogViewPostRow postType="wishes" postId={123} postTitle="Bicycle for 1 child" />
-        <ChatDialogMessages messages={chatMessages} />
+        <ChatDialogMessages messages={chatMessages} navBarHeight={navBarHeight} />
       </Stack>
       <ChatDialogInputRow />
     </ChatDialogContainer>
   );
 };
 
-export default ChatDialogTabletAndDesktop;
+export default ChatDialogMobile;

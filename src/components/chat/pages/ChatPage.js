@@ -12,11 +12,12 @@ import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 const ChatPage = ({ user }) => {
   const [selectedChatId, setSelectedChatId] = useState(null);
   const { isTablet } = useMediaQuery();
+  const navBarConstant = isTablet ? 'DESKTOP' : 'MOBILE';
   const navBarOffsetHeight = user
-    ? NAVBAR_HEIGHT.DESKTOP
+    ? NAVBAR_HEIGHT[navBarConstant]
     : user.emailVerified
-    ? NAVBAR_HEIGHT.DESKTOP
-    : NAVBAR_HEIGHT.DESKTOP + EMAIL_BAR_HEIGHT.DESKTOP;
+    ? NAVBAR_HEIGHT[navBarConstant]
+    : NAVBAR_HEIGHT[navBarConstant] + EMAIL_BAR_HEIGHT[navBarConstant];
 
   const gridContainerStyle = {
     height: `calc(100vh - ${navBarOffsetHeight}px)`,
@@ -27,7 +28,7 @@ const ChatPage = ({ user }) => {
     return (
       <Grid style={gridContainerStyle} columns="1fr 3fr">
         <ListOfChats setSelectedChatId={setSelectedChatId} />
-        <ChatDialogTabletAndDesktop selectedChatId={selectedChatId} />
+        <ChatDialogTabletAndDesktop selectedChatId={selectedChatId} navBarHeight={navBarOffsetHeight} />
       </Grid>
     );
   };
@@ -38,7 +39,11 @@ const ChatPage = ({ user }) => {
         {selectedChatId == null ? (
           <ListOfChats setSelectedChatId={setSelectedChatId} />
         ) : (
-          <ChatDialogMobile selectedChatId={selectedChatId} setSelectedChatId={setSelectedChatId} />
+          <ChatDialogMobile
+            selectedChatId={selectedChatId}
+            setSelectedChatId={setSelectedChatId}
+            navBarHeight={navBarOffsetHeight}
+          />
         )}
       </Grid>
     );

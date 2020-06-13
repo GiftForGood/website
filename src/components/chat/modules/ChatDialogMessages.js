@@ -8,15 +8,31 @@ import ChatBubbleForText from './ChatBubbleForText';
 import ProfileAvatar from '../../imageContainers/ProfileAvatar';
 import { getTimeDifferenceFromNow } from '../../../../utils/api/time';
 import GreyText from '../../text/GreyText';
+import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
+
+/**
+ * To be changed if any of the heights change, the extra "+1 or +2" for the top/bottom borders
+ */
+const desktopHeights = {
+  chatDialogBackButton: 0, // 0 as it does not exist in desktop
+  chatDialogUserRow: 88 + 1,
+  chatDialogSeePostRow: 113 + 1,
+  chatDialogInputRow: 74,
+  chatDialogMessagesPadding: 48 + 2,
+};
+
+const mobileHeights = {
+  chatDialogBackButton: 44,
+  chatDialogUserRow: 104 + 1,
+  chatDialogSeePostRow: 96 + 1,
+  chatDialogInputRow: 74,
+  chatDialogMessagesPadding: 32 + 2,
+};
 
 const MessageContainer = styled.div`
   width: 100%;
-  min-height: 45vh;
-  max-height: 45vh;
-  ${media.tablet(css`
-    min-height: 55vh;
-    max-height: 55vh;
-  `)}
+  min-height: calc(100vh - ${(props) => props.offsetHeight}px);
+  max-height: calc(100vh - ${(props) => props.offsetHeight}px);
   position: relative;
   overflow-y: scroll;
   overflow-x: hidden;
@@ -52,7 +68,7 @@ const LeftMessageSection = ({ message }) => {
 
 const RightMessageSection = ({ message }) => {
   return (
-    <Stack direction="column" align="end">
+    <Stack direction="column" align="end" spaceAfter="none">
       <RightMessageSectionContainer>
         <Stack direction="row">
           <RightColumnStackContainer>
@@ -75,11 +91,24 @@ const RightMessageSection = ({ message }) => {
 /**
  *
  * @param {array} messages is an array of chat messages
+ * @param {number} navBarHeight is the height of the navbar
  */
-const ChatDialogMessages = ({ messages }) => {
+const ChatDialogMessages = ({ messages, navBarHeight }) => {
+  const { isTablet } = useMediaQuery();
+  const {
+    chatDialogBackButton,
+    chatDialogInputRow,
+    chatDialogSeePostRow,
+    chatDialogUserRow,
+    chatDialogMessagesPadding,
+  } = isTablet ? desktopHeights : mobileHeights;
+  const sumOfOtherComponentHeights =
+    chatDialogBackButton + chatDialogInputRow + chatDialogSeePostRow + chatDialogUserRow + chatDialogMessagesPadding;
+  // offsetHeight is used to calculate the amount of height left for the ChatDialogMessages to occupy
+  const offsetHeight = navBarHeight + sumOfOtherComponentHeights;
   return (
     <CardSection>
-      <MessageContainer>
+      <MessageContainer offsetHeight={offsetHeight}>
         <Stack direction="column">
           {messages.map((message, index) => {
             return message.isByLoggedInUser ? (

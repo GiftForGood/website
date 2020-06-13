@@ -135,8 +135,7 @@ const listOfChatMessages = [
   },
   {
     name: 'Jinz',
-    message:
-      'https://giftforgood.io',
+    message: 'https://giftforgood.io',
     messageContentType: 'text',
     messageDate: 1591887112442,
     profileImageUrl:
@@ -164,7 +163,7 @@ const dummyUser = {
   rating: 4,
 };
 
-const ChatDialogTabletAndDesktop = ({ selectedChatId }) => {
+const ChatDialogTabletAndDesktop = ({ selectedChatId, navBarHeight }) => {
   const [chatMessages, setChatMessages] = useState([]);
 
   useEffect(() => {
@@ -196,7 +195,7 @@ const ChatDialogTabletAndDesktop = ({ selectedChatId }) => {
           profileImageUrl={dummyUser.profileImageUrl}
         />
         <ChatDialogViewPostRow postType="wishes" postId={123} postTitle="Bicycle for 1 child" />
-        <ChatDialogMessages messages={chatMessages} />
+        <ChatDialogMessages messages={chatMessages} navBarHeight={navBarHeight} />
       </Stack>
       <ChatDialogInputRow />
     </ChatDialogContainer>
