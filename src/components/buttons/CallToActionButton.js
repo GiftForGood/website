@@ -23,7 +23,25 @@ const CallToActionButtonStyle = styled.button`
   }
 `;
 
-const CallToActionButton = ({ fullWidth }) => {
+const BottomCallToActionButtonStyle = styled.button`
+  background: ${colors.donorBackground};
+  height: 40px;
+  border-radius: 30px;
+
+  :active {
+    background: ${colors.donorHoverActive};
+  }
+
+  :hover {
+    background: ${colors.donorHoverActive};
+  }
+
+  :focus {
+    box-shadow: 0 0 0 3px rgba(222, 24, 24, 0.5);
+  }
+`;
+
+const CallToActionButton = ({ fullWidth, rounded }) => {
   const user = useUser();
   const router = useRouter();
 
@@ -44,7 +62,7 @@ const CallToActionButton = ({ fullWidth }) => {
       {({ isDisabled }) => (
         <Button
           fullWidth={fullWidth}
-          asComponent={CallToActionButtonStyle}
+          asComponent={rounded ? BottomCallToActionButtonStyle : CallToActionButtonStyle }
           size="normal"
           disabled={isDisabled}
           onClick={onButtonClick}
