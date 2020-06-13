@@ -1,5 +1,4 @@
 import React from 'react';
-import { Button, Text, Grid, Stack } from '@kiwicom/orbit-components/lib';
 import BlackText from '../../text/BlackText';
 import WhiteText from '../../text/WhiteText';
 import styled, { css } from 'styled-components';

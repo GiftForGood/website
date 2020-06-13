@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Stack } from '@kiwicom/orbit-components/lib';
 import api from '../../../../utils/api';
 import styled, { css } from 'styled-components';

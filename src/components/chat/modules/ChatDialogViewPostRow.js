@@ -1,8 +1,8 @@
 import React from 'react';
-import { Button, Text, Grid, Stack } from '@kiwicom/orbit-components/lib';
+import { Button, Stack } from '@kiwicom/orbit-components/lib';
 import BlackText from '../../text/BlackText';
 import api from '../../../../utils/api';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import { donations, wishes } from '../../../../utils/constants/postType';
 import { CardSection } from '@kiwicom/orbit-components/lib/Card';
 import SeePostButton from '../../../components/buttons/ChatSeePostButton';

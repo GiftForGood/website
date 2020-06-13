@@ -9,10 +9,6 @@ import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import { EMAIL_BAR_HEIGHT, NAVBAR_HEIGHT } from '../../../../utils/constants/navbar';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 
-const ChatPageContainer = styled.div`
-  max-height: 80vh;
-`;
-
 const ChatPage = ({ user }) => {
   const [selectedChatId, setSelectedChatId] = useState(null);
   const { isTablet } = useMediaQuery();
@@ -48,7 +44,7 @@ const ChatPage = ({ user }) => {
     );
   };
 
-  return <ChatPageContainer>{isTablet ? <ChatPageTabletAndDesktop /> : <ChatPageMobile />}</ChatPageContainer>;
+  return isTablet ? <ChatPageTabletAndDesktop /> : <ChatPageMobile />;
 };
 
 export default ChatPage;

@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Text, Grid, Stack, ButtonLink } from '@kiwicom/orbit-components/lib';
+import { Stack, ButtonLink } from '@kiwicom/orbit-components/lib';
 import ChatDialogUserRow from './ChatDialogUserRow';
 import ChatDialogViewPostRow from './ChatDialogViewPostRow';
 import ChatDialogMessages from './ChatDialogMessages';
 import ChatDialogInputRow from './ChatDialogInputRow';
 import BlackText from '../../text/BlackText';
 import api from '../../../../utils/api';
-import styled, { css } from 'styled-components';
-import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
+import styled from 'styled-components';
 import ChevronLeft from '@kiwicom/orbit-components/lib/icons/ChevronLeft';
 
 const ChatDialogContainer = styled.div`

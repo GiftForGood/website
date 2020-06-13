@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Text, Grid, Stack } from '@kiwicom/orbit-components/lib';
+import { Button, Stack } from '@kiwicom/orbit-components/lib';
 import CalendarModal from '../../calendar/modules/CalendarModal';
 import ProfileAvatar from '../../imageContainers/ProfileAvatar';
 import BlackText from '../../text/BlackText';

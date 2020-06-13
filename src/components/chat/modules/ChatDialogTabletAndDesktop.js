@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Text, Grid, Stack, Separator } from '@kiwicom/orbit-components/lib';
+import { Stack } from '@kiwicom/orbit-components/lib';
 import ChatDialogUserRow from './ChatDialogUserRow';
 import ChatDialogViewPostRow from './ChatDialogViewPostRow';
 import ChatDialogMessages from './ChatDialogMessages';
@@ -7,7 +7,6 @@ import ChatDialogInputRow from './ChatDialogInputRow';
 import BlackText from '../../text/BlackText';
 import api from '../../../../utils/api';
 import styled, { css } from 'styled-components';
-import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 
 const ChatDialogContainer = styled.div`
   width: 100%;
@@ -133,6 +132,17 @@ const listOfChatMessages = [
       'https://lh5.googleusercontent.com/-5EqdfAc5juo/AAAAAAAAAAI/AAAAAAAAAAA/AMZuucl1rs-33JOHxPrO29Pe3Vck2sJwkQ/photo.jpg',
     postTitle: 'Barbie dolls',
     isByLoggedInUser: true,
+  },
+  {
+    name: 'Jinz',
+    message:
+      'https://giftforgood.io',
+    messageContentType: 'text',
+    messageDate: 1591887112442,
+    profileImageUrl:
+      'https://lh5.googleusercontent.com/-5EqdfAc5juo/AAAAAAAAAAI/AAAAAAAAAAA/AMZuucl1rs-33JOHxPrO29Pe3Vck2sJwkQ/photo.jpg',
+    postTitle: 'Barbie dolls',
+    isByLoggedInUser: false,
   },
   {
     name: 'Jinz',
