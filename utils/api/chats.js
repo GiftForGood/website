@@ -77,23 +77,62 @@ class ChatsAPI {
 
   /**
    * Subscribe to chats belonging to a NPO. Does not include chat messages
+   * It will also return a USER_CHATS_BATCH_SIZE of chats belonging to the NPO on the initial subscription
+   * It is recommended to use this function to fetch the first batch of chats and use the getChatsForNPO to get older chats
    * @param {string} id The id of the NPO
+   * @param {function} callback The function to call to handle the new chat message
+   * @throws {FirebaseError}
    * @return {function} The subscriber function. Needed to unsubscribe from the listener
    */
-  async subscribeToChatForNPO(id) {}
+  async subscribeToChatForNPO(id, callback) {
+    return chatsCollection
+      .where('npo.id', '==', id)
+      .orderBy('lastMessage.dateTime', 'desc')
+      .limit(USER_CHATS_BATCH_SIZE)
+      .onSnapshot((snapshot) => {
+        snapshot.docChanges().forEach((change) => {
+          if (change.type === 'added') {
+            callback(change.doc);
+          }
+        });
+      });
+  }
 
   /**
    * Subscribe to chats belonging to a donor. Does nto include chat messages
+   * It will also return a USER_CHATS_BATCH_SIZE of chats belonging to the donor on the initial subscription
+   * It is recommended to use this function to fetch the first batch of chats and use the getChatsForDonor to get older chats
    * @param {string} id The id of the donor
+   * @param {function} callback The function to call to handle the new chat message
+   * @throws {FirebaseError}
    * @return {function} The subscriber function. Needed to unsubscribe from the listener
    */
-  async subscribeToChatForDonor(id) {}
+  async subscribeToChatForDonor(id, callback) {
+    return chatsCollection
+      .where('donor.id', '==', id)
+      .orderBy('lastMessage.dateTime', 'desc')
+      .limit(USER_CHATS_BATCH_SIZE)
+      .onSnapshot((snapshot) => {
+        snapshot.docChanges().forEach((change) => {
+          if (change.type === 'added') {
+            callback(change.doc);
+          }
+        });
+      });
+  }
 
   /**
    * Unsubscribe from chats.
-   * @param {function} func The subscriber function
+   * @param {function} unsubscribeFunction The function to unsubscribe to. It is the function that is returned when subscribing to the chat messages
+   * @throws {ChatError}
    */
-  async unsubscribeToChat(func) {}
+  async unsubscribeToChat(unsubscribeFunction) {
+    if (typeof unsubscribeFunction !== 'function') {
+      throw new ChatError('invalid-unsubscribe-function', 'only can unsubscribe using a function');
+    }
+
+    unsubscribeFunction();
+  }
 
   /**
    * Create a chat message for a wish without an existing chat. It will create a new chat and add the chat message within it
@@ -107,22 +146,19 @@ class ChatsAPI {
    * @return {object} A firebase documents of the created chat message
    */
   async createChatMessageForWish(wishId, contentType, content) {
-    this._validateContentType(contentType);
-    this._validateContents(contentType, [content]);
-    if (contentType === IMAGE) {
-      this._validateImageExtensions([contents]);
-    }
+    this._validateChatMessages(contentType, [content]);
 
     const [wishInfo, donorInfo] = await Promise.all([this._getWishInfo(wishId), this._getCurrentDonorInfo()]);
     const npoInfo = await this._getNPOInfo(wishInfo.user.userId);
     await this._validateChat(wishInfo.wishId, npoInfo.userId, donorInfo.userId);
 
-    const chatInfo = await this._createChatForWish(wishInfo, npoInfo, donorInfo);
+    const chatDoc = await this._createChatForWish(wishInfo, npoInfo, donorInfo);
+    const chatInfo = chatDoc.data();
     // Assumes that only donor can start a conversation on a wish
-    const chatMessage = await this._createChatMessages(chatInfo.chatId, donor, donorInfo, contentType, content);
+    const chatMessage = await this._createChatMessage(chatInfo.chatId, donor, donorInfo, contentType, content);
     this._updateChat(chatInfo, donor, 1, chatMessage.data());
 
-    return chatMessages;
+    return chatMessage;
   }
 
   /**
@@ -137,24 +173,21 @@ class ChatsAPI {
    * @return {array} A list of firebase documents of the created chat messages
    */
   async createChatMessagesForWish(wishId, contentType, contents) {
-    this._validateContentType(contentType);
-    this._validateContents(contentType, contents);
-    if (contentType === IMAGE) {
-      this._validateImageExtensions(contents);
-    }
+    this._validateChatMessages(contentType, contents);
 
     const [wishInfo, donorInfo] = await Promise.all([this._getWishInfo(wishId), this._getCurrentDonorInfo()]);
     const npoInfo = await this._getNPOInfo(wishInfo.user.userId);
     await this._validateChat(wishInfo.wishId, npoInfo.userId, donorInfo.userId);
 
-    const chatInfo = await this._createChatForWish(wishInfo, npoInfo, donorInfo);
+    const chatDoc = await this._createChatForWish(wishInfo, npoInfo, donorInfo);
+    const chatInfo = chatDoc.data();
     // Assumes that only donor can start a conversation on a wish
     const chatMessages = await this._createChatMessages(chatInfo.chatId, donor, donorInfo, contentType, contents);
     const numberOfMessages = chatMessages.length;
     const lastChatMessage = chatMessages[chatMessages.length - 1].data();
     this._updateChat(chatInfo, donor, numberOfMessages, lastChatMessage);
 
-    return chatMessage;
+    return chatMessages;
   }
 
   /**
@@ -169,17 +202,14 @@ class ChatsAPI {
    * @return {object} A firebase document of the created chat message
    */
   async createChatMessageForDonation(donationId, contentType, content) {
-    this._validateContentType(contentType);
-    this._validateContents(contentType, [content]);
-    if (contentType === IMAGE) {
-      this._validateImageExtensions([contents]);
-    }
+    this._validateChatMessages(contentType, [content]);
 
     const [donationInfo, npoInfo] = await Promise.all([this._getDonationInfo(donationId), this._getCurrentNPOInfo()]);
     const donorInfo = await this._getDonorInfo(donationInfo.user.userId);
     await this._validateChat(donationInfo.donationId, npoInfo.userId, donorInfo.userId);
 
-    const chatInfo = await this._createChatForDonation(donationInfo, npoInfo, donorInfo);
+    const chatDoc = await this._createChatForDonation(donationInfo, npoInfo, donorInfo);
+    const chatInfo = chatDoc.data();
     // Assumes that only npo can start a conversation on a donation
     const chatMessage = await this._createChatMessage(chatInfo.chatId, npo, npoInfo, contentType, content);
     this._updateChat(chatInfo, npo, 1, chatMessage.data());
@@ -199,17 +229,14 @@ class ChatsAPI {
    * @return {array} A list of firebase documents of the created chat messages
    */
   async createChatMessagesForDonation(donationId, contentType, contents) {
-    this._validateContentType(contentType);
-    this._validateContents(contentType, contents);
-    if (contentType === IMAGE) {
-      this._validateImageExtensions(contents);
-    }
+    this._validateChatMessages(contentType, contents);
 
     const [donationInfo, npoInfo] = await Promise.all([this._getDonationInfo(donationId), this._getCurrentNPOInfo()]);
     const donorInfo = await this._getDonorInfo(donationInfo.user.userId);
     await this._validateChat(donationInfo.donationId, npoInfo.userId, donorInfo.userId);
 
-    const chatInfo = await this._createChatForDonation(donationInfo, npoInfo, donorInfo);
+    const chatDoc = await this._createChatForDonation(donationInfo, npoInfo, donorInfo);
+    const chatInfo = chatDoc.data();
     // Assumes that only npo can start a conversation on a donation
     const chatMessages = await this._createChatMessages(chatInfo.chatId, npo, npoInfo, contentType, contents);
     const numberOfMessages = chatMessages.length;
@@ -231,11 +258,7 @@ class ChatsAPI {
    * @return {object} A firebase document of the created chat message
    */
   async createChatMessage(id, contentType, content) {
-    this._validateContentType(contentType);
-    this._validateContents(contentType, [content]);
-    if (contentType === IMAGE) {
-      this._validateImageExtensions([content]);
-    }
+    this._validateChatMessages(contentType, [content]);
 
     const userId = firebaseAuth.currentUser.uid;
     const [userTypeInfo, chatDoc] = await Promise.all([this._getCurrentUserInfo(), this.getChat(id)]);
@@ -272,11 +295,7 @@ class ChatsAPI {
    * @return {array} A list of firebase document of the created chat messages
    */
   async createChatMessages(id, contentType, contents) {
-    this._validateContentType(contentType);
-    this._validateContents(contentType, contents);
-    if (contentType === IMAGE) {
-      this._validateImageExtensions(contents);
-    }
+    this._validateChatMessages(contentType, contents);
 
     const userId = firebaseAuth.currentUser.uid;
     const [userTypeInfo, chatDoc] = await Promise.all([this._getCurrentUserInfo(), this.getChat(id)]);
@@ -333,6 +352,8 @@ class ChatsAPI {
 
   /**
    * Subscribe to messages belonging a chat
+   * It will also return a CHAT_MESSAGES_BATCH_SIZE of chat messages belonging to the chat on the initial subscription
+   * It is recommended to use this function to fetch the first batch of chat messages and use the getChatMessages to get older chat messages
    * @param {string} id The id of the chat
    * @param {function} callback The function to call to handle the new chat message
    * @throws {FirebaseError}
@@ -346,7 +367,7 @@ class ChatsAPI {
       .collection('messages')
       .orderBy('dateTime', 'desc')
       .limit(CHAT_MESSAGES_BATCH_SIZE)
-      .onSnapshot(async (snapshot) => {
+      .onSnapshot((snapshot) => {
         snapshot.docChanges().forEach((change) => {
           if (change.type === 'added') {
             callback(change.doc);
@@ -359,6 +380,7 @@ class ChatsAPI {
    * Unsubscribe from messages belonging to a chat
    * @param {string} id The id of the chat
    * @param {function} unsubscribeFunction The function to unsubscribe to. It is the function that is returned when subscribing to the chat messages
+   * @throws {ChatError}
    */
   async unsubscribeFromChatMessages(id, unsubscribeFunction) {
     if (typeof unsubscribeFunction !== 'function') {
@@ -463,13 +485,25 @@ class ChatsAPI {
 
     const contentsToUpload = contentType !== IMAGE ? contents : imageUrls;
     const chatMessagesPromise = contentsToUpload.map((contentToUpload) => {
-      return this._createChatMessage(chatId, senderType, senderInfo, contentType, contentToUpload);
+      return this._createMessage(chatId, senderType, senderInfo, contentType, contentToUpload);
     });
 
     return await Promise.all(chatMessagesPromise);
   }
 
   async _createChatMessage(chatId, senderType, senderInfo, contentType, content) {
+    let imageUrl;
+    if (contentType === IMAGE) {
+      const imageUrls = await this._uploadImages(chatId, senderInfo.userId, [content]);
+      imageUrl = imageUrls[0];
+    }
+
+    const contentToUpload = contentType !== IMAGE ? content : imageUrl;
+    return this._createMessage(chatId, senderType, senderInfo, contentType, contentToUpload);
+  }
+
+  // Assumes that the content are the final content to upload to firestore. e.g. image should be uploaded and given as a string
+  async _createMessage(chatId, senderType, senderInfo, contentType, content) {
     const messageSenderInfo = {
       id: senderInfo.userId,
       name: senderInfo.name,
@@ -516,10 +550,17 @@ class ChatsAPI {
   }
 
   async _updateChatStatus(id, status) {
-    const userId = firebaseAuth.currentUser.uid;
+    const user = firebaseAuth.currentUser;
+    if (user == null) {
+      throw new ChatError('invalid-user-id');
+    }
+    const userId = user.uid;
 
     const doc = chatsCollection.doc(id);
     const snapshot = await doc.get();
+    if (!snapshot.exists) {
+      throw new ChatError('invalid-chat-id', 'chat does not exist');
+    }
     const chat = snapshot.data();
 
     let userType;
@@ -687,6 +728,14 @@ class ChatsAPI {
     }
   }
 
+  _validateChatMessages(contentType, contents) {
+    this._validateContentType(contentType);
+    this._validateContents(contentType, contents);
+    if (contentType === IMAGE) {
+      this._validateImageExtensions(contents);
+    }
+  }
+
   _validateContentType(contentType) {
     const validContentType = [TEXT, IMAGE, CALENDAR];
 
@@ -718,8 +767,12 @@ class ChatsAPI {
     const validExtensions = ['.jpg', '.jpeg', '.png'];
 
     for (const image of images) {
-      if (image == null || typeof image == 'string') {
-        throw new ChatError('invalid-image', 'provided image is not the correct type');
+      if (image == null) {
+        throw new ChatError('invalid-image', 'provided image is null');
+      }
+
+      if (typeof image === 'string') {
+        throw new ChatError('invalid-image', 'provided image cannot be type of string');
       }
 
       const imageExt = path.extname(image.name).toLowerCase();
