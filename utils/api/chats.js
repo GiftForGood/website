@@ -6,6 +6,7 @@ import { wishes, donations } from '../constants/postType';
 import { npo, donor } from '../constants/userType';
 import { PENDING } from '../constants/postStatus';
 import { IMAGE, TEXT, CALENDAR } from '../constants/chatContentType';
+import { ON, OFF } from '../constants/chatStatus';
 import { uploadImage } from './common/images';
 import ChatError from './error/chatError';
 
@@ -118,8 +119,8 @@ class ChatsAPI {
 
     const chatInfo = await this._createChatForWish(wishInfo, npoInfo, donorInfo);
     // Assumes that only donor can start a conversation on a wish
-    const chatMessage = await this._createChatMessages(chatInfo.id, donorInfo, contentType, content);
-    this._updateChat(chatInfo.id, donor, 1, chatMessage.data());
+    const chatMessage = await this._createChatMessages(chatInfo.chatId, donor, donorInfo, contentType, content);
+    this._updateChat(chatInfo, donor, 1, chatMessage.data());
 
     return chatMessages;
   }
@@ -148,10 +149,10 @@ class ChatsAPI {
 
     const chatInfo = await this._createChatForWish(wishInfo, npoInfo, donorInfo);
     // Assumes that only donor can start a conversation on a wish
-    const chatMessages = await this._createChatMessages(chatInfo.id, donorInfo, contentType, contents);
+    const chatMessages = await this._createChatMessages(chatInfo.chatId, donor, donorInfo, contentType, contents);
     const numberOfMessages = chatMessages.length;
     const lastChatMessage = chatMessages[chatMessages.length - 1].data();
-    this._updateChat(chatInfo.id, donor, numberOfMessages, lastChatMessage);
+    this._updateChat(chatInfo, donor, numberOfMessages, lastChatMessage);
 
     return chatMessage;
   }
@@ -180,8 +181,8 @@ class ChatsAPI {
 
     const chatInfo = await this._createChatForDonation(donationInfo, npoInfo, donorInfo);
     // Assumes that only npo can start a conversation on a donation
-    const chatMessage = await this._createChatMessage(chatInfo.id, npoInfo, contentType, content);
-    this._updateChat(chatInfo.id, donor, 1, chatMessage.data());
+    const chatMessage = await this._createChatMessage(chatInfo.chatId, npo, npoInfo, contentType, content);
+    this._updateChat(chatInfo, npo, 1, chatMessage.data());
 
     return chatMessage;
   }
@@ -210,10 +211,10 @@ class ChatsAPI {
 
     const chatInfo = await this._createChatForDonation(donationInfo, npoInfo, donorInfo);
     // Assumes that only npo can start a conversation on a donation
-    const chatMessages = await this._createChatMessages(chatInfo.id, npoInfo, contentType, contents);
+    const chatMessages = await this._createChatMessages(chatInfo.chatId, npo, npoInfo, contentType, contents);
     const numberOfMessages = chatMessages.length;
     const lastChatMessage = chatMessages[chatMessages.length - 1].data();
-    this._updateChat(chatInfo.id, donor, numberOfMessages, lastChatMessage);
+    this._updateChat(chatInfo, npo, numberOfMessages, lastChatMessage);
 
     return chatMessages;
   }
@@ -237,8 +238,9 @@ class ChatsAPI {
     }
 
     const userId = firebaseAuth.currentUser.uid;
-    const userTypeInfo = await this._getCurrentUserInfo();
+    const [userTypeInfo, chatDoc] = await Promise.all([this._getCurrentUserInfo(), this.getChat(id)]);
     const userTypes = userTypeInfo.type;
+    const chatInfo = chatDoc.data();
 
     let userInfo;
     let userType;
@@ -252,8 +254,8 @@ class ChatsAPI {
       throw new ChatError('invalid-user-type');
     }
 
-    const chatMessage = await this._createChatMessage(id, userInfo, contentType, content);
-    this._updateChat(id, userType, 1, chatMessage.data());
+    const chatMessage = await this._createChatMessage(id, userType, userInfo, contentType, content);
+    this._updateChat(chatInfo, userType, 1, chatMessage.data());
 
     return chatMessage;
   }
@@ -277,8 +279,9 @@ class ChatsAPI {
     }
 
     const userId = firebaseAuth.currentUser.uid;
-    const userTypeInfo = await this._getCurrentUserInfo();
+    const [userTypeInfo, chatDoc] = await Promise.all([this._getCurrentUserInfo(), this.getChat(id)]);
     const userTypes = userTypeInfo.type;
+    const chatInfo = chatDoc.data();
 
     let userInfo;
     let userType;
@@ -292,10 +295,10 @@ class ChatsAPI {
       throw new ChatError('invalid-user-type');
     }
 
-    const chatMessages = await this._createChatMessages(id, userInfo, contentType, contents);
+    const chatMessages = await this._createChatMessages(id, userType, userInfo, contentType, contents);
     const numberOfMessages = chatMessages.length;
     const lastChatMessage = chatMessages[chatMessages.length - 1].data();
-    this._updateChat(id, userType, numberOfMessages, lastChatMessage);
+    this._updateChat(chatInfo, userType, numberOfMessages, lastChatMessage);
 
     return chatMessages;
   }
@@ -312,7 +315,7 @@ class ChatsAPI {
       // First page
       return chatsCollection
         .doc(id)
-        .collection('chatHistory')
+        .collection('messages')
         .orderBy('dateTime', 'desc')
         .limit(CHAT_MESSAGES_BATCH_SIZE)
         .get();
@@ -320,7 +323,7 @@ class ChatsAPI {
       // Subsequent pages
       return chatsCollection
         .doc(id)
-        .collection('chatHistory')
+        .collection('messages')
         .orderBy('dateTime', 'desc')
         .startAfter(lastQueriedDocument)
         .limit(CHAT_MESSAGES_BATCH_SIZE)
@@ -331,15 +334,92 @@ class ChatsAPI {
   /**
    * Subscribe to messages belonging a chat
    * @param {string} id The id of the chat
+   * @param {function} callback The function to call to handle the new chat message
+   * @throws {FirebaseError}
    * @return {function} The subscriber function. Needed to unsubscribe from the listener
    */
-  async subscribeToChatMessages(id) {}
+  async subscribeToChatMessages(id, callback) {
+    await this._updateChatStatus(id, ON);
+
+    return chatsCollection
+      .doc(id)
+      .collection('messages')
+      .orderBy('dateTime', 'desc')
+      .limit(CHAT_MESSAGES_BATCH_SIZE)
+      .onSnapshot(async (snapshot) => {
+        snapshot.docChanges().forEach((change) => {
+          if (change.type === 'added') {
+            callback(change.doc);
+          }
+        });
+      });
+  }
+
+  async _updateChatStatus(id, status) {
+    const userId = firebaseAuth.currentUser.uid;
+
+    const doc = chatsCollection.doc(id);
+    const snapshot = await doc.get();
+    const chat = snapshot.data();
+
+    let userType;
+    if (chat.donor.id === userId) {
+      userType = donor;
+    } else if (chat.npo.id === userId) {
+      userType = npo;
+    } else {
+      throw new ChatError('invalid-user-type');
+    }
+
+    const statusField = `${userType}.status`;
+    const unreadCountField = `${userType}.unreadCount`;
+    const lastActiveDateTimeField = `${userType}.lastActiveDateTime`;
+    let data = {
+      [statusField]: status,
+      [lastActiveDateTimeField]: Date.now(),
+    };
+
+    // Only should read the message when the user is on the chat
+    if (status === ON) {
+      data[unreadCountField] = 0;
+    }
+
+    doc.update(data);
+  }
+
+  // Not used at the moment. Might need to use it if we decided to actively managed uses lastActiveDateTimeField
+  async _readMessage(chatId, chatInfo, chatMessageInfo) {
+    const userId = firebaseAuth.currentUser.uid;
+    if (userId === chatMessageInfo.sender.id) {
+      console.log('isSender');
+      return;
+    }
+
+    const receiverType = this._getReceiverType(chatMessageInfo.sender.type);
+    const unreadCountField = `${receiverType}.unreadCount`;
+    const lastActiveDateTimeField = `${receiverType}.lastActiveDateTime`;
+    const data = {
+      [unreadCountField]: 0,
+      [lastActiveDateTimeField]: Date.now(),
+    };
+
+    chatsCollection.doc(chatId).update(data);
+  }
 
   /**
    * Unsubscribe from messages belonging to a chat
-   * @param {function} func The subscriber function
+   * @param {string} id The id of the chat
+   * @param {function} unsubscribeFunction The function to unsubscribe to. It is the function that is returned when subscribing to the chat messages
    */
-  async unsubscribeFromChatMessages(func) {}
+  async unsubscribeFromChatMessages(id, unsubscribeFunction) {
+    if (typeof unsubscribeFunction !== 'function') {
+      throw new ChatError('invalid-unsubscribe-function', 'only can unsubscribe using a function');
+    }
+    // TODO: Remove
+    console.log('api unsub');
+    await this._updateChatStatus(id, OFF);
+    unsubscribeFunction();
+  }
 
   async _createChatForWish(wishInfo, npoInfo, donorInfo) {
     if (wishInfo.status !== PENDING) {
@@ -357,6 +437,7 @@ class ChatsAPI {
       name: wishInfo.user.userName,
       id: wishInfo.user.userId,
       profileImageUrl: wishInfo.user.profileImageUrl,
+      status: OFF, // By default, status will always be off
       lastActiveDateTime: npoInfo.lastLoggedInDateTime, // However, does not reflect in the current NPO is online
       unreadCount: 0,
       organization: wishInfo.organization,
@@ -366,6 +447,7 @@ class ChatsAPI {
       name: donorInfo.name,
       id: donorInfo.userId,
       profileImageUrl: donorInfo.profileImageUrl,
+      status: OFF, // By default, status will always be off
       lastActiveDateTime: Date.now(),
       unreadCount: 0,
     };
@@ -398,6 +480,7 @@ class ChatsAPI {
       name: npoInfo.name,
       id: npoInfo.userId,
       profileImageUrl: npoInfo.profileImageUrl,
+      status: OFF, // By default, status will always be off
       lastActiveDateTime: Date.now(),
       unreadCount: 0,
       organization: npoInfo.organization,
@@ -407,6 +490,7 @@ class ChatsAPI {
       name: donationInfo.user.userName,
       id: donationInfo.user.userId,
       profileImageUrl: donationInfo.user.profileImageUrl,
+      status: OFF, // By default, status will always be off
       lastActiveDateTime: donorInfo.lastLoggedInDateTime, // However, does not reflect in the current donor is online
       unreadCount: 0,
     };
@@ -423,7 +507,7 @@ class ChatsAPI {
     return newChat.get();
   }
 
-  async _createChatMessages(chatId, senderInfo, contentType, contents) {
+  async _createChatMessages(chatId, senderType, senderInfo, contentType, contents) {
     let imageUrls = [];
     if (contentType === IMAGE) {
       imageUrls = await this._uploadImages(chatId, senderInfo.userId, contents);
@@ -431,17 +515,18 @@ class ChatsAPI {
 
     const contentsToUpload = contentType !== IMAGE ? contents : imageUrls;
     const chatMessagesPromise = contentsToUpload.map((contentToUpload) => {
-      return this._createChatMessage(chatId, senderInfo, contentType, contentToUpload);
+      return this._createChatMessage(chatId, senderType, senderInfo, contentType, contentToUpload);
     });
 
     return await Promise.all(chatMessagesPromise);
   }
 
-  async _createChatMessage(chatId, senderInfo, contentType, content) {
+  async _createChatMessage(chatId, senderType, senderInfo, contentType, content) {
     const messageSenderInfo = {
       id: senderInfo.userId,
       name: senderInfo.name,
       profileImageUrl: senderInfo.profileImageUrl,
+      type: senderType,
     };
 
     const data = {
@@ -452,38 +537,34 @@ class ChatsAPI {
     };
 
     const chatDoc = chatsCollection.doc(chatId);
-    const chatMessageDoc = chatDoc.collection('chatHistory').doc();
+    const chatMessageDoc = chatDoc.collection('messages').doc();
     await chatMessageDoc.set(data);
 
     return chatMessageDoc.get();
   }
 
-  async _updateChat(chatId, senderType, numberOfMessages, message) {
+  async _updateChat(chatInfo, senderType, numberOfMessages, message) {
     const lastMessage = {
       dateTime: message.dateTime,
       content: message.content,
       contentType: message.contentType,
     };
 
-    let receiverType;
-    if (senderType === npo) {
-      receiverType = donor;
-    } else if (senderType === donor) {
-      receiverType = npo;
-    } else {
-      throw new ChatError('invalid-user-type');
-    }
-
+    const receiverType = this._getReceiverType(senderType);
     const lastActiveDateTimeField = `${senderType}.lastActiveDateTime`;
     const receiverUnreadCountField = `${receiverType}.unreadCount`;
-    const data = {
+    const receiverStatusField = `${receiverType}.status`;
+
+    let data = {
       [lastActiveDateTimeField]: message.dateTime,
-      [receiverUnreadCountField]: firebase.firestore.FieldValue.increment(numberOfMessages),
       lastMessage: lastMessage,
     };
 
-    const chatDoc = chatsCollection.doc(chatId);
-    chatDoc.update(data);
+    if (chatInfo[receiverType]['status'] != ON) {
+      data[receiverUnreadCountField] = firebase.firestore.FieldValue.increment(numberOfMessages);
+    }
+
+    chatsCollection.doc(chatInfo.chatId).update(data);
   }
 
   async _uploadImages(chatId, senderId, images) {
@@ -501,6 +582,16 @@ class ChatsAPI {
     });
 
     return await Promise.all(imagesPromise);
+  }
+
+  _getReceiverType(senderType) {
+    if (senderType === npo) {
+      return donor;
+    } else if (senderType === donor) {
+      return npo;
+    } else {
+      throw new ChatError('invalid-user-type');
+    }
   }
 
   async _getCurrentUserInfo() {
