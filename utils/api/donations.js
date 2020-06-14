@@ -302,7 +302,7 @@ class DonationsAPI {
    *  string: Is an existing image
    *  file object: Is a new image
    * @param {array} images A list of images for the donation. Should include the cover image.
-   *  It is represented as a list of string and file objects. Strings should always appear before the file object.
+   *  It is represented as a list of string and file objects. Images will be stored in the order it is given
    *  string: Existing images
    *  file object: New images
    * @throws {DonationError}
@@ -535,8 +535,14 @@ class DonationsAPI {
   async _getDonationImages(userId, donationId, updatedImages, coverImage) {
     let imageUrls = [];
     let newImageObjects = [];
-    let existingImageIndexes = [];
+    let existingImageIndexes = []; // Used to find which images needs to be deleted
     let imageNamesToDelete = [];
+
+    let existingImagesOrder = [];
+    let newImagesOrder = [];
+    let uploadedImageUrls = [];
+
+    const coverImageIndex = this._getCoverImageIndex(updatedImages, coverImage);
 
     const storageRef = firebaseStorage.ref();
     const imageRefs = storageRef.child(`donors/${userId}/donations/${donationId}/`);
@@ -553,22 +559,29 @@ class DonationsAPI {
       existingImageInfos.push(imageInfo);
     }
 
-    for (const image of updatedImages) {
+    for (let i = 0; i < updatedImages.length; i++) {
+      const image = updatedImages[i];
       if (typeof image === 'string') {
         // Existing images
         const existingImageIndex = existingImageInfos.findIndex((existingImageInfo) => {
           return existingImageInfo.url == image;
         });
 
-        if (typeof existingImageIndex === -1) {
+        if (existingImageIndex === -1) {
           throw new DonationError('invalid-image-url', 'the image url should be an existing image url');
         }
 
         existingImageIndexes.push(existingImageIndex);
         imageUrls.push(existingImageInfos[existingImageIndex].url);
+
+        const imageIndex = this._getImageOrder(i, coverImageIndex);
+        existingImagesOrder.push(imageIndex);
       } else {
         // New images
         newImageObjects.push(image);
+
+        const imageIndex = this._getImageOrder(i, coverImageIndex);
+        newImagesOrder.push(imageIndex);
       }
     }
 
@@ -587,7 +600,35 @@ class DonationsAPI {
       coverImage
     );
 
-    return [coverImageUrl, [...imageUrls, ...newImageUrls]];
+    // Setting the images in the correct order
+    for (let i = 0; i < imageUrls.length; i++) {
+      uploadedImageUrls[existingImagesOrder[i]] = imageUrls[i];
+    }
+    for (let i = 0; i < newImageUrls.length; i++) {
+      uploadedImageUrls[newImagesOrder[i]] = newImageUrls[i];
+    }
+
+    return [coverImageUrl, uploadedImageUrls];
+  }
+
+  _getCoverImageIndex(images, coverImage) {
+    return images.findIndex((image) => {
+      const imageName = typeof image === 'string' ? image : image.name;
+      const coverImageName = typeof coverImage === 'string' ? coverImage : coverImage.name;
+
+      return imageName === coverImageName;
+    });
+  }
+
+  // Gets the image order with reference to the cover image index, as cover image is always stored at index 0
+  _getImageOrder(index, coverImageIndex) {
+    if (index < coverImageIndex) {
+      return index + 1;
+    } else if (index === coverImageIndex) {
+      return 0;
+    } else {
+      return index;
+    }
   }
 
   async _uploadUpdatedImages(userId, donationId, images, coverImage) {
