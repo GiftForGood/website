@@ -1,37 +1,36 @@
 import React, { useState } from 'react';
 import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
+import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 import { Stack } from '@kiwicom/orbit-components/lib';
 import CarouselScrollButton from '../../buttons/CarouselScrollButton';
+import { Carousel } from 'react-responsive-carousel';
 
-const DisplayImageContainer = styled.div`
+const CarouselImage = styled.img`
   height: 100vw;
   width: 100vw;
-  min-width: 100%;
-  overflow: hidden;
-  position: relative;
-  display: flex;
+  object-fit: cover;
   ${media.desktop(css`
     width: 500px;
     height: 500px;
   `)};
 `;
 
-const Image = styled.img`
-  width: 100%;
-  height: 100%;
-  display: block;
-  object-fit: cover;
+const ImageCarouselContainer = styled.div`
+  min-width: 100%;
+  ${media.desktop(css`
+    width: 500px;
+    padding-bottom: 20px;
+  `)};
 `;
 
-const NonSelectedThumbnailContainer = styled.div`
-  padding-top: 20px;
+const ThumbnailImage = styled.img`
+  object-fit: cover;
   width: calc(75px + 2vw);
   height: calc(75px + 2vw);
   min-width: 75px;
   min-height: 75px;
-  display: flex;
-  opacity: 0.5;
+  opacity: ${(props) => (props.selected ? '1' : '0.5')};
   :hover {
     cursor: pointer;
     opacity: 1;
@@ -42,78 +41,69 @@ const NonSelectedThumbnailContainer = styled.div`
   `)};
 `;
 
-const SelectedThumbnailContainer = styled.div`
-  padding-top: 20px;
-  width: calc(75px + 2vw);
-  height: calc(75px + 2vw);
-  min-width: 75px;
-  min-height: 75px;
-  display: flex;
-  opacity: 1;
-  :hover {
-    cursor: pointer;
-  }
-  ${media.desktop(css`
-    width: 110px;
-    height: 110px;
-  `)};
-`;
-
 const ImagePanel = ({ images }) => {
-  const [displayImage, setDisplayImage] = useState(images[0]);
+  const { isDesktop } = useMediaQuery();
   const [selectedThumbnailIndex, setSelectedThumbnailIndex] = useState(0);
 
   const handleThumbnailClick = (index) => {
-    setDisplayImage(images[index]);
     setSelectedThumbnailIndex(index);
   };
 
-  const handleNextClick = () => {
-    const nextThumbnailIndex = selectedThumbnailIndex + 1;
-    if (nextThumbnailIndex >= images.length) {
+  const updateThumbnailIndex = (index) => {
+    if (index === null) {
       return;
     }
-    setDisplayImage(images[nextThumbnailIndex]);
-    setSelectedThumbnailIndex(nextThumbnailIndex);
+    // Timeout is for the sliding transition time
+    setTimeout(() => {
+      setSelectedThumbnailIndex(index);
+    }, 350);
   };
 
-  const handlePrevClick = () => {
-    const prevThumbnailIndex = selectedThumbnailIndex - 1;
-    if (prevThumbnailIndex < 0) {
-      return;
-    }
-    setDisplayImage(images[prevThumbnailIndex]);
-    setSelectedThumbnailIndex(prevThumbnailIndex);
+  const ImageCarousel = () => {
+    return (
+      <Carousel
+        showThumbs={false}
+        showStatus={false}
+        swipeable={isDesktop ? false : true}
+        renderArrowNext={(onClickHandler, hasNext, label) =>
+          hasNext && <CarouselScrollButton direction="right" onClickHandler={onClickHandler} size="normal" />
+        }
+        renderArrowPrev={(onClickHandler, hasPrev, label) =>
+          hasPrev && <CarouselScrollButton direction="left" onClickHandler={onClickHandler} size="normal" />
+        }
+        selectedItem={selectedThumbnailIndex}
+        onChange={(index) => updateThumbnailIndex(isDesktop ? index : null)}
+      >
+        {images.map((image, index) => {
+          return <CarouselImage key={index} src={image} />;
+        })}
+      </Carousel>
+    );
   };
 
   const Thumbnails = () => {
     return images.map((image, index) => {
-      if (index === selectedThumbnailIndex) {
-        return (
-          <SelectedThumbnailContainer key={index} onClick={() => handleThumbnailClick(index)}>
-            <Image src={image} />
-          </SelectedThumbnailContainer>
-        );
-      } else {
-        return (
-          <NonSelectedThumbnailContainer key={index} onClick={() => handleThumbnailClick(index)}>
-            <Image src={image} />
-          </NonSelectedThumbnailContainer>
-        );
-      }
+      return (
+        <ThumbnailImage
+          key={index}
+          src={image}
+          selected={index === selectedThumbnailIndex}
+          onClick={() => handleThumbnailClick(index)}
+        />
+      );
     });
   };
 
   return (
     <>
-      <DisplayImageContainer>
-        <CarouselScrollButton direction="left" size="normal" onClickHandler={handlePrevClick} />
-        <Image src={displayImage} />
-        <CarouselScrollButton direction="right" size="normal" onClickHandler={handleNextClick} />
-      </DisplayImageContainer>
-      <Stack direction="row" desktop={{ justify: images.length === 4 ? 'between' : 'start' }}>
-        <Thumbnails />
-      </Stack>
+      <ImageCarouselContainer>
+        <ImageCarousel />
+      </ImageCarouselContainer>
+      {isDesktop ? (
+        <Stack direction="row" desktop={{ justify: images.length === 4 ? 'between' : 'start' }}>
+          <Thumbnails />
+        </Stack>
+      ) : null}
     </>
   );
 };
