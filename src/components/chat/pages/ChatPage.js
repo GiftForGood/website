@@ -13,11 +13,11 @@ const ChatPage = ({ user }) => {
   const { isTablet } = useMediaQuery();
   const navBarConstant = isTablet ? 'DESKTOP' : 'MOBILE';
   const navBarOffsetHeight = user
-    ? NAVBAR_HEIGHT[navBarConstant]
-    : user.emailVerified
-    ? NAVBAR_HEIGHT[navBarConstant]
-    : NAVBAR_HEIGHT[navBarConstant] + EMAIL_BAR_HEIGHT[navBarConstant];
-
+    ? user.user.emailVerified
+      ? NAVBAR_HEIGHT[navBarConstant]
+      : NAVBAR_HEIGHT[navBarConstant] + EMAIL_BAR_HEIGHT[navBarConstant]
+    : NAVBAR_HEIGHT[navBarConstant];
+  
   const gridContainerStyle = {
     height: `calc(100vh - ${navBarOffsetHeight}px)`,
     width: '100vw',
