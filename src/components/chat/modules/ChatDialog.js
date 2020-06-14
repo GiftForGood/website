@@ -8,6 +8,7 @@ import BlackText from '../../text/BlackText';
 import api from '../../../../utils/api';
 import styled from 'styled-components';
 import ChevronLeft from '@kiwicom/orbit-components/lib/icons/ChevronLeft';
+import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 
 const ChatDialogContainer = styled.div`
   width: 100%;
@@ -154,9 +155,51 @@ const dummyUser = {
   rating: 4,
 };
 
-const ChatDialogMobile = ({ selectedChatId, setSelectedChatId, navBarHeight }) => {
-  const [chatMessages, setChatMessages] = useState([]);
+const ChatDialogMobile = ({ chatMessages, navBarHeight, setSelectedChatId }) => {
+  return (
+    <>
+      <Stack direction="column" spacing="none">
+        <ButtonLink
+          onClick={function () {
+            setSelectedChatId(null);
+          }}
+          iconLeft={<ChevronLeft />}
+          transparent
+          type="secondary"
+        />
+        <ChatDialogUserRow
+          rating={dummyUser.rating}
+          name={dummyUser.name}
+          profileImageUrl={dummyUser.profileImageUrl}
+        />
+        <ChatDialogViewPostRow postType="wishes" postId={123} postTitle="Bicycle for 1 child" />
+        <ChatDialogMessages messages={chatMessages} navBarHeight={navBarHeight} />
+      </Stack>
+      <ChatDialogInputRow />
+    </>
+  );
+};
 
+const ChatDialogDesktop = ({ chatMessages, navBarHeight }) => {
+  return (
+    <>
+      <Stack direction="column" spacing="none">
+        <ChatDialogUserRow
+          rating={dummyUser.rating}
+          name={dummyUser.name}
+          profileImageUrl={dummyUser.profileImageUrl}
+        />
+        <ChatDialogViewPostRow postType="wishes" postId={123} postTitle="Bicycle for 1 child" />
+        <ChatDialogMessages messages={chatMessages} navBarHeight={navBarHeight} />
+      </Stack>
+      <ChatDialogInputRow />
+    </>
+  );
+};
+
+const ChatDialog = ({ selectedChatId, setSelectedChatId, navBarHeight }) => {
+  const { isTablet } = useMediaQuery();
+  const [chatMessages, setChatMessages] = useState([]);
   useEffect(() => {
     /**
      * TODO: load the corresponding chat messages according to the selectedChatId
@@ -179,26 +222,17 @@ const ChatDialogMobile = ({ selectedChatId, setSelectedChatId, navBarHeight }) =
 
   return (
     <ChatDialogContainer>
-      <Stack direction="column" spacing="none">
-        <ButtonLink
-          onClick={function () {
-            setSelectedChatId(null);
-          }}
-          iconLeft={<ChevronLeft />}
-          transparent
-          type="secondary"
+      {isTablet ? (
+        <ChatDialogDesktop chatMessages={chatMessages} navBarHeight={navBarHeight} />
+      ) : (
+        <ChatDialogMobile
+          chatMessages={chatMessages}
+          navBarHeight={navBarHeight}
+          setSelectedChatId={setSelectedChatId}
         />
-        <ChatDialogUserRow
-          rating={dummyUser.rating}
-          name={dummyUser.name}
-          profileImageUrl={dummyUser.profileImageUrl}
-        />
-        <ChatDialogViewPostRow postType="wishes" postId={123} postTitle="Bicycle for 1 child" />
-        <ChatDialogMessages messages={chatMessages} navBarHeight={navBarHeight} />
-      </Stack>
-      <ChatDialogInputRow />
+      )}
     </ChatDialogContainer>
   );
 };
 
-export default ChatDialogMobile;
+export default ChatDialog;

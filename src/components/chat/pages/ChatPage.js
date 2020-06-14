@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { Grid, Stack } from '@kiwicom/orbit-components/lib';
 import ListOfChats from '../modules/ListOfChats';
-import ChatDialogTabletAndDesktop from '../modules/ChatDialogTabletAndDesktop';
-import ChatDialogMobile from '../modules/ChatDialogMobile';
+import ChatDialog from '../modules/ChatDialog';
 import api from '../../../../utils/api';
 import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
@@ -28,7 +27,7 @@ const ChatPage = ({ user }) => {
     return (
       <Grid style={gridContainerStyle} columns="1fr 3fr">
         <ListOfChats setSelectedChatId={setSelectedChatId} />
-        <ChatDialogTabletAndDesktop selectedChatId={selectedChatId} navBarHeight={navBarOffsetHeight} />
+        <ChatDialog selectedChatId={selectedChatId} navBarHeight={navBarOffsetHeight} />
       </Grid>
     );
   };
@@ -39,7 +38,7 @@ const ChatPage = ({ user }) => {
         {selectedChatId == null ? (
           <ListOfChats setSelectedChatId={setSelectedChatId} />
         ) : (
-          <ChatDialogMobile
+          <ChatDialog
             selectedChatId={selectedChatId}
             setSelectedChatId={setSelectedChatId}
             navBarHeight={navBarOffsetHeight}
