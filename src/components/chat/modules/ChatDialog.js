@@ -13,6 +13,7 @@ import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 const ChatDialogContainer = styled.div`
   width: 100%;
   height: 100%;
+  position: relative;
 `;
 
 const MessageContainer = styled.div`

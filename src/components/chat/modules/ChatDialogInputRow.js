@@ -5,12 +5,22 @@ import api from '../../../../utils/api';
 import styled, { css } from 'styled-components';
 import Gallery from '@kiwicom/orbit-components/lib/icons/Gallery';
 import { useDropzone } from 'react-dropzone';
+import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 
 const InputRowContainer = styled.div`
   width: 95%;
+  /* for mobile and tablet, the input row will stick to the bottom */
+  position: -webkit-sticky; /* Safari */
+  position: sticky;
+  bottom: 0;
+  padding-top: 15px;
+  padding-bottom: 15px;
   margin: 0 auto;
-  margin-top: 15px;
-  margin-bottom: 15px;
+  background-color: white;
+  ${media.desktop(css`
+    position: relative;
+    bottom: unset;
+  `)}
 `;
 
 const ImageUpload = () => {
