@@ -10,6 +10,9 @@ import DonorProfilePage from '../../src/components/profile/pages/DonorProfilePag
 const TopNavigationBar = dynamic(() => import('../../src/components/navbar/modules/TopNavigationBar'), {
   ssr: false,
 });
+const BottomNavigation = dynamic(() => import('../../src/components/navbar/modules/BottomNavigation'), {
+  ssr: false,
+});
 
 export async function getServerSideProps({ params, req, res, query }) {
   let userId = params.userId;
@@ -33,6 +36,7 @@ const Profile = ({ user, userId, userTypes }) => {
       ) : containsDonor(userTypes) ? (
         <DonorProfilePage userId={userId} />
       ) : null}
+      <BottomNavigation />
     </SessionProvider>
   );
 };

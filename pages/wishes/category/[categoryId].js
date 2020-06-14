@@ -8,6 +8,9 @@ import Error from 'next/error';
 const TopNavigationBar = dynamic(() => import('../../../src/components/navbar/modules/TopNavigationBar'), {
   ssr: false,
 });
+const BottomNavigation = dynamic(() => import('../../../src/components/navbar/modules/BottomNavigation'), {
+  ssr: false,
+});
 
 export async function getServerSideProps({ params, query, req, res }) {
   const [categoryDetails, user] = await Promise.all([getCategoryDetails(params.categoryId), isAuthenticated(req, res)]);
@@ -36,6 +39,7 @@ const ViewCategory = ({ categoryDetails, filterQuery, user }) => {
     <SessionProvider user={user}>
       <TopNavigationBar />
       <ViewCategoryPage categoryDetails={categoryDetails} filterQuery={filterQuery} />
+      <BottomNavigation />
     </SessionProvider>
   );
 };
