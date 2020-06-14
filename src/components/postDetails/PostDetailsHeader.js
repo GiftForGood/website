@@ -9,12 +9,14 @@ import { AlertCircle, Edit, CloseCircle, MenuKebab, ShareAndroid } from '@kiwico
 import { Button, Stack, Text, Popover, ButtonLink } from '@kiwicom/orbit-components/lib';
 import { useRouter } from 'next/router';
 import { COMPLETED, CLOSED } from '../../../utils/constants/postStatus';
-import { donations } from '../../../utils/constants/postType';
+import { donations, wishes } from '../../../utils/constants/postType';
+import { donor, npo } from '../../../utils/constants/userType';
 import RatingStars from '../ratingStars';
 import { colors } from '../../../utils/constants/colors';
 
 const PostDetailsHeader = ({
   loginUserId,
+  loginUserType,
   postUserId,
   postUserName,
   profileImageUrl,
@@ -26,6 +28,8 @@ const PostDetailsHeader = ({
 }) => {
   const router = useRouter();
   const isOwnPost = loginUserId === postUserId; // whether login user is the post owner
+  const isPostTypeSameAsUserType =
+    (postType === donations && loginUserType === donor) || (postType === wishes && loginUserType === npo);
   const chatType = isOwnPost ? 'View Chats' : 'Chat';
   const postUrl = `https://www.giftforgood.io${router.asPath}`;
   const isCompletedPost = postStatus === COMPLETED;
@@ -168,7 +172,13 @@ const PostDetailsHeader = ({
             return (
               <>
                 <Button
-                  disabled={isDisabled || (chatType === 'Chat' && (isClosedPost || isCompletedPost)) ? true : false}
+                  disabled={
+                    isDisabled ||
+                    (!isOwnPost && isPostTypeSameAsUserType) ||
+                    (chatType === 'Chat' && (isClosedPost || isCompletedPost))
+                      ? true
+                      : false
+                  }
                   size="small"
                   asComponent={ChatButton}
                   onClick={handleOnClickChatBtn}

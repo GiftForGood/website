@@ -18,6 +18,7 @@ const BadgeWrapper = styled.div`
 
 const WishInformation = ({
   loginUserId,
+  loginUserType,
   wishUserId,
   wishUserName,
   profileImageUrl,
@@ -58,6 +59,7 @@ const WishInformation = ({
     <Stack spaceAfter="largest">
       <WishInformationHeader
         loginUserId={loginUserId}
+        loginUserType={loginUserType}
         postUserId={wishUserId}
         postUserName={wishUserName}
         profileImageUrl={profileImageUrl}
