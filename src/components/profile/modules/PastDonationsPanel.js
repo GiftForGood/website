@@ -9,6 +9,7 @@ import BlackText from '../../text/BlackText';
 import { DONATIONS_BATCH_SIZE } from '../../../../utils/api/constants';
 import InfiniteScroll from 'react-infinite-scroller';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
+import { getFormattedDate } from '../../../../utils/api/time';
 
 const GridSectionContainer = styled.div`
   margin-top: 20px;
@@ -178,9 +179,12 @@ const PastDonationsPanel = ({ isMine, userId }) => {
         status,
         locations,
         coverImageUrl,
+        validPeriodFrom,
+        validPeriodTo,
       } = pastDonation.data();
       const locationNames = locations.map((location) => location.name).join(', ');
       const postHref = `/donations/${donationId}`;
+      const validPeriod = `${getFormattedDate(validPeriodFrom)} - ${getFormattedDate(validPeriodTo)}`;
       return (
         <DonationCard
           key={donationId}
@@ -192,6 +196,7 @@ const PastDonationsPanel = ({ isMine, userId }) => {
           postHref={postHref}
           coverImageUrl={coverImageUrl}
           status={status}
+          validPeriod={validPeriod}
           locations={locationNames}
         />
       );

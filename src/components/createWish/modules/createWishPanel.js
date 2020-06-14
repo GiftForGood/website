@@ -278,6 +278,7 @@ const CreateWishPanel = ({ wish, mode }) => {
                   formik={formik}
                   storeLocally={true}
                   help={'The most recently used address will be stored on device.'}
+                  storageKey={'location_wish'}
                 />
 
                 {isDesktop ? null : <LivePreviewPanel />}
