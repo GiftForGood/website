@@ -17,10 +17,6 @@ const BottomNavigationContainer = styled.div`
   right: 0;
   transition: ${transition(['transform'], 'normal', 'ease-in-out')};
   transform: translate3d(0, ${({ shown }) => (shown ? '0' : `1000px`)}, 0);
-
-  ${media.tablet(css`
-    transform: translate3d(0, ${({ shown }) => (shown ? '0' : `1000px`)}, 0);
-  `)};
 `;
 
 const BottomNavigation = () => {
