@@ -478,10 +478,14 @@ const CreateDonationPanel = ({ mode }) => {
 
                 <GooglePlacesAutoCompleteField
                   label={'Nearest MRT/LRT to you'}
-                  formik={formik}
                   storeLocally={true}
                   help={'The most recently used address will be stored on device.'}
                   storageKey={'location_donation'}
+                  onChange={(location) => {
+                    formik.setFieldValue('location', location);
+                  }}
+                  error={formik.touched.location && formik.errors.location ? formik.errors.location : ''}
+                  disabled={formik.isSubmitting}
                 />
 
                 <ChoiceGroup
