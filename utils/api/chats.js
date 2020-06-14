@@ -84,7 +84,7 @@ class ChatsAPI {
    * @throws {FirebaseError}
    * @return {function} The subscriber function. Needed to unsubscribe from the listener
    */
-  async subscribeToChatForNPO(id, callback) {
+  async subscribeToChatsForNPO(id, callback) {
     return chatsCollection
       .where('npo.id', '==', id)
       .orderBy('lastMessage.dateTime', 'desc')
@@ -107,7 +107,7 @@ class ChatsAPI {
    * @throws {FirebaseError}
    * @return {function} The subscriber function. Needed to unsubscribe from the listener
    */
-  async subscribeToChatForDonor(id, callback) {
+  async subscribeToChatsForDonor(id, callback) {
     return chatsCollection
       .where('donor.id', '==', id)
       .orderBy('lastMessage.dateTime', 'desc')
@@ -126,7 +126,7 @@ class ChatsAPI {
    * @param {function} unsubscribeFunction The function to unsubscribe to. It is the function that is returned when subscribing to the chat messages
    * @throws {ChatError}
    */
-  async unsubscribeToChat(unsubscribeFunction) {
+  async unsubscribeToChats(unsubscribeFunction) {
     if (typeof unsubscribeFunction !== 'function') {
       throw new ChatError('invalid-unsubscribe-function', 'only can unsubscribe using a function');
     }
