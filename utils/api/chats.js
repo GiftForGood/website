@@ -247,79 +247,96 @@ class ChatsAPI {
   }
 
   /**
-   * Create a chat message
+   * Create a chat message for text. Text message includes regular text and url
    * @param {string} id The id of the chat that tbe message belongs to
-   * @param {string} contentType The type of the message
-   * @param {string/object} content The content of the message
-   *  string: Represent a text, link or a calendar text
-   *  object: Represent a file or and image
+   * @param {string} text The text message
    * @throws {ChatError}
    * @throws {FirebaseError}
    * @return {object} A firebase document of the created chat message
    */
-  async createChatMessage(id, contentType, content) {
-    this._validateChatMessages(contentType, [content]);
+  async sendTextMessage(id, text) {
+    this._validateContents([text]);
 
-    const userId = firebaseAuth.currentUser.uid;
-    const [userTypeInfo, chatDoc] = await Promise.all([this._getCurrentUserInfo(), this.getChat(id)]);
-    const userTypes = userTypeInfo.type;
-    const chatInfo = chatDoc.data();
-
-    let userInfo;
-    let userType;
-    if (userTypes.includes(npo)) {
-      userInfo = await this._getNPOInfo(userId);
-      userType = npo;
-    } else if (userTypes.includes(donor)) {
-      userInfo = await this._getDonorInfo(userId);
-      userType = donor;
-    } else {
-      throw new ChatError('invalid-user-type');
-    }
-
-    const chatMessage = await this._createChatMessage(id, userType, userInfo, contentType, content);
-    this._updateChat(chatInfo, userType, 1, chatMessage.data());
-
-    return chatMessage;
+    return this._sendChatMessage(id, TEXT, text);
   }
 
   /**
-   * Create create chat messages of the same content type.
+   * Create a chat message for calendar
    * @param {string} id The id of the chat that tbe message belongs to
-   * @param {string} contentType The type of the message
-   * @param {array} contents A list of content of the messages. Messages are created in the order in the list
-   *  string: Represent a text, link or a calendar text
-   *  object: Represent a file or and image
+   * @param {string} calendar The calendar message
+   * @throws {ChatError}
+   * @throws {FirebaseError}
+   * @return {object} A firebase document of the created chat message
+   */
+  async sendCalendarMessage(id, calendar) {
+    this._validateContents([calendar]);
+
+    return this._sendChatMessage(id, CALENDAR, calendar);
+  }
+
+  /**
+   * Create a chat message for image
+   * @param {string} id The id of the chat that tbe message belongs to
+   * @param {object} image The image message
+   * @throws {ChatError}
+   * @throws {FirebaseError}
+   * @return {object} A firebase document of the created chat message
+   */
+  async sendImageMessage(id, image) {
+    this._validateContents([image]);
+    this._validateImageContents([image]);
+
+    const userId = firebaseAuth.currentUser.uid;
+    const imageUrls = await this._uploadImages(id, userId, [image]);
+    const imageUrl = imageUrls[0];
+
+    return this._sendChatMessage(id, IMAGE, imageUrl);
+  }
+
+  /**
+   * Create multiple text messages. Text message includes regular text and url
+   * @param {string} id The id of the chat that tbe message belongs to
+   * @param {array} texts A list of text messages. Messages are created in the order in the list
    * @throws {ChatError}
    * @throws {FirebaseError}
    * @return {array} A list of firebase document of the created chat messages
    */
-  async createChatMessages(id, contentType, contents) {
-    this._validateChatMessages(contentType, contents);
+  async sendTextMessages(id, texts) {
+    this._validateContents(texts);
+
+    return this._sendChatMessages(id, TEXT, texts);
+  }
+
+  /**
+   * Create multiple calendar messages.
+   * @param {string} id The id of the chat that tbe message belongs to
+   * @param {array} calendars A list of calendar messages. Messages are created in the order in the list
+   * @throws {ChatError}
+   * @throws {FirebaseError}
+   * @return {array} A list of firebase document of the created chat messages
+   */
+  async sendCalendarMessages(id, calendars) {
+    this._validateContents(calendars);
+
+    return this._sendChatMessages(id, CALENDAR, calendars);
+  }
+
+  /**
+   * Create multiple image messages.
+   * @param {string} id The id of the chat that tbe message belongs to
+   * @param {array} images A list of image messages. Messages are created in the order in the list
+   * @throws {ChatError}
+   * @throws {FirebaseError}
+   * @return {array} A list of firebase document of the created chat messages
+   */
+  async sendImageMessages(id, images) {
+    this._validateContents(images);
+    this._validateImageContents(images);
 
     const userId = firebaseAuth.currentUser.uid;
-    const [userTypeInfo, chatDoc] = await Promise.all([this._getCurrentUserInfo(), this.getChat(id)]);
-    const userTypes = userTypeInfo.type;
-    const chatInfo = chatDoc.data();
+    const imageUrls = await this._uploadImages(id, userId, images);
 
-    let userInfo;
-    let userType;
-    if (userTypes.includes(npo)) {
-      userInfo = await this._getNPOInfo(userId);
-      userType = npo;
-    } else if (userTypes.includes(donor)) {
-      userInfo = await this._getDonorInfo(userId);
-      userType = donor;
-    } else {
-      throw new ChatError('invalid-user-type');
-    }
-
-    const chatMessages = await this._createChatMessages(id, userType, userInfo, contentType, contents);
-    const numberOfMessages = chatMessages.length;
-    const lastChatMessage = chatMessages[chatMessages.length - 1].data();
-    this._updateChat(chatInfo, userType, numberOfMessages, lastChatMessage);
-
-    return chatMessages;
+    return this._sendChatMessages(id, IMAGE, imageUrls);
   }
 
   /**
@@ -477,33 +494,65 @@ class ChatsAPI {
     return newChat.get();
   }
 
-  async _createChatMessages(chatId, senderType, senderInfo, contentType, contents) {
-    let imageUrls = [];
-    if (contentType === IMAGE) {
-      imageUrls = await this._uploadImages(chatId, senderInfo.userId, contents);
+  async _sendChatMessage(id, contentType, content) {
+    const userId = firebaseAuth.currentUser.uid;
+    const [userTypeInfo, chatDoc] = await Promise.all([this._getCurrentUserInfo(), this.getChat(id)]);
+    const userTypes = userTypeInfo.type;
+    const chatInfo = chatDoc.data();
+
+    let userInfo;
+    let userType;
+    if (userTypes.includes(npo)) {
+      userInfo = await this._getNPOInfo(userId);
+      userType = npo;
+    } else if (userTypes.includes(donor)) {
+      userInfo = await this._getDonorInfo(userId);
+      userType = donor;
+    } else {
+      throw new ChatError('invalid-user-type');
     }
 
-    const contentsToUpload = contentType !== IMAGE ? contents : imageUrls;
-    const chatMessagesPromise = contentsToUpload.map((contentToUpload) => {
-      return this._createMessage(chatId, senderType, senderInfo, contentType, contentToUpload);
+    const chatMessage = await this._createChatMessage(id, userType, userInfo, contentType, content);
+    this._updateChat(chatInfo, userType, 1, chatMessage.data());
+
+    return chatMessage;
+  }
+
+  async _sendChatMessages(id, contentType, contents) {
+    const userId = firebaseAuth.currentUser.uid;
+    const [userTypeInfo, chatDoc] = await Promise.all([this._getCurrentUserInfo(), this.getChat(id)]);
+    const userTypes = userTypeInfo.type;
+    const chatInfo = chatDoc.data();
+
+    let userInfo;
+    let userType;
+    if (userTypes.includes(npo)) {
+      userInfo = await this._getNPOInfo(userId);
+      userType = npo;
+    } else if (userTypes.includes(donor)) {
+      userInfo = await this._getDonorInfo(userId);
+      userType = donor;
+    } else {
+      throw new ChatError('invalid-user-type');
+    }
+
+    const chatMessages = await this._createChatMessages(id, userType, userInfo, contentType, contents);
+    const numberOfMessages = chatMessages.length;
+    const lastChatMessage = chatMessages[chatMessages.length - 1].data();
+    this._updateChat(chatInfo, userType, numberOfMessages, lastChatMessage);
+
+    return chatMessages;
+  }
+
+  async _createChatMessages(chatId, senderType, senderInfo, contentType, contents) {
+    const chatMessagesPromise = contents.map((content) => {
+      return this._createChatMessage(chatId, senderType, senderInfo, contentType, content);
     });
 
     return await Promise.all(chatMessagesPromise);
   }
 
   async _createChatMessage(chatId, senderType, senderInfo, contentType, content) {
-    let imageUrl;
-    if (contentType === IMAGE) {
-      const imageUrls = await this._uploadImages(chatId, senderInfo.userId, [content]);
-      imageUrl = imageUrls[0];
-    }
-
-    const contentToUpload = contentType !== IMAGE ? content : imageUrl;
-    return this._createMessage(chatId, senderType, senderInfo, contentType, contentToUpload);
-  }
-
-  // Assumes that the content are the final content to upload to firestore. e.g. image should be uploaded and given as a string
-  async _createMessage(chatId, senderType, senderInfo, contentType, content) {
     const messageSenderInfo = {
       id: senderInfo.userId,
       name: senderInfo.name,
@@ -728,42 +777,13 @@ class ChatsAPI {
     }
   }
 
-  _validateChatMessages(contentType, contents) {
-    this._validateContentType(contentType);
-    this._validateContents(contentType, contents);
-    if (contentType === IMAGE) {
-      this._validateImageExtensions(contents);
-    }
-  }
-
-  _validateContentType(contentType) {
-    const validContentType = [TEXT, IMAGE, CALENDAR];
-
-    if (!validContentType.includes(contentType)) {
-      throw new ChatError('invalid-content-type', `Only ${validContentType.join(', ')} are valid content type`);
-    }
-  }
-
-  _validateContents(contentType, contents) {
+  _validateContents(contents) {
     if (contents.length <= 0) {
       throw new ChatError('invalid-content-length', 'need to have a least one content');
     }
-
-    for (const content of contents) {
-      if (contentType === IMAGE && typeof content === 'string') {
-        throw new ChatError('invalid-content-specified', 'specified content type of image, but got string');
-      }
-
-      if (contentType !== IMAGE && typeof content !== 'string') {
-        throw new ChatError(
-          'invalid-content-specified',
-          `specified content type of non-image, but got ${typeof content}`
-        );
-      }
-    }
   }
 
-  _validateImageExtensions(images) {
+  _validateImageContents(images) {
     const validExtensions = ['.jpg', '.jpeg', '.png'];
 
     for (const image of images) {
@@ -771,13 +791,16 @@ class ChatsAPI {
         throw new ChatError('invalid-image', 'provided image is null');
       }
 
-      if (typeof image === 'string') {
-        throw new ChatError('invalid-image', 'provided image cannot be type of string');
+      if (typeof content === 'string') {
+        throw new ChatError('invalid-image-content-specified', 'specified content type of image, but got string');
       }
 
       const imageExt = path.extname(image.name).toLowerCase();
       if (!validExtensions.includes(imageExt)) {
-        throw new ChatError('invalid-image-extension', `Only ${validExtensions.join(', ')} are valid image extensions`);
+        throw new ChatError(
+          'invalid-image-extension',
+          `${imageExt} not allowed. Only ${validExtensions.join(', ')} are valid image extensions`
+        );
       }
     }
   }
