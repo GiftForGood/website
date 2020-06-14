@@ -95,6 +95,8 @@ const RightMessageSection = ({ message }) => {
  */
 const ChatDialogMessages = ({ messages, navBarHeight }) => {
   const { isTablet } = useMediaQuery();
+
+  // get all heights of components within the chatDialog
   const {
     chatDialogBackButton,
     chatDialogInputRow,
@@ -102,8 +104,10 @@ const ChatDialogMessages = ({ messages, navBarHeight }) => {
     chatDialogUserRow,
     chatDialogMessagesPadding,
   } = isTablet ? desktopHeights : mobileHeights;
+
   const sumOfOtherComponentHeights =
     chatDialogBackButton + chatDialogInputRow + chatDialogSeePostRow + chatDialogUserRow + chatDialogMessagesPadding;
+
   // offsetHeight is used to calculate the amount of height left for the ChatDialogMessages to occupy
   const offsetHeight = navBarHeight + sumOfOtherComponentHeights;
   return (

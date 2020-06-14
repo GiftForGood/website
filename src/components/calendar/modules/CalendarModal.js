@@ -44,6 +44,7 @@ const CalendarModal = ({ onShow, onHide }) => {
           <Button type="secondary" onClick={onHide}>
             Cancel
           </Button>
+          {/* TODO: add handling of creating calendar message in chat */}
           <Button onClick={onHide} asComponent={okButton}>
             Ok
           </Button>

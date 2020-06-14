@@ -29,11 +29,11 @@ const ImageUpload = () => {
   );
 };
 
-/**
- *
- */
 const ChatDialogInputRow = () => {
-  const handleSendMessage = () => console.log('see post');
+  /**
+   * TODO: handle send message and display in chat
+   */
+  const handleSendMessage = () => console.log('send message');
   return (
     <InputRowContainer>
       <Stack direction="row" justify="between" align="center">

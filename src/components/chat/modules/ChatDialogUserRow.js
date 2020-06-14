@@ -31,6 +31,9 @@ const ChatDialogUserRow = ({ name, profileImageUrl, rating }) => {
 
   const handleShowSuggestDateModal = () => setShowSuggestDateModal(true);
   const handleCloseSuggestDateModal = () => setShowSuggestDateModal(false);
+  /**
+   * TODO: add handling of complete post
+   */
   const handleCompletePost = () => console.log('complete post');
   return (
     <CardSection>

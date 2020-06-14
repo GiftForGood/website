@@ -115,6 +115,9 @@ const listOfChats = [
 const ListOfChats = ({ setSelectedChatId }) => {
   const [chats, setChats] = useState([]);
 
+  /**
+   * TODO: get list of chats from api
+   */
   useEffect(() => {
     setChats(listOfChats);
   }, []);
