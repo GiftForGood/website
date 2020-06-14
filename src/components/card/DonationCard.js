@@ -111,6 +111,8 @@ const CardDescriptionFooter = ({ validPeriod, locations }) => {
  * @param {string} locations is the location names of the donation post
  * @param {string} status is the current status of the donation post, if not provided, the status won't be shown in card
  * @param {string} validPeriod is the validity period of the donation post
+ * @param {string} categoryId is the category id
+ * @param {string} categoryName is the category name of the donation currently displayed in
  */
 const DonationCard = ({
   name,
@@ -123,12 +125,17 @@ const DonationCard = ({
   locations,
   status = null,
   validPeriod,
+  categoryId,
+  categoryName,
 }) => {
   const timeAgo = getTimeDifferenceFromNow(postedDateTime);
   const router = useRouter();
   const handleOnClickDonationPost = (event) => {
     event.preventDefault();
-    router.push(postHref);
+    router.push({
+      pathname: postHref,
+      query: { categoryId: categoryId, categoryName: categoryName },
+    });
   };
   return (
     <CardContainer>

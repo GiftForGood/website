@@ -20,7 +20,7 @@ const ClosePostModal = ({ postId, postType, onClose, setIsClosedPost }) => {
       if (isWishPost) {
         const wishDoc = await api.wishes.close(postId, closePostReason);
       } else {
-        const donationDoc = await api.donations.closeDonation(postId, closePostReason);
+        const donationDoc = await api.donations.close(postId, closePostReason);
       }
       setIsClosedPost(true);
       onClose();
