@@ -1,10 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import CardHeader from '../card/CardHeader';
 import { Stack, Text, Grid } from '@kiwicom/orbit-components/lib';
 import { getTimeDifferenceFromNow } from '../../../utils/api/time';
 import GreyText from '../text/GreyText';
 import styled, { css } from 'styled-components';
-import { defaultPostImagePath } from '../../../utils/constants/imagePaths';
 import { useRouter } from 'next/router';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import { PENDING } from '../../../utils/constants/postStatus';
@@ -49,12 +48,10 @@ const CardImageContainer = styled.div`
   height: 100%;
   width: 100%;
   position: relative;
+  background-color: #f0f1f1;
 `;
 
-const CardImage = styled.div`
-  background-image: url(${(props) => props.imageUrl});
-  background-size: cover;
-  background-position: center;
+const CardImage = styled.img`
   height: 100%;
   width: 100%;
 `;
@@ -128,14 +125,20 @@ const DonationCard = ({
   categoryId,
   categoryName,
 }) => {
+  const [hasImage, setHasImage] = useState(true);
   const timeAgo = getTimeDifferenceFromNow(postedDateTime);
   const router = useRouter();
+
   const handleOnClickDonationPost = (event) => {
     event.preventDefault();
     router.push({
       pathname: postHref,
       query: { categoryId: categoryId, categoryName: categoryName },
     });
+  };
+
+  const handleImageOnError = () => {
+    setHasImage(false);
   };
   return (
     <CardContainer>
@@ -144,7 +147,8 @@ const DonationCard = ({
           <CardHeader name={name} imageUrl={profileImageUrl} timeAgo={timeAgo} />
         </CardHeaderContainer>
         <CardImageContainer>
-          <CardImage imageUrl={coverImageUrl || defaultPostImagePath} />
+          {hasImage ? <CardImage src={coverImageUrl} loading="lazy" onError={handleImageOnError} /> : null}
+
           {/* status label will only be shown if status is provided and it is not pending */}
           {status != null && status != PENDING && <DonationCardStatus status={status} />}
         </CardImageContainer>
