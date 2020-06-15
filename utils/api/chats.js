@@ -135,115 +135,171 @@ class ChatsAPI {
   }
 
   /**
-   * Create a chat message for a wish without an existing chat. It will create a new chat and add the chat message within it
+   * Create a single text chat message for a wish without an existing chat. It will create a new chat and add the chat message within it
    * @param {string} wishId The id of the wish
-   * @param {string} contentType The type of the message
-   * @param {string/object} content The content of the message
-   *  string: Represent a text, link or a calendar text
-   *  object: Represent a file or and image
+   * @param {string} text A text message
    * @throws {ChatError}
    * @throws {FirebaseError}
-   * @return {object} A firebase documents of the created chat message
+   * @return {object} A firebase documents of the created chat messages
    */
-  async createChatMessageForWish(wishId, contentType, content) {
-    this._validateChatMessages(contentType, [content]);
-
-    const [wishInfo, donorInfo] = await Promise.all([this._getWishInfo(wishId), this._getCurrentDonorInfo()]);
-    const npoInfo = await this._getNPOInfo(wishInfo.user.userId);
-    await this._validateChat(wishInfo.wishId, npoInfo.userId, donorInfo.userId);
-
-    const chatDoc = await this._createChatForWish(wishInfo, npoInfo, donorInfo);
-    const chatInfo = chatDoc.data();
-    // Assumes that only donor can start a conversation on a wish
-    const chatMessage = await this._createChatMessage(chatInfo.chatId, donor, donorInfo, contentType, content);
-    this._updateChat(chatInfo, donor, 1, chatMessage.data());
-
-    return chatMessage;
+  async sendInitialTextMessageForWish(wishId, text) {
+    const messages = this.sendInitialTextMessagesForWish(wishId, [text]);
+    return messages[0];
   }
 
   /**
-   * Create chat messages for a wish of the same content type without an existing chat. It will create a new chat and add the chat messages within it
+   * Create a single calendar chat message for a wish without an existing chat. It will create a new chat and add the chat message within it
    * @param {string} wishId The id of the wish
-   * @param {string} contentType The type of the message
-   * @param {array} contents A list of content of the messages. Messages are created in the order in the list
-   *  string: Represent a text, link or a calendar text
-   *  object: Represent a file or and image
+   * @param {string} text A calendar messages
+   * @throws {ChatError}
+   * @throws {FirebaseError}
+   * @return {object} A firebase documents of the created chat messages
+   */
+  async sendInitialCalendarMessageForWish(wishId, calendar) {
+    const messages = this.sendInitialCalendarMessagesForWish(wishId, [calendar]);
+    return messages[0];
+  }
+
+  /**
+   * Create a single image chat message for a wish without an existing chat. It will create a new chat and add the chat message within it
+   * @param {string} wishId The id of the wish
+   * @param {object} text A image messages.
+   * @throws {ChatError}
+   * @throws {FirebaseError}
+   * @return {object} A firebase documents of the created chat messages
+   */
+  async sendInitialImageMessageForWish(wishId, image) {
+    const messages = this.sendInitialImageMessagesForWish(wishId, [image]);
+    return messages[0];
+  }
+
+  /**
+   * Create text chat messages for a wish without an existing chat. It will create a new chat and add the chat messages within it
+   * @param {string} wishId The id of the wish
+   * @param {array} texts A list of text messages. Messages are created in the order in the list
    * @throws {ChatError}
    * @throws {FirebaseError}
    * @return {array} A list of firebase documents of the created chat messages
    */
-  async createChatMessagesForWish(wishId, contentType, contents) {
-    this._validateChatMessages(contentType, contents);
+  async sendInitialTextMessagesForWish(wishId, texts) {
+    this._validateChatMessages(TEXT, texts);
 
-    const [wishInfo, donorInfo] = await Promise.all([this._getWishInfo(wishId), this._getCurrentDonorInfo()]);
-    const npoInfo = await this._getNPOInfo(wishInfo.user.userId);
-    await this._validateChat(wishInfo.wishId, npoInfo.userId, donorInfo.userId);
-
-    const chatDoc = await this._createChatForWish(wishInfo, npoInfo, donorInfo);
-    const chatInfo = chatDoc.data();
-    // Assumes that only donor can start a conversation on a wish
-    const chatMessages = await this._createChatMessages(chatInfo.chatId, donor, donorInfo, contentType, contents);
-    const numberOfMessages = chatMessages.length;
-    const lastChatMessage = chatMessages[chatMessages.length - 1].data();
-    this._updateChat(chatInfo, donor, numberOfMessages, lastChatMessage);
-
-    return chatMessages;
+    const [chatInfo, donorInfo] = await this._fetchInfoAndCreateChatForWish(wishId);
+    return this._sendTextMessages(chatInfo.chatId, texts, chatInfo, donor, donorInfo);
   }
 
   /**
-   * Create a chat message for a donation without an existing chat. It will create a new chat and add the chat message within it
-   * @param {string} donationId The id of the donation
-   * @param {string} contentType The type of the message
-   * @param {string/object} content The content of the message
-   *  string: Represent a text, link or a calendar text
-   *  object: Represent a file or and image
-   * @throws {ChatError}
-   * @throws {FirebaseError}
-   * @return {object} A firebase document of the created chat message
-   */
-  async createChatMessageForDonation(donationId, contentType, content) {
-    this._validateChatMessages(contentType, [content]);
-
-    const [donationInfo, npoInfo] = await Promise.all([this._getDonationInfo(donationId), this._getCurrentNPOInfo()]);
-    const donorInfo = await this._getDonorInfo(donationInfo.user.userId);
-    await this._validateChat(donationInfo.donationId, npoInfo.userId, donorInfo.userId);
-
-    const chatDoc = await this._createChatForDonation(donationInfo, npoInfo, donorInfo);
-    const chatInfo = chatDoc.data();
-    // Assumes that only npo can start a conversation on a donation
-    const chatMessage = await this._createChatMessage(chatInfo.chatId, npo, npoInfo, contentType, content);
-    this._updateChat(chatInfo, npo, 1, chatMessage.data());
-
-    return chatMessage;
-  }
-
-  /**
-   * Create chat messages for a donation of the same content type without an existing chat. It will create a new chat and add the chat messages within it
-   * @param {string} donationId The id of the donation
-   * @param {string} contentType The type of the message
-   * @param {array} contents A list of contents of the messages. Messages are created in the order in the list
-   *  string: Represent a text, link or a calendar text
-   *  object: Represent a file or and image
+   * Create calendar chat messages for a wish without an existing chat. It will create a new chat and add the chat messages within it
+   * @param {string} wishId The id of the wish
+   * @param {array} calendar A list of calendar messages. Messages are created in the order in the list
    * @throws {ChatError}
    * @throws {FirebaseError}
    * @return {array} A list of firebase documents of the created chat messages
    */
-  async createChatMessagesForDonation(donationId, contentType, contents) {
-    this._validateChatMessages(contentType, contents);
+  async sendInitialCalendarMessagesForWish(wishId, calendars) {
+    this._validateChatMessages(CALENDAR, calendars);
 
-    const [donationInfo, npoInfo] = await Promise.all([this._getDonationInfo(donationId), this._getCurrentNPOInfo()]);
-    const donorInfo = await this._getDonorInfo(donationInfo.user.userId);
-    await this._validateChat(donationInfo.donationId, npoInfo.userId, donorInfo.userId);
+    const [chatInfo, donorInfo] = await this._fetchInfoAndCreateChatForWish(wishId);
+    return this._sendCalendarMessages(chatInfo.chatId, calendars, chatInfo, donor, donorInfo);
+  }
 
-    const chatDoc = await this._createChatForDonation(donationInfo, npoInfo, donorInfo);
-    const chatInfo = chatDoc.data();
-    // Assumes that only npo can start a conversation on a donation
-    const chatMessages = await this._createChatMessages(chatInfo.chatId, npo, npoInfo, contentType, contents);
-    const numberOfMessages = chatMessages.length;
-    const lastChatMessage = chatMessages[chatMessages.length - 1].data();
-    this._updateChat(chatInfo, npo, numberOfMessages, lastChatMessage);
+  /**
+   * Create image chat messages for a wish without an existing chat. It will create a new chat and add the chat messages within it
+   * @param {string} wishId The id of the wish
+   * @param {array} texts A list of image messages. Messages are created in the order in the list
+   * @throws {ChatError}
+   * @throws {FirebaseError}
+   * @return {array} A list of firebase documents of the created chat messages
+   */
+  async sendInitialImageMessagesForWish(wishId, images) {
+    this._validateChatMessages(IMAGE, images);
 
-    return chatMessages;
+    const [chatInfo, donorInfo] = await this._fetchInfoAndCreateChatForWish(wishId);
+    return this._sendImageMessages(chatInfo.chatId, images, chatInfo, donor, donorInfo);
+  }
+
+  /**
+   * Create a single text chat message for a donation without an existing chat. It will create a new chat and add the chat message within it
+   * @param {string} donationId The id of the donation
+   * @param {string} text A text message
+   * @throws {ChatError}
+   * @throws {FirebaseError}
+   * @return {object} A firebase documents of the created chat messages
+   */
+  async sendInitialTextMessageForDonation(donationId, text) {
+    const messages = await this.sendInitialTextMessagesForDonation(donationId, [text]);
+    return messages[0];
+  }
+
+  /**
+   * Create a single calendar chat message for a donation without an existing chat. It will create a new chat and add the chat message within it
+   * @param {string} donationId The id of the donation
+   * @param {string} text A calendar messages
+   * @throws {ChatError}
+   * @throws {FirebaseError}
+   * @return {object} A firebase documents of the created chat messages
+   */
+  async sendInitialCalendarMessageForDonation(donationId, calendar) {
+    const messages = await this.sendInitialCalendarMessagesForDonation(donationId, [calendar]);
+    return messages[0];
+  }
+
+  /**
+   * Create a single image chat message for a donation without an existing chat. It will create a new chat and add the chat message within it
+   * @param {string} donationId The id of the donation
+   * @param {object} text A image messages.
+   * @throws {ChatError}
+   * @throws {FirebaseError}
+   * @return {object} A firebase documents of the created chat messages
+   */
+  async sendInitialImageMessageForDonation(donationId, image) {
+    const messages = await this.sendInitialImageMessagesForDonation(donationId, [image]);
+    return messages[0];
+  }
+
+  /**
+   * Create text chat messages for a donation without an existing chat. It will create a new chat and add the chat messages within it
+   * @param {string} donationId The id of the donation
+   * @param {array} texts A list of text messages. Messages are created in the order in the list
+   * @throws {ChatError}
+   * @throws {FirebaseError}
+   * @return {array} A list of firebase documents of the created chat messages
+   */
+  async sendInitialTextMessagesForDonation(donationId, texts) {
+    this._validateChatMessages(TEXT, texts);
+
+    const [chatInfo, npoInfo] = await this._fetchInfoAndCreateChatForDonation(donationId);
+    return this._sendTextMessages(chatInfo.chatId, texts, chatInfo, npo, npoInfo);
+  }
+
+  /**
+   * Create calendar chat messages for a donation without an existing chat. It will create a new chat and add the chat messages within it
+   * @param {string} donationId The id of the donation
+   * @param {array} calendar A list of calendar messages. Messages are created in the order in the list
+   * @throws {ChatError}
+   * @throws {FirebaseError}
+   * @return {array} A list of firebase documents of the created chat messages
+   */
+  async sendInitialCalendarMessagesForDonation(donationId, calendars) {
+    this._validateChatMessages(CALENDAR, calendars);
+
+    const [chatInfo, npoInfo] = await this._fetchInfoAndCreateChatForDonation(donationId);
+    return this._sendCalendarMessages(chatInfo.chatId, calendars, chatInfo, npo, npoInfo);
+  }
+
+  /**
+   * Create image chat messages for a donation without an existing chat. It will create a new chat and add the chat messages within it
+   * @param {string} donationId The id of the donation
+   * @param {array} texts A list of image messages. Messages are created in the order in the list
+   * @throws {ChatError}
+   * @throws {FirebaseError}
+   * @return {array} A list of firebase documents of the created chat messages
+   */
+  async sendInitialImageMessagesForDonation(donationId, images) {
+    this._validateChatMessages(IMAGE, images);
+
+    const [chatInfo, npoInfo] = await this._fetchInfoAndCreateChatForDonation(donationId);
+    return this._sendImageMessages(chatInfo.chatId, images, chatInfo, npo, npoInfo);
   }
 
   /**
@@ -255,9 +311,8 @@ class ChatsAPI {
    * @return {object} A firebase document of the created chat message
    */
   async sendTextMessage(id, text) {
-    this._validateContents([text]);
-
-    return this._sendChatMessage(id, TEXT, text);
+    const messages = await this._sendTextMessages(id, [text]);
+    return messages[0];
   }
 
   /**
@@ -269,9 +324,8 @@ class ChatsAPI {
    * @return {object} A firebase document of the created chat message
    */
   async sendCalendarMessage(id, calendar) {
-    this._validateContents([calendar]);
-
-    return this._sendChatMessage(id, CALENDAR, calendar);
+    const messages = await this._sendCalendarMessages(id, [calendar]);
+    return messages[0];
   }
 
   /**
@@ -283,14 +337,8 @@ class ChatsAPI {
    * @return {object} A firebase document of the created chat message
    */
   async sendImageMessage(id, image) {
-    this._validateContents([image]);
-    this._validateImageContents([image]);
-
-    const userId = firebaseAuth.currentUser.uid;
-    const imageUrls = await this._uploadImages(id, userId, [image]);
-    const imageUrl = imageUrls[0];
-
-    return this._sendChatMessage(id, IMAGE, imageUrl);
+    const messages = await this._sendImageMessages(id, [image]);
+    return messages[0];
   }
 
   /**
@@ -302,9 +350,7 @@ class ChatsAPI {
    * @return {array} A list of firebase document of the created chat messages
    */
   async sendTextMessages(id, texts) {
-    this._validateContents(texts);
-
-    return this._sendChatMessages(id, TEXT, texts);
+    return this._sendTextMessages(id, texts);
   }
 
   /**
@@ -316,9 +362,7 @@ class ChatsAPI {
    * @return {array} A list of firebase document of the created chat messages
    */
   async sendCalendarMessages(id, calendars) {
-    this._validateContents(calendars);
-
-    return this._sendChatMessages(id, CALENDAR, calendars);
+    return this._sendCalendarMessages(id, calendars);
   }
 
   /**
@@ -330,13 +374,7 @@ class ChatsAPI {
    * @return {array} A list of firebase document of the created chat messages
    */
   async sendImageMessages(id, images) {
-    this._validateContents(images);
-    this._validateImageContents(images);
-
-    const userId = firebaseAuth.currentUser.uid;
-    const imageUrls = await this._uploadImages(id, userId, images);
-
-    return this._sendChatMessages(id, IMAGE, imageUrls);
+    return this._sendImageMessages(id, images);
   }
 
   /**
@@ -408,6 +446,17 @@ class ChatsAPI {
     unsubscribeFunction();
   }
 
+  async _fetchInfoAndCreateChatForWish(wishId) {
+    const [wishInfo, donorInfo] = await Promise.all([this._getWishInfo(wishId), this._getCurrentDonorInfo()]);
+    const npoInfo = await this._getNPOInfo(wishInfo.user.userId);
+    await this._validateChat(wishInfo.wishId, npoInfo.userId, donorInfo.userId);
+
+    const chatDoc = await this._createChatForWish(wishInfo, npoInfo, donorInfo);
+    const chatInfo = chatDoc.data();
+
+    return [chatInfo, donorInfo];
+  }
+
   async _createChatForWish(wishInfo, npoInfo, donorInfo) {
     if (wishInfo.status !== PENDING) {
       throw new ChatError('invalid-post-status', 'only can start a chat on a pending wish');
@@ -449,6 +498,17 @@ class ChatsAPI {
     await newChat.set(data);
 
     return newChat.get();
+  }
+
+  async _fetchInfoAndCreateChatForDonation(donationId) {
+    const [donationInfo, npoInfo] = await Promise.all([this._getDonationInfo(donationId), this._getCurrentNPOInfo()]);
+    const donorInfo = await this._getDonorInfo(donationInfo.user.userId);
+    await this._validateChat(donationInfo.donationId, npoInfo.userId, donorInfo.userId);
+
+    const chatDoc = await this._createChatForDonation(donationInfo, npoInfo, donorInfo);
+    const chatInfo = chatDoc.data();
+
+    return [chatInfo, npoInfo];
   }
 
   async _createChatForDonation(donationInfo, npoInfo, donorInfo) {
@@ -494,49 +554,46 @@ class ChatsAPI {
     return newChat.get();
   }
 
-  async _sendChatMessage(id, contentType, content) {
-    const userId = firebaseAuth.currentUser.uid;
-    const [userTypeInfo, chatDoc] = await Promise.all([this._getCurrentUserInfo(), this.getChat(id)]);
-    const userTypes = userTypeInfo.type;
-    const chatInfo = chatDoc.data();
+  async _sendTextMessages(chatId, texts, chatInfo = null, senderType = null, senderInfo = null) {
+    this._validateContents(texts);
+    this._validateTextContents(TEXT, texts);
 
-    let userInfo;
-    let userType;
-    if (userTypes.includes(npo)) {
-      userInfo = await this._getNPOInfo(userId);
-      userType = npo;
-    } else if (userTypes.includes(donor)) {
-      userInfo = await this._getDonorInfo(userId);
-      userType = donor;
-    } else {
-      throw new ChatError('invalid-user-type');
-    }
-
-    const chatMessage = await this._createChatMessage(id, userType, userInfo, contentType, content);
-    this._updateChat(chatInfo, userType, 1, chatMessage.data());
-
-    return chatMessage;
+    return this._sendChatMessages(chatId, TEXT, texts, chatInfo, senderType, senderInfo);
   }
 
-  async _sendChatMessages(id, contentType, contents) {
-    const userId = firebaseAuth.currentUser.uid;
-    const [userTypeInfo, chatDoc] = await Promise.all([this._getCurrentUserInfo(), this.getChat(id)]);
-    const userTypes = userTypeInfo.type;
-    const chatInfo = chatDoc.data();
+  async _sendCalendarMessages(chatId, calendars, chatInfo = null, senderType = null, senderInfo = null) {
+    this._validateContents(calendars);
+    this._validateTextContents(CALENDAR, calendars);
 
-    let userInfo;
-    let userType;
-    if (userTypes.includes(npo)) {
-      userInfo = await this._getNPOInfo(userId);
-      userType = npo;
-    } else if (userTypes.includes(donor)) {
-      userInfo = await this._getDonorInfo(userId);
-      userType = donor;
-    } else {
-      throw new ChatError('invalid-user-type');
+    return this._sendChatMessages(chatId, CALENDAR, calendars, chatInfo, senderType, senderInfo);
+  }
+
+  async _sendImageMessages(chatId, images, chatInfo = null, senderType = null, senderInfo = null) {
+    this._validateContents(images);
+    this._validateImageContents(images);
+
+    const userId = firebaseAuth.currentUser.uid;
+    const imageUrls = await this._uploadImages(chatId, userId, images);
+
+    return this._sendChatMessages(chatId, IMAGE, imageUrls, chatInfo, senderType, senderInfo);
+  }
+
+  async _sendChatMessages(chatId, contentType, contents, chatInfo, senderType, senderInfo) {
+    if (chatInfo === null) {
+      const chatDoc = await this.getChat(chatId);
+      if (!chatDoc.exists) {
+        throw new ChatError('invalid-chat', `chat of ${chatId} does not exist`);
+      }
+      chatInfo = chatDoc.data();
     }
 
-    const chatMessages = await this._createChatMessages(id, userType, userInfo, contentType, contents);
+    let userType = senderType;
+    let userInfo = senderInfo;
+    if (senderType === null || senderInfo === null) {
+      [userType, userInfo] = await this._getCurrentUserTypeAndInfo();
+    }
+
+    const chatMessages = await this._createChatMessages(chatId, userType, userInfo, contentType, contents);
     const numberOfMessages = chatMessages.length;
     const lastChatMessage = chatMessages[chatMessages.length - 1].data();
     this._updateChat(chatInfo, userType, numberOfMessages, lastChatMessage);
@@ -682,17 +739,6 @@ class ChatsAPI {
     }
   }
 
-  async _getCurrentUserInfo() {
-    const user = firebaseAuth.currentUser;
-
-    if (user == null) {
-      throw new ChatError('invalid-user-id');
-    }
-
-    const userId = user.uid;
-    return this._getUserTypeInfo(userId);
-  }
-
   async _getUserTypeInfo(id) {
     const snapshot = await db.collection('users').doc(id).get();
 
@@ -701,6 +747,30 @@ class ChatsAPI {
     }
 
     return snapshot.data();
+  }
+
+  async _getCurrentUserTypeAndInfo() {
+    const user = firebaseAuth.currentUser;
+
+    if (user == null) {
+      throw new ChatError('invalid-user-id');
+    }
+
+    const userId = user.uid;
+    const userTypes = await this._getUserTypeInfo(userId);
+    let userInfo;
+    let userType;
+    if (userTypes.type.includes(npo)) {
+      userInfo = await this._getNPOInfo(userId);
+      userType = npo;
+    } else if (userTypes.includes(donor)) {
+      userInfo = await this._getDonorInfo(userId);
+      userType = donor;
+    } else {
+      throw new ChatError('invalid-user-type');
+    }
+
+    return [userType, userInfo];
   }
 
   async _getCurrentNPOInfo() {
@@ -777,9 +847,29 @@ class ChatsAPI {
     }
   }
 
+  _validateChatMessages(contentType, contents) {
+    this._validateContents(contents);
+    if (contentType === IMAGE) {
+      this._validateImageContents(contents);
+    } else {
+      this._validateTextContents(contentType, contents);
+    }
+  }
+
   _validateContents(contents) {
     if (contents.length <= 0) {
       throw new ChatError('invalid-content-length', 'need to have a least one content');
+    }
+  }
+
+  _validateTextContents(contentType, contents) {
+    for (const content of contents) {
+      if (typeof content !== 'string') {
+        throw new ChatError(
+          `invalid-${contentType}`,
+          `type of ${contentType} can only be string. ${typeof content} provided`
+        );
+      }
     }
   }
 
@@ -787,7 +877,7 @@ class ChatsAPI {
     const validExtensions = ['.jpg', '.jpeg', '.png'];
 
     for (const image of images) {
-      if (image == null) {
+      if (image === null) {
         throw new ChatError('invalid-image', 'provided image is null');
       }
 
