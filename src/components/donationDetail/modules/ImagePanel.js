@@ -5,11 +5,13 @@ import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 import { Stack } from '@kiwicom/orbit-components/lib';
 import CarouselScrollButton from '../../buttons/CarouselScrollButton';
 import { Carousel } from 'react-responsive-carousel';
+import { colors } from '../../../../utils/constants/colors';
 
 const CarouselImage = styled.img`
   height: 100vw;
   width: 100vw;
   object-fit: cover;
+  background-color: ${colors.imageLoadingBackground};
   ${media.desktop(css`
     width: 500px;
     height: 500px;
@@ -25,6 +27,7 @@ const ImageCarouselContainer = styled.div`
 `;
 
 const ThumbnailImage = styled.img`
+  background-color: ${colors.imageLoadingBackground};
   object-fit: cover;
   width: calc(75px + 2vw);
   height: calc(75px + 2vw);

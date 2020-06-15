@@ -8,6 +8,7 @@ import { useRouter } from 'next/router';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import { PENDING } from '../../../utils/constants/postStatus';
 import DonationCardStatus from './DonationCardStatus';
+import { colors } from '../../../utils/constants/colors';
 
 const CardContainer = styled.div`
   display: flex;
@@ -48,7 +49,7 @@ const CardImageContainer = styled.div`
   height: 100%;
   width: 100%;
   position: relative;
-  background-color: #f0f1f1;
+  background-color: ${colors.imageLoadingBackground};
 `;
 
 const CardImage = styled.img`
