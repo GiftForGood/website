@@ -5,6 +5,7 @@ import useUser from '../src/components/session/modules/useUser';
 import { isAuthenticated } from '../utils/authentication/authentication';
 import dynamic from 'next/dynamic';
 const TopNavigationBar = dynamic(() => import('../src/components/navbar/modules/TopNavigationBar'), { ssr: false });
+const BottomNavigation = dynamic(() => import('../src/components/navbar/modules/BottomNavigation'), { ssr: false });
 
 export async function getServerSideProps({ params, req, res, query }) {
   let user = await isAuthenticated(req, res);
@@ -21,6 +22,7 @@ const DonationsHome = ({ user }) => {
     <SessionProvider user={user}>
       <TopNavigationBar />
       <DonationsHomePage />
+      <BottomNavigation />
     </SessionProvider>
   );
 };

@@ -6,3 +6,7 @@ export const companyLogoImagePath =
 export const allCategoriesImagePath =
   'https://res.cloudinary.com/giftforgood/image/upload/w_100,h_100/v1590379184/all.jpg';
 export const ogImagePath = 'https://res.cloudinary.com/giftforgood/image/upload/v1590847455/ogimage_logo_erwdyd.jpg';
+export const donationItemConditionIconPath =
+  'https://res.cloudinary.com/giftforgood/image/upload/v1591200186/icons/ticket_lfxp6q.svg';
+export const donationDimensionIconPath =
+  'https://res.cloudinary.com/giftforgood/image/upload/v1591199264/icons/ruler_o8pauc.svg';
