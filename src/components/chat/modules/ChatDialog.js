@@ -108,8 +108,8 @@ const listOfChatMessages = [
   {
     name: 'Jinz',
     message:
-      'Bye, I am just messing around with you. HAHAHA cant believe you fell for it, i am purposely typing very long to test out the sizing of the chat bubble',
-    messageContentType: 'text',
+      '17 Jun (Wed) - 10:00 am to 11:00 am,18 Jun (Thu) - 12:00 pm to 1:00 pm,18 Jun (Thu) - 1:00 pm to 2:00 pm,19 Jun (Fri) - 2:00 pm to 3:00 pm',
+    messageContentType: 'calendar',
     messageDate: 1591887112442,
     profileImageUrl:
       'https://lh5.googleusercontent.com/-5EqdfAc5juo/AAAAAAAAAAI/AAAAAAAAAAA/AMZuucl1rs-33JOHxPrO29Pe3Vck2sJwkQ/photo.jpg',

@@ -10,6 +10,7 @@ import ProfileAvatar from '../../imageContainers/ProfileAvatar';
 import { getTimeDifferenceFromNow } from '../../../../utils/api/time';
 import GreyText from '../../text/GreyText';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
+import ChatBubbleForCalendar from './ChatBubbleForCalendar';
 
 /**
  * To be changed if any of the heights change, the extra "+1 or +2" for the top/bottom borders
@@ -59,7 +60,8 @@ const getMessageContent = (messageContentType, content, isByLoggedInUser) => {
     return <ChatBubbleForImage imageUrl={content} isByLoggedInUser={isByLoggedInUser} />;
   }
   if (messageContentType === 'calendar') {
-    return <div>calendar container (to be done)</div>;
+    const dateTimes = content.split(','); // dateTimes are separated by comma delimiter
+    return <ChatBubbleForCalendar dateTimes={dateTimes} isByLoggedInUser={isByLoggedInUser} />;
   }
   return <div>N.A.</div>;
 };
