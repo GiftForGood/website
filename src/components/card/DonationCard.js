@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import CardHeader from '../card/CardHeader';
 import { Stack, Text, Grid } from '@kiwicom/orbit-components/lib';
 import { getTimeDifferenceFromNow } from '../../../utils/api/time';
@@ -127,6 +127,7 @@ const DonationCard = ({
   categoryName,
 }) => {
   const [hasImage, setHasImage] = useState(true);
+  const [imageUrl, setImageUrl] = useState(coverImageUrl);
   const timeAgo = getTimeDifferenceFromNow(postedDateTime);
   const router = useRouter();
 
@@ -141,6 +142,22 @@ const DonationCard = ({
   const handleImageOnError = () => {
     setHasImage(false);
   };
+
+  useEffect(() => {
+    if (coverImageUrl) {
+      setHasImage(true);
+      // Checks if its Firebase URL
+      if (!coverImageUrl.includes('blob:')) {
+        const lastIndexOfDot = coverImageUrl.lastIndexOf('.');
+        const newSmallImageUrl =
+          coverImageUrl.substring(0, lastIndexOfDot) + '_500x500' + coverImageUrl.substring(lastIndexOfDot);
+        setImageUrl(newSmallImageUrl);
+      } else {
+        setImageUrl(coverImageUrl);
+      }
+    }
+  }, [coverImageUrl]);
+
   return (
     <CardContainer>
       <Grid style={{ height: '100%' }} rows="1fr 3fr 2fr" cols="1fr">
@@ -148,7 +165,7 @@ const DonationCard = ({
           <CardHeader name={name} imageUrl={profileImageUrl} timeAgo={timeAgo} />
         </CardHeaderContainer>
         <CardImageContainer>
-          {hasImage ? <CardImage src={coverImageUrl} loading="lazy" onError={handleImageOnError} /> : null}
+          {hasImage ? <CardImage src={imageUrl} loading="lazy" onError={handleImageOnError} /> : null}
 
           {/* status label will only be shown if status is provided and it is not pending */}
           {status != null && status != PENDING && <DonationCardStatus status={status} />}
