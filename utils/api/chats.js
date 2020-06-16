@@ -7,6 +7,7 @@ import { npo, donor } from '../constants/userType';
 import { PENDING } from '../constants/postStatus';
 import { IMAGE, TEXT, CALENDAR } from '../constants/chatContentType';
 import { ON, OFF } from '../constants/chatStatus';
+import { ADDED, MODIFIED } from '../constants/chatSubscriptionChange';
 import { uploadImage } from './common/images';
 import ChatError from './error/chatError';
 
@@ -76,46 +77,36 @@ class ChatsAPI {
   }
 
   /**
-   * Subscribe to chats belonging to a NPO. Does not include chat messages
-   * It will also return a USER_CHATS_BATCH_SIZE of chats belonging to the NPO on the initial subscription
-   * It is recommended to use this function to fetch the first batch of chats and use the getChatsForNPO to get older chats
-   * @param {string} id The id of the NPO
-   * @param {function} callback The function to call to handle the new chat message
+   * Subscribe to chats belonging to the current logged in user. Does not include chat messages
+   * It will also return a USER_CHATS_BATCH_SIZE of chats belonging to the user on the initial subscription
+   * It is recommended to use this function to fetch the first batch of chats and use the getChatsForNPO / getChatsForDonor to get older chats
+   * @param {function(string, object): void} callback The function to call to handle the change in chats 
+   *  The first argument is type. The type of change of the chat. Refer to the constant file `chatSubscriptionChange` to see which are the changed provided
+   *  The second argument is doc. The firebase document that is changed
+   * @throws {ChatError}
    * @throws {FirebaseError}
    * @return {function} The subscriber function. Needed to unsubscribe from the listener
    */
-  async subscribeToChatsForNPO(id, callback) {
-    return chatsCollection
-      .where('npo.id', '==', id)
-      .orderBy('lastMessage.dateTime', 'desc')
-      .limit(USER_CHATS_BATCH_SIZE)
-      .onSnapshot((snapshot) => {
-        snapshot.docChanges().forEach((change) => {
-          if (change.type === 'added') {
-            callback(change.doc);
-          }
-        });
-      });
-  }
+  async subscribeToChats(callback) {
+    const user = firebaseAuth.currentUser
+    if (user === null) {
+      throw new ChatError('invalid-user-id');
+    }
+    const userId = user.uid;
+    const userType = await this._getUserTypeInfo(userId);
+    const userIdField = `${userType}.id`
 
-  /**
-   * Subscribe to chats belonging to a donor. Does nto include chat messages
-   * It will also return a USER_CHATS_BATCH_SIZE of chats belonging to the donor on the initial subscription
-   * It is recommended to use this function to fetch the first batch of chats and use the getChatsForDonor to get older chats
-   * @param {string} id The id of the donor
-   * @param {function} callback The function to call to handle the new chat message
-   * @throws {FirebaseError}
-   * @return {function} The subscriber function. Needed to unsubscribe from the listener
-   */
-  async subscribeToChatsForDonor(id, callback) {
     return chatsCollection
-      .where('donor.id', '==', id)
+      .where(userIdField, '==', userId)
       .orderBy('lastMessage.dateTime', 'desc')
       .limit(USER_CHATS_BATCH_SIZE)
       .onSnapshot((snapshot) => {
         snapshot.docChanges().forEach((change) => {
           if (change.type === 'added') {
-            callback(change.doc);
+            callback(ADDED, change.doc);
+          }
+          if (change.type === 'modified') {
+            callback(MODIFIED, change.doc);
           }
         });
       });
@@ -143,7 +134,7 @@ class ChatsAPI {
    * @return {object} A firebase documents of the created chat messages
    */
   async sendInitialTextMessageForWish(wishId, text) {
-    const messages = this.sendInitialTextMessagesForWish(wishId, [text]);
+    const messages = await this.sendInitialTextMessagesForWish(wishId, [text]);
     return messages[0];
   }
 
@@ -156,7 +147,7 @@ class ChatsAPI {
    * @return {object} A firebase documents of the created chat messages
    */
   async sendInitialCalendarMessageForWish(wishId, calendar) {
-    const messages = this.sendInitialCalendarMessagesForWish(wishId, [calendar]);
+    const messages = await this.sendInitialCalendarMessagesForWish(wishId, [calendar]);
     return messages[0];
   }
 
@@ -169,7 +160,7 @@ class ChatsAPI {
    * @return {object} A firebase documents of the created chat messages
    */
   async sendInitialImageMessageForWish(wishId, image) {
-    const messages = this.sendInitialImageMessagesForWish(wishId, [image]);
+    const messages = await this.sendInitialImageMessagesForWish(wishId, [image]);
     return messages[0];
   }
 
@@ -739,7 +730,7 @@ class ChatsAPI {
     }
   }
 
-  async _getUserTypeInfo(id) {
+  async _getUserTypesInfo(id) {
     const snapshot = await db.collection('users').doc(id).get();
 
     if (!snapshot.exists) {
@@ -747,6 +738,23 @@ class ChatsAPI {
     }
 
     return snapshot.data();
+  }
+
+  async _getUserTypeInfo(id) {
+    const snapshot = await db.collection('users').doc(id).get();
+
+    if (!snapshot.exists) {
+      throw new ChatError('invalid-user-id', 'user does not exist');
+    }
+
+    const userTypes = snapshot.data();
+    if (userTypes.type.includes(npo)) {
+      return npo;
+    } else if (userTypes.type.includes(donor)) {
+      return donor;
+    } else {
+      throw new ChatError('invalid-user-type');
+    }
   }
 
   async _getCurrentUserTypeAndInfo() {
@@ -757,13 +765,13 @@ class ChatsAPI {
     }
 
     const userId = user.uid;
-    const userTypes = await this._getUserTypeInfo(userId);
+    const userTypes = await this._getUserTypesInfo(userId);
     let userInfo;
     let userType;
     if (userTypes.type.includes(npo)) {
       userInfo = await this._getNPOInfo(userId);
       userType = npo;
-    } else if (userTypes.includes(donor)) {
+    } else if (userTypes.type.includes(donor)) {
       userInfo = await this._getDonorInfo(userId);
       userType = donor;
     } else {
