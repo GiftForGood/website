@@ -6,6 +6,9 @@ import { isAuthenticated } from '../../../utils/authentication/authentication';
 const TopNavigationBar = dynamic(() => import('../../../src/components/navbar/modules/TopNavigationBar'), {
   ssr: false,
 });
+const BottomNavigation = dynamic(() => import('../../../src/components/navbar/modules/BottomNavigation'), {
+  ssr: false,
+});
 
 export async function getServerSideProps({ query, req, res }) {
   let user = await isAuthenticated(req, res);
@@ -22,6 +25,7 @@ const ViewAllDonations = ({ filterQuery, user }) => {
     <SessionProvider user={user}>
       <TopNavigationBar />
       <ViewAllDonationsPage filterQuery={filterQuery} />
+      <BottomNavigation />
     </SessionProvider>
   );
 };

@@ -34,24 +34,30 @@ const unloadScript = () => {
 /**
  * The field that has google places auto complete.
  * @param {string} label is the label of the InputField
- * @param {object} formik is the formik object that is used with this InputField. formik sets the field `location` for the field. It is required to have `location` in your initial values.
  * @param {boolean} storeLocally is to set if the location is stored locally on device
  * @param {string} help is the help label of the InputField
- * @param {string} key is the key to storeLocally using localStorage
+ * @param {string} storageKey is the key to storeLocally using localStorage
+ * @param {function} onChange is the function called whenever the field changes
+ * @param {string} error is the error for the field
+ * @param {boolean} disabled is to disable the field
  */
-const GooglePlacesAutoComepleteField = ({ label, formik, storeLocally, help, storageKey }) => {
-  const [query, setQuery] = useState('');
+const GooglePlacesAutoCompleteField = ({ label, storeLocally, help, storageKey, onChange, error, disabled }) => {
   const autoCompleteRef = useRef(null);
   const [location, setLocation] = useLocalStorage(storageKey, '');
+  const [query, setQuery] = useState(location);
 
   useEffect(() => {
-    formik.setFieldValue('location', location);
+    onChange(location);
     loadScript(GOOGLE_PLACE_AUTOCOMPLETE_URL, () => handleScriptLoad(setQuery, autoCompleteRef));
 
     return function cleanup() {
       unloadScript();
     };
   }, []);
+
+  useEffect(() => {
+    setQuery(location);
+  }, [location]);
 
   const handleScriptLoad = (updateQuery, autoCompleteRef) => {
     autoComplete = new window.google.maps.places.Autocomplete(autoCompleteRef.current, {
@@ -65,7 +71,7 @@ const GooglePlacesAutoComepleteField = ({ label, formik, storeLocally, help, sto
     const addressObject = autoComplete.getPlace();
     const { formatted_address } = addressObject;
     updateQuery(formatted_address);
-    formik.setFieldValue('location', formatted_address);
+    onChange(formatted_address);
     if (storeLocally) {
       setLocation(formatted_address);
     }
@@ -73,18 +79,18 @@ const GooglePlacesAutoComepleteField = ({ label, formik, storeLocally, help, sto
 
   return (
     <InputField
-      disabled={formik.isSubmitting}
+      disabled={disabled}
       label={label}
       ref={autoCompleteRef}
       onChange={(event) => {
         setQuery(event.target.value);
       }}
       placeholder=""
-      value={query || location}
-      error={formik.touched.location && formik.errors.location ? formik.errors.location : ''}
+      value={query}
+      error={error}
       help={help}
     />
   );
 };
 
-export default GooglePlacesAutoComepleteField;
+export default GooglePlacesAutoCompleteField;
