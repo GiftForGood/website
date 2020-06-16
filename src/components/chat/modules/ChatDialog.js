@@ -46,8 +46,8 @@ const listOfChatMessages = [
   {
     name: 'Jinz',
     message:
-      'Bye, I am just messing around with you. HAHAHA cant believe you fell for it, i am purposely typing very long to test out the sizing of the chat bubble',
-    messageContentType: 'text',
+      'https://lh5.googleusercontent.com/-5EqdfAc5juo/AAAAAAAAAAI/AAAAAAAAAAA/AMZuucl1rs-33JOHxPrO29Pe3Vck2sJwkQ/photo.jpg',
+    messageContentType: 'image',
     messageDate: 1591887112442,
     profileImageUrl:
       'https://lh5.googleusercontent.com/-5EqdfAc5juo/AAAAAAAAAAI/AAAAAAAAAAA/AMZuucl1rs-33JOHxPrO29Pe3Vck2sJwkQ/photo.jpg',
@@ -56,8 +56,8 @@ const listOfChatMessages = [
   },
   {
     name: 'Jinz',
-    message: 'Hello',
-    messageContentType: 'text',
+    message: 'https://res.cloudinary.com/giftforgood/image/upload/v1588838774/medicalequipment.jpg',
+    messageContentType: 'image',
     messageDate: 1591887112440,
     profileImageUrl:
       'https://lh5.googleusercontent.com/-5EqdfAc5juo/AAAAAAAAAAI/AAAAAAAAAAA/AMZuucl1rs-33JOHxPrO29Pe3Vck2sJwkQ/photo.jpg',
@@ -118,8 +118,8 @@ const listOfChatMessages = [
   },
   {
     name: 'Jinz',
-    message: 'Hello',
-    messageContentType: 'text',
+    message: 'https://res.cloudinary.com/giftforgood/image/upload/v1591517911/donations-banner.jpg',
+    messageContentType: 'image',
     messageDate: 1591887112440,
     profileImageUrl:
       'https://lh5.googleusercontent.com/-5EqdfAc5juo/AAAAAAAAAAI/AAAAAAAAAAA/AMZuucl1rs-33JOHxPrO29Pe3Vck2sJwkQ/photo.jpg',
@@ -128,8 +128,8 @@ const listOfChatMessages = [
   },
   {
     name: 'James',
-    message: 'Hello',
-    messageContentType: 'text',
+    message: 'https://res.cloudinary.com/giftforgood/image/upload/v1590379184/all.jpg',
+    messageContentType: 'image',
     messageDate: 1591887112438,
     profileImageUrl:
       'https://lh5.googleusercontent.com/-5EqdfAc5juo/AAAAAAAAAAI/AAAAAAAAAAA/AMZuucl1rs-33JOHxPrO29Pe3Vck2sJwkQ/photo.jpg',

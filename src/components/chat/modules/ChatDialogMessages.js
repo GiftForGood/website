@@ -5,6 +5,7 @@ import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import { CardSection } from '@kiwicom/orbit-components/lib/Card';
 import ChatBubbleForText from './ChatBubbleForText';
+import ChatBubbleForImage from './ChatBubbleForImage';
 import ProfileAvatar from '../../imageContainers/ProfileAvatar';
 import { getTimeDifferenceFromNow } from '../../../../utils/api/time';
 import GreyText from '../../text/GreyText';
@@ -50,38 +51,45 @@ const RightMessageSectionContainer = styled.div`
   width: fit-content;
 `;
 
+const getMessageContent = (messageContentType, content, isByLoggedInUser) => {
+  if (messageContentType === 'text') {
+    return <ChatBubbleForText text={content} isByLoggedInUser={isByLoggedInUser} />;
+  }
+  if (messageContentType === 'image') {
+    return <ChatBubbleForImage imageUrl={content} isByLoggedInUser={isByLoggedInUser} />;
+  }
+  if (messageContentType === 'calendar') {
+    return <div>calendar container (to be done)</div>;
+  }
+  return <div>N.A.</div>;
+};
+
 const LeftMessageSection = ({ message }) => {
+  const { message: messageContent, profileImageUrl, messageDate, messageContentType } = message;
   return (
     <Stack direction="row">
-      <ProfileAvatar imageUrl={message.profileImageUrl} width={25} height={25} />
+      <ProfileAvatar imageUrl={profileImageUrl} width={25} height={25} />
       <Stack direction="column" spacing="extraTight">
-        {message.messageContentType === 'text' ? (
-          <ChatBubbleForText text={message.message} isByLoggedInUser={false} />
-        ) : (
-          <div>image container (to be done)</div>
-        )}
-        <GreyText size="tiny">{getTimeDifferenceFromNow(message.messageDate)}</GreyText>
+        {getMessageContent(messageContentType, messageContent, false)}
+        <GreyText size="tiny">{getTimeDifferenceFromNow(messageDate)}</GreyText>
       </Stack>
     </Stack>
   );
 };
 
 const RightMessageSection = ({ message }) => {
+  const { message: messageContent, profileImageUrl, messageDate, messageContentType } = message;
   return (
     <Stack direction="column" align="end" spaceAfter="none">
       <RightMessageSectionContainer>
         <Stack direction="row">
           <RightColumnStackContainer>
             <Stack direction="column" spacing="extraTight" align="end">
-              {message.messageContentType === 'text' ? (
-                <ChatBubbleForText text={message.message} isByLoggedInUser={true} />
-              ) : (
-                <div>image container (to be done)</div>
-              )}
-              <GreyText size="tiny">{getTimeDifferenceFromNow(message.messageDate)}</GreyText>
+              {getMessageContent(messageContentType, messageContent, true)}
+              <GreyText size="tiny">{getTimeDifferenceFromNow(messageDate)}</GreyText>
             </Stack>
           </RightColumnStackContainer>
-          <ProfileAvatar imageUrl={message.profileImageUrl} width={25} height={25} />
+          <ProfileAvatar imageUrl={profileImageUrl} width={25} height={25} />
         </Stack>
       </RightMessageSectionContainer>
     </Stack>
