@@ -15,24 +15,32 @@ const chatsCollection = db.collection('chats');
 
 class ChatsAPI {
   /**
-   * Get a batch of chats for a NPO. Does not include chat messages, only the chat that belongs to the NPO. Only return results of USER_CHATS_BATCH_SIZE
-   * @param {string} id The id of the NPO
+   * Get a batch of chats for the current logged in user. Does not include chat messages. Only return results of USER_CHATS_BATCH_SIZE
    * @param {object} lastQueriedDocument The last queried firebase document to start the query after. If the field is not given, the query will start from the first document
+   * @throws {ChatError}
    * @throws {FirebaseError}
-   * @return {array} A list of firebase document of chats belonging to a NPO
+   * @return {array} A list of firebase document of chats belonging to the current logged in user
    */
-  async getChatsForNPO(id, lastQueriedDocument = null) {
+  async getChats(lastQueriedDocument = null) {
+    const user = firebaseAuth.currentUser;
+    if (user === null) {
+      throw new ChatError('invalid-user-id');
+    }
+    const userId = user.uid;
+    const userType = await this._getUserTypeInfo(userId);
+    const userIdField = `${userType}.id`;
+
     if (lastQueriedDocument == null) {
       // First page
       return chatsCollection
-        .where('npo.id', '==', id)
+        .where(userIdField, '==', userId)
         .orderBy('lastMessage.dateTime', 'desc')
         .limit(USER_CHATS_BATCH_SIZE)
         .get();
     } else {
       // Subsequent pages
       return chatsCollection
-        .where('npo.id', '==', id)
+        .where(userIdField, '==', userId)
         .orderBy('lastMessage.dateTime', 'desc')
         .startAfter(lastQueriedDocument)
         .limit(USER_CHATS_BATCH_SIZE)
@@ -41,24 +49,35 @@ class ChatsAPI {
   }
 
   /**
-   * Get a batch of chats for a donor. Does not include chat messages, only the chat that belongs to the donor. Only return results of USER_CHATS_BATCH_SIZE
-   * @param {string} id The id of the donor
+   * Get a batch of chats for the current logged in user for a post. Does not include chat messages. Only return results of USER_CHATS_BATCH_SIZE
+   * @param {string} postId
    * @param {object} lastQueriedDocument The last queried firebase document to start the query after. If the field is not given, the query will start from the first document
+   * @throws {ChatError}
    * @throws {FirebaseError}
-   * @return {array} A list of firebase document of chats belonging to a donor
+   * @return {array} A list of firebase document of chats belonging to the current logged in user
    */
-  async getChatsForDonor(id, lastQueriedDocument = null) {
+  async getChatsForPost(postId, lastQueriedDocument = null) {
+    const user = firebaseAuth.currentUser;
+    if (user === null) {
+      throw new ChatError('invalid-user-id');
+    }
+    const userId = user.uid;
+    const userType = await this._getUserTypeInfo(userId);
+    const userIdField = `${userType}.id`;
+
     if (lastQueriedDocument == null) {
       // First page
       return chatsCollection
-        .where('donor.id', '==', id)
+        .where(userIdField, '==', userId)
+        .where('post.id', '==', postId)
         .orderBy('lastMessage.dateTime', 'desc')
         .limit(USER_CHATS_BATCH_SIZE)
         .get();
     } else {
       // Subsequent pages
       return chatsCollection
-        .where('donor.id', '==', id)
+        .where(userIdField, '==', userId)
+        .where('post.id', '==', postId)
         .orderBy('lastMessage.dateTime', 'desc')
         .startAfter(lastQueriedDocument)
         .limit(USER_CHATS_BATCH_SIZE)
@@ -113,7 +132,45 @@ class ChatsAPI {
   }
 
   /**
-   * Unsubscribe from chats.
+   * Subscribe to chats belonging to the current logged in user for a post. Does not include chat messages
+   * It will also return a USER_CHATS_BATCH_SIZE of chats belonging to the user for a post on the initial subscription
+   * It is recommended to use this function to fetch the first batch of chats and use the getChatsForNPO / getChatsForDonor to get older chats
+   * @param {string} postId. The id of a post that belong to the current logged in user
+   * @param {function(string, object): void} callback The function to call to handle the change in chats
+   *  The first argument is type. The type of change of the chat. Refer to the constant file `chatSubscriptionChange` to see which are the changed provided
+   *  The second argument is doc. The firebase document that is changed
+   * @throws {ChatError}
+   * @throws {FirebaseError}
+   * @return {function} The subscriber function. Needed to unsubscribe from the listener
+   */
+  async subscribeToChatsForPost(postId, callback) {
+    const user = firebaseAuth.currentUser;
+    if (user === null) {
+      throw new ChatError('invalid-user-id');
+    }
+    const userId = user.uid;
+    const userType = await this._getUserTypeInfo(userId);
+    const userIdField = `${userType}.id`;
+
+    return chatsCollection
+      .where(userIdField, '==', userId)
+      .where('post.id', '==', postId)
+      .orderBy('lastMessage.dateTime', 'desc')
+      .limit(USER_CHATS_BATCH_SIZE)
+      .onSnapshot((snapshot) => {
+        snapshot.docChanges().forEach((change) => {
+          if (change.type === 'added') {
+            callback(ADDED, change.doc);
+          }
+          if (change.type === 'modified') {
+            callback(MODIFIED, change.doc);
+          }
+        });
+      });
+  }
+
+  /**
+   * Unsubscribe from chats. Able to unsubscribe to chat belonging to a user and well as a user post
    * @param {function} unsubscribeFunction The function to unsubscribe to. It is the function that is returned when subscribing to the chat messages
    * @throws {ChatError}
    */
