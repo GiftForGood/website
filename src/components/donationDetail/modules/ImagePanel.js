@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
@@ -47,6 +47,7 @@ const ThumbnailImage = styled.img`
 const ImagePanel = ({ images }) => {
   const { isDesktop } = useMediaQuery();
   const [selectedThumbnailIndex, setSelectedThumbnailIndex] = useState(0);
+  const [largeImages, setLargeImages] = useState(images);
 
   const handleThumbnailClick = (index) => {
     setSelectedThumbnailIndex(index);
@@ -61,6 +62,17 @@ const ImagePanel = ({ images }) => {
       setSelectedThumbnailIndex(index);
     }, 350);
   };
+
+  useEffect(() => {
+    if (images) {
+      const newLargeImages = images.map((img) => {
+        const lastIndexOfDot = img.lastIndexOf('.');
+        const newLargeImageUrl = img.substring(0, lastIndexOfDot) + '_1000x1000' + img.substring(lastIndexOfDot);
+        return newLargeImageUrl;
+      });
+      setLargeImages(newLargeImages);
+    }
+  }, [images]);
 
   const ImageCarousel = () => {
     return (
@@ -77,7 +89,7 @@ const ImagePanel = ({ images }) => {
         selectedItem={selectedThumbnailIndex}
         onChange={(index) => updateThumbnailIndex(isDesktop ? index : null)}
       >
-        {images.map((image, index) => {
+        {largeImages.map((image, index) => {
           return <CarouselImage key={index} src={image} />;
         })}
       </Carousel>
@@ -85,7 +97,7 @@ const ImagePanel = ({ images }) => {
   };
 
   const Thumbnails = () => {
-    return images.map((image, index) => {
+    return largeImages.map((image, index) => {
       return (
         <ThumbnailImage
           key={index}
