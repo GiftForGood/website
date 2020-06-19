@@ -127,6 +127,8 @@ const ViewCategoryPage = ({ categoryDetails, filterQuery }) => {
           postHref={postHref}
           locations={locations.map((location) => location.name).join(', ')}
           validPeriod={validPeriod}
+          categoryId={category.id}
+          categoryName={category.name}
         />
       );
     });

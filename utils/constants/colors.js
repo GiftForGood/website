@@ -30,6 +30,7 @@ export const colors = {
   saveChangesBackground: '#4db6ac',
   saveChangesHoverActive: '#35ada0',
   saveChangesFocus: '#16a595',
+  separatorBackground: '#eff2f5',
   dragDropAccept: '#00e676',
   dragDropReject: '#ff1744',
   dragDropActive: '#2196f3',
@@ -39,4 +40,5 @@ export const colors = {
   dragDropErrorText: '#d21c1c',
   dndBackgroundActive: '#CAD4DE',
   bannerBackground: '#ffffff',
+  imageLoadingBackground: '#f0f1f1',
 };

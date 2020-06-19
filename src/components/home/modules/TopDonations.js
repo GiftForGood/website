@@ -129,6 +129,8 @@ const TopDonations = ({ numberOfPosts, numberOfCategories }) => {
                     postHref={donationPostHref}
                     validPeriod={validPeriod}
                     locations={locations.join(', ')}
+                    categoryId={category.id}
+                    categoryName={category.name}
                   ></DonationCard>
                 );
               })}

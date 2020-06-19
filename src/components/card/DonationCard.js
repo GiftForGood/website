@@ -1,14 +1,14 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import CardHeader from '../card/CardHeader';
 import { Stack, Text, Grid } from '@kiwicom/orbit-components/lib';
 import { getTimeDifferenceFromNow } from '../../../utils/api/time';
 import GreyText from '../text/GreyText';
 import styled, { css } from 'styled-components';
-import { defaultPostImagePath } from '../../../utils/constants/imagePaths';
 import { useRouter } from 'next/router';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import { PENDING } from '../../../utils/constants/postStatus';
 import DonationCardStatus from './DonationCardStatus';
+import { colors } from '../../../utils/constants/colors';
 
 const CardContainer = styled.div`
   display: flex;
@@ -49,12 +49,10 @@ const CardImageContainer = styled.div`
   height: 100%;
   width: 100%;
   position: relative;
+  background-color: ${colors.imageLoadingBackground};
 `;
 
-const CardImage = styled.div`
-  background-image: url(${(props) => props.imageUrl});
-  background-size: cover;
-  background-position: center;
+const CardImage = styled.img`
   height: 100%;
   width: 100%;
 `;
@@ -111,6 +109,8 @@ const CardDescriptionFooter = ({ validPeriod, locations }) => {
  * @param {string} locations is the location names of the donation post
  * @param {string} status is the current status of the donation post, if not provided, the status won't be shown in card
  * @param {string} validPeriod is the validity period of the donation post
+ * @param {string} categoryId is the category id
+ * @param {string} categoryName is the category name of the donation currently displayed in
  */
 const DonationCard = ({
   name,
@@ -123,13 +123,41 @@ const DonationCard = ({
   locations,
   status = null,
   validPeriod,
+  categoryId,
+  categoryName,
 }) => {
+  const [hasImage, setHasImage] = useState(true);
+  const [imageUrl, setImageUrl] = useState(coverImageUrl);
   const timeAgo = getTimeDifferenceFromNow(postedDateTime);
   const router = useRouter();
+
   const handleOnClickDonationPost = (event) => {
     event.preventDefault();
-    router.push(postHref);
+    router.push({
+      pathname: postHref,
+      query: { categoryId: categoryId, categoryName: categoryName },
+    });
   };
+
+  const handleImageOnError = () => {
+    setHasImage(false);
+  };
+
+  useEffect(() => {
+    if (coverImageUrl) {
+      setHasImage(true);
+      // Checks if its Firebase URL
+      if (!coverImageUrl.includes('blob:')) {
+        const lastIndexOfDot = coverImageUrl.lastIndexOf('.');
+        const newSmallImageUrl =
+          coverImageUrl.substring(0, lastIndexOfDot) + '_500x500' + coverImageUrl.substring(lastIndexOfDot);
+        setImageUrl(newSmallImageUrl);
+      } else {
+        setImageUrl(coverImageUrl);
+      }
+    }
+  }, [coverImageUrl]);
+
   return (
     <CardContainer>
       <Grid style={{ height: '100%' }} rows="1fr 3fr 2fr" cols="1fr">
@@ -137,7 +165,8 @@ const DonationCard = ({
           <CardHeader name={name} imageUrl={profileImageUrl} timeAgo={timeAgo} />
         </CardHeaderContainer>
         <CardImageContainer>
-          <CardImage imageUrl={coverImageUrl || defaultPostImagePath} />
+          {hasImage ? <CardImage src={imageUrl} loading="lazy" onError={handleImageOnError} /> : null}
+
           {/* status label will only be shown if status is provided and it is not pending */}
           {status != null && status != PENDING && <DonationCardStatus status={status} />}
         </CardImageContainer>
