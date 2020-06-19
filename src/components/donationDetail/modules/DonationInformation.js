@@ -35,6 +35,7 @@ const BadgeWrapper = styled.div`
 
 const DonationInformation = ({
   loginUserId,
+  loginUserType,
   donationUserId,
   donationUserName,
   profileImageUrl,
@@ -138,6 +139,7 @@ const DonationInformation = ({
     <Stack spaceAfter="largest">
       <DonationInformationHeader
         loginUserId={loginUserId}
+        loginUserType={loginUserType}
         postUserId={donationUserId}
         postUserName={donationUserName}
         profileImageUrl={profileImageUrl}
