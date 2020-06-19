@@ -8,6 +8,7 @@ import UsersAPI from './users';
 import WishesAPI from './wishes';
 import BannersAPI from './banners';
 import TermsAndConditionsAPI from './termsandconditions';
+import ChatsAPI from './chats';
 
 class API {
   auth = new AuthAPI();
@@ -20,6 +21,7 @@ class API {
   wishes = new WishesAPI();
   banners = new BannersAPI();
   termsandconditions = new TermsAndConditionsAPI();
+  chats = new ChatsAPI();
 }
 
 const api = new API();
