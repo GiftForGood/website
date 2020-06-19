@@ -326,7 +326,6 @@ class DonationsAPI {
     coverImage,
     images
   ) {
-    this._validateDate(validPeriodFromDay, validPeriodFromMonth, validPeriodFromYear);
     this._validateDate(validPeriodToDay, validPeriodToMonth, validPeriodToYear);
     this._validateDateRange(
       validPeriodFromDay,
@@ -344,6 +343,12 @@ class DonationsAPI {
     if (donationInfo.status !== PENDING) {
       throw new DonationError('invalid-donation-status', 'only can update a pending donation');
     }
+    this._validateUpdateFromDate(
+      validPeriodFromDay,
+      validPeriodFromMonth,
+      validPeriodFromYear,
+      donationInfo.validPeriodFrom
+    );
 
     const validPeriodFromDate = `${validPeriodFromDay}-${validPeriodFromMonth}-${validPeriodFromYear}`;
     const validPeriodToDate = `${validPeriodToDay}-${validPeriodToMonth}-${validPeriodToYear}`;
@@ -687,6 +692,19 @@ class DonationsAPI {
 
     if (toDateMoment.diff(fromDateMoment, 'days') < 1) {
       throw new DonationError('invalid-date-range', 'toDate needs to be 1 day or more than fromDate');
+    }
+  }
+
+  _validateUpdateFromDate(day, month, year, previousFromTimestamp) {
+    const fromDate = `${day}-${month}-${year}`;
+    const fromDateMoment = moment(fromDate, 'DD-MM-YYYY');
+    const previousFromDateMoment = moment(previousFromTimestamp);
+
+    if (fromDateMoment.diff(previousFromDateMoment, 'days') < 0) {
+      throw new DonationError(
+        'invalid-update-from-date',
+        'the new fromDate cannot be before than the previous fromDate'
+      );
     }
   }
 
