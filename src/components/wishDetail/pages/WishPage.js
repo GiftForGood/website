@@ -6,6 +6,7 @@ import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import Map from '../modules/Map';
 import NpoInformation from '../../postDetails/UserInfoCard';
 import { wishes } from '../../../../utils/constants/postType';
+import { donor as donorType, npo as npoType } from '../../../../utils/constants/userType';
 import Desktop from '@kiwicom/orbit-components/lib/Desktop';
 import BreadcrumbsPanel from '../../postDetails/BreadcrumbsPanel';
 
@@ -38,7 +39,7 @@ const WishPage = ({ wishId, wishDetails, npoDetails, user, prevHref, categoryNam
   const npo = npoDetails;
   const categoryTags = wish.categories.map((category) => category.name);
   const loginUserId = user == null ? '' : user.user.userId;
-
+  const loginUserType = user == null ? '' : user.user.donor ? donorType : npoType;
   return (
     <Wrapper>
       <Desktop>
@@ -53,6 +54,7 @@ const WishPage = ({ wishId, wishDetails, npoDetails, user, prevHref, categoryNam
         <RightPanel>
           <WishInformation
             loginUserId={loginUserId}
+            loginUserType={loginUserType}
             wishUserId={wish.user.userId}
             wishUserName={wish.user.userName}
             profileImageUrl={wish.user.profileImageUrl}

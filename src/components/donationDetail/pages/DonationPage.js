@@ -3,6 +3,7 @@ import styled, { css } from 'styled-components';
 import Grid from '@kiwicom/orbit-components/lib/utils/Grid';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import { donations } from '../../../../utils/constants/postType';
+import { donor as donorType, npo as npoType } from '../../../../utils/constants/userType';
 import DonationInformation from '../modules/DonationInformation';
 import DonorInformation from '../../postDetails/UserInfoCard';
 import Desktop from '@kiwicom/orbit-components/lib/Desktop';
@@ -37,6 +38,7 @@ const DonationPage = ({ donationId, donationDetails, donorDetails, user, prevHre
   const donor = donorDetails;
   const categoryTags = donation.categories.map((category) => category.name);
   const loginUserId = user == null ? '' : user.user.userId;
+  const loginUserType = user == null ? '' : user.user.donor ? donorType : npoType;
 
   return (
     <Wrapper>
@@ -52,6 +54,7 @@ const DonationPage = ({ donationId, donationDetails, donorDetails, user, prevHre
         <RightPanel>
           <DonationInformation
             loginUserId={loginUserId}
+            loginUserType={loginUserType}
             donationUserId={donation.user.userId}
             donationUserName={donation.user.userName}
             profileImageUrl={donation.user.profileImageUrl}
