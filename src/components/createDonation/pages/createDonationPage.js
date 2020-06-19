@@ -45,7 +45,7 @@ const HeadingWrapper = styled.div`
   `)}
 `;
 
-const CreateWishPage = ({ mode, donation }) => {
+const CreateDonationPage = ({ mode, donation }) => {
   return (
     <Container>
       <HeadingWrapper>
@@ -65,4 +65,4 @@ const CreateWishPage = ({ mode, donation }) => {
   );
 };
 
-export default CreateWishPage;
+export default CreateDonationPage;

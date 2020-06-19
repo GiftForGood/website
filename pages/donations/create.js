@@ -23,7 +23,7 @@ export async function getServerSideProps({ params, req, res, query }) {
   };
 }
 
-const CreateWishes = ({ user }) => {
+const CreateDonations = ({ user }) => {
   return (
     <SessionProvider user={user}>
       <TopNavigationBar />
@@ -32,4 +32,4 @@ const CreateWishes = ({ user }) => {
   );
 };
 
-export default CreateWishes;
+export default CreateDonations;

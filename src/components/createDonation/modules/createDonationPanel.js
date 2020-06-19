@@ -452,7 +452,7 @@ const CreateDonationPanel = ({ mode, donation }) => {
     <>
       <LeftPanelContainer>
         <DragNDropInputField
-          initialImages={donation.imageUrls}
+          initialImages={donation && donation.imageUrls}
           onChange={(selectedImages) => {
             formik.setFieldValue('selectedImages', selectedImages);
           }}
