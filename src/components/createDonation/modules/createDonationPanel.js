@@ -285,8 +285,11 @@ const CreateDonationPanel = ({ mode, donation }) => {
         if (validFromDay === undefined || validFromMonth === undefined || validFromYear === undefined) {
           return true;
         }
-        let isValidDate = validateDate(validFromDay, validFromMonth, validFromYear);
-        return isValidDate;
+        if (mode === 'create') {
+          let isValidDate = validateDate(validFromDay, validFromMonth, validFromYear);
+          return isValidDate;
+        }
+        return true;
       }
     ),
     customValidToValidationMoreThanZeroDayFromToday: Yup.boolean().test(
