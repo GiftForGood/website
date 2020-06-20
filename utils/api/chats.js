@@ -9,6 +9,7 @@ import { IMAGE, TEXT, CALENDAR } from '../constants/chatContentType';
 import { ON, OFF } from '../constants/chatStatus';
 import { ADDED, MODIFIED } from '../constants/chatSubscriptionChange';
 import { uploadImage } from './common/images';
+import { getCurrentUser } from './common/user';
 import ChatError from './error/chatError';
 
 const chatsCollection = db.collection('chats');
@@ -22,7 +23,7 @@ class ChatsAPI {
    * @return {array} A list of firebase document of chats belonging to the current logged in user
    */
   async getChats(lastQueriedDocument = null) {
-    const user = firebaseAuth.currentUser;
+    const user = await getCurrentUser();
     if (user === null) {
       throw new ChatError('invalid-user-id');
     }
@@ -57,7 +58,7 @@ class ChatsAPI {
    * @return {array} A list of firebase document of chats belonging to the current logged in user
    */
   async getChatsForPost(postId, lastQueriedDocument = null) {
-    const user = firebaseAuth.currentUser;
+    const user = await getCurrentUser();
     if (user === null) {
       throw new ChatError('invalid-user-id');
     }
@@ -97,9 +98,9 @@ class ChatsAPI {
 
   /**
    * Subscribe to chats belonging to the current logged in user. Does not include chat messages
-   * It will also return a USER_CHATS_BATCH_SIZE of chats belonging to the user on the initial subscription
+   * @param {function(string, object): void} callback The function to call to handle the change in chats. 
+   * The callback will return a USER_CHATS_BATCH_SIZE of chats belonging to the user on the initial subscription
    * It is recommended to use this function to fetch the first batch of chats and use the getChatsForNPO / getChatsForDonor to get older chats
-   * @param {function(string, object): void} callback The function to call to handle the change in chats
    *  The first argument is type. The type of change of the chat. Refer to the constant file `chatSubscriptionChange` to see which are the changed provided
    *  The second argument is doc. The firebase document that is changed
    * @throws {ChatError}
@@ -107,7 +108,7 @@ class ChatsAPI {
    * @return {function} The subscriber function. Needed to unsubscribe from the listener
    */
   async subscribeToChats(callback) {
-    const user = firebaseAuth.currentUser;
+    const user = await getCurrentUser();
     if (user === null) {
       throw new ChatError('invalid-user-id');
     }
@@ -133,10 +134,10 @@ class ChatsAPI {
 
   /**
    * Subscribe to chats belonging to the current logged in user for a post. Does not include chat messages
-   * It will also return a USER_CHATS_BATCH_SIZE of chats belonging to the user for a post on the initial subscription
-   * It is recommended to use this function to fetch the first batch of chats and use the getChatsForNPO / getChatsForDonor to get older chats
    * @param {string} postId. The id of a post that belong to the current logged in user
    * @param {function(string, object): void} callback The function to call to handle the change in chats
+   * The callback will also return a USER_CHATS_BATCH_SIZE of chats belonging to the user for a post on the initial subscription
+   * It is recommended to use this function to fetch the first batch of chats and use the getChatsForNPO / getChatsForDonor to get older chats
    *  The first argument is type. The type of change of the chat. Refer to the constant file `chatSubscriptionChange` to see which are the changed provided
    *  The second argument is doc. The firebase document that is changed
    * @throws {ChatError}
@@ -144,7 +145,7 @@ class ChatsAPI {
    * @return {function} The subscriber function. Needed to unsubscribe from the listener
    */
   async subscribeToChatsForPost(postId, callback) {
-    const user = firebaseAuth.currentUser;
+    const user = await getCurrentUser();
     if (user === null) {
       throw new ChatError('invalid-user-id');
     }
@@ -455,10 +456,11 @@ class ChatsAPI {
 
   /**
    * Subscribe to messages belonging a chat
+   * @param {string} id The id of the chat
+   * @param {function(object): void} callback The function to call to handle the new chat message
    * It will also return a CHAT_MESSAGES_BATCH_SIZE of chat messages belonging to the chat on the initial subscription
    * It is recommended to use this function to fetch the first batch of chat messages and use the getChatMessages to get older chat messages
-   * @param {string} id The id of the chat
-   * @param {function} callback The function to call to handle the new chat message
+   *  The first argument is doc. The firebase document that is changed
    * @throws {FirebaseError}
    * @return {function} The subscriber function. Needed to unsubscribe from the listener
    */
@@ -704,7 +706,7 @@ class ChatsAPI {
   }
 
   async _updateChatStatus(id, status) {
-    const user = firebaseAuth.currentUser;
+    const user = await getCurrentUser();
     if (user == null) {
       throw new ChatError('invalid-user-id');
     }
@@ -815,8 +817,7 @@ class ChatsAPI {
   }
 
   async _getCurrentUserTypeAndInfo() {
-    const user = firebaseAuth.currentUser;
-
+    const user = await getCurrentUser();
     if (user == null) {
       throw new ChatError('invalid-user-id');
     }
@@ -839,7 +840,7 @@ class ChatsAPI {
   }
 
   async _getCurrentNPOInfo() {
-    const user = firebaseAuth.currentUser;
+    const user = await getCurrentUser();
 
     if (user == null) {
       throw new ChatError('invalid-user-id');
@@ -860,7 +861,7 @@ class ChatsAPI {
   }
 
   async _getCurrentDonorInfo() {
-    const user = firebaseAuth.currentUser;
+    const user = await getCurrentUser();
 
     if (user == null) {
       throw new ChatError('invalid-user-id');
