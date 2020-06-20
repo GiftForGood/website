@@ -45,9 +45,16 @@ const TwoLineTextContainer = styled.div`
   -webkit-box-orient: vertical;
 `;
 
+// note that card image container takes 3/6 fractions of the entire height of card
 const CardImageContainer = styled.div`
   height: 100%;
   width: 100%;
+  min-height: calc(3 * 400px / 6);
+  max-height: calc(3 * 400px / 6);
+  ${media.desktop(css`
+    min-height: calc(3 * 450px / 6);
+    max-height: calc(3 * 450px / 6);
+  `)}
   position: relative;
   background-color: ${colors.imageLoadingBackground};
 `;
@@ -55,6 +62,7 @@ const CardImageContainer = styled.div`
 const CardImage = styled.img`
   height: 100%;
   width: 100%;
+  object-fit: cover;
 `;
 
 const CardDescriptionContainer = styled.div`
@@ -155,12 +163,14 @@ const DonationCard = ({
       } else {
         setImageUrl(coverImageUrl);
       }
+    } else {
+      setHasImage(false);
     }
   }, [coverImageUrl]);
 
   return (
     <CardContainer>
-      <Grid style={{ height: '100%' }} rows="1fr 3fr 2fr" cols="1fr">
+      <Grid style={{ height: '100%' }} desktop={{ rows: '1fr 3fr 2fr' }} cols="1fr">
         <CardHeaderContainer>
           <CardHeader name={name} imageUrl={profileImageUrl} timeAgo={timeAgo} />
         </CardHeaderContainer>

@@ -34,11 +34,14 @@ import {
   setLocation,
   setValidFrom,
   setValidTo,
+  resetToInitialState,
 } from '../actions';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 import { toast } from 'react-toastify';
 import ToastContainer from '../../toast/ToastContainer';
 import { useRouter } from 'next/router';
+import { getDay, getMonth, getYear } from '../../../../utils/api/time';
+import { v4 as uuidv4 } from 'uuid';
 
 const Container = styled.div`
   min-width: 300px;
@@ -76,13 +79,14 @@ const validateDateRange = (fromDay, fromMonth, fromYear, toDay, toMonth, toYear)
   return true;
 };
 
-const CreateDonationPanel = ({ mode }) => {
+const CreateDonationPanel = ({ mode, donation }) => {
   const dispatch = useDispatch();
   const router = useRouter();
   const [categories, setCategories] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const { isDesktop } = useMediaQuery();
   const [isLoading, setIsLoading] = useState(false);
+  const [editDonation, setEditDonation] = useState(null);
 
   const [alertTitle, setAlertTitle] = useState('');
   const [showAlert, setShowAlert] = useState(false);
@@ -106,6 +110,8 @@ const CreateDonationPanel = ({ mode }) => {
   const handleFormSubmission = async (values) => {
     if (mode === 'create') {
       handleCreateDonation(values);
+    } else if (mode === 'edit') {
+      handleEditDonation(values);
     }
   };
 
@@ -145,6 +151,66 @@ const CreateDonationPanel = ({ mode }) => {
         itemCondition,
         coverImage,
         selectedImages
+      );
+      const donationId = donationDoc.data().donationId;
+      router.push(`/donations/${donationId}`);
+    } catch (error) {
+      console.error(error);
+      setIsLoading(false);
+      formik.setSubmitting(false);
+      if (error.code === 'donation/invalid-current-user') {
+        displayAlert('Invalid current user', error.message, 'critical');
+      } else {
+        displayAlert('Error', error.message, 'critical');
+      }
+    }
+  };
+
+  const handleEditDonation = async (values) => {
+    try {
+      setShowAlert(false);
+      setIsLoading(true);
+      const {
+        title,
+        description,
+        validFromDay,
+        validFromMonth,
+        validFromYear,
+        validToDay,
+        validToMonth,
+        validToYear,
+        dimensions,
+        location,
+        itemCondition,
+        categories,
+        selectedImages,
+      } = values;
+      const id = donation.donationId;
+
+      const categoryIds = categories.map((category) => category.id);
+      const images = selectedImages.map((img) => {
+        if (img.lastModified === undefined) {
+          return img.preview;
+        }
+        return img;
+      });
+      const coverImage = images[0];
+      const donationDoc = await api.donations.update(
+        id,
+        title,
+        description,
+        categoryIds,
+        validFromDay,
+        validFromMonth,
+        validFromYear,
+        validToDay,
+        validToMonth,
+        validToYear,
+        dimensions,
+        [location],
+        itemCondition,
+        coverImage,
+        images
       );
       const donationId = donationDoc.data().donationId;
       router.push(`/donations/${donationId}`);
@@ -220,8 +286,11 @@ const CreateDonationPanel = ({ mode }) => {
         if (validFromDay === undefined || validFromMonth === undefined || validFromYear === undefined) {
           return true;
         }
-        let isValidDate = validateDate(validFromDay, validFromMonth, validFromYear);
-        return isValidDate;
+        if (mode === 'create') {
+          let isValidDate = validateDate(validFromDay, validFromMonth, validFromYear);
+          return isValidDate;
+        }
+        return true;
       }
     ),
     customValidToValidationMoreThanZeroDayFromToday: Yup.boolean().test(
@@ -270,7 +339,7 @@ const CreateDonationPanel = ({ mode }) => {
   });
 
   const formik = useFormik({
-    initialValues: {
+    initialValues: editDonation || {
       title: '',
       description: '',
       validFromDay: '',
@@ -286,6 +355,7 @@ const CreateDonationPanel = ({ mode }) => {
       selectedImages: [],
     },
     validationSchema: validationSchema,
+    enableReinitialize: true,
     onSubmit: (values) => {
       handleFormSubmission(values);
     },
@@ -312,6 +382,34 @@ const CreateDonationPanel = ({ mode }) => {
       );
     }
   }, [formik, dispatch]);
+
+  // Used to edit donation
+  useEffect(() => {
+    if (donation) {
+      let editDonation = {
+        title: donation.title,
+        description: donation.description,
+        validFromDay: getDay(donation.validPeriodFrom),
+        validFromMonth: getMonth(donation.validPeriodFrom),
+        validFromYear: getYear(donation.validPeriodFrom),
+        validToDay: getDay(donation.validPeriodTo),
+        validToMonth: getMonth(donation.validPeriodTo),
+        validToYear: getYear(donation.validPeriodTo),
+        dimensions: donation.dimensions,
+        location: donation.locations[0].fullAddress,
+        itemCondition: donation.itemCondition,
+        categories: donation.categories,
+        selectedImages: donation.imageUrls.map((imageUrl) => ({
+          preview: imageUrl,
+          id: uuidv4(),
+        })),
+      };
+      setEditDonation(editDonation);
+      setSelectedCategories(donation.categories);
+    } else {
+      dispatch(resetToInitialState);
+    }
+  }, [donation]);
 
   const onChoiceClicked = (category) => {
     // Allow only 3 categories
@@ -357,8 +455,8 @@ const CreateDonationPanel = ({ mode }) => {
     <>
       <LeftPanelContainer>
         <DragNDropInputField
+          initialImages={donation && donation.imageUrls}
           onChange={(selectedImages) => {
-            console.log('onChange');
             formik.setFieldValue('selectedImages', selectedImages);
           }}
           error={formik.touched.selectedImages && formik.errors.selectedImages ? formik.errors.selectedImages : ''}

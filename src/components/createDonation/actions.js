@@ -53,3 +53,9 @@ export function setCoverImage(coverImage) {
     coverImage,
   };
 }
+
+export function resetToInitialState() {
+  return {
+    type: 'create-donation/RESET_INITIAL_STATE',
+  };
+}

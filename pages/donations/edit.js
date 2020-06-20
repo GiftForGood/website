@@ -4,8 +4,10 @@ import { isVerified } from '../../utils/authentication/verification';
 import { isDonor } from '../../utils/authentication/userType';
 import SessionProvider from '../../src/components/session/modules/SessionProvider';
 import CreateDonationPage from '../../src/components/createDonation/pages/createDonationPage';
-
 import dynamic from 'next/dynamic';
+import api from '../../utils/api';
+import Error from 'next/error';
+
 const TopNavigationBar = dynamic(() => import('../../src/components/navbar/modules/TopNavigationBar'), { ssr: false });
 
 export async function getServerSideProps({ params, req, res, query }) {
@@ -16,20 +18,35 @@ export async function getServerSideProps({ params, req, res, query }) {
   }
   isVerified(user.user, res, { Location: '/' });
   isDonor(user.user, res, { Location: '/' });
+  const donationId = query.id;
+  const donationDoc = await api.donations.get(donationId);
+  let donation = null;
+  let isMine = false;
+  if (donationDoc.exists) {
+    donation = donationDoc.data();
+  }
+  if (user && donation && user.user.userId === donation.user.userId) {
+    // checks if the wish is mine.
+    isMine = true;
+  }
   return {
     props: {
       user,
+      donation,
+      isMine,
     },
   };
 }
 
-const CreateDonations = ({ user }) => {
+const CreateWishes = ({ user, donation, isMine }) => {
   return (
     <SessionProvider user={user}>
       <TopNavigationBar />
-      <CreateDonationPage mode="create" />
+      {donation ? null : <Error statusCode={404} />}
+      {isMine ? null : <Error statusCode={404} />}
+      {donation && isMine && <CreateDonationPage donation={donation} mode="edit" />}
     </SessionProvider>
   );
 };
 
-export default CreateDonations;
+export default CreateWishes;

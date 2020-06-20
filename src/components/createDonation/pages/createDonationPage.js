@@ -45,7 +45,7 @@ const HeadingWrapper = styled.div`
   `)}
 `;
 
-const CreateWishPage = () => {
+const CreateDonationPage = ({ mode, donation }) => {
   return (
     <Container>
       <HeadingWrapper>
@@ -59,10 +59,10 @@ const CreateWishPage = () => {
       </HeadingWrapper>
 
       <Wrapper>
-        <CreateDonationPanel mode="create" />
+        <CreateDonationPanel mode={mode} donation={donation} />
       </Wrapper>
     </Container>
   );
 };
 
-export default CreateWishPage;
+export default CreateDonationPage;

@@ -55,9 +55,7 @@ const HorizontalImagesContainer = styled.div`
   overflow: auto;
 `;
 
-const DraggableImageContainer = styled.div`
-  ${(props) => props.draggableStyle}
-`;
+const DraggableImageContainer = styled.div``;
 
 const NormalText = styled.p`
   margin: 8px auto;
@@ -123,7 +121,7 @@ const Image = ({ src, onDeleteClick }) => {
   );
 };
 
-const DragNDropInputField = ({ onChange, error }) => {
+const DragNDropInputField = ({ onChange, error, initialImages = null }) => {
   const { acceptedFiles, getRootProps, getInputProps, isDragActive, isDragAccept, isDragReject } = useDropzone({
     accept: 'image/*',
   });
@@ -142,7 +140,6 @@ const DragNDropInputField = ({ onChange, error }) => {
       if (allowedRemainingImages > 0) {
         const allowedImages = acceptedImages.splice(0, allowedRemainingImages);
         setSelectedImages([...selectedImages, ...allowedImages]);
-        //onChange([...selectedImages, ...allowedImages]);
       }
     }
   };
@@ -154,6 +151,16 @@ const DragNDropInputField = ({ onChange, error }) => {
   useEffect(() => {
     onChange(selectedImages);
   }, [selectedImages]);
+
+  useEffect(() => {
+    if (initialImages) {
+      let initial = initialImages.map((imageUrl) => ({
+        preview: imageUrl,
+        id: uuidv4(),
+      }));
+      setSelectedImages(initial);
+    }
+  }, [initialImages]);
 
   const onDragEnd = (result) => {
     if (!result.destination) {
