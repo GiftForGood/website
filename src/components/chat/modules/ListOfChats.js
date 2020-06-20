@@ -5,6 +5,8 @@ import api from '../../../../utils/api';
 import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import { colors } from '../../../../utils/constants/colors';
+import { MODIFIED, ADDED } from '../../../../utils/constants/chatSubscriptionChange';
+import { donations, wishes } from '../../../../utils/constants/postType';
 
 const ListOfChatsContainer = styled.div`
   min-width: 200px;
@@ -19,124 +21,72 @@ const ListOfChatsContainer = styled.div`
   border-right: 1px solid ${colors.chatBorders};
 `;
 
-const listOfChats = [
-  {
-    name: 'Jinz',
-    lastMessage: 'Bye4',
-    lastMessageContentType: 'text',
-    lastMessageDate: 1591887112442,
-    profileImageUrl:
-      'https://lh5.googleusercontent.com/-5EqdfAc5juo/AAAAAAAAAAI/AAAAAAAAAAA/AMZuucl1rs-33JOHxPrO29Pe3Vck2sJwkQ/photo.jpg',
-    postTitle: 'Barbie dolls',
-  },
-  {
-    name: 'Jinz',
-    lastMessage: 'Bye4',
-    lastMessageContentType: 'text',
-    lastMessageDate: 1591887112442,
-    profileImageUrl:
-      'https://lh5.googleusercontent.com/-5EqdfAc5juo/AAAAAAAAAAI/AAAAAAAAAAA/AMZuucl1rs-33JOHxPrO29Pe3Vck2sJwkQ/photo.jpg',
-    postTitle: 'Barbie dolls',
-  },
-  {
-    name: 'Jinz',
-    lastMessage: 'Bye4',
-    lastMessageContentType: 'text',
-    lastMessageDate: 1591887112442,
-    profileImageUrl:
-      'https://lh5.googleusercontent.com/-5EqdfAc5juo/AAAAAAAAAAI/AAAAAAAAAAA/AMZuucl1rs-33JOHxPrO29Pe3Vck2sJwkQ/photo.jpg',
-    postTitle: 'Barbie dolls',
-  },
-  {
-    name: 'Jinz',
-    lastMessage: 'Bye4',
-    lastMessageContentType: 'text',
-    lastMessageDate: 1591887112442,
-    profileImageUrl:
-      'https://lh5.googleusercontent.com/-5EqdfAc5juo/AAAAAAAAAAI/AAAAAAAAAAA/AMZuucl1rs-33JOHxPrO29Pe3Vck2sJwkQ/photo.jpg',
-    postTitle: 'Barbie dolls',
-  },
-  {
-    name: 'Jinz',
-    lastMessage: 'Bye4',
-    lastMessageContentType: 'text',
-    lastMessageDate: 1591887112442,
-    profileImageUrl:
-      'https://lh5.googleusercontent.com/-5EqdfAc5juo/AAAAAAAAAAI/AAAAAAAAAAA/AMZuucl1rs-33JOHxPrO29Pe3Vck2sJwkQ/photo.jpg',
-    postTitle: 'Barbie dolls',
-  },
-  {
-    name: 'Jinz',
-    lastMessage: 'Bye4',
-    lastMessageContentType: 'text',
-    lastMessageDate: 1591887112442,
-    profileImageUrl:
-      'https://lh5.googleusercontent.com/-5EqdfAc5juo/AAAAAAAAAAI/AAAAAAAAAAA/AMZuucl1rs-33JOHxPrO29Pe3Vck2sJwkQ/photo.jpg',
-    postTitle: 'Barbie dolls',
-  },
-  {
-    name: 'Jinz',
-    lastMessage: 'Bye4',
-    lastMessageContentType: 'text',
-    lastMessageDate: 1591887112442,
-    profileImageUrl:
-      'https://lh5.googleusercontent.com/-5EqdfAc5juo/AAAAAAAAAAI/AAAAAAAAAAA/AMZuucl1rs-33JOHxPrO29Pe3Vck2sJwkQ/photo.jpg',
-    postTitle: 'Barbie dolls',
-  },
-  {
-    name: 'Jinz',
-    lastMessage: 'Bye4',
-    lastMessageContentType: 'text',
-    lastMessageDate: 1591887112442,
-    profileImageUrl:
-      'https://lh5.googleusercontent.com/-5EqdfAc5juo/AAAAAAAAAAI/AAAAAAAAAAA/AMZuucl1rs-33JOHxPrO29Pe3Vck2sJwkQ/photo.jpg',
-    postTitle: 'Barbie dolls',
-  },
-  {
-    name: 'Jinz',
-    lastMessage: 'Bye4',
-    lastMessageContentType: 'text',
-    lastMessageDate: 1591887112442,
-    profileImageUrl:
-      'https://lh5.googleusercontent.com/-5EqdfAc5juo/AAAAAAAAAAI/AAAAAAAAAAA/AMZuucl1rs-33JOHxPrO29Pe3Vck2sJwkQ/photo.jpg',
-    postTitle: 'Barbie dolls',
-  },
-  {
-    name: 'Jinz',
-    lastMessage: 'Bye4',
-    lastMessageContentType: 'text',
-    lastMessageDate: 1591887112442,
-    profileImageUrl:
-      'https://lh5.googleusercontent.com/-5EqdfAc5juo/AAAAAAAAAAI/AAAAAAAAAAA/AMZuucl1rs-33JOHxPrO29Pe3Vck2sJwkQ/photo.jpg',
-    postTitle: 'Barbie dolls',
-  },
-];
-
-const ListOfChats = ({ setSelectedChatId }) => {
+const ListOfChats = ({ user, setSelectedChatId, isNewChat, postId, postType, isForSpecificPost }) => {
   const [chats, setChats] = useState([]);
 
   /**
    * TODO: get list of chats from api
    */
   useEffect(() => {
-    setChats(listOfChats);
+    let unsubscribeFunction;
+    if (isForSpecificPost) {
+      api.chats.subscribeToChatsForPost(updateChats).then((fn) => {
+        unsubscribeFunction = fn;
+      });
+    } else {
+      api.chats.subscribeToChats(updateChats).then((fn) => (unsubscribeFunction = fn));
+    }
+
+    return () => {
+      // TODO: unsubscribe to chats
+      // api.chats.unsubscribeToChats(unsubscribeFunction).then(() => console.log('unsubscribed from chats'));
+    };
   }, []);
+
+  const updateChats = (changeType, changedDoc) => {
+    if (changeType === ADDED) {
+      // console.log([changedDoc.data(), ...chats])
+      setChats([changedDoc.data(), ...chats]);
+    }
+
+    if (changeType === MODIFIED) {
+      // need to get modified chat to first position
+      const chatsWithModifiedChatRemoved = chats.filter((chat) => chat.chatId !== changedDoc.chatId);
+      setChats([changedDoc.data(), ...chatsWithModifiedChatRemoved]);
+    }
+  };
+
+  const getNextBatchOfChats = () => {
+    if (isForSpecificPost) {
+      api.chats.getChatsForPost(postId, chats[chats.length - 1]).then((rawChats) => {
+        const newChats = rawChats.docs.map((rawChat) => rawChat.data());
+        setChats([...chats, ...newChats]);
+      });
+    } else {
+      api.chats.getChats(chats[chats.length - 1]).then((rawChats) => {
+        const newChats = rawChats.docs.map((rawChat) => rawChat.data());
+        setChats([...chats, ...newChats]);
+      });
+    }
+  };
 
   return (
     <ListOfChatsContainer>
       <Stack direction="column" spacing="none">
         <TileGroup>
-          {chats.map((chat, index) => {
-            const { name, lastMessage, profileImageUrl, postTitle, lastMessageDate } = chat;
+          {chats.map((chat) => {
+            const { chatId, donor, npo, lastMessage, post } = chat;
+            // get opposite user's details
+            const { name, profileImageUrl } = user.user.userId === donor.id ? npo : donor;
             return (
               <ChatWithUserCard
-                key={index}
-                chatId={index} // initial dummy value
+                key={chatId}
+                chatId={chatId} // initial dummy value
                 name={name}
-                lastMessage={lastMessage}
+                lastMessage={lastMessage.content}
+                contentType={lastMessage.contentType}
                 profileImageUrl={profileImageUrl}
-                postTitle={postTitle}
-                lastMessageDateInMs={lastMessageDate}
+                postTitle={post.title}
                 setSelectedChatId={setSelectedChatId}
               />
             );

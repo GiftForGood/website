@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Grid, Stack } from '@kiwicom/orbit-components/lib';
 import ListOfChats from '../modules/ListOfChats';
 import ChatDialog from '../modules/ChatDialog';
@@ -8,8 +8,17 @@ import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import { EMAIL_BAR_HEIGHT, NAVBAR_HEIGHT } from '../../../../utils/constants/navbar';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 
-const ChatPage = ({ user }) => {
+const ChatPage = ({ user, postId, postType, isForSpecificPost }) => {
   const [selectedChatId, setSelectedChatId] = useState(null);
+  const [isNewChat, setIsNewChat] = useState(false);
+
+  useEffect(() => {
+    // only get chats for post if postId query is given
+    if (postId) {
+      api.chats.getChatsForPost(postId).then((rawChats) => setIsNewChat(rawChats.docs.length === 0));
+    }
+  }, []);
+
   const { isTablet } = useMediaQuery();
   const navBarConstant = isTablet ? 'DESKTOP' : 'MOBILE';
   const navBarOffsetHeight = user
@@ -26,8 +35,23 @@ const ChatPage = ({ user }) => {
   const ChatPageTabletAndDesktop = () => {
     return (
       <Grid style={gridContainerStyle} columns="1fr 3fr">
-        <ListOfChats setSelectedChatId={setSelectedChatId} />
-        <ChatDialog selectedChatId={selectedChatId} navBarHeight={navBarOffsetHeight} />
+        <ListOfChats
+          user={user}
+          setSelectedChatId={setSelectedChatId}
+          isNewChat={isNewChat}
+          postId={postId}
+          postType={postType}
+          isForSpecificPost={isForSpecificPost}
+        />
+        <ChatDialog
+          loggedInUser={user}
+          selectedChatId={selectedChatId}
+          navBarHeight={navBarOffsetHeight}
+          isNewChat={isNewChat}
+          setIsNewChat={setIsNewChat}
+          postId={postId}
+          postType={postType}
+        />
       </Grid>
     );
   };
@@ -36,12 +60,24 @@ const ChatPage = ({ user }) => {
     return (
       <Grid style={gridContainerStyle} columns="1fr">
         {selectedChatId == null ? (
-          <ListOfChats setSelectedChatId={setSelectedChatId} />
+          <ListOfChats
+            user={user}
+            setSelectedChatId={setSelectedChatId}
+            isNewChat={isNewChat}
+            postId={postId}
+            postType={postType}
+            isForSpecificPost={isForSpecificPost}
+          />
         ) : (
           <ChatDialog
+            loggedInUser={user}
             selectedChatId={selectedChatId}
             setSelectedChatId={setSelectedChatId}
             navBarHeight={navBarOffsetHeight}
+            isNewChat={isNewChat}
+            setIsNewChat={setIsNewChat}
+            postId={postId}
+            postType={postType}
           />
         )}
       </Grid>

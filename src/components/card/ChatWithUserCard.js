@@ -6,6 +6,7 @@ import ProfileAvatar from '../../components/imageContainers/ProfileAvatar';
 import BlackText from '../../components/text/BlackText';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import { getFormattedDate } from '../../../utils/api/time';
+import { IMAGE, CALENDAR } from '../../../utils/constants/chatContentType';
 
 const DetailsContainer = styled.div`
   display: flex;
@@ -59,6 +60,7 @@ const AvatarName = ({ name }) => {
  * @param {string} name is the opposite user's name
  * @param {string} postTitle is the title of the post that the chat is for
  * @param {string} lastMessage is the previous last message of this chat
+ * @param {string} contentType is the previous last message's content type of this chat
  * @param {string} lastMessageDate is the date of the previous last message of this chat in milliseconds
  * @param {function} setSelectedChat is the handler to execute when click on the user card
  */
@@ -68,10 +70,10 @@ const ChatWithUserCard = ({
   name,
   postTitle,
   lastMessage,
-  lastMessageDateInMs,
+  contentType,
   setSelectedChatId,
 }) => {
-  const lastMessageDate = getFormattedDate(lastMessageDateInMs);
+  const lastMessageDate = getFormattedDate(lastMessage.date);
   return (
     <Tile
       onClick={function () {
@@ -97,7 +99,9 @@ const ChatWithUserCard = ({
                 </BlackText>
               </OneLineTextContainer>
               <OneLineTextContainer>
-                <BlackText size="small">{lastMessage}</BlackText>
+                <BlackText size="small">
+                  {contentType === IMAGE ? 'Sent an image' : contentType === CALENDAR ? 'Sent a calendar' : lastMessage}
+                </BlackText>
               </OneLineTextContainer>
             </Stack>
           </Stack>

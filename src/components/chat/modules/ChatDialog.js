@@ -22,196 +22,100 @@ const MessageContainer = styled.div`
   margin-top: 40vh;
 `;
 
-const listOfChatMessages = [
-  {
-    name: 'Jinz',
-    message: 'TOP Hello',
-    messageContentType: 'text',
-    messageDate: 1591887112440,
-    profileImageUrl:
-      'https://lh5.googleusercontent.com/-5EqdfAc5juo/AAAAAAAAAAI/AAAAAAAAAAA/AMZuucl1rs-33JOHxPrO29Pe3Vck2sJwkQ/photo.jpg',
-    postTitle: 'Barbie dolls',
-    isByLoggedInUser: false,
-  },
-  {
-    name: 'James',
-    message: 'Hello',
-    messageContentType: 'text',
-    messageDate: 1591887112438,
-    profileImageUrl:
-      'https://lh5.googleusercontent.com/-5EqdfAc5juo/AAAAAAAAAAI/AAAAAAAAAAA/AMZuucl1rs-33JOHxPrO29Pe3Vck2sJwkQ/photo.jpg',
-    postTitle: 'Barbie dolls',
-    isByLoggedInUser: true,
-  },
-  {
-    name: 'Jinz',
-    message:
-      'https://lh5.googleusercontent.com/-5EqdfAc5juo/AAAAAAAAAAI/AAAAAAAAAAA/AMZuucl1rs-33JOHxPrO29Pe3Vck2sJwkQ/photo.jpg',
-    messageContentType: 'image',
-    messageDate: 1591887112442,
-    profileImageUrl:
-      'https://lh5.googleusercontent.com/-5EqdfAc5juo/AAAAAAAAAAI/AAAAAAAAAAA/AMZuucl1rs-33JOHxPrO29Pe3Vck2sJwkQ/photo.jpg',
-    postTitle: 'Barbie dolls',
-    isByLoggedInUser: false,
-  },
-  {
-    name: 'Jinz',
-    message: 'https://res.cloudinary.com/giftforgood/image/upload/v1588838774/medicalequipment.jpg',
-    messageContentType: 'image',
-    messageDate: 1591887112440,
-    profileImageUrl:
-      'https://lh5.googleusercontent.com/-5EqdfAc5juo/AAAAAAAAAAI/AAAAAAAAAAA/AMZuucl1rs-33JOHxPrO29Pe3Vck2sJwkQ/photo.jpg',
-    postTitle: 'Barbie dolls',
-    isByLoggedInUser: false,
-  },
-  {
-    name: 'James',
-    message: 'Hello',
-    messageContentType: 'text',
-    messageDate: 1591887112438,
-    profileImageUrl:
-      'https://lh5.googleusercontent.com/-5EqdfAc5juo/AAAAAAAAAAI/AAAAAAAAAAA/AMZuucl1rs-33JOHxPrO29Pe3Vck2sJwkQ/photo.jpg',
-    postTitle: 'Barbie dolls',
-    isByLoggedInUser: true,
-  },
-  {
-    name: 'Jinz',
-    message:
-      'Bye, I am just messing around with you. HAHAHA cant believe you fell for it, i am purposely typing very long to test out the sizing of the chat bubble',
-    messageContentType: 'text',
-    messageDate: 1591887112442,
-    profileImageUrl:
-      'https://lh5.googleusercontent.com/-5EqdfAc5juo/AAAAAAAAAAI/AAAAAAAAAAA/AMZuucl1rs-33JOHxPrO29Pe3Vck2sJwkQ/photo.jpg',
-    postTitle: 'Barbie dolls',
-    isByLoggedInUser: false,
-  },
-  {
-    name: 'Jinz',
-    message: 'Hello',
-    messageContentType: 'text',
-    messageDate: 1591887112440,
-    profileImageUrl:
-      'https://lh5.googleusercontent.com/-5EqdfAc5juo/AAAAAAAAAAI/AAAAAAAAAAA/AMZuucl1rs-33JOHxPrO29Pe3Vck2sJwkQ/photo.jpg',
-    postTitle: 'Barbie dolls',
-    isByLoggedInUser: false,
-  },
-  {
-    name: 'James',
-    message: 'Hello',
-    messageContentType: 'text',
-    messageDate: 1591887112438,
-    profileImageUrl:
-      'https://lh5.googleusercontent.com/-5EqdfAc5juo/AAAAAAAAAAI/AAAAAAAAAAA/AMZuucl1rs-33JOHxPrO29Pe3Vck2sJwkQ/photo.jpg',
-    postTitle: 'Barbie dolls',
-    isByLoggedInUser: true,
-  },
-  {
-    name: 'Jinz',
-    message:
-      '17 Jun (Wed) - 10:00 am to 11:00 am,18 Jun (Thu) - 12:00 pm to 1:00 pm,18 Jun (Thu) - 1:00 pm to 2:00 pm,19 Jun (Fri) - 2:00 pm to 3:00 pm',
-    messageContentType: 'calendar',
-    messageDate: 1591887112442,
-    profileImageUrl:
-      'https://lh5.googleusercontent.com/-5EqdfAc5juo/AAAAAAAAAAI/AAAAAAAAAAA/AMZuucl1rs-33JOHxPrO29Pe3Vck2sJwkQ/photo.jpg',
-    postTitle: 'Barbie dolls',
-    isByLoggedInUser: false,
-  },
-  {
-    name: 'Jinz',
-    message: 'https://res.cloudinary.com/giftforgood/image/upload/v1591517911/donations-banner.jpg',
-    messageContentType: 'image',
-    messageDate: 1591887112440,
-    profileImageUrl:
-      'https://lh5.googleusercontent.com/-5EqdfAc5juo/AAAAAAAAAAI/AAAAAAAAAAA/AMZuucl1rs-33JOHxPrO29Pe3Vck2sJwkQ/photo.jpg',
-    postTitle: 'Barbie dolls',
-    isByLoggedInUser: false,
-  },
-  {
-    name: 'James',
-    message: 'https://res.cloudinary.com/giftforgood/image/upload/v1590379184/all.jpg',
-    messageContentType: 'image',
-    messageDate: 1591887112438,
-    profileImageUrl:
-      'https://lh5.googleusercontent.com/-5EqdfAc5juo/AAAAAAAAAAI/AAAAAAAAAAA/AMZuucl1rs-33JOHxPrO29Pe3Vck2sJwkQ/photo.jpg',
-    postTitle: 'Barbie dolls',
-    isByLoggedInUser: true,
-  },
-  {
-    name: 'Jinz',
-    message:
-      'BTM. Bye, I am just messing around with you. HAHAHA cant believe you fell for it, i am purposely typing very long to test out the sizing of the chat bubble',
-    messageContentType: 'text',
-    messageDate: 1591887112442,
-    profileImageUrl:
-      'https://lh5.googleusercontent.com/-5EqdfAc5juo/AAAAAAAAAAI/AAAAAAAAAAA/AMZuucl1rs-33JOHxPrO29Pe3Vck2sJwkQ/photo.jpg',
-    postTitle: 'Barbie dolls',
-    isByLoggedInUser: false,
-  },
-];
-
-const dummyUser = {
-  name: 'Jinz',
-  profileImageUrl:
-    'https://lh5.googleusercontent.com/-5EqdfAc5juo/AAAAAAAAAAI/AAAAAAAAAAA/AMZuucl1rs-33JOHxPrO29Pe3Vck2sJwkQ/photo.jpg',
-  rating: 4,
-};
-
-const ChatDialogMobile = ({ chatMessages, navBarHeight, setSelectedChatId }) => {
-  return (
-    <>
-      <Stack direction="column" spacing="none">
-        <ButtonLink
-          onClick={function () {
-            setSelectedChatId(null);
-          }}
-          iconLeft={<ChevronLeft />}
-          transparent
-          type="secondary"
-        />
-        <ChatDialogUserRow
-          rating={dummyUser.rating}
-          name={dummyUser.name}
-          profileImageUrl={dummyUser.profileImageUrl}
-        />
-        <ChatDialogViewPostRow postType="wishes" postId={123} postTitle="Bicycle for 1 child" />
-        <ChatDialogMessages messages={chatMessages} navBarHeight={navBarHeight} />
-      </Stack>
-      <ChatDialogInputRow />
-    </>
-  );
-};
-
-const ChatDialogDesktop = ({ chatMessages, navBarHeight }) => {
-  return (
-    <>
-      <Stack direction="column" spacing="none">
-        <ChatDialogUserRow
-          rating={dummyUser.rating}
-          name={dummyUser.name}
-          profileImageUrl={dummyUser.profileImageUrl}
-        />
-        <ChatDialogViewPostRow postType="wishes" postId={123} postTitle="Bicycle for 1 child" />
-        <ChatDialogMessages messages={chatMessages} navBarHeight={navBarHeight} />
-      </Stack>
-      <ChatDialogInputRow />
-    </>
-  );
-};
-
-const ChatDialog = ({ selectedChatId, setSelectedChatId, navBarHeight }) => {
+const ChatDialogContent = ({
+  loggedInUser,
+  navBarHeight,
+  selectedChatId,
+  setSelectedChatId,
+  isNewChat,
+  setIsNewChat,
+  post,
+  chat,
+  postId,
+  postType,
+}) => {
   const { isTablet } = useMediaQuery();
-  const [chatMessages, setChatMessages] = useState([]);
-  useEffect(() => {
-    /**
-     * TODO: load the corresponding chat messages according to the selectedChatId
-     */
-    if (selectedChatId != null) {
-      setChatMessages(listOfChatMessages);
-    }
-  }, [selectedChatId]);
+  let title, oppositeUserName, oppositeUserProfileImageUrl;
+  if (post == null) {
+    title = chat.post.title;
+    const oppositeUser = chat.npo.id === loggedInUser.user.id ? chat.donor : chat.npo;
+    oppositeUserName = oppositeUser.name;
+    oppositeUserProfileImageUrl = oppositeUser.profileImageUrl;
+  } else {
+    title = post.title;
+    oppositeUserName = post.user.userName;
+    oppositeUserProfileImageUrl = post.user.profileImageUrl;
+  }
+  return (
+    <>
+      <Stack direction="column" spacing="none">
+        {!isTablet && (
+          <ButtonLink
+            onClick={function () {
+              setSelectedChatId(null);
+            }}
+            iconLeft={<ChevronLeft />}
+            transparent
+            type="secondary"
+          />
+        )}
+        <ChatDialogUserRow
+          rating={5} // apparently rating is not within the user in donations/wishes, default val for now
+          name={oppositeUserName}
+          profileImageUrl={oppositeUserProfileImageUrl}
+        />
+        <ChatDialogViewPostRow
+          postType={selectedChatId ? chat.post.type : postType}
+          postId={selectedChatId ? chat.post.id : postId}
+          postTitle={title}
+        />
+        <ChatDialogMessages
+          loggedInUser={loggedInUser}
+          selectedChatId={selectedChatId}
+          isNewChat={isNewChat}
+          navBarHeight={navBarHeight}
+        />
+      </Stack>
+      <ChatDialogInputRow
+        selectedChatId={selectedChatId}
+        setSelectedChatId={setSelectedChatId}
+        isNewChat={isNewChat}
+        setIsNewChat={setIsNewChat}
+        postType={postType}
+        postId={postId}
+      />
+    </>
+  );
+};
 
-  // no chat selected yet
-  if (selectedChatId == null) {
+const ChatDialog = ({
+  loggedInUser,
+  selectedChatId,
+  setSelectedChatId,
+  navBarHeight,
+  isNewChat,
+  setIsNewChat,
+  postId,
+  postType,
+}) => {
+  const [post, setPost] = useState(null); // note that the post is only needed when creating a new chat for a post
+  const [chat, setChat] = useState(null);
+  useEffect(() => {
+    // when creating a new chat
+    if (postId && isNewChat) {
+      api[postType].get(postId).then((rawPost) => {
+        setPost(rawPost.data());
+      });
+    } else if (selectedChatId) {
+      // when a chat has been selected
+      api.chats.getChat(selectedChatId).then((rawChat) => {
+        setChat(rawChat.data());
+      });
+    }
+  }, []);
+
+  // no chat selected yet and is not creating a new chat for a post
+  if (selectedChatId == null && !isNewChat) {
     return (
       <ChatDialogContainer>
         <MessageContainer>
@@ -221,17 +125,30 @@ const ChatDialog = ({ selectedChatId, setSelectedChatId, navBarHeight }) => {
     );
   }
 
+  // if creating new post, but the post hasn't been populated yet
+  if (post == null && postId && isNewChat) {
+    return null;
+  }
+
+  // if not creating new post, but the chat hasn't been populated yet
+  if (!isNewChat && chat == null) {
+    return null;
+  }
+
   return (
     <ChatDialogContainer>
-      {isTablet ? (
-        <ChatDialogDesktop chatMessages={chatMessages} navBarHeight={navBarHeight} />
-      ) : (
-        <ChatDialogMobile
-          chatMessages={chatMessages}
-          navBarHeight={navBarHeight}
-          setSelectedChatId={setSelectedChatId}
-        />
-      )}
+      <ChatDialogContent
+        loggedInUser={loggedInUser}
+        navBarHeight={navBarHeight}
+        selectedChatId={selectedChatId}
+        setSelectedChatId={setSelectedChatId}
+        isNewChat={isNewChat}
+        setIsNewChat={setIsNewChat}
+        post={post}
+        chat={chat}
+        postId={postId}
+        postType={postType}
+      />
     </ChatDialogContainer>
   );
 };

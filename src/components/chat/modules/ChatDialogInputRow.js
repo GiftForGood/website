@@ -5,6 +5,7 @@ import api from '../../../../utils/api';
 import styled, { css } from 'styled-components';
 import Gallery from '@kiwicom/orbit-components/lib/icons/Gallery';
 import { useDropzone } from 'react-dropzone';
+import { donations, wishes } from '../../../../utils/constants/postType';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 
 const InputRowContainer = styled.div`
@@ -39,16 +40,46 @@ const ImageUpload = () => {
   );
 };
 
-const ChatDialogInputRow = () => {
+const ChatDialogInputRow = ({ selectedChatId, setSelectedChatId, isNewChat, setIsNewChat, postType, postId }) => {
   /**
    * TODO: handle send message and display in chat
    */
-  const handleSendMessage = () => console.log('send message');
+
+  const [inputMessage, setInputMessage] = useState('');
+  const handleSendMessage = () => {
+    if (inputMessage.trim().length <= 0) {
+      return; // no content being sent if empty or all spaces
+    }
+    if (isNewChat) {
+      sendFirstMessage().then((chat) => {
+        // need to get the chat id from the newly created chat to select chat id
+        setSelectedChatId(chat.chatId);
+        setInputMessage(''); // clear input message after sent
+        setIsNewChat(false);
+      });
+    } else {
+      api.chats.sendTextMessage(selectedChatId, inputMessage).then(() => {
+        setInputMessage(''); // clear input message after sent
+      });
+    }
+  };
+
+  const sendFirstMessage = async () => {
+    const method = postType === donations ? 'sendInitialTextMessageForDonation' : 'sendInitialTextMessageForWish';
+    const [rawChat, rawFirstMessage] = await api.chats[method](postId, inputMessage);
+    return rawChat.data();
+  };
+
   return (
     <InputRowContainer>
       <Stack direction="row" justify="between" align="center">
         <ImageUpload />
-        <InputField placeholder="Type your messages here..." />
+        <InputField
+          placeholder="Type your messages here..."
+          id="chat-input"
+          value={inputMessage}
+          onChange={(e) => setInputMessage(e.target.value)}
+        />
         <Button size="small" onClick={handleSendMessage} asComponent={ChatButton}>
           Send
         </Button>

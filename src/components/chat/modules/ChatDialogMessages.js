@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Stack } from '@kiwicom/orbit-components/lib';
 import api from '../../../../utils/api';
 import styled, { css } from 'styled-components';
@@ -67,31 +67,31 @@ const getMessageContent = (messageContentType, content, isByLoggedInUser) => {
 };
 
 const LeftMessageSection = ({ message }) => {
-  const { message: messageContent, profileImageUrl, messageDate, messageContentType } = message;
+  const { content, sender, dateTime, contentType } = message;
   return (
     <Stack direction="row">
-      <ProfileAvatar imageUrl={profileImageUrl} width={25} height={25} />
+      <ProfileAvatar imageUrl={sender.profileImageUrl} width={25} height={25} />
       <Stack direction="column" spacing="extraTight">
-        {getMessageContent(messageContentType, messageContent, false)}
-        <GreyText size="tiny">{getTimeDifferenceFromNow(messageDate)}</GreyText>
+        {getMessageContent(contentType, content, false)}
+        <GreyText size="tiny">{getTimeDifferenceFromNow(dateTime)}</GreyText>
       </Stack>
     </Stack>
   );
 };
 
 const RightMessageSection = ({ message }) => {
-  const { message: messageContent, profileImageUrl, messageDate, messageContentType } = message;
+  const { content, sender, dateTime, contentType } = message;
   return (
     <Stack direction="column" align="end" spaceAfter="none">
       <RightMessageSectionContainer>
         <Stack direction="row">
           <RightColumnStackContainer>
             <Stack direction="column" spacing="extraTight" align="end">
-              {getMessageContent(messageContentType, messageContent, true)}
-              <GreyText size="tiny">{getTimeDifferenceFromNow(messageDate)}</GreyText>
+              {getMessageContent(contentType, content, true)}
+              <GreyText size="tiny">{getTimeDifferenceFromNow(dateTime)}</GreyText>
             </Stack>
           </RightColumnStackContainer>
-          <ProfileAvatar imageUrl={profileImageUrl} width={25} height={25} />
+          <ProfileAvatar imageUrl={sender.profileImageUrl} width={25} height={25} />
         </Stack>
       </RightMessageSectionContainer>
     </Stack>
@@ -100,11 +100,29 @@ const RightMessageSection = ({ message }) => {
 
 /**
  *
- * @param {array} messages is an array of chat messages
  * @param {number} navBarHeight is the height of the navbar
  */
-const ChatDialogMessages = ({ messages, navBarHeight }) => {
+const ChatDialogMessages = ({ loggedInUser, selectedChatId, isNewChat, navBarHeight }) => {
+  const [chatMessages, setChatMessages] = useState([]);
+  console.log(selectedChatId);
+  useEffect(() => {
+    if (selectedChatId != null || !isNewChat) {
+      api.chats.subscribeToChatMessages(selectedChatId, updateChatMessages).then(() => {});
+    }
+    console.log(selectedChatId);
+  }, [selectedChatId]);
   const { isTablet } = useMediaQuery();
+  const updateChatMessages = (chatDoc) => {
+    setChatMessages((prevChatMessages) => {
+      const newChat = chatDoc.data();
+      const lastChatMessage = prevChatMessages[prevChatMessages.length - 1];
+      // if it's not the first message and the new chat added is later than last chat
+      if (lastChatMessage && lastChatMessage.dateTime < newChat.dateTime) {
+        return [...prevChatMessages, chatDoc.data()];
+      }
+      return [chatDoc.data(), ...prevChatMessages];
+    });
+  };
 
   // get all heights of components within the chatDialog
   const {
@@ -124,13 +142,14 @@ const ChatDialogMessages = ({ messages, navBarHeight }) => {
     <CardSection>
       <MessageContainer offsetHeight={offsetHeight}>
         <Stack direction="column">
-          {messages.map((message, index) => {
-            return message.isByLoggedInUser ? (
-              <RightMessageSection key={index} message={message} />
-            ) : (
-              <LeftMessageSection key={index} message={message} />
-            );
-          })}
+          {chatMessages &&
+            chatMessages.map((message, index) => {
+              return message.sender.id === loggedInUser.user.userId ? (
+                <RightMessageSection key={index} message={message} />
+              ) : (
+                <LeftMessageSection key={index} message={message} />
+              );
+            })}
         </Stack>
       </MessageContainer>
     </CardSection>
