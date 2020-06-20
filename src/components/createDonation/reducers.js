@@ -56,6 +56,11 @@ const createDonationReducer = (state = initialState, action) => {
         ...state,
         coverImage: action.coverImage,
       };
+
+    case 'create-donation/RESET_INITIAL_STATE':
+      return {
+        ...initialState,
+      };
     default:
       return state;
   }

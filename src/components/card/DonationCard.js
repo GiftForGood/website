@@ -163,6 +163,8 @@ const DonationCard = ({
       } else {
         setImageUrl(coverImageUrl);
       }
+    } else {
+      setHasImage(false)
     }
   }, [coverImageUrl]);
 

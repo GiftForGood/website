@@ -34,6 +34,7 @@ import {
   setLocation,
   setValidFrom,
   setValidTo,
+  resetToInitialState,
 } from '../actions';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 import { toast } from 'react-toastify';
@@ -405,6 +406,8 @@ const CreateDonationPanel = ({ mode, donation }) => {
       };
       setEditDonation(editDonation);
       setSelectedCategories(donation.categories);
+    } else {
+      dispatch(resetToInitialState)
     }
   }, [donation]);
 
