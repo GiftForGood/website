@@ -1,19 +1,36 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { InputField, ButtonLink } from '@kiwicom/orbit-components/lib';
 import Close from '@kiwicom/orbit-components/lib/icons/Close';
+import useDebouncedEffect from '../../../utils/hooks/useDebouncedEffect';
 
+// Added 500ms of delay so that search does not incur so much request.
+const SearchBar = ({ currentRefinement, isSearchStalled, refine, inputRef }) => {
+  const [search, setSearch] = useState('');
+  const onChange = (e) => {
+    setSearch(e.target.value);
+  };
 
-const SearchBar = ({ currentRefinement, isSearchStalled, refine }) => (
-  <form noValidate action="" role="search">
-    <InputField
-      inputMode="search"
-      placeholder="Search for wishes or donations"
-      value={currentRefinement}
-      onChange={(event) => refine(event.currentTarget.value)}
-      suffix={<ButtonLink iconLeft={<Close />} onClick={() => refine('')} size="normal" transparent />}
-    />
-    {isSearchStalled ? 'My search is stalled' : ''}
-  </form>
-);
+  useDebouncedEffect(
+    () => {
+      refine(search);
+    },
+    500,
+    [search]
+  );
+
+  return (
+    <form noValidate action="" role="search">
+      <InputField
+        ref={inputRef}
+        inputMode="search"
+        placeholder="Search for wishes or donations"
+        value={search}
+        onChange={onChange}
+        suffix={<ButtonLink iconLeft={<Close />} onClick={() => refine('')} size="normal" transparent />}
+      />
+      {isSearchStalled ? 'My search is stalled' : ''}
+    </form>
+  );
+};
 
 export default SearchBar;

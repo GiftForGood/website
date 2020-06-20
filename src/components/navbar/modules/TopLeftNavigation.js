@@ -1,11 +1,12 @@
 import React from 'react';
-import { Stack, ButtonLink } from '@kiwicom/orbit-components/';
+import { Stack, ButtonLink, Popover } from '@kiwicom/orbit-components/';
 import { MenuHamburger } from '@kiwicom/orbit-components/lib/icons';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 import LogoButton from '../../buttons/LogoButton';
 import SearchBar from '../../search/SearchBar';
 import { companyLogoImagePath } from '../../../../utils/constants/imagePaths';
 import styled from 'styled-components';
+import NavSearchBar from '../../search/modules/NavSearchBar';
 
 const SearchBarContainer = styled.div`
   min-width: 350px;
@@ -20,7 +21,7 @@ const TopLeftNavigation = ({ onHamburgerClick }) => {
           <LogoButton src={companyLogoImagePath} height={45} href={'/'} />
           {isDesktop && (
             <SearchBarContainer>
-              <SearchBar />
+              <NavSearchBar />
             </SearchBarContainer>
           )}
           <ButtonLink transparent type="secondary" href={'/'}>
