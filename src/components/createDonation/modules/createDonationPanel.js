@@ -407,7 +407,7 @@ const CreateDonationPanel = ({ mode, donation }) => {
       setEditDonation(editDonation);
       setSelectedCategories(donation.categories);
     } else {
-      dispatch(resetToInitialState)
+      dispatch(resetToInitialState);
     }
   }, [donation]);
 
