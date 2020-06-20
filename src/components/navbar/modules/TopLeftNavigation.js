@@ -1,9 +1,8 @@
 import React from 'react';
-import { Stack, ButtonLink, Popover } from '@kiwicom/orbit-components/';
+import { Stack, ButtonLink } from '@kiwicom/orbit-components/';
 import { MenuHamburger } from '@kiwicom/orbit-components/lib/icons';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 import LogoButton from '../../buttons/LogoButton';
-import SearchBar from '../../search/SearchBar';
 import { companyLogoImagePath } from '../../../../utils/constants/imagePaths';
 import styled from 'styled-components';
 import NavSearchBar from '../../search/modules/NavSearchBar';

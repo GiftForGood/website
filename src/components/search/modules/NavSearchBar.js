@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef } from 'react';
 import { InstantSearch, connectSearchBox, Index, Configure, connectHits } from 'react-instantsearch-dom';
 import SearchBar from '../SearchBar';
 import Hits from './Hits';
