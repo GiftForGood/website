@@ -42,3 +42,15 @@ export const getExpireWishDateFormat = (timeInMilliSeconds) => {
 export const getFormattedDateRange = (startDate, endDate) => {
   return `${moment(startDate).format('D MMM (ddd) - h:mm a')} to ${moment(endDate).format('h:mm a')}`;
 };
+
+export const getDay = (timeInMilliSeconds) => {
+  return moment(timeInMilliSeconds).format('DD');
+};
+
+export const getMonth = (timeInMilliSeconds) => {
+  return moment(timeInMilliSeconds).format('MM');
+};
+
+export const getYear = (timeInMilliSeconds) => {
+  return moment(timeInMilliSeconds).format('YYYY');
+};

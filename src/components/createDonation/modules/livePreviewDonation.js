@@ -1,5 +1,5 @@
 import React from 'react';
-import { Stack, Heading, Text, Alert, Tooltip, TextLink } from '@kiwicom/orbit-components/lib';
+import { Stack, Heading, Text } from '@kiwicom/orbit-components/lib';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import DonationCard from '../../card/DonationCard';
