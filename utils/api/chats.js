@@ -98,7 +98,7 @@ class ChatsAPI {
 
   /**
    * Subscribe to chats belonging to the current logged in user. Does not include chat messages
-   * @param {function(string, object): void} callback The function to call to handle the change in chats. 
+   * @param {function(string, object): void} callback The function to call to handle the change in chats.
    * The callback will return a USER_CHATS_BATCH_SIZE of chats belonging to the user on the initial subscription
    * It is recommended to use this function to fetch the first batch of chats and use the getChatsForNPO / getChatsForDonor to get older chats
    *  The first argument is type. The type of change of the chat. Refer to the constant file `chatSubscriptionChange` to see which are the changed provided
@@ -189,11 +189,13 @@ class ChatsAPI {
    * @param {string} text A text message
    * @throws {ChatError}
    * @throws {FirebaseError}
-   * @return {object} A firebase documents of the created chat messages
+   * @return {array} [chatDoc, chatMessageDoc]
+   *  {object} chatDoc: The firebase document for the created chat
+   *  {object} chatMessageDoc: The firebase document for the create chat message
    */
   async sendInitialTextMessageForWish(wishId, text) {
-    const messages = await this.sendInitialTextMessagesForWish(wishId, [text]);
-    return messages[0];
+    const [chat, messages] = await this.sendInitialTextMessagesForWish(wishId, [text]);
+    return [chat, messages[0]];
   }
 
   /**
@@ -202,11 +204,13 @@ class ChatsAPI {
    * @param {string} text A calendar messages
    * @throws {ChatError}
    * @throws {FirebaseError}
-   * @return {object} A firebase documents of the created chat messages
+   * @return {array} [chatDoc, chatMessageDoc]
+   *  {object} chatDoc: The firebase document for the created chat
+   *  {object} chatMessageDoc: The firebase document for the create chat message
    */
   async sendInitialCalendarMessageForWish(wishId, calendar) {
-    const messages = await this.sendInitialCalendarMessagesForWish(wishId, [calendar]);
-    return messages[0];
+    const [chat, messages] = await this.sendInitialCalendarMessagesForWish(wishId, [calendar]);
+    return [chat, messages[0]];
   }
 
   /**
@@ -215,11 +219,13 @@ class ChatsAPI {
    * @param {object} text A image messages.
    * @throws {ChatError}
    * @throws {FirebaseError}
-   * @return {object} A firebase documents of the created chat messages
+   * @return {array} [chatDoc, chatMessageDoc]
+   *  {object} chatDoc: The firebase document for the created chat
+   *  {object} chatMessageDoc: The firebase document for the create chat message
    */
   async sendInitialImageMessageForWish(wishId, image) {
-    const messages = await this.sendInitialImageMessagesForWish(wishId, [image]);
-    return messages[0];
+    const [chat, messages] = await this.sendInitialImageMessagesForWish(wishId, [image]);
+    return [chat, messages[0]];
   }
 
   /**
@@ -228,13 +234,17 @@ class ChatsAPI {
    * @param {array} texts A list of text messages. Messages are created in the order in the list
    * @throws {ChatError}
    * @throws {FirebaseError}
-   * @return {array} A list of firebase documents of the created chat messages
+   * @return {array} [chatDoc, chatMessageDoc]
+   *  {object} chatDoc: The firebase document for the created chat
+   *  {array} chatMessagesDocs: A list of firebase documents of the created chat messages
    */
   async sendInitialTextMessagesForWish(wishId, texts) {
     this._validateChatMessages(TEXT, texts);
 
-    const [chatInfo, donorInfo] = await this._fetchInfoAndCreateChatForWish(wishId);
-    return this._sendTextMessages(chatInfo.chatId, texts, chatInfo, donor, donorInfo);
+    const [chatDoc, donorInfo] = await this._fetchInfoAndCreateChatForWish(wishId);
+    const chatInfo = chatDoc.data();
+    const chatMessages = await this._sendTextMessages(chatInfo.chatId, texts, chatInfo, donor, donorInfo);
+    return [chatDoc, chatMessages];
   }
 
   /**
@@ -243,13 +253,17 @@ class ChatsAPI {
    * @param {array} calendar A list of calendar messages. Messages are created in the order in the list
    * @throws {ChatError}
    * @throws {FirebaseError}
-   * @return {array} A list of firebase documents of the created chat messages
+   * @return {array} [chatDoc, chatMessageDoc]
+   *  {object} chatDoc: The firebase document for the created chat
+   *  {array} chatMessagesDocs: A list of firebase documents of the created chat messages
    */
   async sendInitialCalendarMessagesForWish(wishId, calendars) {
     this._validateChatMessages(CALENDAR, calendars);
 
-    const [chatInfo, donorInfo] = await this._fetchInfoAndCreateChatForWish(wishId);
-    return this._sendCalendarMessages(chatInfo.chatId, calendars, chatInfo, donor, donorInfo);
+    const [chatDoc, donorInfo] = await this._fetchInfoAndCreateChatForWish(wishId);
+    const chatInfo = chatDoc.data();
+    const chatMessages = await this._sendCalendarMessages(chatInfo.chatId, calendars, chatInfo, donor, donorInfo);
+    return [chatDoc, chatMessages];
   }
 
   /**
@@ -258,13 +272,17 @@ class ChatsAPI {
    * @param {array} texts A list of image messages. Messages are created in the order in the list
    * @throws {ChatError}
    * @throws {FirebaseError}
-   * @return {array} A list of firebase documents of the created chat messages
+   * @return {array} [chatDoc, chatMessageDoc]
+   *  {object} chatDoc: The firebase document for the created chat
+   *  {array} chatMessagesDocs: A list of firebase documents of the created chat messages
    */
   async sendInitialImageMessagesForWish(wishId, images) {
     this._validateChatMessages(IMAGE, images);
 
-    const [chatInfo, donorInfo] = await this._fetchInfoAndCreateChatForWish(wishId);
-    return this._sendImageMessages(chatInfo.chatId, images, chatInfo, donor, donorInfo);
+    const [chatDoc, donorInfo] = await this._fetchInfoAndCreateChatForWish(wishId);
+    const chatInfo = chatDoc.data();
+    const chatMessages = await this._sendImageMessages(chatInfo.chatId, images, chatInfo, donor, donorInfo);
+    return [chatDoc, chatMessages];
   }
 
   /**
@@ -273,11 +291,13 @@ class ChatsAPI {
    * @param {string} text A text message
    * @throws {ChatError}
    * @throws {FirebaseError}
-   * @return {object} A firebase documents of the created chat messages
+   * @return {array} [chatDoc, chatMessageDoc]
+   *  {object} chatDoc: The firebase document for the created chat
+   *  {object} chatMessageDoc: The firebase document for the create chat message
    */
   async sendInitialTextMessageForDonation(donationId, text) {
-    const messages = await this.sendInitialTextMessagesForDonation(donationId, [text]);
-    return messages[0];
+    const [chat, messages] = await this.sendInitialTextMessagesForDonation(donationId, [text]);
+    return [chat, messages[0]];
   }
 
   /**
@@ -286,11 +306,13 @@ class ChatsAPI {
    * @param {string} text A calendar messages
    * @throws {ChatError}
    * @throws {FirebaseError}
-   * @return {object} A firebase documents of the created chat messages
+   * @return {array} [chatDoc, chatMessageDoc]
+   *  {object} chatDoc: The firebase document for the created chat
+   *  {object} chatMessageDoc: The firebase document for the create chat message
    */
   async sendInitialCalendarMessageForDonation(donationId, calendar) {
-    const messages = await this.sendInitialCalendarMessagesForDonation(donationId, [calendar]);
-    return messages[0];
+    const [chat, messages] = await this.sendInitialCalendarMessagesForDonation(donationId, [calendar]);
+    return [chat, messages[0]];
   }
 
   /**
@@ -299,11 +321,13 @@ class ChatsAPI {
    * @param {object} text A image messages.
    * @throws {ChatError}
    * @throws {FirebaseError}
-   * @return {object} A firebase documents of the created chat messages
+   * @return {array} [chatDoc, chatMessageDoc]
+   *  {object} chatDoc: The firebase document for the created chat
+   *  {object} chatMessageDoc: The firebase document for the create chat message
    */
   async sendInitialImageMessageForDonation(donationId, image) {
-    const messages = await this.sendInitialImageMessagesForDonation(donationId, [image]);
-    return messages[0];
+    const [chat, messages] = await this.sendInitialImageMessagesForDonation(donationId, [image]);
+    return [chat, messages[0]];
   }
 
   /**
@@ -312,13 +336,17 @@ class ChatsAPI {
    * @param {array} texts A list of text messages. Messages are created in the order in the list
    * @throws {ChatError}
    * @throws {FirebaseError}
-   * @return {array} A list of firebase documents of the created chat messages
+   * @return {array} [chatDoc, chatMessageDoc]
+   *  {object} chatDoc: The firebase document for the created chat
+   *  {array} chatMessagesDocs: A list of firebase documents of the created chat messages
    */
   async sendInitialTextMessagesForDonation(donationId, texts) {
     this._validateChatMessages(TEXT, texts);
 
-    const [chatInfo, npoInfo] = await this._fetchInfoAndCreateChatForDonation(donationId);
-    return this._sendTextMessages(chatInfo.chatId, texts, chatInfo, npo, npoInfo);
+    const [chatDoc, npoInfo] = await this._fetchInfoAndCreateChatForDonation(donationId);
+    const chatInfo = chatDoc.data();
+    const chatMessages = await this._sendTextMessages(chatInfo.chatId, texts, chatInfo, npo, npoInfo);
+    return [chatDoc, chatMessages];
   }
 
   /**
@@ -327,13 +355,17 @@ class ChatsAPI {
    * @param {array} calendar A list of calendar messages. Messages are created in the order in the list
    * @throws {ChatError}
    * @throws {FirebaseError}
-   * @return {array} A list of firebase documents of the created chat messages
+   * @return {array} [chatDoc, chatMessageDoc]
+   *  {object} chatDoc: The firebase document for the created chat
+   *  {array} chatMessagesDocs: A list of firebase documents of the created chat messages
    */
   async sendInitialCalendarMessagesForDonation(donationId, calendars) {
     this._validateChatMessages(CALENDAR, calendars);
 
-    const [chatInfo, npoInfo] = await this._fetchInfoAndCreateChatForDonation(donationId);
-    return this._sendCalendarMessages(chatInfo.chatId, calendars, chatInfo, npo, npoInfo);
+    const [chatDoc, npoInfo] = await this._fetchInfoAndCreateChatForDonation(donationId);
+    const chatInfo = chatDoc.data();
+    const chatMessages = await this._sendCalendarMessages(chatInfo.chatId, calendars, chatInfo, npo, npoInfo);
+    return [chatDoc, chatMessages];
   }
 
   /**
@@ -342,13 +374,17 @@ class ChatsAPI {
    * @param {array} texts A list of image messages. Messages are created in the order in the list
    * @throws {ChatError}
    * @throws {FirebaseError}
-   * @return {array} A list of firebase documents of the created chat messages
+   * @return {array} [chatDoc, chatMessageDoc]
+   *  {object} chatDoc: The firebase document for the created chat
+   *  {array} chatMessagesDocs: A list of firebase documents of the created chat messages
    */
   async sendInitialImageMessagesForDonation(donationId, images) {
     this._validateChatMessages(IMAGE, images);
 
-    const [chatInfo, npoInfo] = await this._fetchInfoAndCreateChatForDonation(donationId);
-    return this._sendImageMessages(chatInfo.chatId, images, chatInfo, npo, npoInfo);
+    const [chatDoc, npoInfo] = await this._fetchInfoAndCreateChatForDonation(donationId);
+    const chatInfo = chatDoc.data();
+    const chatMessages = await this._sendImageMessages(chatInfo.chatId, images, chatInfo, npo, npoInfo);
+    return [chatDoc, chatMessages];
   }
 
   /**
@@ -502,9 +538,8 @@ class ChatsAPI {
     await this._validateChat(wishInfo.wishId, npoInfo.userId, donorInfo.userId);
 
     const chatDoc = await this._createChatForWish(wishInfo, npoInfo, donorInfo);
-    const chatInfo = chatDoc.data();
 
-    return [chatInfo, donorInfo];
+    return [chatDoc, donorInfo];
   }
 
   async _createChatForWish(wishInfo, npoInfo, donorInfo) {
@@ -556,9 +591,8 @@ class ChatsAPI {
     await this._validateChat(donationInfo.donationId, npoInfo.userId, donorInfo.userId);
 
     const chatDoc = await this._createChatForDonation(donationInfo, npoInfo, donorInfo);
-    const chatInfo = chatDoc.data();
 
-    return [chatInfo, npoInfo];
+    return [chatDoc, npoInfo];
   }
 
   async _createChatForDonation(donationInfo, npoInfo, donorInfo) {
