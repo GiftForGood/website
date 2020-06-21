@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Button, Stack, InputField } from '@kiwicom/orbit-components/lib';
+import { Button, Stack, InputField, Alert } from '@kiwicom/orbit-components/lib';
 import ChatButton from '../../../components/buttons/ChatButton';
 import api from '../../../../utils/api';
 import styled, { css } from 'styled-components';
@@ -7,6 +7,7 @@ import Gallery from '@kiwicom/orbit-components/lib/icons/Gallery';
 import { useDropzone } from 'react-dropzone';
 import { donations, wishes } from '../../../../utils/constants/postType';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
+import ChatError from '../../../../utils/api/error/chatError';
 
 const InputRowContainer = styled.div`
   width: 95%;
@@ -24,12 +25,15 @@ const InputRowContainer = styled.div`
   `)}
 `;
 
-const ChatDialogInputRow = ({ selectedChatId, setSelectedChatId, isNewChat, setIsNewChat, postType, postId }) => {
-  /**
-   * TODO: handle send message and display in chat
-   */
+const AlertWrapper = styled.div`
+  position: absolute;
+  bottom: 100%;
+  width: fit-content;
+`;
 
+const ChatDialogInputRow = ({ selectedChatId, setSelectedChatId, isNewChat, setIsNewChat, postType, postId }) => {
   const [inputMessage, setInputMessage] = useState('');
+  const [alertMessage, setAlertMessage] = useState('');
   const handleSendMessage = () => {
     if (inputMessage.trim().length <= 0) {
       return; // no content being sent if empty or all spaces
@@ -57,9 +61,9 @@ const ChatDialogInputRow = ({ selectedChatId, setSelectedChatId, isNewChat, setI
             setIsNewChat(false);
             uploadedFiles = [];
           })
-          .catch((err) => console.error(err));
+          .catch((err) => handleImageUploadError(err));
       } else {
-        api.chats.sendImageMessages(selectedChatId, uploadedFiles).catch((err) => console.error(err));
+        api.chats.sendImageMessages(selectedChatId, uploadedFiles).catch((err) => handleImageUploadError(err));
       }
     }, []);
     const { getRootProps, getInputProps } = useDropzone({ onDrop: onUpload });
@@ -69,6 +73,19 @@ const ChatDialogInputRow = ({ selectedChatId, setSelectedChatId, isNewChat, setI
         <Gallery size="normal" />
       </div>
     );
+  };
+
+  const handleImageUploadError = (err) => {
+    if (err instanceof ChatError) {
+      setAlertMessage(err.message);
+      setTimeout(() => {
+        closeAlert(); // hide alert message after 5 seconds
+      }, 5000);
+    }
+  };
+
+  const closeAlert = () => {
+    setAlertMessage('');
   };
 
   const sendFirstImageMessages = async (images) => {
@@ -85,6 +102,13 @@ const ChatDialogInputRow = ({ selectedChatId, setSelectedChatId, isNewChat, setI
 
   return (
     <InputRowContainer>
+      {alertMessage.length > 0 && (
+        <AlertWrapper>
+          <Alert icon type="critical" title="Something has gone wrong" closable onClose={closeAlert}>
+            {alertMessage}
+          </Alert>
+        </AlertWrapper>
+      )}
       <Stack direction="row" justify="between" align="center">
         <ImageUpload
           selectedChatId={selectedChatId}
