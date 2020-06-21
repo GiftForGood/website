@@ -46,6 +46,7 @@ const ChatPage = ({ user, postId, postType, isForSpecificPost }) => {
         <ChatDialog
           loggedInUser={user}
           selectedChatId={selectedChatId}
+          setSelectedChatId={setSelectedChatId}
           navBarHeight={navBarOffsetHeight}
           isNewChat={isNewChat}
           setIsNewChat={setIsNewChat}
