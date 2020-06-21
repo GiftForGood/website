@@ -5,7 +5,6 @@ import styled, { css } from 'styled-components';
 import { colors } from '../../../../utils/constants/colors';
 
 const ChatBubbleContainer = styled.div`
-  max-width: 60%;
   width: fit-content;
   padding: 5px 15px 5px 15px;
   border-radius: 5px;

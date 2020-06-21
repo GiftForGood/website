@@ -24,12 +24,19 @@ const InputRowContainer = styled.div`
   `)}
 `;
 
-const ImageUpload = () => {
+const ImageUpload = ({ selectedChatId, setSelectedChatId, setIsNewChat, isNewChat }) => {
   const onUpload = useCallback((uploadedFiles) => {
-    /**
-     * TODO: upload the image and display in chat
-     */
-    console.log(uploadedFiles);
+    if (isNewChat) {
+      sendFirstImageMessages(uploadedFiles)
+        .then((chat) => {
+          setSelectedChatId(chat.data().chatId);
+          setIsNewChat(false);
+          uploadedFiles = [];
+        })
+        .catch((err) => console.error(err));
+    } else {
+      api.chats.sendImageMessages(selectedChatId, uploadedFiles).catch((err) => console.error(err));
+    }
   }, []);
   const { getRootProps, getInputProps } = useDropzone({ onDrop: onUpload });
   return (
@@ -64,6 +71,12 @@ const ChatDialogInputRow = ({ selectedChatId, setSelectedChatId, isNewChat, setI
     }
   };
 
+  const sendFirstImageMessages = async (images) => {
+    const method = postType === donations ? 'sendInitialImageMessagesForDonation' : 'sendInitialImageMessagesForWish';
+    const [rawChat, rawFirstMessage] = await api.chats[method](postId, images);
+    return rawChat.data();
+  };
+
   const sendFirstMessage = async () => {
     const method = postType === donations ? 'sendInitialTextMessageForDonation' : 'sendInitialTextMessageForWish';
     const [rawChat, rawFirstMessage] = await api.chats[method](postId, inputMessage);
@@ -73,7 +86,12 @@ const ChatDialogInputRow = ({ selectedChatId, setSelectedChatId, isNewChat, setI
   return (
     <InputRowContainer>
       <Stack direction="row" justify="between" align="center">
-        <ImageUpload />
+        <ImageUpload
+          selectedChatId={selectedChatId}
+          setSelectedChatId={setSelectedChatId}
+          setIsNewChat={setIsNewChat}
+          isNewChat={isNewChat}
+        />
         <InputField
           placeholder="Type your messages here..."
           id="chat-input"

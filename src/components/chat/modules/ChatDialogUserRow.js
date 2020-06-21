@@ -26,7 +26,15 @@ const ButtonsContainer = styled.div`
  * @param {string} profileImageUrl is the url of the opposite user's profile image
  * @param {string} rating is the rating of the opposite user
  */
-const ChatDialogUserRow = ({ name, profileImageUrl, rating }) => {
+const ChatDialogUserRow = ({
+  selectedChatId,
+  setSelectedChatId,
+  isNewChat,
+  setIsNewChat,
+  name,
+  profileImageUrl,
+  rating,
+}) => {
   const [showSuggestDateModal, setShowSuggestDateModal] = useState(false);
 
   const handleShowSuggestDateModal = () => setShowSuggestDateModal(true);
@@ -52,7 +60,14 @@ const ChatDialogUserRow = ({ name, profileImageUrl, rating }) => {
             <Button size="small" onClick={handleShowSuggestDateModal} asComponent={SuggestDateButton}>
               Suggest Dates
             </Button>
-            <CalendarModal onShow={showSuggestDateModal} onHide={handleCloseSuggestDateModal} />
+            <CalendarModal
+              selectedChatId={selectedChatId}
+              setSelectedChatId={setSelectedChatId}
+              isNewChat={isNewChat}
+              setIsNewChat={setIsNewChat}
+              onShow={showSuggestDateModal}
+              onHide={handleCloseSuggestDateModal}
+            />
             <Button size="small" onClick={handleCompletePost} asComponent={CompleteButton}>
               Complete
             </Button>

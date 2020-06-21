@@ -45,14 +45,17 @@ const ListOfChats = ({ user, setSelectedChatId, isNewChat, postId, postType, isF
 
   const updateChats = (changeType, changedDoc) => {
     if (changeType === ADDED) {
-      // console.log([changedDoc.data(), ...chats])
-      setChats([changedDoc.data(), ...chats]);
+      setChats((prevChats) => {
+        return [...prevChats, changedDoc.data()];
+      });
     }
 
     if (changeType === MODIFIED) {
       // need to get modified chat to first position
-      const chatsWithModifiedChatRemoved = chats.filter((chat) => chat.chatId !== changedDoc.chatId);
-      setChats([changedDoc.data(), ...chatsWithModifiedChatRemoved]);
+      setChats((prevChats) => {
+        const chatsWithModifiedChatRemoved = prevChats.filter((chat) => chat.chatId !== changedDoc.data().chatId);
+        return [changedDoc.data(), ...chatsWithModifiedChatRemoved];
+      });
     }
   };
 

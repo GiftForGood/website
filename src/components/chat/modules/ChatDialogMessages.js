@@ -50,6 +50,18 @@ const RightColumnStackContainer = styled.div`
 
 const RightMessageSectionContainer = styled.div`
   width: fit-content;
+  max-width: 90%;
+  ${media.tablet(css`
+    max-width: 60%;
+  `)}
+`;
+
+const LeftMessageSectionContainer = styled.div`
+  width: fit-content;
+  max-width: 90%;
+  ${media.tablet(css`
+    max-width: 60%;
+  `)}
 `;
 
 const getMessageContent = (messageContentType, content, isByLoggedInUser) => {
@@ -69,20 +81,22 @@ const getMessageContent = (messageContentType, content, isByLoggedInUser) => {
 const LeftMessageSection = ({ message }) => {
   const { content, sender, dateTime, contentType } = message;
   return (
-    <Stack direction="row">
-      <ProfileAvatar imageUrl={sender.profileImageUrl} width={25} height={25} />
-      <Stack direction="column" spacing="extraTight">
-        {getMessageContent(contentType, content, false)}
-        <GreyText size="tiny">{getTimeDifferenceFromNow(dateTime)}</GreyText>
+    <LeftMessageSectionContainer>
+      <Stack direction="row" grow={false}>
+        <ProfileAvatar imageUrl={sender.profileImageUrl} width={25} height={25} />
+        <Stack direction="column" spacing="extraTight">
+          {getMessageContent(contentType, content, false)}
+          <GreyText size="tiny">{getTimeDifferenceFromNow(dateTime)}</GreyText>
+        </Stack>
       </Stack>
-    </Stack>
+    </LeftMessageSectionContainer>
   );
 };
 
 const RightMessageSection = ({ message }) => {
   const { content, sender, dateTime, contentType } = message;
   return (
-    <Stack direction="column" align="end" spaceAfter="none">
+    <Stack direction="column" align="end" spaceAfter="none" grow={false}>
       <RightMessageSectionContainer>
         <Stack direction="row">
           <RightColumnStackContainer>
@@ -104,12 +118,10 @@ const RightMessageSection = ({ message }) => {
  */
 const ChatDialogMessages = ({ loggedInUser, selectedChatId, isNewChat, navBarHeight }) => {
   const [chatMessages, setChatMessages] = useState([]);
-  console.log(selectedChatId);
   useEffect(() => {
     if (selectedChatId != null || !isNewChat) {
       api.chats.subscribeToChatMessages(selectedChatId, updateChatMessages).then(() => {});
     }
-    console.log(selectedChatId);
   }, [selectedChatId]);
   const { isTablet } = useMediaQuery();
   const updateChatMessages = (chatDoc) => {

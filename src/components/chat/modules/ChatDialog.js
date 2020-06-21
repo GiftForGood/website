@@ -36,9 +36,9 @@ const ChatDialogContent = ({
 }) => {
   const { isTablet } = useMediaQuery();
   let title, oppositeUserName, oppositeUserProfileImageUrl;
-  if (post == null) {
+  if (post == null || typeof post == 'undefined') {
     title = chat.post.title;
-    const oppositeUser = chat.npo.id === loggedInUser.user.id ? chat.donor : chat.npo;
+    const oppositeUser = chat.npo.id === loggedInUser.user.userId ? chat.donor : chat.npo;
     oppositeUserName = oppositeUser.name;
     oppositeUserProfileImageUrl = oppositeUser.profileImageUrl;
   } else {
@@ -63,6 +63,10 @@ const ChatDialogContent = ({
           rating={5} // apparently rating is not within the user in donations/wishes, default val for now
           name={oppositeUserName}
           profileImageUrl={oppositeUserProfileImageUrl}
+          selectedChatId={selectedChatId}
+          setSelectedChatId={setSelectedChatId}
+          isNewChat={isNewChat}
+          setIsNewChat={setIsNewChat}
         />
         <ChatDialogViewPostRow
           postType={selectedChatId ? chat.post.type : postType}

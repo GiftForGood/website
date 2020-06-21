@@ -269,7 +269,7 @@ class ChatsAPI {
   /**
    * Create image chat messages for a wish without an existing chat. It will create a new chat and add the chat messages within it
    * @param {string} wishId The id of the wish
-   * @param {array} texts A list of image messages. Messages are created in the order in the list
+   * @param {array} images A list of image messages. Messages are created in the order in the list
    * @throws {ChatError}
    * @throws {FirebaseError}
    * @return {array} [chatDoc, chatMessageDoc]

@@ -5,6 +5,7 @@ import { colors } from '../../../../utils/constants/colors';
 import { Button, Heading, Stack } from '@kiwicom/orbit-components/lib';
 import { getFormattedDateRange } from '../../../../utils/api/time';
 import Modal, { ModalSection, ModalFooter } from '@kiwicom/orbit-components/lib/Modal';
+import api from '../../../../utils/api';
 
 const okButton = styled.button`
   background: ${colors.calendarSelectedBackground};
@@ -24,7 +25,7 @@ const DATE = '5';
 const title = 'Suggest Dates to deliver';
 const description = '*Please select up to ' + DATE + ' dates';
 
-const CalendarModal = ({ onShow, onHide }) => {
+const CalendarModal = ({ selectedChatId, setSelectedChatId, isNewChat, setIsNewChat, onShow, onHide }) => {
   const [selectedDates, setSelectedDates] = useState([]);
   if (!onShow) {
     return <div></div>;
@@ -35,11 +36,28 @@ const CalendarModal = ({ onShow, onHide }) => {
       const message = selectedDates
         .map((selectedDate) => getFormattedDateRange(selectedDate.startDate, selectedDate.endDate))
         .join(','); // dates are separated by comma
-      const messageType = 'calendar';
-      // TODO: call chat api that creates a new message of type calendar
+      if (isNewChat) {
+        sendFirstCalendarMessage(message)
+          .then((chat) => {
+            // need to get the chat id from the newly created chat to select chat id
+            setSelectedChatId(chat.data().chatId);
+            setIsNewChat(false);
+          })
+          .catch((err) => console.error(err));
+      } else {
+        api.chats.sendCalendarMessage(selectedChatId, message).catch((err) => console.error(err));
+      }
     }
     onHide();
   };
+
+  const sendFirstCalendarMessage = async (calendarRawString) => {
+    const method =
+      postType === donations ? 'sendInitialCalendarMessageForDonation' : 'sendInitialCalendarMessageForWish';
+    const [rawChat, rawFirstMessage] = await api.chats[method](postId, calendarRawString);
+    return rawChat.data();
+  };
+
   return (
     <Modal size="large">
       <ModalSection>
