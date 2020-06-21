@@ -80,7 +80,7 @@ const ChatPage = ({ user, postId, postType, isViewingChatsForMyPost }) => {
   const ChatPageMobile = () => {
     return (
       <Grid style={gridContainerStyle} columns="1fr">
-        {selectedChatId == null ? (
+        {selectedChatId == null && !isNewChat ? (
           <ListOfChats
             user={user}
             setSelectedChatId={setSelectedChatId}
