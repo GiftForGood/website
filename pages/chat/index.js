@@ -19,7 +19,7 @@ export async function getServerSideProps({ params, req, res, query }) {
 
   // get all chats if postId not given
   const postId = query.postId ? query.postId : null;
-  const isForSpecificPost = postId ? true : false;
+  const isViewingChatsForMyPost = postId ? true : false;
   const postType = user.user.donor ? donations : wishes;
 
   // checking if the logged in user is the post owner, if not then route back to home
@@ -41,17 +41,17 @@ export async function getServerSideProps({ params, req, res, query }) {
     props: {
       postId,
       user,
-      isForSpecificPost,
+      isViewingChatsForMyPost,
       postType,
     },
   };
 }
 
-const ViewOwnChats = ({ user, postId, isForSpecificPost, postType }) => {
+const ViewOwnChats = ({ user, postId, isViewingChatsForMyPost, postType }) => {
   return (
     <SessionProvider user={user}>
       <TopNavigationBar />
-      <ChatPage user={user} postId={postId} isForSpecificPost={isForSpecificPost} postType={postType} />
+      <ChatPage user={user} postId={postId} isViewingChatsForMyPost={isViewingChatsForMyPost} postType={postType} />
     </SessionProvider>
   );
 };

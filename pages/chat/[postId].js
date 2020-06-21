@@ -15,8 +15,7 @@ export async function getServerSideProps({ params, req, res, query }) {
     res.writeHead(302, { Location: '/' });
     res.end();
   }
-
-  const postId = query.postId ? query.postId : null;
+  const postId = params.postId ? params.postId : null;
   const postType = query.postType ? query.postType : null;
   if (!postId || !postType) {
     // postId or postType not provided

@@ -60,6 +60,8 @@ const ChatDialogContent = ({
           />
         )}
         <ChatDialogUserRow
+          postId={postId}
+          postType={postType}
           rating={5} // apparently rating is not within the user in donations/wishes, default val for now
           name={oppositeUserName}
           profileImageUrl={oppositeUserProfileImageUrl}

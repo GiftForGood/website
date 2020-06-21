@@ -24,29 +24,6 @@ const InputRowContainer = styled.div`
   `)}
 `;
 
-const ImageUpload = ({ selectedChatId, setSelectedChatId, setIsNewChat, isNewChat }) => {
-  const onUpload = useCallback((uploadedFiles) => {
-    if (isNewChat) {
-      sendFirstImageMessages(uploadedFiles)
-        .then((chat) => {
-          setSelectedChatId(chat.data().chatId);
-          setIsNewChat(false);
-          uploadedFiles = [];
-        })
-        .catch((err) => console.error(err));
-    } else {
-      api.chats.sendImageMessages(selectedChatId, uploadedFiles).catch((err) => console.error(err));
-    }
-  }, []);
-  const { getRootProps, getInputProps } = useDropzone({ onDrop: onUpload });
-  return (
-    <div {...getRootProps()}>
-      <input {...getInputProps()} />
-      <Gallery size="normal" />
-    </div>
-  );
-};
-
 const ChatDialogInputRow = ({ selectedChatId, setSelectedChatId, isNewChat, setIsNewChat, postType, postId }) => {
   /**
    * TODO: handle send message and display in chat
@@ -69,6 +46,29 @@ const ChatDialogInputRow = ({ selectedChatId, setSelectedChatId, isNewChat, setI
         setInputMessage(''); // clear input message after sent
       });
     }
+  };
+
+  const ImageUpload = ({ selectedChatId, setSelectedChatId, setIsNewChat, isNewChat }) => {
+    const onUpload = useCallback((uploadedFiles) => {
+      if (isNewChat) {
+        sendFirstImageMessages(uploadedFiles)
+          .then((chat) => {
+            setSelectedChatId(chat.chatId);
+            setIsNewChat(false);
+            uploadedFiles = [];
+          })
+          .catch((err) => console.error(err));
+      } else {
+        api.chats.sendImageMessages(selectedChatId, uploadedFiles).catch((err) => console.error(err));
+      }
+    }, []);
+    const { getRootProps, getInputProps } = useDropzone({ onDrop: onUpload });
+    return (
+      <div {...getRootProps()}>
+        <input {...getInputProps()} />
+        <Gallery size="normal" />
+      </div>
+    );
   };
 
   const sendFirstImageMessages = async (images) => {

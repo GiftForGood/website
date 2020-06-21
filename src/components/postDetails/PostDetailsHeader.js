@@ -65,7 +65,7 @@ const PostDetailsHeader = ({
 
   const handleOnClickChatBtn = (event) => {
     event.preventDefault();
-    router.push(chatType === 'Chat' ? `/chat/${postId}?postType=${postType}` : `/chat/?postId=${postId}`);
+    router.push(chatType === 'Chat' ? `/chat/${postId}?postType=${postType}` : `/chat?postId=${postId}`);
   };
 
   const handleOnClickShareBtn = () => {

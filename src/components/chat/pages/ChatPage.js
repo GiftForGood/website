@@ -8,14 +8,39 @@ import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import { EMAIL_BAR_HEIGHT, NAVBAR_HEIGHT } from '../../../../utils/constants/navbar';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 
-const ChatPage = ({ user, postId, postType, isForSpecificPost }) => {
+const NoChatsContainer = styled.div`
+  margin: 0 auto;
+  margin-top: 40vh;
+  width: fit-content;
+`;
+
+const ChatPage = ({ user, postId, postType, isViewingChatsForMyPost }) => {
   const [selectedChatId, setSelectedChatId] = useState(null);
   const [isNewChat, setIsNewChat] = useState(false);
+  const [hasNoChatForOwnPost, setHasNoChatForOwnPost] = useState(true);
 
   useEffect(() => {
     // only get chats for post if postId query is given
     if (postId) {
-      api.chats.getChatsForPost(postId).then((rawChats) => setIsNewChat(rawChats.docs.length === 0));
+      api.chats.getChatsForPost(postId).then((rawChats) => {
+        // sometimes getChatsForPost does not finish executing
+        setIsNewChat(rawChats.docs.length === 0);
+
+        // if viewing own chats for a specific post and the post have no chat
+        if (isViewingChatsForMyPost && rawChats.docs.length === 0) {
+          setHasNoChatForOwnPost(true);
+        } else {
+          setHasNoChatForOwnPost(false);
+        }
+
+        // if you are continue-ing to chat with a post that is not yours, automatically select chat and show
+        // the messsages
+        if (!isViewingChatsForMyPost && rawChats.docs.length > 0) {
+          setSelectedChatId(rawChats.docs[0].data().chatId);
+        }
+      });
+    } else {
+      setHasNoChatForOwnPost(false);
     }
   }, []);
 
@@ -41,7 +66,7 @@ const ChatPage = ({ user, postId, postType, isForSpecificPost }) => {
           isNewChat={isNewChat}
           postId={postId}
           postType={postType}
-          isForSpecificPost={isForSpecificPost}
+          isViewingChatsForMyPost={isViewingChatsForMyPost}
         />
         <ChatDialog
           loggedInUser={user}
@@ -67,7 +92,7 @@ const ChatPage = ({ user, postId, postType, isForSpecificPost }) => {
             isNewChat={isNewChat}
             postId={postId}
             postType={postType}
-            isForSpecificPost={isForSpecificPost}
+            isViewingChatsForMyPost={isViewingChatsForMyPost}
           />
         ) : (
           <ChatDialog
@@ -84,6 +109,10 @@ const ChatPage = ({ user, postId, postType, isForSpecificPost }) => {
       </Grid>
     );
   };
+
+  if (hasNoChatForOwnPost && isViewingChatsForMyPost) {
+    return <NoChatsContainer>No chats for this post yet.</NoChatsContainer>;
+  }
 
   return isTablet ? <ChatPageTabletAndDesktop /> : <ChatPageMobile />;
 };

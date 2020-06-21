@@ -5,6 +5,7 @@ import { colors } from '../../../../utils/constants/colors';
 import { Button, Heading, Stack } from '@kiwicom/orbit-components/lib';
 import { getFormattedDateRange } from '../../../../utils/api/time';
 import Modal, { ModalSection, ModalFooter } from '@kiwicom/orbit-components/lib/Modal';
+import { donations } from '../../../../utils/constants/postType';
 import api from '../../../../utils/api';
 
 const okButton = styled.button`
@@ -25,13 +26,21 @@ const DATE = '5';
 const title = 'Suggest Dates to deliver';
 const description = '*Please select up to ' + DATE + ' dates';
 
-const CalendarModal = ({ selectedChatId, setSelectedChatId, isNewChat, setIsNewChat, onShow, onHide }) => {
+const CalendarModal = ({
+  postType,
+  postId,
+  selectedChatId,
+  setSelectedChatId,
+  isNewChat,
+  setIsNewChat,
+  onShow,
+  onHide,
+}) => {
   const [selectedDates, setSelectedDates] = useState([]);
   if (!onShow) {
     return <div></div>;
   }
   const onClickOk = () => {
-    console.log(selectedDates);
     if (selectedDates.length > 0) {
       const message = selectedDates
         .map((selectedDate) => getFormattedDateRange(selectedDate.startDate, selectedDate.endDate))
@@ -40,7 +49,7 @@ const CalendarModal = ({ selectedChatId, setSelectedChatId, isNewChat, setIsNewC
         sendFirstCalendarMessage(message)
           .then((chat) => {
             // need to get the chat id from the newly created chat to select chat id
-            setSelectedChatId(chat.data().chatId);
+            setSelectedChatId(chat.chatId);
             setIsNewChat(false);
           })
           .catch((err) => console.error(err));

@@ -27,6 +27,8 @@ const ButtonsContainer = styled.div`
  * @param {string} rating is the rating of the opposite user
  */
 const ChatDialogUserRow = ({
+  postId,
+  postType,
   selectedChatId,
   setSelectedChatId,
   isNewChat,
@@ -61,6 +63,8 @@ const ChatDialogUserRow = ({
               Suggest Dates
             </Button>
             <CalendarModal
+              postType={postType}
+              postId={postId}
               selectedChatId={selectedChatId}
               setSelectedChatId={setSelectedChatId}
               isNewChat={isNewChat}

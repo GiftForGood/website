@@ -21,16 +21,13 @@ const ListOfChatsContainer = styled.div`
   border-right: 1px solid ${colors.chatBorders};
 `;
 
-const ListOfChats = ({ user, setSelectedChatId, isNewChat, postId, postType, isForSpecificPost }) => {
+const ListOfChats = ({ user, setSelectedChatId, isNewChat, postId, postType, isViewingChatsForMyPost }) => {
   const [chats, setChats] = useState([]);
 
-  /**
-   * TODO: get list of chats from api
-   */
   useEffect(() => {
     let unsubscribeFunction;
-    if (isForSpecificPost) {
-      api.chats.subscribeToChatsForPost(updateChats).then((fn) => {
+    if (isViewingChatsForMyPost) {
+      api.chats.subscribeToChatsForPost(postId, updateChats).then((fn) => {
         unsubscribeFunction = fn;
       });
     } else {
@@ -54,8 +51,6 @@ const ListOfChats = ({ user, setSelectedChatId, isNewChat, postId, postType, isF
       // need to get modified chat to first position
       setChats((prevChats) => {
         const chatsWithModifiedChatRemoved = prevChats.filter((chat) => chat.chatId !== changedDoc.data().chatId);
-        console.log(changedDoc.data().lastMessage.dateTime);
-        console.log(chatsWithModifiedChatRemoved[0].lastMessage.dateTime);
         if (
           chatsWithModifiedChatRemoved.length == 0 ||
           changedDoc.data().lastMessage.dateTime > chatsWithModifiedChatRemoved[0].lastMessage.dateTime
@@ -68,7 +63,7 @@ const ListOfChats = ({ user, setSelectedChatId, isNewChat, postId, postType, isF
   };
 
   const getNextBatchOfChats = () => {
-    if (isForSpecificPost) {
+    if (isViewingChatsForMyPost) {
       api.chats.getChatsForPost(postId, chats[chats.length - 1]).then((rawChats) => {
         const newChats = rawChats.docs.map((rawChat) => rawChat.data());
         setChats([...chats, ...newChats]);
