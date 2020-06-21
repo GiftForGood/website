@@ -54,7 +54,15 @@ const ListOfChats = ({ user, setSelectedChatId, isNewChat, postId, postType, isF
       // need to get modified chat to first position
       setChats((prevChats) => {
         const chatsWithModifiedChatRemoved = prevChats.filter((chat) => chat.chatId !== changedDoc.data().chatId);
-        return [changedDoc.data(), ...chatsWithModifiedChatRemoved];
+        console.log(changedDoc.data().lastMessage.dateTime);
+        console.log(chatsWithModifiedChatRemoved[0].lastMessage.dateTime);
+        if (
+          chatsWithModifiedChatRemoved.length == 0 ||
+          changedDoc.data().lastMessage.dateTime > chatsWithModifiedChatRemoved[0].lastMessage.dateTime
+        ) {
+          return [changedDoc.data(), ...chatsWithModifiedChatRemoved];
+        }
+        return prevChats;
       });
     }
   };
