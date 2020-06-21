@@ -8,7 +8,10 @@ const TopNavigationBar = dynamic(() => import('../../src/components/navbar/modul
   ssr: false,
 });
 
-// This is the URL to view your own chats
+/**
+ * URL when creating a new chat or viewing an existing chat for another user's chat
+ * e.g. /chat/[postId]?postType=[postType]
+ */
 export async function getServerSideProps({ params, req, res, query }) {
   const user = await isAuthenticated(req, res);
   if (!user) {
@@ -17,14 +20,19 @@ export async function getServerSideProps({ params, req, res, query }) {
   }
   const postId = params.postId ? params.postId : null;
   const postType = query.postType ? query.postType : null;
+
+  /**
+   * Check if both postId and postType is provided
+   */
   if (!postId || !postType) {
-    // postId or postType not provided
     res.writeHead(302, { Location: '/' });
     res.end();
   }
 
+  /**
+   * Check if post exists
+   */
   const rawPost = await api[postType].get(postId).catch((err) => console.error(err));
-  // invalid id as post does not exist
   if (!rawPost.exists) {
     res.writeHead(302, { Location: '/' });
     res.end();

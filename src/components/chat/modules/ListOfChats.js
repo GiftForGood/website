@@ -6,7 +6,6 @@ import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import { colors } from '../../../../utils/constants/colors';
 import { MODIFIED, ADDED } from '../../../../utils/constants/chatSubscriptionChange';
-import { donations, wishes } from '../../../../utils/constants/postType';
 
 const ListOfChatsContainer = styled.div`
   min-width: 200px;
@@ -21,7 +20,7 @@ const ListOfChatsContainer = styled.div`
   border-right: 1px solid ${colors.chatBorders};
 `;
 
-const ListOfChats = ({ user, setSelectedChatId, isNewChat, postId, postType, isViewingChatsForMyPost }) => {
+const ListOfChats = ({ user, setSelectedChatId, postId, isViewingChatsForMyPost }) => {
   const [chats, setChats] = useState([]);
 
   useEffect(() => {

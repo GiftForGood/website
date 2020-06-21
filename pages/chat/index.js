@@ -9,7 +9,12 @@ const TopNavigationBar = dynamic(() => import('../../src/components/navbar/modul
   ssr: false,
 });
 
-// This is the URL to view your own chats
+/**
+ * URL when viewing all of your chats, or viewing all of your chats for a particular post that you created
+ *
+ * viewing all of your chats: /chat
+ * viewing all of your chats for a particular post you created: /chat?postId=[postId]
+ */
 export async function getServerSideProps({ params, req, res, query }) {
   const user = await isAuthenticated(req, res);
   if (!user) {
@@ -17,12 +22,13 @@ export async function getServerSideProps({ params, req, res, query }) {
     res.end();
   }
 
-  // get all chats if postId not given
   const postId = query.postId ? query.postId : null;
   const isViewingChatsForMyPost = postId ? true : false;
   const postType = user.user.donor ? donations : wishes;
 
-  // checking if the logged in user is the post owner, if not then route back to home
+  /**
+   * Check if logged in user is the post owner, if chats for a particular post is queried
+   */
   if (postId) {
     const rawPost = await api[postType].get(postId).catch((err) => console.error(err));
     if (!rawPost.exists) {

@@ -35,17 +35,27 @@ const ChatDialogContent = ({
   postType,
 }) => {
   const { isTablet } = useMediaQuery();
-  let title, oppositeUserName, oppositeUserProfileImageUrl;
-  if (post == null || typeof post == 'undefined') {
-    title = chat.post.title;
+  let chatPostTitle, oppositeUserName, oppositeUserProfileImageUrl, chatPostType, chatPostId;
+  const isCreatingNewChatForAPost = postId && isNewChat;
+
+  // obtain post details accordingly
+  if (isCreatingNewChatForAPost) {
+    // get from post
+    chatPostTitle = post.title;
+    oppositeUserName = post.user.userName;
+    oppositeUserProfileImageUrl = post.user.profileImageUrl;
+    chatPostType = postType;
+    chatPostId = postId;
+  } else {
+    // get from chat
+    chatPostTitle = chat.post.title;
     const oppositeUser = chat.npo.id === loggedInUser.user.userId ? chat.donor : chat.npo;
     oppositeUserName = oppositeUser.name;
     oppositeUserProfileImageUrl = oppositeUser.profileImageUrl;
-  } else {
-    title = post.title;
-    oppositeUserName = post.user.userName;
-    oppositeUserProfileImageUrl = post.user.profileImageUrl;
+    chatPostType = chat.post.type;
+    chatPostId = chat.post.id;
   }
+
   return (
     <>
       <Stack direction="column" spacing="none">
@@ -60,8 +70,8 @@ const ChatDialogContent = ({
           />
         )}
         <ChatDialogUserRow
-          postId={postId}
-          postType={postType}
+          postId={chatPostType}
+          postType={chatPostType}
           rating={5} // apparently rating is not within the user in donations/wishes, default val for now
           name={oppositeUserName}
           profileImageUrl={oppositeUserProfileImageUrl}
@@ -70,11 +80,7 @@ const ChatDialogContent = ({
           isNewChat={isNewChat}
           setIsNewChat={setIsNewChat}
         />
-        <ChatDialogViewPostRow
-          postType={selectedChatId ? chat.post.type : postType}
-          postId={selectedChatId ? chat.post.id : postId}
-          postTitle={title}
-        />
+        <ChatDialogViewPostRow postType={chatPostType} postId={chatPostId} postTitle={chatPostTitle} />
         <ChatDialogMessages
           loggedInUser={loggedInUser}
           selectedChatId={selectedChatId}
@@ -87,8 +93,8 @@ const ChatDialogContent = ({
         setSelectedChatId={setSelectedChatId}
         isNewChat={isNewChat}
         setIsNewChat={setIsNewChat}
-        postType={postType}
-        postId={postId}
+        postType={chatPostType}
+        postId={chatPostId}
       />
     </>
   );
@@ -104,15 +110,28 @@ const ChatDialog = ({
   postId,
   postType,
 }) => {
-  const [post, setPost] = useState(null); // note that the post is only needed when creating a new chat for a post
+  /**
+   * note that the post is only needed when creating a new chat for a post, in order to get
+   * details of the post, since there's no chat to reference to get the post data from.
+   */
+  const [post, setPost] = useState(null);
+
+  /**
+   * note that chat is used to obtain the details of the post, when there's already existing
+   * messages for that chat.
+   */
   const [chat, setChat] = useState(null);
+
+  const isCreatingNewChatForAPost = postId && isNewChat;
+  const hasSelectedChat = selectedChatId !== null;
+
   useEffect(() => {
     // when creating a new chat
-    if (postId && isNewChat) {
+    if (isCreatingNewChatForAPost) {
       api[postType].get(postId).then((rawPost) => {
         setPost(rawPost.data());
       });
-    } else if (selectedChatId) {
+    } else if (hasSelectedChat) {
       // when a chat has been selected
       api.chats.getChat(selectedChatId).then((rawChat) => {
         setChat(rawChat.data());
@@ -121,7 +140,7 @@ const ChatDialog = ({
   }, []);
 
   // no chat selected yet and is not creating a new chat for a post
-  if (selectedChatId == null && !isNewChat) {
+  if (!hasSelectedChat && !isNewChat) {
     return (
       <ChatDialogContainer>
         <MessageContainer>
@@ -131,13 +150,13 @@ const ChatDialog = ({
     );
   }
 
-  // if creating new post, but the post hasn't been populated yet
-  if (post == null && postId && isNewChat) {
+  // when creating new post, but the post hasn't been populated yet
+  if (post == null && isCreatingNewChatForAPost) {
     return null;
   }
 
-  // if not creating new post, but the chat hasn't been populated yet
-  if (!isNewChat && chat == null) {
+  // when not creating new chat, but the chat hasn't been populated yet
+  if (!isCreatingNewChatForAPost && chat == null) {
     return null;
   }
 

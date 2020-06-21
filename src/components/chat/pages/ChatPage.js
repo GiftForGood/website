@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Grid, Stack } from '@kiwicom/orbit-components/lib';
+import { Grid } from '@kiwicom/orbit-components/lib';
 import ListOfChats from '../modules/ListOfChats';
 import ChatDialog from '../modules/ChatDialog';
 import api from '../../../../utils/api';
-import styled, { css } from 'styled-components';
-import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
+import styled from 'styled-components';
 import { EMAIL_BAR_HEIGHT, NAVBAR_HEIGHT } from '../../../../utils/constants/navbar';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 
@@ -23,18 +22,16 @@ const ChatPage = ({ user, postId, postType, isViewingChatsForMyPost }) => {
     // only get chats for post if postId query is given
     if (postId) {
       api.chats.getChatsForPost(postId).then((rawChats) => {
-        // sometimes getChatsForPost does not finish executing
         setIsNewChat(rawChats.docs.length === 0);
 
-        // if viewing own chats for a specific post and the post have no chat
         if (isViewingChatsForMyPost && rawChats.docs.length === 0) {
           setHasNoChatForOwnPost(true);
         } else {
           setHasNoChatForOwnPost(false);
         }
 
-        // if you are continue-ing to chat with a post that is not yours, automatically select chat and show
-        // the messsages
+        // if continue to chat with a post that is not yours, automatically select chat and show the messsages
+        // note: assumes that you can only have one chat with a post that is not yours
         if (!isViewingChatsForMyPost && rawChats.docs.length > 0) {
           setSelectedChatId(rawChats.docs[0].data().chatId);
         }
@@ -63,9 +60,7 @@ const ChatPage = ({ user, postId, postType, isViewingChatsForMyPost }) => {
         <ListOfChats
           user={user}
           setSelectedChatId={setSelectedChatId}
-          isNewChat={isNewChat}
           postId={postId}
-          postType={postType}
           isViewingChatsForMyPost={isViewingChatsForMyPost}
         />
         <ChatDialog
@@ -89,9 +84,7 @@ const ChatPage = ({ user, postId, postType, isViewingChatsForMyPost }) => {
           <ListOfChats
             user={user}
             setSelectedChatId={setSelectedChatId}
-            isNewChat={isNewChat}
             postId={postId}
-            postType={postType}
             isViewingChatsForMyPost={isViewingChatsForMyPost}
           />
         ) : (

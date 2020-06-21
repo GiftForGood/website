@@ -64,6 +64,9 @@ const LeftMessageSectionContainer = styled.div`
   `)}
 `;
 
+/**
+ * Gets the corresponding chat bubble based on message content type
+ */
 const getMessageContent = (messageContentType, content, isByLoggedInUser) => {
   if (messageContentType === 'text') {
     return <ChatBubbleForText text={content} isByLoggedInUser={isByLoggedInUser} />;
@@ -75,6 +78,7 @@ const getMessageContent = (messageContentType, content, isByLoggedInUser) => {
     const dateTimes = content.split(','); // dateTimes are separated by comma delimiter
     return <ChatBubbleForCalendar dateTimes={dateTimes} isByLoggedInUser={isByLoggedInUser} />;
   }
+  // unknown message content type
   return <div>N.A.</div>;
 };
 
@@ -118,21 +122,24 @@ const RightMessageSection = ({ message }) => {
  */
 const ChatDialogMessages = ({ loggedInUser, selectedChatId, isNewChat, navBarHeight }) => {
   const [chatMessages, setChatMessages] = useState([]);
+  const { isTablet } = useMediaQuery();
   useEffect(() => {
+    // when selected a chat, subscribe to the corresponding chat messages
     if (selectedChatId != null || !isNewChat) {
       api.chats.subscribeToChatMessages(selectedChatId, updateChatMessages).then(() => {});
     }
   }, [selectedChatId]);
-  const { isTablet } = useMediaQuery();
-  const updateChatMessages = (chatDoc) => {
+
+  const updateChatMessages = (chatMessageDoc) => {
     setChatMessages((prevChatMessages) => {
-      const newChat = chatDoc.data();
+      const newChatMessage = chatMessageDoc.data();
       const lastChatMessage = prevChatMessages[prevChatMessages.length - 1];
-      // if it's not the first message and the new chat added is later than last chat
-      if (lastChatMessage && lastChatMessage.dateTime < newChat.dateTime) {
-        return [...prevChatMessages, chatDoc.data()];
+
+      // insert chat message to correct position
+      if (lastChatMessage && lastChatMessage.dateTime < newChatMessage.dateTime) {
+        return [...prevChatMessages, newChatMessage];
       }
-      return [chatDoc.data(), ...prevChatMessages];
+      return [newChatMessage, ...prevChatMessages];
     });
   };
 
@@ -150,12 +157,14 @@ const ChatDialogMessages = ({ loggedInUser, selectedChatId, isNewChat, navBarHei
 
   // offsetHeight is used to calculate the amount of height left for the ChatDialogMessages to occupy
   const offsetHeight = navBarHeight + sumOfOtherComponentHeights;
+
   return (
     <CardSection>
       <MessageContainer offsetHeight={offsetHeight}>
         <Stack direction="column">
           {chatMessages &&
             chatMessages.map((message, index) => {
+              // right side is logged in user's messages, left side is opposite user's
               return message.sender.id === loggedInUser.user.userId ? (
                 <RightMessageSection key={index} message={message} />
               ) : (
