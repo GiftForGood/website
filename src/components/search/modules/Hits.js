@@ -10,7 +10,12 @@ const Hits = ({ hits, type }) => {
   return (
     <>
       {hits.map((hit) => (
-        <ListChoice description={hit.description} title={hit.title} onClick={() => handleOnClick(type, hit.objectID)} key={hit.objectID} />
+        <ListChoice
+          description={hit.description}
+          title={hit.title}
+          onClick={() => handleOnClick(type, hit.objectID)}
+          key={hit.objectID}
+        />
       ))}
     </>
   );
