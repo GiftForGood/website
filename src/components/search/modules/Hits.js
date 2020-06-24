@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, ListChoice } from '@kiwicom/orbit-components/lib';
+import { ListChoice } from '@kiwicom/orbit-components/lib';
 import { useRouter } from 'next/router';
 
 const Hits = ({ hits, type }) => {
@@ -10,7 +10,7 @@ const Hits = ({ hits, type }) => {
   return (
     <>
       {hits.map((hit) => (
-        <ListChoice description={hit.description} title={hit.title} onClick={() => handleOnClick(type, hit.objectID)} />
+        <ListChoice description={hit.description} title={hit.title} onClick={() => handleOnClick(type, hit.objectID)} key={hit.objectID} />
       ))}
     </>
   );
