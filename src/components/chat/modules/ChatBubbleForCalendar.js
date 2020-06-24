@@ -45,7 +45,6 @@ const ChatBubbleForCalendar = ({ dateTimes, isByLoggedInUser, sender, loggedInUs
                   .catch((err) => console.error(err));
               }
             };
-            // TODO: implement on click handler when selecting a time slot
             return (
               <CalendarButton
                 dateTime={dateTime}
