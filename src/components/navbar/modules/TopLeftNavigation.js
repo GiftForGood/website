@@ -6,6 +6,7 @@ import LogoButton from '../../buttons/LogoButton';
 import { companyLogoImagePath } from '../../../../utils/constants/imagePaths';
 import styled from 'styled-components';
 import NavSearchBar from '../../search/modules/NavSearchBar';
+import Link from 'next/link';
 
 const SearchBarContainer = styled.div`
   min-width: 350px;
@@ -23,12 +24,17 @@ const TopLeftNavigation = ({ onHamburgerClick }) => {
               <NavSearchBar />
             </SearchBarContainer>
           )}
-          <ButtonLink transparent type="secondary" href={'/'}>
-            Wishes
-          </ButtonLink>
-          <ButtonLink transparent type="secondary" href={'/donations'}>
-            Donations
-          </ButtonLink>
+          <Link href="/">
+            <ButtonLink transparent type="secondary" href={'/'}>
+              Wishes
+            </ButtonLink>
+          </Link>
+
+          <Link href="/donations">
+            <ButtonLink transparent type="secondary" href={'/donations'}>
+              Donations
+            </ButtonLink>
+          </Link>
         </>
       ) : (
         <ButtonLink iconLeft={<MenuHamburger />} transparent type="secondary" onClick={onHamburgerClick} />
