@@ -67,7 +67,7 @@ const LeftMessageSectionContainer = styled.div`
 /**
  * Gets the corresponding chat bubble based on message content type
  */
-const getMessageContent = (messageContentType, content, isByLoggedInUser) => {
+const getMessageContent = (messageContentType, content, isByLoggedInUser, sender, loggedInUser, selectedChatId) => {
   if (messageContentType === 'text') {
     return <ChatBubbleForText text={content} isByLoggedInUser={isByLoggedInUser} />;
   }
@@ -76,20 +76,28 @@ const getMessageContent = (messageContentType, content, isByLoggedInUser) => {
   }
   if (messageContentType === 'calendar') {
     const dateTimes = content.split(','); // dateTimes are separated by comma delimiter
-    return <ChatBubbleForCalendar dateTimes={dateTimes} isByLoggedInUser={isByLoggedInUser} />;
+    return (
+      <ChatBubbleForCalendar
+        dateTimes={dateTimes}
+        isByLoggedInUser={isByLoggedInUser}
+        sender={sender}
+        loggedInUser={loggedInUser}
+        selectedChatId={selectedChatId}
+      />
+    );
   }
   // unknown message content type
   return <div>N.A.</div>;
 };
 
-const LeftMessageSection = ({ message }) => {
+const LeftMessageSection = ({ message, loggedInUser, selectedChatId }) => {
   const { content, sender, dateTime, contentType } = message;
   return (
     <LeftMessageSectionContainer>
       <Stack direction="row" grow={false}>
         <ProfileAvatar imageUrl={sender.profileImageUrl} width={25} height={25} />
         <Stack direction="column" spacing="extraTight">
-          {getMessageContent(contentType, content, false)}
+          {getMessageContent(contentType, content, false, sender, loggedInUser, selectedChatId)}
           <GreyText size="tiny">{getTimeDifferenceFromNow(dateTime)}</GreyText>
         </Stack>
       </Stack>
@@ -97,7 +105,7 @@ const LeftMessageSection = ({ message }) => {
   );
 };
 
-const RightMessageSection = ({ message }) => {
+const RightMessageSection = ({ message, loggedInUser, selectedChatId }) => {
   const { content, sender, dateTime, contentType } = message;
   return (
     <Stack direction="column" align="end" spaceAfter="none" grow={false}>
@@ -105,7 +113,7 @@ const RightMessageSection = ({ message }) => {
         <Stack direction="row">
           <RightColumnStackContainer>
             <Stack direction="column" spacing="extraTight" align="end">
-              {getMessageContent(contentType, content, true)}
+              {getMessageContent(contentType, content, true, sender, loggedInUser, selectedChatId)}
               <GreyText size="tiny">{getTimeDifferenceFromNow(dateTime)}</GreyText>
             </Stack>
           </RightColumnStackContainer>
@@ -166,9 +174,19 @@ const ChatDialogMessages = ({ loggedInUser, selectedChatId, isNewChat, navBarHei
             chatMessages.map((message, index) => {
               // right side is logged in user's messages, left side is opposite user's
               return message.sender.id === loggedInUser.user.userId ? (
-                <RightMessageSection key={index} message={message} />
+                <RightMessageSection
+                  key={index}
+                  message={message}
+                  loggedInUser={loggedInUser}
+                  selectedChatId={selectedChatId}
+                />
               ) : (
-                <LeftMessageSection key={index} message={message} />
+                <LeftMessageSection
+                  key={index}
+                  message={message}
+                  loggedInUser={loggedInUser}
+                  selectedChatId={selectedChatId}
+                />
               );
             })}
         </Stack>

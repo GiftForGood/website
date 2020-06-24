@@ -5,6 +5,7 @@ import { Stack } from '@kiwicom/orbit-components/lib';
 import WhiteText from '../../text/WhiteText';
 import BlackText from '../../text/BlackText';
 import CalendarButton from '../../buttons/CalendarButton';
+import api from '../../../../utils/api';
 
 const ChatTextContainer = styled.div`
   width: fit-content;
@@ -23,7 +24,7 @@ const ChatButtonsContainer = styled.div`
  * @param {string[]} dateTimes are the date time selections to show to the user
  * @param {boolean} isByLoggedInUser is whether the image is sent by logged in user
  */
-const ChatBubbleForCalendar = ({ dateTimes, isByLoggedInUser }) => {
+const ChatBubbleForCalendar = ({ dateTimes, isByLoggedInUser, sender, loggedInUser, selectedChatId }) => {
   const text = 'Here are the dates I have selected, please choose 1 that fits your timing';
   return (
     <Stack direction="column" spacing="condensed" align={isByLoggedInUser ? 'end' : 'start'}>
@@ -33,8 +34,26 @@ const ChatBubbleForCalendar = ({ dateTimes, isByLoggedInUser }) => {
       <ChatButtonsContainer>
         <Stack direction="column" spacing="condensed">
           {dateTimes.map((dateTime, i) => {
+            const handleClickDateTime = () => {
+              // Not sure if need this check as the button is disabled for the owner
+              if (sender.id !== loggedInUser.user.userId) {
+                // send auto generated message when the user that clicked isn't the one that sent
+                const message = `I am available for ${dateTime}`;
+                api.chats
+                  .sendTextMessage(selectedChatId, message)
+                  .then(() => {})
+                  .catch((err) => console.error(err));
+              }
+            };
             // TODO: implement on click handler when selecting a time slot
-            return <CalendarButton dateTime={dateTime} onClickHandler={function () {}} key={i} />;
+            return (
+              <CalendarButton
+                dateTime={dateTime}
+                onClickHandler={handleClickDateTime}
+                isByLoggedInUser={isByLoggedInUser}
+                key={i}
+              />
+            );
           })}
         </Stack>
       </ChatButtonsContainer>
