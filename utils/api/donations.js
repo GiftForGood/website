@@ -7,6 +7,7 @@ import { DONATIONS_BATCH_SIZE } from './constants';
 import { NEW, USED } from '../constants/itemCondition';
 import { TIMESTAMP } from '../constants/donationsSortType';
 import { PENDING, CLOSED, COMPLETED } from '../constants/postStatus';
+import { ALL_TEXT } from '../constants/imageVariation';
 import { getLocations, getUpdatedLocations } from './common/location';
 import {
   getCategoryInfo,
@@ -15,6 +16,7 @@ import {
   getCustomPostCategoryInfo,
   getCustomPostCategoryInfos,
 } from './common/categories';
+import { uploadImage, deleteImage } from './common/images';
 import DonationError from './error/donationsError';
 
 const donationsCollection = db.collection('donations');
@@ -115,13 +117,6 @@ class DonationsAPI {
 
     return newDonation.get();
   }
-
-  /**
-   * Search donations containing the text both in the title and description
-   * @param {string} text The search text
-   * @return {object} A firebase document of donations that contain the text
-   */
-  async search(text) {}
 
   /**
    * Get the top X pending donations belonging to a category, sorted by timestamp
@@ -491,6 +486,7 @@ class DonationsAPI {
   }
 
   async _uploadImages(userId, donationId, images, coverImage = null) {
+    const pathToUpload = `donors/${userId}/donations/${donationId}/`;
     let imageInfos = [];
 
     for (const image of images) {
@@ -508,33 +504,29 @@ class DonationsAPI {
     }
 
     const imagesPromise = imageInfos.map((imageInfo) => {
-      return this._uploadImage(userId, donationId, Object.values(imageInfo)[0], Object.keys(imageInfo)[0]);
+      return uploadImage(Object.values(imageInfo)[0], Object.keys(imageInfo)[0], pathToUpload);
     });
 
-    const imageUrls = await Promise.all(imagesPromise);
+    const rawImageUrls = await Promise.all(imagesPromise);
+    
+    let imageUrls = [];
+    for (const rawImageUrl of rawImageUrls) {
+      let imageUrlMapping = {'raw': rawImageUrl}
+      for (const sizeText of ALL_TEXT) {
+        imageUrlMapping[sizeText] = "";
+      }
+      imageUrls.push(imageUrlMapping);
+    }
     const coverImageUrl = coverImage !== null ? imageUrls[0] : '';
 
     return [coverImageUrl, imageUrls];
   }
 
-  async _uploadImage(userId, donationId, image, imageName) {
-    const storageRef = firebaseStorage.ref();
-    const imageRef = storageRef.child(`donors/${userId}/donations/${donationId}/${imageName}`);
-    await imageRef.put(image);
-
-    return imageRef.getDownloadURL();
-  }
-
   async _deleteImages(userId, donationId, imageNames) {
+    const pathToImage = `donors/${userId}/donations/${donationId}/`;
     for (const imageName of imageNames) {
-      this._deleteImage(userId, donationId, imageName);
+      deleteImage(imageName, pathToImage);
     }
-  }
-
-  async _deleteImage(userId, donationId, imageName) {
-    const storageRef = firebaseStorage.ref();
-    const imageRef = storageRef.child(`donors/${userId}/donations/${donationId}/${imageName}`);
-    imageRef.delete();
   }
 
   async _getDonationImages(userId, donationId, updatedImages, coverImage) {
