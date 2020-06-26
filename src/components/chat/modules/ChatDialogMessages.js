@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Stack } from '@kiwicom/orbit-components/lib';
+import React, { useState, useEffect, useRef } from 'react';
+import { Stack, Loading } from '@kiwicom/orbit-components/lib';
 import api from '../../../../utils/api';
 import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
@@ -11,6 +11,8 @@ import { getTimeDifferenceFromNow } from '../../../../utils/api/time';
 import GreyText from '../../text/GreyText';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 import ChatBubbleForCalendar from './ChatBubbleForCalendar';
+import InfiniteScroll from 'react-infinite-scroller';
+import { CHAT_MESSAGES_BATCH_SIZE } from '../../../../utils/api/constants';
 
 /**
  * To be changed if any of the heights change, the extra "+1 or +2" for the top/bottom borders
@@ -129,25 +131,52 @@ const RightMessageSection = ({ message, loggedInUser, selectedChatId }) => {
  * @param {number} navBarHeight is the height of the navbar
  */
 const ChatDialogMessages = ({ loggedInUser, selectedChatId, isNewChat, navBarHeight }) => {
-  const [chatMessages, setChatMessages] = useState([]);
+  const [chatMessageDocs, setChatMessageDocs] = useState([]);
+  const [shouldSeeMore, setShouldSeeMore] = useState(true);
   const { isTablet } = useMediaQuery();
   useEffect(() => {
     // when selected a chat, subscribe to the corresponding chat messages
     if (selectedChatId != null || !isNewChat) {
       api.chats.subscribeToChatMessages(selectedChatId, updateChatMessages).then(() => {});
+      disableFurtherLoadsIfMessagesLessThanOneBatch();
     }
   }, [selectedChatId]);
 
   const updateChatMessages = (chatMessageDoc) => {
-    setChatMessages((prevChatMessages) => {
+    setChatMessageDocs((prevChatMessageDocs) => {
       const newChatMessage = chatMessageDoc.data();
-      const lastChatMessage = prevChatMessages[prevChatMessages.length - 1];
+      const lastChatMessage = prevChatMessageDocs[prevChatMessageDocs.length - 1];
 
-      // insert chat message to correct position
+      // insert chat message doc to correct position
       if (lastChatMessage && lastChatMessage.dateTime < newChatMessage.dateTime) {
-        return [...prevChatMessages, newChatMessage];
+        return [...prevChatMessageDocs, chatMessageDoc];
       }
-      return [newChatMessage, ...prevChatMessages];
+      return [chatMessageDoc, ...prevChatMessageDocs];
+    });
+  };
+
+  /**
+   * A hacky way to determine if we should load more after the first batch,
+   * since the subscription method does not tell whether the first load of chat
+   * messages are less than one CHAT_MESSAGES_BATCH_SIZE
+   */
+  const disableFurtherLoadsIfMessagesLessThanOneBatch = () => {
+    api.chats.getChatMessages(selectedChatId).then((rawNewChatMessages) => {
+      if (rawNewChatMessages.docs.length < CHAT_MESSAGES_BATCH_SIZE) {
+        // loaded all chat messages
+        setShouldSeeMore(false);
+      }
+    });
+  };
+
+  const handleOnSeeMore = () => {
+    api.chats.getChatMessages(selectedChatId, chatMessageDocs[0]).then((rawNewChatMessages) => {
+      const newChatMessageDocs = rawNewChatMessages.docs;
+      setChatMessageDocs([...newChatMessageDocs, ...chatMessageDocs]);
+      if (newChatMessageDocs.length < CHAT_MESSAGES_BATCH_SIZE) {
+        // loaded all chat messages
+        setShouldSeeMore(false);
+      }
     });
   };
 
@@ -169,27 +198,37 @@ const ChatDialogMessages = ({ loggedInUser, selectedChatId, isNewChat, navBarHei
   return (
     <CardSection>
       <MessageContainer offsetHeight={offsetHeight}>
-        <Stack direction="column">
-          {chatMessages &&
-            chatMessages.map((message, index) => {
-              // right side is logged in user's messages, left side is opposite user's
-              return message.sender.id === loggedInUser.user.userId ? (
-                <RightMessageSection
-                  key={index}
-                  message={message}
-                  loggedInUser={loggedInUser}
-                  selectedChatId={selectedChatId}
-                />
-              ) : (
-                <LeftMessageSection
-                  key={index}
-                  message={message}
-                  loggedInUser={loggedInUser}
-                  selectedChatId={selectedChatId}
-                />
-              );
-            })}
-        </Stack>
+        <InfiniteScroll
+          loadMore={handleOnSeeMore}
+          hasMore={shouldSeeMore}
+          isReverse
+          initialLoad={false}
+          useWindow={false}
+          loader={<Loading type="pageLoader" key={0} />}
+        >
+          <Stack direction="column">
+            {chatMessageDocs &&
+              chatMessageDocs.map((messageDoc, index) => {
+                const message = messageDoc.data();
+                // right side is logged in user's messages, left side is opposite user's
+                return message.sender.id === loggedInUser.user.userId ? (
+                  <RightMessageSection
+                    key={index}
+                    message={message}
+                    loggedInUser={loggedInUser}
+                    selectedChatId={selectedChatId}
+                  />
+                ) : (
+                  <LeftMessageSection
+                    key={index}
+                    message={message}
+                    loggedInUser={loggedInUser}
+                    selectedChatId={selectedChatId}
+                  />
+                );
+              })}
+          </Stack>
+        </InfiniteScroll>
       </MessageContainer>
     </CardSection>
   );
