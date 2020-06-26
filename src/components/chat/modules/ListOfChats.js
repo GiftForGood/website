@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Stack, TileGroup } from '@kiwicom/orbit-components/lib';
+import { Stack, TileGroup, Loading } from '@kiwicom/orbit-components/lib';
 import ChatWithUserCard from '../../card/ChatWithUserCard';
 import api from '../../../../utils/api';
 import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import { colors } from '../../../../utils/constants/colors';
 import { MODIFIED, ADDED } from '../../../../utils/constants/chatSubscriptionChange';
+import InfiniteScroll from 'react-infinite-scroller';
+import { USER_CHATS_BATCH_SIZE } from '../../../../utils/api/constants';
 
 const ListOfChatsContainer = styled.div`
   min-width: 200px;
@@ -21,7 +23,8 @@ const ListOfChatsContainer = styled.div`
 `;
 
 const ListOfChats = ({ user, setSelectedChatId, postId, isViewingChatsForMyPost }) => {
-  const [chats, setChats] = useState([]);
+  const [chatDocs, setChatDocs] = useState([]);
+  const [shouldSeeMore, setShouldSeeMore] = useState(true);
 
   useEffect(() => {
     let unsubscribeFunction;
@@ -32,6 +35,7 @@ const ListOfChats = ({ user, setSelectedChatId, postId, isViewingChatsForMyPost 
     } else {
       api.chats.subscribeToChats(updateChats).then((fn) => (unsubscribeFunction = fn));
     }
+    disableFurtherLoadsIfChatsLessThanOneBatch();
 
     return () => {
       // TODO: unsubscribe to chats
@@ -41,63 +45,107 @@ const ListOfChats = ({ user, setSelectedChatId, postId, isViewingChatsForMyPost 
 
   const updateChats = (changeType, changedDoc) => {
     if (changeType === ADDED) {
-      setChats((prevChats) => {
-        return [...prevChats, changedDoc.data()];
+      setChatDocs((prevChatDocs) => {
+        return [...prevChatDocs, changedDoc];
       });
     }
 
     if (changeType === MODIFIED) {
       // need to get modified chat to first position
-      setChats((prevChats) => {
-        const chatsWithModifiedChatRemoved = prevChats.filter((chat) => chat.chatId !== changedDoc.data().chatId);
+      setChatDocs((prevChatDocs) => {
+        const chatDocsWithModifiedChatRemoved = prevChatDocs.filter(
+          (chat) => chat.data().chatId !== changedDoc.data().chatId
+        );
         if (
-          chatsWithModifiedChatRemoved.length == 0 ||
-          changedDoc.data().lastMessage.dateTime > chatsWithModifiedChatRemoved[0].lastMessage.dateTime
+          chatDocsWithModifiedChatRemoved.length == 0 ||
+          changedDoc.data().lastMessage.dateTime > chatDocsWithModifiedChatRemoved[0].data().lastMessage.dateTime
         ) {
-          return [changedDoc.data(), ...chatsWithModifiedChatRemoved];
+          return [changedDoc, ...chatDocsWithModifiedChatRemoved];
         }
-        return prevChats;
+        return prevChatDocs;
       });
     }
   };
 
-  const getNextBatchOfChats = () => {
+  /**
+   * A hacky way to determine if we should load more after the first batch,
+   * since the subscription method does not tell whether the first load of chats
+   * are less than one USER_CHATS_BATCH_SIZE
+   */
+  const disableFurtherLoadsIfChatsLessThanOneBatch = () => {
     if (isViewingChatsForMyPost) {
-      api.chats.getChatsForPost(postId, chats[chats.length - 1]).then((rawChats) => {
-        const newChats = rawChats.docs.map((rawChat) => rawChat.data());
-        setChats([...chats, ...newChats]);
+      api.chats.getChatsForPost(postId).then((rawChats) => {
+        const newChatDocs = rawChats.docs;
+        if (newChatDocs.length < USER_CHATS_BATCH_SIZE) {
+          setShouldSeeMore(false);
+        }
       });
     } else {
-      api.chats.getChats(chats[chats.length - 1]).then((rawChats) => {
-        const newChats = rawChats.docs.map((rawChat) => rawChat.data());
-        setChats([...chats, ...newChats]);
+      api.chats.getChats().then((rawChats) => {
+        const newChatDocs = rawChats.docs;
+        if (newChatDocs.length < USER_CHATS_BATCH_SIZE) {
+          setShouldSeeMore(false);
+        }
+      });
+    }
+  };
+
+  const handleOnSeeMore = () => {
+    if (isViewingChatsForMyPost) {
+      console.log(chatDocs[0]);
+      console.log(chatDocs[chatDocs.length - 1]);
+      api.chats.getChatsForPost(postId, chatDocs[chatDocs.length - 1]).then((rawChats) => {
+        const newChatDocs = rawChats.docs;
+        if (newChatDocs.length < USER_CHATS_BATCH_SIZE) {
+          setShouldSeeMore(false);
+        }
+        setChatDocs([...chatDocs, ...newChatDocs]);
+      });
+    } else {
+      console.log(chatDocs[0]);
+      console.log(chatDocs[chatDocs.length - 1]);
+      api.chats.getChats(chatDocs[chatDocs.length - 1]).then((rawChats) => {
+        const newChatDocs = rawChats.docs;
+        if (newChatDocs.length < USER_CHATS_BATCH_SIZE) {
+          setShouldSeeMore(false);
+        }
+        setChatDocs([...chatDocs, ...newChatDocs]);
       });
     }
   };
 
   return (
     <ListOfChatsContainer>
-      <Stack direction="column" spacing="none">
-        <TileGroup>
-          {chats.map((chat) => {
-            const { chatId, donor, npo, lastMessage, post } = chat;
-            // get opposite user's details
-            const { name, profileImageUrl } = user.user.userId === donor.id ? npo : donor;
-            return (
-              <ChatWithUserCard
-                key={chatId}
-                chatId={chatId} // initial dummy value
-                name={name}
-                lastMessage={lastMessage.content}
-                contentType={lastMessage.contentType}
-                profileImageUrl={profileImageUrl}
-                postTitle={post.title}
-                setSelectedChatId={setSelectedChatId}
-              />
-            );
-          })}
-        </TileGroup>
-      </Stack>
+      <InfiniteScroll
+        loadMore={handleOnSeeMore}
+        hasMore={shouldSeeMore}
+        initialLoad={false}
+        useWindow={false}
+        loader={<Loading type="pageLoader" key={0} />}
+      >
+        <Stack direction="column" spacing="none">
+          <TileGroup>
+            {chatDocs &&
+              chatDocs.map((chat) => {
+                const { chatId, donor, npo, lastMessage, post } = chat.data();
+                // get opposite user's details
+                const { name, profileImageUrl } = user.user.userId === donor.id ? npo : donor;
+                return (
+                  <ChatWithUserCard
+                    key={chatId}
+                    chatId={chatId} // initial dummy value
+                    name={name}
+                    lastMessage={lastMessage.content}
+                    contentType={lastMessage.contentType}
+                    profileImageUrl={profileImageUrl}
+                    postTitle={post.title}
+                    setSelectedChatId={setSelectedChatId}
+                  />
+                );
+              })}
+          </TileGroup>
+        </Stack>
+      </InfiniteScroll>
     </ListOfChatsContainer>
   );
 };
