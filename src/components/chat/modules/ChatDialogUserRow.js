@@ -29,30 +29,40 @@ const ButtonsContainer = styled.div`
 const ChatDialogUserRow = ({
   postId,
   postType,
+  loggedInUser,
   selectedChatId,
   setSelectedChatId,
   isNewChat,
   setIsNewChat,
-  name,
-  profileImageUrl,
+  oppositeUser,
+  postOwnerId,
+  postEnquirerId,
   rating,
 }) => {
   const [showSuggestDateModal, setShowSuggestDateModal] = useState(false);
 
   const handleShowSuggestDateModal = () => setShowSuggestDateModal(true);
   const handleCloseSuggestDateModal = () => setShowSuggestDateModal(false);
+  const isLoggedInUserThePostOwner = loggedInUser.user.userId === postOwnerId;
   /**
    * TODO: add handling of complete post
    */
-  const handleCompletePost = () => console.log('complete post');
+  const handleCompletePost = () => {
+    console.log(postId);
+    api[postType].complete(postId, postEnquirerId).then(() => {
+      console.log('Complete post successful.');
+      // TODO/KIV: add review and appreciation message modal
+    });
+  };
+
   return (
     <CardSection>
       <Stack direction="row" justify="between" align="center">
         <AvatarContainer>
           <Stack direction="row" align="center">
-            <ProfileAvatar imageUrl={profileImageUrl} />
+            <ProfileAvatar imageUrl={oppositeUser.profileImageUrl} />
             <Stack direction="column" align="start" spacing="extraTight">
-              <BlackText size="small">{name}</BlackText>
+              <BlackText size="small">{oppositeUser.name}</BlackText>
               <RatingStars rating={rating} showEmpty color={colors.ratingStarBackground} size="small" />
             </Stack>
           </Stack>
@@ -72,7 +82,12 @@ const ChatDialogUserRow = ({
               onShow={showSuggestDateModal}
               onHide={handleCloseSuggestDateModal}
             />
-            <Button size="small" onClick={handleCompletePost} asComponent={CompleteButton}>
+            <Button
+              size="small"
+              onClick={handleCompletePost}
+              asComponent={CompleteButton}
+              disabled={!isLoggedInUserThePostOwner}
+            >
               Complete
             </Button>
           </Stack>

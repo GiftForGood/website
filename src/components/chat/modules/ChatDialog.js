@@ -9,6 +9,7 @@ import api from '../../../../utils/api';
 import styled from 'styled-components';
 import ChevronLeft from '@kiwicom/orbit-components/lib/icons/ChevronLeft';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
+import { donations } from '../../../../utils/constants/postType';
 
 const ChatDialogContainer = styled.div`
   width: 100%;
@@ -35,25 +36,26 @@ const ChatDialogContent = ({
   postType,
 }) => {
   const { isTablet } = useMediaQuery();
-  let chatPostTitle, oppositeUserName, oppositeUserProfileImageUrl, chatPostType, chatPostId;
+  let chatPostTitle, oppositeUser, chatPostType, chatPostId, postOwnerId, postEnquirerId;
   const isCreatingNewChatForAPost = postId && isNewChat;
 
   // obtain post details accordingly
   if (isCreatingNewChatForAPost) {
     // get from post
     chatPostTitle = post.title;
-    oppositeUserName = post.user.userName;
-    oppositeUserProfileImageUrl = post.user.profileImageUrl;
+    oppositeUser = post.user;
+    postOwnerId = post.user.id;
+    postEnquirerId = loggedInUser.user.id;
     chatPostType = postType;
     chatPostId = postId;
   } else {
     // get from chat
     chatPostTitle = chat.post.title;
-    const oppositeUser = chat.npo.id === loggedInUser.user.userId ? chat.donor : chat.npo;
-    oppositeUserName = oppositeUser.name;
-    oppositeUserProfileImageUrl = oppositeUser.profileImageUrl;
+    oppositeUser = chat.npo.id === loggedInUser.user.userId ? chat.donor : chat.npo;
     chatPostType = chat.post.type;
     chatPostId = chat.post.id;
+    postOwnerId = chatPostType === donations ? chat.donor.id : chat.npo.id;
+    postEnquirerId = chatPostType === donations ? chat.npo.id : chat.donor.id;
   }
 
   return (
@@ -70,11 +72,13 @@ const ChatDialogContent = ({
           />
         )}
         <ChatDialogUserRow
-          postId={chatPostType}
+          postId={chatPostId}
           postType={chatPostType}
           rating={5} // apparently rating is not within the user in donations/wishes, default val for now
-          name={oppositeUserName}
-          profileImageUrl={oppositeUserProfileImageUrl}
+          loggedInUser={loggedInUser}
+          oppositeUser={oppositeUser}
+          postOwnerId={postOwnerId}
+          postEnquirerId={postEnquirerId}
           selectedChatId={selectedChatId}
           setSelectedChatId={setSelectedChatId}
           isNewChat={isNewChat}
