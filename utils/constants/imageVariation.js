@@ -4,5 +4,5 @@ export const ALL = [SMALL, LARGE];
 export const ALL_TEXT = ['small', 'large'];
 export const SIZE_TO_TEXT = {
   [SMALL]: 'small',
-  [LARGE]: 'large'
+  [LARGE]: 'large',
 };
