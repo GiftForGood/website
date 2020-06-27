@@ -58,6 +58,10 @@ const RightMessageSectionContainer = styled.div`
   `)}
 `;
 
+const LeftColumnStackContainer = styled.div`
+  width: fit-content;
+`;
+
 const LeftMessageSectionContainer = styled.div`
   width: fit-content;
   max-width: 90%;
@@ -98,10 +102,12 @@ const LeftMessageSection = ({ message, loggedInUser, selectedChatId }) => {
     <LeftMessageSectionContainer>
       <Stack direction="row" grow={false}>
         <ProfileAvatar imageUrl={sender.profileImageUrl} width={25} height={25} />
-        <Stack direction="column" spacing="extraTight">
-          {getMessageContent(contentType, content, false, sender, loggedInUser, selectedChatId)}
-          <GreyText size="tiny">{getTimeDifferenceFromNow(dateTime)}</GreyText>
-        </Stack>
+        <LeftColumnStackContainer>
+          <Stack direction="column" spacing="extraTight">
+            {getMessageContent(contentType, content, false, sender, loggedInUser, selectedChatId)}
+            <GreyText size="tiny">{getTimeDifferenceFromNow(dateTime)}</GreyText>
+          </Stack>
+        </LeftColumnStackContainer>
       </Stack>
     </LeftMessageSectionContainer>
   );
