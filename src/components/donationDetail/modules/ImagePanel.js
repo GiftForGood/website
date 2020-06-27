@@ -44,6 +44,9 @@ const ThumbnailImage = styled.img`
   `)};
 `;
 
+/**
+ * @param {object} images is the array of object imagesUrl.
+ */
 const ImagePanel = ({ images }) => {
   const { isDesktop } = useMediaQuery();
   const [selectedThumbnailIndex, setSelectedThumbnailIndex] = useState(0);
@@ -63,13 +66,14 @@ const ImagePanel = ({ images }) => {
     }, 350);
   };
 
+  const handleOnImageError = () => {
+    const newLargeImages = images.map((img) => img.raw);
+    setLargeImages(newLargeImages);
+  };
+
   useEffect(() => {
     if (images) {
-      const newLargeImages = images.map((img) => {
-        const lastIndexOfDot = img.lastIndexOf('.');
-        const newLargeImageUrl = img.substring(0, lastIndexOfDot) + '_1000x1000' + img.substring(lastIndexOfDot);
-        return newLargeImageUrl;
-      });
+      const newLargeImages = images.map((img) => img.large);
       setLargeImages(newLargeImages);
     }
   }, [images]);
@@ -90,7 +94,7 @@ const ImagePanel = ({ images }) => {
         onChange={(index) => updateThumbnailIndex(isDesktop ? index : null)}
       >
         {largeImages.map((image, index) => {
-          return <CarouselImage key={index} src={image} />;
+          return <CarouselImage key={index} src={image} onError={handleOnImageError} />;
         })}
       </Carousel>
     );
