@@ -5,6 +5,7 @@ import SearchBar from '../SearchBar';
 import algoliasearch from 'algoliasearch/lite';
 import styled from 'styled-components';
 import Hits from '../modules/Hits';
+import { MAXIMUM_SEARCH } from '../../../../utils/constants/search';
 
 const searchClient = algoliasearch(process.env.ALGOLIA_APP_ID, process.env.ALGOLIA_SEARCH_KEY);
 
@@ -25,7 +26,7 @@ const SearchPage = () => {
         </Container>
 
         <CustomHits type="wishes" />
-        <Configure hitsPerPage={10} />
+        <Configure hitsPerPage={MAXIMUM_SEARCH} />
       </Index>
 
       <Index indexName="donations">
@@ -34,7 +35,7 @@ const SearchPage = () => {
         </Container>
 
         <CustomHits type="donations" />
-        <Configure hitsPerPage={10} />
+        <Configure hitsPerPage={MAXIMUM_SEARCH} />
       </Index>
     </InstantSearch>
   );
