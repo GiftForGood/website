@@ -51,7 +51,6 @@ const ListOfChats = ({ user, setSelectedChatId, postId, isViewingChatsForMyPost 
     }
 
     if (changeType === MODIFIED) {
-      console.log(changedDoc);
       // need to get modified chat to first position
       setChatDocs((prevChatDocs) => {
         const chatDocsWithModifiedChatRemoved = prevChatDocs.filter(
