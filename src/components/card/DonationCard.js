@@ -111,7 +111,7 @@ const CardDescriptionFooter = ({ validPeriod, locations }) => {
  * @param {string} title is the title of the donation
  * @param {string} description is the description of the donation
  * @param {string} profileImageUrl is the url to the avatar image of the donor user
- * @param {string} coverImageUrl is the url to the cover image of the donation post
+ * @param {object | string} coverImageUrl is the url(s) to the cover image of the donation post
  * @param {string} postedDateTime is the time posted for donation in milliseconds
  * @param {string} postHref is the link url to direct users to after clicking the donation card
  * @param {string} locations is the location names of the donation post
