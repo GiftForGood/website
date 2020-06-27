@@ -135,7 +135,7 @@ const DonationCard = ({
   categoryName,
 }) => {
   const [hasImage, setHasImage] = useState(true);
-  const [imageUrl, setImageUrl] = useState(coverImageUrl);
+  const [imageUrl, setImageUrl] = useState(null);
   const timeAgo = getTimeDifferenceFromNow(postedDateTime);
   const router = useRouter();
 
@@ -149,17 +149,16 @@ const DonationCard = ({
 
   const handleImageOnError = () => {
     setHasImage(false);
+    setImageUrl(coverImageUrl.raw);
+    setHasImage(true);
   };
 
   useEffect(() => {
     if (coverImageUrl) {
       setHasImage(true);
       // Checks if its Firebase URL
-      if (!coverImageUrl.includes('blob:')) {
-        const lastIndexOfDot = coverImageUrl.lastIndexOf('.');
-        const newSmallImageUrl =
-          coverImageUrl.substring(0, lastIndexOfDot) + '_500x500' + coverImageUrl.substring(lastIndexOfDot);
-        setImageUrl(newSmallImageUrl);
+      if (typeof coverImageUrl === 'object' && coverImageUrl !== null) {
+        setImageUrl(coverImageUrl.small);
       } else {
         setImageUrl(coverImageUrl);
       }
