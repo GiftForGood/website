@@ -6,7 +6,7 @@ import algoliasearch from 'algoliasearch/lite';
 import styled from 'styled-components';
 import Hits from '../modules/Hits';
 
-const searchClient = algoliasearch(process.env.ALGOLIA_APP_ID, process.env.ALGOLIA_ADMIN_KEY);
+const searchClient = algoliasearch(process.env.ALGOLIA_APP_ID, process.env.ALGOLIA_SEARCH_KEY);
 
 const CustomSearchBox = connectSearchBox(SearchBar);
 const CustomHits = connectHits(Hits);

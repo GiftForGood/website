@@ -9,7 +9,7 @@ import { useEffect } from 'react';
 
 const CustomSearchBox = connectSearchBox(SearchBar);
 const CustomHits = connectHits(Hits);
-const searchClient = algoliasearch(process.env.ALGOLIA_APP_ID, process.env.ALGOLIA_ADMIN_KEY);
+const searchClient = algoliasearch(process.env.ALGOLIA_APP_ID, process.env.ALGOLIA_SEARCH_KEY);
 
 const Container = styled.div`
   padding-top: 10px;
