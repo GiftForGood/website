@@ -39,7 +39,9 @@ const ListOfChats = ({ user, selectedChatId, setSelectedChatId, postId, isViewin
 
     return () => {
       if (unsubscribeFunction) {
-        api.chats.unsubscribeToChats(unsubscribeFunction).then(() => console.log('unsubscribed from chats successfully'));
+        api.chats
+          .unsubscribeToChats(unsubscribeFunction)
+          .then(() => console.log('unsubscribed from chats successfully'));
       }
     };
   }, []);
