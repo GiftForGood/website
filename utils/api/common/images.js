@@ -36,15 +36,7 @@ export const uploadImage = async (image, imageName, pathToUpload) => {
 export const deleteImage = async (imageName, pathToImage) => {
   const path = getPath(pathToImage);
 
-  // let imageNames = getImageVariations(imageName);
-  // imageNames.push(imageName);
-
   const storageRef = firebaseStorage.ref();
-  // for (const name of imageNames) {
-  //   const imageRef = storageRef.child(`${path}${name}`);
-  //   imageRef.delete();
-  // }
-
   const imageRef = storageRef.child(`${path}${imageName}`);
   imageRef.delete();
 };
