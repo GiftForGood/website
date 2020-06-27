@@ -51,6 +51,7 @@ const ListOfChats = ({ user, setSelectedChatId, postId, isViewingChatsForMyPost 
     }
 
     if (changeType === MODIFIED) {
+      console.log(changedDoc);
       // need to get modified chat to first position
       setChatDocs((prevChatDocs) => {
         const chatDocsWithModifiedChatRemoved = prevChatDocs.filter(
@@ -92,8 +93,6 @@ const ListOfChats = ({ user, setSelectedChatId, postId, isViewingChatsForMyPost 
 
   const handleOnSeeMore = () => {
     if (isViewingChatsForMyPost) {
-      console.log(chatDocs[0]);
-      console.log(chatDocs[chatDocs.length - 1]);
       api.chats.getChatsForPost(postId, chatDocs[chatDocs.length - 1]).then((rawChats) => {
         const newChatDocs = rawChats.docs;
         if (newChatDocs.length < USER_CHATS_BATCH_SIZE) {
@@ -102,8 +101,6 @@ const ListOfChats = ({ user, setSelectedChatId, postId, isViewingChatsForMyPost 
         setChatDocs([...chatDocs, ...newChatDocs]);
       });
     } else {
-      console.log(chatDocs[0]);
-      console.log(chatDocs[chatDocs.length - 1]);
       api.chats.getChats(chatDocs[chatDocs.length - 1]).then((rawChats) => {
         const newChatDocs = rawChats.docs;
         if (newChatDocs.length < USER_CHATS_BATCH_SIZE) {
@@ -130,6 +127,9 @@ const ListOfChats = ({ user, setSelectedChatId, postId, isViewingChatsForMyPost 
                 const { chatId, donor, npo, lastMessage, post } = chat.data();
                 // get opposite user's details
                 const { name, profileImageUrl } = user.user.userId === donor.id ? npo : donor;
+
+                // get unread count of my own chat
+                const { unreadCount } = user.user.userId === donor.id ? donor : npo;
                 return (
                   <ChatWithUserCard
                     key={chatId}
@@ -140,6 +140,7 @@ const ListOfChats = ({ user, setSelectedChatId, postId, isViewingChatsForMyPost 
                     profileImageUrl={profileImageUrl}
                     postTitle={post.title}
                     setSelectedChatId={setSelectedChatId}
+                    unreadCount={unreadCount}
                   />
                 );
               })}

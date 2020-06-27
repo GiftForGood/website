@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Stack, CardSection, Tile } from '@kiwicom/orbit-components/lib';
-import api from '../../../utils/api';
+import React from 'react';
+import { Stack, Tile, NotificationBadge } from '@kiwicom/orbit-components/lib';
 import styled, { css } from 'styled-components';
 import ProfileAvatar from '../../components/imageContainers/ProfileAvatar';
 import BlackText from '../../components/text/BlackText';
@@ -12,6 +11,7 @@ const DetailsContainer = styled.div`
   display: flex;
   align-items: center;
   width: 100%;
+  position: relative;
 `;
 
 const LastMessageDateContainer = styled.div`
@@ -42,6 +42,12 @@ const OneLineTextContainer = styled.div`
   -webkit-box-orient: vertical;
 `;
 
+const NotificationBadgeWrapper = styled.div`
+  position: absolute;
+  bottom: 0;
+  right: 0;
+`;
+
 const LastMessageDate = ({ date }) => {
   return <BlackText size="small">{date}</BlackText>;
 };
@@ -69,6 +75,7 @@ const ChatWithUserCard = ({
   profileImageUrl,
   name,
   postTitle,
+  unreadCount,
   lastMessage,
   contentType,
   setSelectedChatId,
@@ -105,6 +112,11 @@ const ChatWithUserCard = ({
               </OneLineTextContainer>
             </Stack>
           </Stack>
+          {unreadCount > 0 && (
+            <NotificationBadgeWrapper>
+              <NotificationBadge type="info">{unreadCount}</NotificationBadge>
+            </NotificationBadgeWrapper>
+          )}
         </DetailsContainer>
       </Stack>
     </Tile>
