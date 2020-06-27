@@ -44,10 +44,13 @@ const ThumbnailImage = styled.img`
   `)};
 `;
 
+/**
+ * @param {object} images is the array of object imagesUrl.
+ */
 const ImagePanel = ({ images }) => {
   const { isDesktop } = useMediaQuery();
   const [selectedThumbnailIndex, setSelectedThumbnailIndex] = useState(0);
-  const [largeImages, setLargeImages] = useState(images);
+  const [largeImages, setLargeImages] = useState(null);
 
   const handleThumbnailClick = (index) => {
     setSelectedThumbnailIndex(index);
@@ -63,13 +66,14 @@ const ImagePanel = ({ images }) => {
     }, 350);
   };
 
+  const handleOnImageError = () => {
+    const newLargeImages = images.map((img) => img.raw);
+    setLargeImages(newLargeImages);
+  };
+
   useEffect(() => {
     if (images) {
-      const newLargeImages = images.map((img) => {
-        const lastIndexOfDot = img.lastIndexOf('.');
-        const newLargeImageUrl = img.substring(0, lastIndexOfDot) + '_1000x1000' + img.substring(lastIndexOfDot);
-        return newLargeImageUrl;
-      });
+      const newLargeImages = images.map((img) => img.large);
       setLargeImages(newLargeImages);
     }
   }, [images]);
@@ -89,24 +93,28 @@ const ImagePanel = ({ images }) => {
         selectedItem={selectedThumbnailIndex}
         onChange={(index) => updateThumbnailIndex(isDesktop ? index : null)}
       >
-        {largeImages.map((image, index) => {
-          return <CarouselImage key={index} src={image} />;
-        })}
+        {largeImages &&
+          largeImages.map((image, index) => {
+            return <CarouselImage key={index} src={image} onError={handleOnImageError} />;
+          })}
       </Carousel>
     );
   };
 
   const Thumbnails = () => {
-    return largeImages.map((image, index) => {
-      return (
-        <ThumbnailImage
-          key={index}
-          src={image}
-          selected={index === selectedThumbnailIndex}
-          onClick={() => handleThumbnailClick(index)}
-        />
-      );
-    });
+    return (
+      largeImages &&
+      largeImages.map((image, index) => {
+        return (
+          <ThumbnailImage
+            key={index}
+            src={image}
+            selected={index === selectedThumbnailIndex}
+            onClick={() => handleThumbnailClick(index)}
+          />
+        );
+      })
+    );
   };
 
   return (
