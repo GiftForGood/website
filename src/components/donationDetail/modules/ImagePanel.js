@@ -93,24 +93,28 @@ const ImagePanel = ({ images }) => {
         selectedItem={selectedThumbnailIndex}
         onChange={(index) => updateThumbnailIndex(isDesktop ? index : null)}
       >
-        {largeImages && largeImages.map((image, index) => {
-          return <CarouselImage key={index} src={image} onError={handleOnImageError} />;
-        })}
+        {largeImages &&
+          largeImages.map((image, index) => {
+            return <CarouselImage key={index} src={image} onError={handleOnImageError} />;
+          })}
       </Carousel>
     );
   };
 
   const Thumbnails = () => {
-    return largeImages && largeImages.map((image, index) => {
-      return (
-        <ThumbnailImage
-          key={index}
-          src={image}
-          selected={index === selectedThumbnailIndex}
-          onClick={() => handleThumbnailClick(index)}
-        />
-      );
-    });
+    return (
+      largeImages &&
+      largeImages.map((image, index) => {
+        return (
+          <ThumbnailImage
+            key={index}
+            src={image}
+            selected={index === selectedThumbnailIndex}
+            onClick={() => handleThumbnailClick(index)}
+          />
+        );
+      })
+    );
   };
 
   return (

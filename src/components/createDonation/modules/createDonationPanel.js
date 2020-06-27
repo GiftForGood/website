@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import RedButton from '../../buttons/RedButton';
 import {
   Button,
   InputField,
@@ -23,7 +24,6 @@ import GooglePlacesAutoCompleteField from '../../inputfield/GooglePlacesAutoComp
 import api from '../../../../utils/api';
 import DragNDropInputField from './DragNDropInputField';
 import moment from 'moment';
-import RedButton from '../../buttons/RedButton';
 import LivePreviewDonation from './livePreviewDonation';
 import { useDispatch } from 'react-redux';
 import {
@@ -408,7 +408,7 @@ const CreateDonationPanel = ({ mode, donation }) => {
       };
       setEditDonation(editDonation);
       setSelectedCategories(donation.categories);
-      setImages(donation.imageUrls.map((imageUrl) => (imageUrl.raw)))
+      setImages(donation.imageUrls.map((imageUrl) => imageUrl.raw));
     } else {
       dispatch(resetToInitialState);
     }
@@ -618,6 +618,7 @@ const CreateDonationPanel = ({ mode, donation }) => {
                 </Popover>
 
                 {isDesktop ? null : <LivePreviewDonation />}
+
                 <Button fullWidth submit asComponent={RedButton} disabled={formik.isSubmitting} loading={isLoading}>
                   Post it
                 </Button>
