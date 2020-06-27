@@ -50,7 +50,7 @@ const ThumbnailImage = styled.img`
 const ImagePanel = ({ images }) => {
   const { isDesktop } = useMediaQuery();
   const [selectedThumbnailIndex, setSelectedThumbnailIndex] = useState(0);
-  const [largeImages, setLargeImages] = useState(images);
+  const [largeImages, setLargeImages] = useState(null);
 
   const handleThumbnailClick = (index) => {
     setSelectedThumbnailIndex(index);
@@ -93,7 +93,7 @@ const ImagePanel = ({ images }) => {
         selectedItem={selectedThumbnailIndex}
         onChange={(index) => updateThumbnailIndex(isDesktop ? index : null)}
       >
-        {largeImages.map((image, index) => {
+        {largeImages && largeImages.map((image, index) => {
           return <CarouselImage key={index} src={image} onError={handleOnImageError} />;
         })}
       </Carousel>
@@ -101,7 +101,7 @@ const ImagePanel = ({ images }) => {
   };
 
   const Thumbnails = () => {
-    return largeImages.map((image, index) => {
+    return largeImages && largeImages.map((image, index) => {
       return (
         <ThumbnailImage
           key={index}
