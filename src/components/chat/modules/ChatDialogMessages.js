@@ -132,7 +132,9 @@ const RightMessageSection = ({ message, loggedInUser, selectedChatId }) => {
  */
 const ChatDialogMessages = ({ loggedInUser, selectedChatId, isNewChat, navBarHeight }) => {
   const [chatMessageDocs, setChatMessageDocs] = useState([]);
-  const [shouldSeeMore, setShouldSeeMore] = useState(true);
+  // only consider loading more when it's not a new chat, since it's impossible to have a new chat
+  // to have messages initially
+  const [shouldSeeMore, setShouldSeeMore] = useState(!isNewChat);
   const { isTablet } = useMediaQuery();
   useEffect(() => {
     // when selected a chat, subscribe to the corresponding chat messages
@@ -145,10 +147,9 @@ const ChatDialogMessages = ({ loggedInUser, selectedChatId, isNewChat, navBarHei
   const updateChatMessages = (chatMessageDoc) => {
     setChatMessageDocs((prevChatMessageDocs) => {
       const newChatMessage = chatMessageDoc.data();
-      const lastChatMessage = prevChatMessageDocs[prevChatMessageDocs.length - 1];
-
+      const lastChatMessageDoc = prevChatMessageDocs[prevChatMessageDocs.length - 1];
       // insert chat message doc to correct position
-      if (lastChatMessage && lastChatMessage.dateTime < newChatMessage.dateTime) {
+      if (lastChatMessageDoc && lastChatMessageDoc.data().dateTime < newChatMessage.dateTime) {
         return [...prevChatMessageDocs, chatMessageDoc];
       }
       return [chatMessageDoc, ...prevChatMessageDocs];
