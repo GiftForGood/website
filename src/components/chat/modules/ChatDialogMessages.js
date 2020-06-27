@@ -149,7 +149,7 @@ const ChatDialogMessages = ({ loggedInUser, selectedChatId, isNewChat, navBarHei
       const newChatMessage = chatMessageDoc.data();
       const lastChatMessageDoc = prevChatMessageDocs[prevChatMessageDocs.length - 1];
       // insert chat message doc to correct position
-      if (lastChatMessageDoc && lastChatMessageDoc.data().dateTime < newChatMessage.dateTime) {
+      if (lastChatMessageDoc && lastChatMessageDoc.data().dateTime <= newChatMessage.dateTime) {
         return [...prevChatMessageDocs, chatMessageDoc];
       }
       return [chatMessageDoc, ...prevChatMessageDocs];
