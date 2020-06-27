@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Stack, Loading } from '@kiwicom/orbit-components/lib';
 import api from '../../../../utils/api';
 import styled, { css } from 'styled-components';
@@ -142,6 +142,7 @@ const ChatDialogMessages = ({ loggedInUser, selectedChatId, isNewChat, navBarHei
   // to have messages initially
   const [shouldSeeMore, setShouldSeeMore] = useState(!isNewChat);
   const { isTablet } = useMediaQuery();
+
   useEffect(() => {
     // when selected a chat, subscribe to the corresponding chat messages
     if (selectedChatId != null || !isNewChat) {
@@ -149,6 +150,14 @@ const ChatDialogMessages = ({ loggedInUser, selectedChatId, isNewChat, navBarHei
       disableFurtherLoadsIfMessagesLessThanOneBatch();
     }
   }, [selectedChatId]);
+
+  const messagesEndRef = useRef(null); // to keep track of the bottom of the messages
+
+  const scrollToBottomIfSentByLoggedInUser = (chatMessage) => {
+    if (chatMessage.sender.id === loggedInUser.user.userId) {
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   const updateChatMessages = (chatMessageDoc) => {
     setChatMessageDocs((prevChatMessageDocs) => {
@@ -160,6 +169,7 @@ const ChatDialogMessages = ({ loggedInUser, selectedChatId, isNewChat, navBarHei
       }
       return [chatMessageDoc, ...prevChatMessageDocs];
     });
+    scrollToBottomIfSentByLoggedInUser(chatMessageDoc.data());
   };
 
   /**
@@ -234,6 +244,7 @@ const ChatDialogMessages = ({ loggedInUser, selectedChatId, isNewChat, navBarHei
                   />
                 );
               })}
+            <div ref={messagesEndRef} />
           </Stack>
         </InfiniteScroll>
       </MessageContainer>
