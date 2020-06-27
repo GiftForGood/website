@@ -38,8 +38,9 @@ const ListOfChats = ({ user, selectedChatId, setSelectedChatId, postId, isViewin
     disableFurtherLoadsIfChatsLessThanOneBatch();
 
     return () => {
-      // TODO: unsubscribe to chats
-      // api.chats.unsubscribeToChats(unsubscribeFunction).then(() => console.log('unsubscribed from chats'));
+      if (unsubscribeFunction) {
+        api.chats.unsubscribeToChats(unsubscribeFunction).then(() => console.log('unsubscribed from chats successfully'));
+      }
     };
   }, []);
 

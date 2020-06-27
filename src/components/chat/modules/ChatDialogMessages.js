@@ -144,11 +144,20 @@ const ChatDialogMessages = ({ loggedInUser, selectedChatId, isNewChat, navBarHei
   const { isTablet } = useMediaQuery();
 
   useEffect(() => {
+    let unsubscribeFunction;
     // when selected a chat, subscribe to the corresponding chat messages
     if (selectedChatId != null || !isNewChat) {
-      api.chats.subscribeToChatMessages(selectedChatId, updateChatMessages).then(() => {});
+      api.chats.subscribeToChatMessages(selectedChatId, updateChatMessages).then((fn) => (unsubscribeFunction = fn));
       disableFurtherLoadsIfMessagesLessThanOneBatch();
     }
+
+    return () => {
+      if (unsubscribeFunction) {
+        api.chats
+          .unsubscribeFromChatMessages(selectedChatId, unsubscribeFunction)
+          .then(() => console.log('unsubscribe to messages successfully'));
+      }
+    };
   }, [selectedChatId]);
 
   const messagesEndRef = useRef(null); // to keep track of the bottom of the messages
