@@ -111,12 +111,12 @@ const ChatWithUserCard = ({
                 </LastMessageDateContainer>
               </Stack>
               <Stack direction="column" spacing="extraTight">
-                <OneLineTextContainer>
+                <OneLineTextContainer style={{ width: '85%' }}>
                   <BlackText size="small" weight="bold">
                     {postTitle}
                   </BlackText>
                 </OneLineTextContainer>
-                <OneLineTextContainer>
+                <OneLineTextContainer style={{ width: '85%' }}>
                   <BlackText size="small">
                     {contentType === IMAGE
                       ? 'Sent an image'
