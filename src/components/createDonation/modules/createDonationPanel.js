@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import RedButton from '../../buttons/RedButton';
 import {
   Button,
   InputField,
@@ -23,7 +24,6 @@ import GooglePlacesAutoCompleteField from '../../inputfield/GooglePlacesAutoComp
 import api from '../../../../utils/api';
 import DragNDropInputField from './DragNDropInputField';
 import moment from 'moment';
-import RedButton from '../../buttons/RedButton';
 import LivePreviewDonation from './livePreviewDonation';
 import { useDispatch } from 'react-redux';
 import {
@@ -92,6 +92,8 @@ const CreateDonationPanel = ({ mode, donation }) => {
   const [showAlert, setShowAlert] = useState(false);
   const [alertType, setAlertType] = useState('');
   const [alertDescription, setAlertDescription] = useState('');
+
+  const [images, setImages] = useState(null);
 
   const displayAlert = (title, description, type) => {
     setShowAlert(true);
@@ -400,12 +402,13 @@ const CreateDonationPanel = ({ mode, donation }) => {
         itemCondition: donation.itemCondition,
         categories: donation.categories,
         selectedImages: donation.imageUrls.map((imageUrl) => ({
-          preview: imageUrl,
+          preview: imageUrl.raw,
           id: uuidv4(),
         })),
       };
       setEditDonation(editDonation);
       setSelectedCategories(donation.categories);
+      setImages(donation.imageUrls.map((imageUrl) => imageUrl.raw));
     } else {
       dispatch(resetToInitialState);
     }
@@ -455,7 +458,7 @@ const CreateDonationPanel = ({ mode, donation }) => {
     <>
       <LeftPanelContainer>
         <DragNDropInputField
-          initialImages={donation && donation.imageUrls}
+          initialImages={images}
           onChange={(selectedImages) => {
             formik.setFieldValue('selectedImages', selectedImages);
           }}
@@ -615,6 +618,7 @@ const CreateDonationPanel = ({ mode, donation }) => {
                 </Popover>
 
                 {isDesktop ? null : <LivePreviewDonation />}
+
                 <Button fullWidth submit asComponent={RedButton} disabled={formik.isSubmitting} loading={isLoading}>
                   Post it
                 </Button>
