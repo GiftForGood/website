@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Button, Stack } from '@kiwicom/orbit-components/lib';
 import CalendarModal from '../../calendar/modules/CalendarModal';
 import ProfileAvatar from '../../imageContainers/ProfileAvatar';
@@ -7,7 +7,7 @@ import RatingStars from '../../ratingStars';
 import api from '../../../../utils/api';
 import SuggestDateButton from '../../../components/buttons/ChatSuggestDatesButton';
 import CompleteButton from '../../../components/buttons/ChatCompleteButton';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import { colors } from '../../../../utils/constants/colors';
 import { CardSection } from '@kiwicom/orbit-components/lib/Card';
 
@@ -44,11 +44,8 @@ const ChatDialogUserRow = ({
   const handleShowSuggestDateModal = () => setShowSuggestDateModal(true);
   const handleCloseSuggestDateModal = () => setShowSuggestDateModal(false);
   const isLoggedInUserThePostOwner = loggedInUser.user.userId === postOwnerId;
-  /**
-   * TODO: add handling of complete post
-   */
+
   const handleCompletePost = () => {
-    console.log(postId);
     api[postType].complete(postId, postEnquirerId).then(() => {
       console.log('Complete post successful.');
       // TODO/KIV: add review and appreciation message modal

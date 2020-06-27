@@ -1,7 +1,7 @@
 import React from 'react';
 import BlackText from '../../text/BlackText';
 import WhiteText from '../../text/WhiteText';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import { colors } from '../../../../utils/constants/colors';
 
 const ChatBubbleContainer = styled.div`

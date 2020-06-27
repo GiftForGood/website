@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Calendar from './Calendar';
 import styled from 'styled-components';
 import { colors } from '../../../../utils/constants/colors';
@@ -88,7 +88,6 @@ const CalendarModal = ({
           <Button type="secondary" onClick={onHide}>
             Cancel
           </Button>
-          {/* TODO: add handling of creating calendar message in chat */}
           <Button onClick={onClickOk} asComponent={okButton}>
             Ok
           </Button>

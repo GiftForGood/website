@@ -9,7 +9,7 @@ const TopNavigationBar = dynamic(() => import('../../src/components/navbar/modul
 });
 
 /**
- * URL when creating a new chat or viewing an existing chat for another user's chat
+ * URL when creating a new chat or viewing an existing chat for another user's post
  * e.g. /chat/[postId]?postType=[postType]
  */
 export async function getServerSideProps({ params, req, res, query }) {

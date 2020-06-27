@@ -1,7 +1,6 @@
 import React from 'react';
 import { Button, Stack } from '@kiwicom/orbit-components/lib';
 import BlackText from '../../text/BlackText';
-import api from '../../../../utils/api';
 import styled from 'styled-components';
 import { donations, wishes } from '../../../../utils/constants/postType';
 import { CardSection } from '@kiwicom/orbit-components/lib/Card';
@@ -16,6 +15,7 @@ const TextContainer = styled.div`
  *
  * @param {string} postType is the type of the post
  * @param {string} postId is the id of the post
+ * @param {string} postTitle is the title of the post
  */
 const ChatDialogViewPostRow = ({ postType, postId, postTitle }) => {
   const handleSeePost = (event) => {

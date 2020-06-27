@@ -1,5 +1,5 @@
 import React from 'react';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import { colors } from '../../../../utils/constants/colors';
 import { Stack } from '@kiwicom/orbit-components/lib';
 import WhiteText from '../../text/WhiteText';
@@ -23,6 +23,9 @@ const ChatButtonsContainer = styled.div`
  *
  * @param {string[]} dateTimes are the date time selections to show to the user
  * @param {boolean} isByLoggedInUser is whether the image is sent by logged in user
+ * @param {object} sender is the sender that sends this message
+ * @param {object} loggedInUser is the currently logged in user
+ * @param {number} selectedChatId is the selected chat id
  */
 const ChatBubbleForCalendar = ({ dateTimes, isByLoggedInUser, sender, loggedInUser, selectedChatId }) => {
   const text = 'Here are the dates I have selected, please choose 1 that fits your timing';

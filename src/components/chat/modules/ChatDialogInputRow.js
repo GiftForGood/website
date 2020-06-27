@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Button, Stack, InputField, Alert } from '@kiwicom/orbit-components/lib';
 import ChatButton from '../../../components/buttons/ChatButton';
 import api from '../../../../utils/api';
 import styled, { css } from 'styled-components';
 import Gallery from '@kiwicom/orbit-components/lib/icons/Gallery';
 import { useDropzone } from 'react-dropzone';
-import { donations, wishes } from '../../../../utils/constants/postType';
+import { donations } from '../../../../utils/constants/postType';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import ChatError from '../../../../utils/api/error/chatError';
 

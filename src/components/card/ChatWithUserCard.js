@@ -3,7 +3,6 @@ import { Stack, Tile, NotificationBadge } from '@kiwicom/orbit-components/lib';
 import styled, { css } from 'styled-components';
 import ProfileAvatar from '../../components/imageContainers/ProfileAvatar';
 import BlackText from '../../components/text/BlackText';
-import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import { getFormattedDate } from '../../../utils/api/time';
 import { IMAGE, CALENDAR } from '../../../utils/constants/chatContentType';
 import { colors } from '../../../utils/constants/colors';
@@ -74,10 +73,11 @@ const AvatarName = ({ name }) => {
  * @param {string} profileImageUrl is the url of the opposite user's profile image
  * @param {string} name is the opposite user's name
  * @param {string} postTitle is the title of the post that the chat is for
+ * @param {number} unreadCount is the number of unread chat messages for this chat
  * @param {string} lastMessage is the previous last message of this chat
  * @param {string} contentType is the previous last message's content type of this chat
- * @param {string} lastMessageDate is the date of the previous last message of this chat in milliseconds
- * @param {function} setSelectedChat is the handler to execute when click on the user card
+ * @param {string} isSelected is whether the card is being selected
+ * @param {function} setSelectedChatId is the handler to execute when click on the user card
  */
 const ChatWithUserCard = ({
   chatId,
