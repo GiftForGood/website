@@ -44,7 +44,7 @@ const OneLineTextContainer = styled.div`
 
 const NotificationBadgeWrapper = styled.div`
   position: absolute;
-  bottom: 0;
+  bottom: 10px;
   right: 0;
 `;
 
