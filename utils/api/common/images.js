@@ -9,6 +9,20 @@ const getPath = (path) => {
   return path;
 };
 
+export const getImageVariations = (imageName) => {
+  let imageArr = imageName.split('.');
+  const ext = '.' + imageArr.pop();
+  const name = imageArr.join('.');
+
+  let imageVariations = [];
+  for (const variation of VARIATIONS) {
+    const imageVariation = `${name}_${variation}${ext}`;
+    imageVariations.push(imageVariation);
+  }
+
+  return imageVariations;
+};
+
 export const uploadImage = async (image, imageName, pathToUpload) => {
   const path = getPath(pathToUpload);
 
@@ -19,7 +33,7 @@ export const uploadImage = async (image, imageName, pathToUpload) => {
   return imageRef.getDownloadURL();
 };
 
-export const deleteImage = async (pathToImage, imageName) => {
+export const deleteImage = async (imageName, pathToImage) => {
   const path = getPath(pathToImage);
 
   const storageRef = firebaseStorage.ref();
