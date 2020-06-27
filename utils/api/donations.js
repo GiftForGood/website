@@ -7,6 +7,7 @@ import { DONATIONS_BATCH_SIZE } from './constants';
 import { NEW, USED } from '../constants/itemCondition';
 import { TIMESTAMP } from '../constants/donationsSortType';
 import { PENDING, CLOSED, COMPLETED } from '../constants/postStatus';
+import { ALL_TEXT, ALL } from '../constants/imageVariation';
 import { getLocations, getUpdatedLocations } from './common/location';
 import {
   getCategoryInfo,
@@ -15,6 +16,7 @@ import {
   getCustomPostCategoryInfo,
   getCustomPostCategoryInfos,
 } from './common/categories';
+import { uploadImage, deleteImage } from './common/images';
 import DonationError from './error/donationsError';
 
 const donationsCollection = db.collection('donations');
@@ -115,13 +117,6 @@ class DonationsAPI {
 
     return newDonation.get();
   }
-
-  /**
-   * Search donations containing the text both in the title and description
-   * @param {string} text The search text
-   * @return {object} A firebase document of donations that contain the text
-   */
-  async search(text) {}
 
   /**
    * Get the top X pending donations belonging to a category, sorted by timestamp
@@ -303,7 +298,7 @@ class DonationsAPI {
    *  file object: Is a new image
    * @param {array} images A list of images for the donation. Should include the cover image.
    *  It is represented as a list of string and file objects. Images will be stored in the order it is given
-   *  string: Existing images
+   *  string: Existing images. Must be the raw image link
    *  file object: New images
    * @throws {DonationError}
    * @throws {FirebaseError}
@@ -356,7 +351,14 @@ class DonationsAPI {
     const [allCategoryInfos, locationInfos, [coverImageUrl, imageUrls]] = await Promise.all([
       getUpdatedCategoryInfos(donationInfo.categories, categories),
       getUpdatedLocations(donationInfo.locations, locations),
-      this._getDonationImages(donationInfo.user.userId, donationInfo.donationId, images, coverImage),
+      this._getDonationImages(
+        donationInfo.user.userId,
+        donationInfo.donationId,
+        donationInfo.imageUrls,
+        donationInfo.coverImageUrl,
+        images,
+        coverImage
+      ),
     ]);
 
     const categoryInfos = getCustomPostCategoryInfos(allCategoryInfos);
@@ -491,6 +493,7 @@ class DonationsAPI {
   }
 
   async _uploadImages(userId, donationId, images, coverImage = null) {
+    const pathToUpload = `donors/${userId}/donations/${donationId}/`;
     let imageInfos = [];
 
     for (const image of images) {
@@ -508,92 +511,107 @@ class DonationsAPI {
     }
 
     const imagesPromise = imageInfos.map((imageInfo) => {
-      return this._uploadImage(userId, donationId, Object.values(imageInfo)[0], Object.keys(imageInfo)[0]);
+      return uploadImage(Object.values(imageInfo)[0], Object.keys(imageInfo)[0], pathToUpload);
     });
 
-    const imageUrls = await Promise.all(imagesPromise);
+    const rawImageUrls = await Promise.all(imagesPromise);
+
+    let imageUrls = [];
+    for (const rawImageUrl of rawImageUrls) {
+      let imageUrlMapping = { raw: rawImageUrl };
+      for (const sizeText of ALL_TEXT) {
+        imageUrlMapping[sizeText] = '';
+      }
+      imageUrls.push(imageUrlMapping);
+    }
     const coverImageUrl = coverImage !== null ? imageUrls[0] : '';
 
     return [coverImageUrl, imageUrls];
   }
 
-  async _uploadImage(userId, donationId, image, imageName) {
-    const storageRef = firebaseStorage.ref();
-    const imageRef = storageRef.child(`donors/${userId}/donations/${donationId}/${imageName}`);
-    await imageRef.put(image);
-
-    return imageRef.getDownloadURL();
-  }
-
   async _deleteImages(userId, donationId, imageNames) {
+    const pathToImage = `donors/${userId}/donations/${donationId}/`;
     for (const imageName of imageNames) {
-      this._deleteImage(userId, donationId, imageName);
+      deleteImage(imageName, pathToImage);
     }
   }
 
-  async _deleteImage(userId, donationId, imageName) {
-    const storageRef = firebaseStorage.ref();
-    const imageRef = storageRef.child(`donors/${userId}/donations/${donationId}/${imageName}`);
-    imageRef.delete();
-  }
-
-  async _getDonationImages(userId, donationId, updatedImages, coverImage) {
+  async _getDonationImages(
+    userId,
+    donationId,
+    existingImagesVariations,
+    existingCoverImageVariations,
+    updatedImages,
+    newCoverImage
+  ) {
     let imageUrls = [];
     let newImageObjects = [];
-    let existingImageIndexes = []; // Used to find which images needs to be deleted
+    let existingStorageImageIndexes = []; // Used to find which images needs to be deleted
     let imageNamesToDelete = [];
 
     let existingImagesOrder = [];
     let newImagesOrder = [];
     let uploadedImageUrls = [];
 
-    const coverImageIndex = this._getCoverImageIndex(updatedImages, coverImage);
+    const newCoverImageIndex = this._getCoverImageIndex(updatedImages, newCoverImage);
 
     const storageRef = firebaseStorage.ref();
     const imageRefs = storageRef.child(`donors/${userId}/donations/${donationId}/`);
 
-    let existingImageInfos = [];
-    const existingImageRefs = await imageRefs.listAll();
-    const existingImageUrlPromises = existingImageRefs.items.map((imageRef) => {
+    let existingStorageImageInfos = [];
+    const existingStorageImageRefs = await imageRefs.listAll();
+    const existingStorageImageUrlPromises = existingStorageImageRefs.items.map((imageRef) => {
       return imageRef.getDownloadURL();
     });
-    const existingImageUrls = await Promise.all(existingImageUrlPromises);
+    const existingStorageImageUrls = await Promise.all(existingStorageImageUrlPromises);
 
-    for (let i = 0; i < existingImageUrls.length; i++) {
-      const imageInfo = { name: existingImageRefs.items[i].name, url: existingImageUrls[i] };
-      existingImageInfos.push(imageInfo);
+    for (let i = 0; i < existingStorageImageUrls.length; i++) {
+      const containsVariation = ALL.some((variation) => existingStorageImageRefs.items[i].name.includes(variation));
+      if (containsVariation) {
+        continue;
+      }
+
+      const imageInfo = { name: existingStorageImageRefs.items[i].name, url: existingStorageImageUrls[i] };
+      existingStorageImageInfos.push(imageInfo);
     }
 
     for (let i = 0; i < updatedImages.length; i++) {
       const image = updatedImages[i];
       if (typeof image === 'string') {
         // Existing images
-        const existingImageIndex = existingImageInfos.findIndex((existingImageInfo) => {
-          return existingImageInfo.url == image;
+        // Finding existing image variations from firestore data
+        const existingImageVariationsIndex = existingImagesVariations.findIndex((existingImageVariations) => {
+          return existingImageVariations.raw === image;
         });
 
-        if (existingImageIndex === -1) {
+        if (existingImageVariationsIndex === -1) {
           throw new DonationError('invalid-image-url', 'the image url should be an existing image url');
         }
 
-        existingImageIndexes.push(existingImageIndex);
-        imageUrls.push(existingImageInfos[existingImageIndex].url);
+        const imageVariations = existingImagesVariations[existingImageVariationsIndex];
+        imageUrls.push(imageVariations);
 
-        const imageIndex = this._getImageOrder(i, coverImageIndex);
+        // Finding existing indexes in the storage. Used to know which image to delete later on
+        const existingStorageImageIndex = existingStorageImageInfos.findIndex((existingStorageImageInfo) => {
+          return existingStorageImageInfo.url === image;
+        });
+        existingStorageImageIndexes.push(existingStorageImageIndex);
+
+        const imageIndex = this._getImageOrder(i, newCoverImageIndex);
         existingImagesOrder.push(imageIndex);
       } else {
         // New images
         newImageObjects.push(image);
 
-        const imageIndex = this._getImageOrder(i, coverImageIndex);
+        const imageIndex = this._getImageOrder(i, newCoverImageIndex);
         newImagesOrder.push(imageIndex);
       }
     }
 
     // Finding images to delete
-    for (let i = 0; i < existingImageInfos.length; i++) {
-      if (!existingImageIndexes.includes(i)) {
-        imageNamesToDelete.push(existingImageInfos[i].name);
+    for (let i = 0; i < existingStorageImageInfos.length; i++) {
+      if (!existingStorageImageIndexes.includes(i)) {
+        imageNamesToDelete.push(existingStorageImageInfos[i].name);
       }
     }
 
@@ -601,8 +619,9 @@ class DonationsAPI {
     const [coverImageUrl, newImageUrls] = await this._uploadUpdatedImages(
       userId,
       donationId,
+      existingCoverImageVariations,
       newImageObjects,
-      coverImage
+      newCoverImage
     );
 
     // Setting the images in the correct order
@@ -636,9 +655,9 @@ class DonationsAPI {
     }
   }
 
-  async _uploadUpdatedImages(userId, donationId, images, coverImage) {
+  async _uploadUpdatedImages(userId, donationId, existingCoverImageVariations, images, coverImage) {
     // This is helper function to handle the upload images of update donation
-    let coverImageUrl = '';
+    let coverImageUrl = existingCoverImageVariations;
     let coverImageToUpload = null;
 
     if (typeof coverImage !== 'string') {
@@ -652,9 +671,7 @@ class DonationsAPI {
       coverImageToUpload
     );
 
-    if (typeof coverImage === 'string') {
-      coverImageUrl = coverImage;
-    } else {
+    if (typeof coverImage !== 'string') {
       coverImageUrl = uploadedCoverImageUrl;
     }
 
