@@ -30,6 +30,7 @@ export const colors = {
   chatCompleteButtonBackground: '#4DB6AC',
   chatCompleteButtonHoverActive: '#35ada0',
   chatCompleteButtonFocus: '#16a595',
+  chatSelected: '#3B80ED',
   chatSeePostButtonBackground: '#C2C2C2',
   chatSeePostButtonHoverActive: '#707070',
   chatSeePostButtonFocus: '#616161',

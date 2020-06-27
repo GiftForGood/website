@@ -22,7 +22,7 @@ const ListOfChatsContainer = styled.div`
   border-right: 1px solid ${colors.chatBorders};
 `;
 
-const ListOfChats = ({ user, setSelectedChatId, postId, isViewingChatsForMyPost }) => {
+const ListOfChats = ({ user, selectedChatId, setSelectedChatId, postId, isViewingChatsForMyPost }) => {
   const [chatDocs, setChatDocs] = useState([]);
   const [shouldSeeMore, setShouldSeeMore] = useState(true);
 
@@ -129,15 +129,17 @@ const ListOfChats = ({ user, setSelectedChatId, postId, isViewingChatsForMyPost 
 
                 // get unread count of my own chat
                 const { unreadCount } = user.user.userId === donor.id ? donor : npo;
+                const isSelected = selectedChatId === chatId;
                 return (
                   <ChatWithUserCard
                     key={chatId}
-                    chatId={chatId} // initial dummy value
+                    chatId={chatId}
                     name={name}
                     lastMessage={lastMessage.content}
                     contentType={lastMessage.contentType}
                     profileImageUrl={profileImageUrl}
                     postTitle={post.title}
+                    isSelected={isSelected}
                     setSelectedChatId={setSelectedChatId}
                     unreadCount={unreadCount}
                   />

@@ -59,6 +59,7 @@ const ChatPage = ({ user, postId, postType, isViewingChatsForMyPost }) => {
       <Grid style={gridContainerStyle} columns="1fr 3fr">
         <ListOfChats
           user={user}
+          selectedChatId={selectedChatId}
           setSelectedChatId={setSelectedChatId}
           postId={postId}
           isViewingChatsForMyPost={isViewingChatsForMyPost}

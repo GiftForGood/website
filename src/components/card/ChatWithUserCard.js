@@ -6,6 +6,7 @@ import BlackText from '../../components/text/BlackText';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import { getFormattedDate } from '../../../utils/api/time';
 import { IMAGE, CALENDAR } from '../../../utils/constants/chatContentType';
+import { colors } from '../../../utils/constants/colors';
 
 const DetailsContainer = styled.div`
   display: flex;
@@ -48,6 +49,14 @@ const NotificationBadgeWrapper = styled.div`
   right: 0;
 `;
 
+const TileContainer = styled.div`
+  ${(props) =>
+    props.isSelected &&
+    css`
+      border: 2px solid ${colors.chatSelected};
+    `}
+`;
+
 const LastMessageDate = ({ date }) => {
   return <BlackText size="small">{date}</BlackText>;
 };
@@ -78,48 +87,55 @@ const ChatWithUserCard = ({
   unreadCount,
   lastMessage,
   contentType,
+  isSelected,
   setSelectedChatId,
 }) => {
   const lastMessageDate = getFormattedDate(lastMessage.date);
   return (
-    <Tile
-      onClick={function () {
-        setSelectedChatId(chatId);
-      }}
-    >
-      <Stack direction="row">
-        <AvatarContainer>
-          <ProfileAvatar imageUrl={profileImageUrl} width={30} height={30} />
-        </AvatarContainer>
-        <DetailsContainer>
-          <Stack direction="column" spacing="compact">
-            <Stack direction="row" align="start" justify="between">
-              <AvatarName name={name} />
-              <LastMessageDateContainer>
-                <LastMessageDate date={lastMessageDate} />
-              </LastMessageDateContainer>
+    <TileContainer isSelected={isSelected}>
+      <Tile
+        onClick={function () {
+          setSelectedChatId(chatId);
+        }}
+      >
+        <Stack direction="row">
+          <AvatarContainer>
+            <ProfileAvatar imageUrl={profileImageUrl} width={30} height={30} />
+          </AvatarContainer>
+          <DetailsContainer>
+            <Stack direction="column" spacing="compact">
+              <Stack direction="row" align="start" justify="between">
+                <AvatarName name={name} />
+                <LastMessageDateContainer>
+                  <LastMessageDate date={lastMessageDate} />
+                </LastMessageDateContainer>
+              </Stack>
+              <Stack direction="column" spacing="extraTight">
+                <OneLineTextContainer>
+                  <BlackText size="small" weight="bold">
+                    {postTitle}
+                  </BlackText>
+                </OneLineTextContainer>
+                <OneLineTextContainer>
+                  <BlackText size="small">
+                    {contentType === IMAGE
+                      ? 'Sent an image'
+                      : contentType === CALENDAR
+                      ? 'Sent a calendar'
+                      : lastMessage}
+                  </BlackText>
+                </OneLineTextContainer>
+              </Stack>
             </Stack>
-            <Stack direction="column" spacing="extraTight">
-              <OneLineTextContainer>
-                <BlackText size="small" weight="bold">
-                  {postTitle}
-                </BlackText>
-              </OneLineTextContainer>
-              <OneLineTextContainer>
-                <BlackText size="small">
-                  {contentType === IMAGE ? 'Sent an image' : contentType === CALENDAR ? 'Sent a calendar' : lastMessage}
-                </BlackText>
-              </OneLineTextContainer>
-            </Stack>
-          </Stack>
-          {unreadCount > 0 && (
-            <NotificationBadgeWrapper>
-              <NotificationBadge type="info">{unreadCount}</NotificationBadge>
-            </NotificationBadgeWrapper>
-          )}
-        </DetailsContainer>
-      </Stack>
-    </Tile>
+            {unreadCount > 0 && (
+              <NotificationBadgeWrapper>
+                <NotificationBadge type="info">{unreadCount}</NotificationBadge>
+              </NotificationBadgeWrapper>
+            )}
+          </DetailsContainer>
+        </Stack>
+      </Tile>
+    </TileContainer>
   );
 };
 
