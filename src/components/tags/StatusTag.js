@@ -7,9 +7,8 @@ import { COMPLETED, CLOSED } from '../../../utils/constants/postStatus';
 const TagContainer = styled.div`
   background-color: ${(props) => props.color};
   width: fit-content;
-  padding: 2px 5px;
-  display: inline-block;
-  margin-left: 10px;
+  padding: 6px 12px;
+  border-radius: 3px;
 `;
 
 const StatusTag = ({ postStatus }) => {
@@ -24,7 +23,9 @@ const StatusTag = ({ postStatus }) => {
 
   return (
     <TagContainer color={tagColor}>
-      <WhiteText size="small">{postStatus.toUpperCase()}</WhiteText>
+      <WhiteText size="small" weight="bold">
+        {postStatus.toUpperCase()}
+      </WhiteText>
     </TagContainer>
   );
 };

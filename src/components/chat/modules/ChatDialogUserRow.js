@@ -11,6 +11,7 @@ import styled from 'styled-components';
 import { colors } from '../../../../utils/constants/colors';
 import { CardSection } from '@kiwicom/orbit-components/lib/Card';
 import { PENDING } from '../../../../utils/constants/postStatus';
+import StatusTag from '../../../components/tags/StatusTag';
 
 const AvatarContainer = styled.div`
   float: left;
@@ -81,14 +82,18 @@ const ChatDialogUserRow = ({
               onShow={showSuggestDateModal}
               onHide={handleCloseSuggestDateModal}
             />
-            <Button
-              size="small"
-              onClick={handleCompletePost}
-              asComponent={CompleteButton}
-              disabled={!isLoggedInUserThePostOwner || postStatus !== PENDING}
-            >
-              Complete
-            </Button>
+            {postStatus === PENDING ? (
+              <Button
+                size="small"
+                onClick={handleCompletePost}
+                asComponent={CompleteButton}
+                disabled={!isLoggedInUserThePostOwner}
+              >
+                Complete
+              </Button>
+            ) : (
+              <StatusTag postStatus={postStatus} />
+            )}
           </Stack>
         </ButtonsContainer>
       </Stack>
