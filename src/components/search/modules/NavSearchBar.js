@@ -28,23 +28,20 @@ const NavSearchBar = () => {
   return (
     <InstantSearch searchClient={searchClient} indexName="wishes">
       <Popover
-
         isOpen={isOpen}
-        position={['bottom']} 
-        disableReposition 
+        position={['bottom']}
+        disableReposition
         onClickOutside={() => setIsOpen(false)}
         containerStyle={{
           zIndex: 1000,
           width: '350px',
           boxShadow: '0 8px 13px 0 rgba(44, 44, 45, 0.27)',
           borderRadius: '5px',
-          position: 'fixed'
+          position: 'fixed',
         }}
         align="start"
         transitionDuration={0.1}
-        content={(
-          { position, nudgedLeft, nudgedTop, targetRect, popoverRect } 
-        ) => {
+        content={({ position, nudgedLeft, nudgedTop, targetRect, popoverRect }) => {
           return (
             <ContentContainer>
               <>
