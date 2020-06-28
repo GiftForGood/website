@@ -5,6 +5,8 @@ import styled from 'styled-components';
 import { donations, wishes } from '../../../../utils/constants/postType';
 import { CardSection } from '@kiwicom/orbit-components/lib/Card';
 import SeePostButton from '../../../components/buttons/ChatSeePostButton';
+import StatusTag from '../../../components/tags/StatusTag';
+import { PENDING } from '../../../../utils/constants/postStatus';
 import router from 'next/router';
 
 const TextContainer = styled.div`
@@ -22,6 +24,7 @@ const ChatDialogViewPostRow = ({ postType, postId, postTitle, postStatus }) => {
     event.preventDefault();
     router.push(`/${postType}/${postId}`);
   };
+
   return (
     <CardSection>
       <Stack direction="row" justify="between" align="center">
@@ -31,7 +34,9 @@ const ChatDialogViewPostRow = ({ postType, postId, postTitle, postStatus }) => {
               {postType === donations ? 'Donating:' : postType === wishes ? 'Requesting for:' : 'N.A.'}
             </BlackText>
             <BlackText size="small" weight="bold">
-              {postTitle} ({postStatus})
+              <span>
+                {postTitle} {postStatus !== PENDING && <StatusTag postStatus={postStatus} />}
+              </span>
             </BlackText>
             <BlackText size="tiny" weight="bold">
               *Delivery cost will be covered by donor
