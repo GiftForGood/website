@@ -94,6 +94,7 @@ const ChatDialogContent = ({
           postStatus={postStatus}
         />
         <ChatDialogMessages
+          postType={chatPostType}
           loggedInUser={loggedInUser}
           selectedChatId={selectedChatId}
           isNewChat={isNewChat}

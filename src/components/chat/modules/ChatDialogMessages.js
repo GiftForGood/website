@@ -11,6 +11,7 @@ import { getTimeDifferenceFromNow } from '../../../../utils/api/time';
 import GreyText from '../../text/GreyText';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 import ChatBubbleForCalendar from './ChatBubbleForCalendar';
+import NewChatTips from './NewChatTips';
 import InfiniteScroll from 'react-infinite-scroller';
 import { CHAT_MESSAGES_BATCH_SIZE } from '../../../../utils/api/constants';
 
@@ -136,7 +137,7 @@ const RightMessageSection = ({ message, loggedInUser, selectedChatId }) => {
  *
  * @param {number} navBarHeight is the height of the navbar
  */
-const ChatDialogMessages = ({ loggedInUser, selectedChatId, isNewChat, navBarHeight }) => {
+const ChatDialogMessages = ({ postType, loggedInUser, selectedChatId, isNewChat, navBarHeight }) => {
   const [chatMessageDocs, setChatMessageDocs] = useState([]);
   // only consider loading more when it's not a new chat, since it's impossible to have a new chat
   // to have messages initially
@@ -220,6 +221,17 @@ const ChatDialogMessages = ({ loggedInUser, selectedChatId, isNewChat, navBarHei
 
   // offsetHeight is used to calculate the amount of height left for the ChatDialogMessages to occupy
   const offsetHeight = navBarHeight + sumOfOtherComponentHeights;
+
+  // display tips before first message is being sent
+  if (isNewChat && !selectedChatId) {
+    return (
+      <CardSection>
+        <MessageContainer offsetHeight={offsetHeight}>
+          <NewChatTips postType={postType} />
+        </MessageContainer>
+      </CardSection>
+    );
+  }
 
   return (
     <CardSection>
