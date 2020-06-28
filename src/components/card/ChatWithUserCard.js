@@ -40,6 +40,7 @@ const OneLineTextContainer = styled.div`
   font-size: 14px;
   -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
+  word-break: break-all;
 `;
 
 const NotificationBadgeWrapper = styled.div`
