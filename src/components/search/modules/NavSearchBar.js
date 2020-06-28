@@ -5,7 +5,7 @@ import Hits from './Hits';
 import algoliasearch from 'algoliasearch/lite';
 import styled from 'styled-components';
 import { Text } from '@kiwicom/orbit-components/lib';
-import { MAXIMUM_SEARCH } from '../../../../utils/constants/search';
+import { MAXIMUM_SEARCH_DESKTOP } from '../../../../utils/constants/search';
 import Popover from 'react-tiny-popover';
 
 const CustomSearchBox = connectSearchBox(SearchBar);
@@ -51,7 +51,7 @@ const NavSearchBar = () => {
                   </Container>
 
                   <CustomHits type="wishes" />
-                  <Configure hitsPerPage={MAXIMUM_SEARCH} />
+                  <Configure hitsPerPage={MAXIMUM_SEARCH_DESKTOP} />
                 </Index>
 
                 <Index indexName="donations">
@@ -60,7 +60,7 @@ const NavSearchBar = () => {
                   </Container>
 
                   <CustomHits type="donations" />
-                  <Configure hitsPerPage={MAXIMUM_SEARCH} />
+                  <Configure hitsPerPage={MAXIMUM_SEARCH_DESKTOP} />
                 </Index>
               </>
             </ContentContainer>

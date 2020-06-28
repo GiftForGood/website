@@ -19,17 +19,24 @@ const SearchBar = ({ currentRefinement, isSearchStalled, refine, inputRef }) => 
   );
 
   return (
-    <form noValidate action="" role="search">
-      <InputField
-        ref={inputRef}
-        inputMode="search"
-        placeholder="Search for wishes or donations"
-        value={search}
-        onChange={onChange}
-        suffix={<ButtonLink iconLeft={<Close />} onClick={() => refine('')} size="normal" transparent />}
-      />
-      {isSearchStalled ? 'My search is stalled' : ''}
-    </form>
+    <InputField
+      ref={inputRef}
+      inputMode="search"
+      placeholder="Search for wishes or donations"
+      value={search}
+      onChange={onChange}
+      suffix={
+        <ButtonLink
+          iconLeft={<Close />}
+          onClick={() => {
+            refine('');
+            setSearch('');
+          }}
+          size="normal"
+          transparent
+        />
+      }
+    />
   );
 };
 

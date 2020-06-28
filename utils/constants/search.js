@@ -1,1 +1,2 @@
-export const MAXIMUM_SEARCH = 10;
+export const MAXIMUM_SEARCH_DESKTOP = 5;
+export const MAXIMUM_SEARCH_MOBILE = 10;
