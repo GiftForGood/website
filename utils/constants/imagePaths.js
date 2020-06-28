@@ -11,3 +11,5 @@ export const donationItemConditionIconPath =
   'https://res.cloudinary.com/giftforgood/image/upload/v1591200186/icons/ticket_lfxp6q.svg';
 export const donationDimensionIconPath =
   'https://res.cloudinary.com/giftforgood/image/upload/v1591199264/icons/ruler_o8pauc.svg';
+export const companyIconImagePath =
+  'https://res.cloudinary.com/giftforgood/image/upload/v1593348734/company/gfg_logo_transparent_xjmrit.svg';
