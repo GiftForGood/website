@@ -36,7 +36,7 @@ const ChatDialogContent = ({
   postType,
 }) => {
   const { isTablet } = useMediaQuery();
-  let chatPostTitle, oppositeUser, chatPostType, chatPostId, postOwnerId, postEnquirerId;
+  let chatPostTitle, oppositeUser, chatPostType, chatPostId, postOwnerId, postEnquirerId, postStatus;
   const isCreatingNewChatForAPost = postId && isNewChat;
 
   // obtain post details accordingly
@@ -48,6 +48,7 @@ const ChatDialogContent = ({
     postEnquirerId = loggedInUser.user.id;
     chatPostType = postType;
     chatPostId = postId;
+    postStatus = post.status;
   } else {
     // get from chat
     chatPostTitle = chat.post.title;
@@ -56,6 +57,7 @@ const ChatDialogContent = ({
     chatPostId = chat.post.id;
     postOwnerId = chatPostType === donations ? chat.donor.id : chat.npo.id;
     postEnquirerId = chatPostType === donations ? chat.npo.id : chat.donor.id;
+    postStatus = chat.post.status;
   }
 
   return (
@@ -74,6 +76,7 @@ const ChatDialogContent = ({
         <ChatDialogUserRow
           postId={chatPostId}
           postType={chatPostType}
+          postStatus={postStatus}
           rating={5} // apparently rating is not within the user in donations/wishes, default val for now
           loggedInUser={loggedInUser}
           oppositeUser={oppositeUser}

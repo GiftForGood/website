@@ -10,6 +10,7 @@ import CompleteButton from '../../../components/buttons/ChatCompleteButton';
 import styled from 'styled-components';
 import { colors } from '../../../../utils/constants/colors';
 import { CardSection } from '@kiwicom/orbit-components/lib/Card';
+import { PENDING } from '../../../../utils/constants/postStatus';
 
 const AvatarContainer = styled.div`
   float: left;
@@ -29,6 +30,7 @@ const ButtonsContainer = styled.div`
 const ChatDialogUserRow = ({
   postId,
   postType,
+  postStatus,
   loggedInUser,
   selectedChatId,
   setSelectedChatId,
@@ -83,7 +85,7 @@ const ChatDialogUserRow = ({
               size="small"
               onClick={handleCompletePost}
               asComponent={CompleteButton}
-              disabled={!isLoggedInUserThePostOwner}
+              disabled={!isLoggedInUserThePostOwner || postStatus !== PENDING}
             >
               Complete
             </Button>
