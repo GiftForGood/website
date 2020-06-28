@@ -17,7 +17,7 @@ const TextContainer = styled.div`
  * @param {string} postId is the id of the post
  * @param {string} postTitle is the title of the post
  */
-const ChatDialogViewPostRow = ({ postType, postId, postTitle }) => {
+const ChatDialogViewPostRow = ({ postType, postId, postTitle, postStatus }) => {
   const handleSeePost = (event) => {
     event.preventDefault();
     router.push(`/${postType}/${postId}`);
@@ -31,7 +31,7 @@ const ChatDialogViewPostRow = ({ postType, postId, postTitle }) => {
               {postType === donations ? 'Donating:' : postType === wishes ? 'Requesting for:' : 'N.A.'}
             </BlackText>
             <BlackText size="small" weight="bold">
-              {postTitle}
+              {postTitle} ({postStatus})
             </BlackText>
             <BlackText size="tiny" weight="bold">
               *Delivery cost will be covered by donor
