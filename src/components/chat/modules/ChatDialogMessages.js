@@ -11,8 +11,9 @@ import { getTimeDifferenceFromNow } from '../../../../utils/api/time';
 import GreyText from '../../text/GreyText';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 import ChatBubbleForCalendar from './ChatBubbleForCalendar';
-import NewChatTips from './NewChatTips';
+import NewChatTips from './NewChatTipsForWish';
 import InfiniteScroll from 'react-infinite-scroller';
+import { wishes } from '../../../../utils/constants/postType';
 import { CHAT_MESSAGES_BATCH_SIZE } from '../../../../utils/api/constants';
 
 /**
@@ -222,8 +223,8 @@ const ChatDialogMessages = ({ postType, loggedInUser, selectedChatId, isNewChat,
   // offsetHeight is used to calculate the amount of height left for the ChatDialogMessages to occupy
   const offsetHeight = navBarHeight + sumOfOtherComponentHeights;
 
-  // display tips before first message is being sent
-  if (isNewChat && !selectedChatId) {
+  // display tips before first message is being sent for a wish
+  if (isNewChat && !selectedChatId && postType === wishes) {
     return (
       <CardSection>
         <MessageContainer offsetHeight={offsetHeight}>
