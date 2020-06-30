@@ -5,6 +5,7 @@ import * as Yup from 'yup';
 import styled, { css } from 'styled-components';
 import ForgetPasswordButton from '../../buttons/ForgetPasswordButton';
 import { companyIconImagePath } from '../../../../utils/constants/imagePaths';
+import api from '../../../../utils/api';
 
 const Logo = styled.img`
   height: 100px;
@@ -29,13 +30,29 @@ const ForgetPassword = () => {
 
   const handleFormSubmission = async (values) => {
     try {
+      setIsLoading(true);
+      const { email } = values;
+      await api.auth.sendPasswordResetEmail(email)
       setHasSentEmail(true);
+      setIsLoading(false);
       displayAlert(
         'Successfully sent',
         `We've successfully sent an email to ${values.email}. Click the link in the email to reset your password.`,
         'success'
       );
-    } catch (error) {}
+      formik.setSubmitting(false);
+    } catch (error) {
+      console.error(error);
+      setIsLoading(false);
+      formik.setSubmitting(false);
+      if (error.code === 'auth/invalid-email') {
+        displayAlert('Invalid Email Provided', error.message, 'critical');
+      } else if (error.code === 'auth/user-not-found') {
+        displayAlert('User not found', error.message, 'critical');
+      } else {
+        displayAlert('Error', error.message, 'critical');
+      }
+    }
   };
 
   const validationSchema = Yup.object().shape({
@@ -78,6 +95,7 @@ const ForgetPassword = () => {
             type="email"
             label="Email"
             name="email"
+            disabled={formik.isSubmitting}
             error={formik.touched.email && formik.errors.email ? formik.errors.email : ''}
             {...formik.getFieldProps('email')}
           />
