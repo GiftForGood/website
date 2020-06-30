@@ -216,6 +216,31 @@ class AuthAPI {
     return firebaseAuth.sendPasswordResetEmail(email, actionCodeSettings);
   }
 
+  /**
+   * Verify the password reset code sent by firebase
+   * @param {string} oobCode The oobCode sent by firebase and a one-time code, used to identify and verify a request
+   */
+  async verifyPasswordResetCode(oobCode) {
+    return firebaseAuth.verifyPasswordResetCode(oobCode);
+  }
+
+  /**
+   * Reset the user's password
+   * @param {string} oobCode The oobCode sent by firebase and a one-time code, used to identify and verify a request
+   * @param {string} newPassword The new password for the user's
+   */
+  async resetPassword(oobCode, newPassword) {
+    return firebaseAuth.confirmPasswordReset(oobCode, newPassword);
+  }
+
+  /**
+   * Verify the verification code sent by firebase
+   * @param {string} oobCode The oobCode sent by firebase and a one-time code, used to identify and verify a request
+   */
+  async verifyEmailVerificationCode(oobCode) {
+    return firebaseAuth.applyActionCode(oobCode);
+  }
+
   async _googleAuth() {
     const provider = new firebase.auth.GoogleAuthProvider();
     return await firebaseAuth.signInWithPopup(provider);
