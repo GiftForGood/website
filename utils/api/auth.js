@@ -204,6 +204,18 @@ class AuthAPI {
     firebaseAuth.signOut();
   }
 
+  /**
+   * Sends a password reset email to the user
+   * @param {string} email The email of the user(NPO | Donor)
+   */
+  async sendPasswordResetEmail(email) {
+    let url = FIREBASE_EMAIL_ACTION_URL + '/login';
+    const actionCodeSettings = {
+      url: url,
+    };
+    return firebaseAuth.sendPasswordResetEmail(email, actionCodeSettings);
+  }
+
   async _googleAuth() {
     const provider = new firebase.auth.GoogleAuthProvider();
     return await firebaseAuth.signInWithPopup(provider);
