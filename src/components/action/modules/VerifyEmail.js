@@ -39,7 +39,7 @@ const VerifyEmail = ({ oobCode, continueUrl }) => {
   if (!isVerified && isError) {
     return (
       <Text align="center" as="div" spaceAfter="largest">
-        <Text  align="center">Code is invalid or expired. Please verify your email again.</Text>
+        <Text align="center">Code is invalid or expired. Please verify your email again.</Text>
       </Text>
     );
   }

@@ -32,7 +32,7 @@ const ForgetPassword = () => {
     try {
       setIsLoading(true);
       const { email } = values;
-      await api.auth.sendPasswordResetEmail(email)
+      await api.auth.sendPasswordResetEmail(email);
       setHasSentEmail(true);
       setIsLoading(false);
       displayAlert(
@@ -107,12 +107,10 @@ const ForgetPassword = () => {
             loading={isLoading}
             disabled={!formik.dirty}
           >
-            {hasSentEmail ? "Resend the password reset link": "Send a password reset link"}
+            {hasSentEmail ? 'Resend the password reset link' : 'Send a password reset link'}
           </Button>
         </Stack>
       </form>
-
-      
     </div>
   );
 };
