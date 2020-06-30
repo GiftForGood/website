@@ -30,7 +30,7 @@ const Panel = styled.div`
   padding-right: 12px;
   min-width: 400px;
   margin-top: 50px;
-  max-width: 1000px;
+  max-width: 700px;
 
   ${media.largeMobile(css`
     margin-top: 0px;
