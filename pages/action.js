@@ -1,5 +1,4 @@
 import React from 'react';
-import { isAuthenticated } from '../utils/authentication/authentication';
 import Error from 'next/error';
 import ActionPage from '../src/components/action/pages/ActionPage';
 import styled, { css } from 'styled-components';

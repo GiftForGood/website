@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { Button, InputField, Stack, Text, SocialButton, Heading, Alert } from '@kiwicom/orbit-components/lib';
+import { Button, InputField, Stack, Text, Heading, Alert } from '@kiwicom/orbit-components/lib';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import ForgetPasswordButton from '../../buttons/ForgetPasswordButton';
 import { companyIconImagePath } from '../../../../utils/constants/imagePaths';
 import api from '../../../../utils/api';
