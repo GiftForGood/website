@@ -12,6 +12,10 @@ const Logo = styled.img`
   width: 100px;
 `;
 
+const Container = styled.div`
+  width: 100%;
+`;
+
 const ResetPassword = ({ oobCode, continueUrl }) => {
   const [userEmail, setUserEmail] = useState('');
   const [isError, setIsError] = useState(false);
@@ -38,7 +42,9 @@ const ResetPassword = ({ oobCode, continueUrl }) => {
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[\!\@\#\$%\^&\*\-\+\=\?\;\:\[\]\{\}\|\`\~\"\'\_])(?=.{12,})/,
         'Please create a password with at least 12 characters, comprising a mix of uppercase and lowercase letters, numbers and symbols'
       ),
-    passwordConfirmation: Yup.string().required('Required').oneOf([Yup.ref('password'), null], 'Passwords must match'),
+    passwordConfirmation: Yup.string()
+      .required('Required')
+      .oneOf([Yup.ref('password'), null], 'Passwords must match'),
   });
 
   const formik = useFormik({
@@ -81,7 +87,7 @@ const ResetPassword = ({ oobCode, continueUrl }) => {
   }
 
   return (
-    <Text align="center" as="div" spaceAfter="largest">
+    <Container>
       <form onSubmit={formik.handleSubmit}>
         <Stack direction="column" align="center" justify="center">
           <Logo src={companyIconImagePath} />
@@ -90,7 +96,8 @@ const ResetPassword = ({ oobCode, continueUrl }) => {
           </Heading>
 
           <Text weight="bold">{userEmail}</Text>
-
+        </Stack>
+        <Stack direction="column" align="" justify="center">
           <Field
             disabled={formik.isSubmitting}
             type="password"
@@ -132,7 +139,7 @@ const ResetPassword = ({ oobCode, continueUrl }) => {
           ) : null}
         </Stack>
       </form>
-    </Text>
+    </Container>
   );
 };
 
