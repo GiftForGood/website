@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, InputField, Stack, Text, Heading, Alert } from '@kiwicom/orbit-components/lib';
+import { Button, InputField, Stack, Text, Heading, Alert, TextLink } from '@kiwicom/orbit-components/lib';
 import ChevronLeft from '@kiwicom/orbit-components/lib/icons/ChevronLeft';
 
 import { useDispatch } from 'react-redux';
@@ -108,7 +108,7 @@ const LoginNpo = () => {
       </Text>
 
       <form onSubmit={formik.handleSubmit}>
-        <Stack spacing="comfy">
+        <Stack spacing="extraLoose">
           <InputField
             type="email"
             label="Email"
@@ -124,6 +124,11 @@ const LoginNpo = () => {
             spaceAfter={'normal'}
             error={formik.touched.password && formik.errors.password ? formik.errors.password : ''}
             {...formik.getFieldProps('password')}
+            help={
+              <div>
+                <TextLink type="secondary"  href="/forget-password">Forget password?</TextLink>
+              </div>
+            }
           />
 
           <Button submit fullWidth={true} asComponent={BlueButton} loading={isLoading}>

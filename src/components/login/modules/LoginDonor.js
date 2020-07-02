@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, InputField, Stack, Text, SocialButton, Heading, Alert } from '@kiwicom/orbit-components/lib';
+import { Button, InputField, Stack, Text, SocialButton, Heading, Alert, TextLink } from '@kiwicom/orbit-components/lib';
 import ChevronLeft from '@kiwicom/orbit-components/lib/icons/ChevronLeft';
 
 import { useDispatch } from 'react-redux';
@@ -146,7 +146,7 @@ const LoginDonor = () => {
         OR
       </Text>
       <form onSubmit={formik.handleSubmit}>
-        <Stack spacing="comfy" spaceAfter="normal">
+        <Stack spacing="extraLoose" spaceAfter="normal">
           <InputField
             type="email"
             label="Email"
@@ -162,6 +162,11 @@ const LoginDonor = () => {
             spaceAfter={'normal'}
             error={formik.touched.password && formik.errors.password ? formik.errors.password : ''}
             {...formik.getFieldProps('password')}
+            help={
+              <div>
+                <TextLink type="secondary"  href="/forget-password">Forget password?</TextLink>
+              </div>
+            }
           />
 
           <Button submit fullWidth={true} asComponent={RedButton} loading={isLoading}>
