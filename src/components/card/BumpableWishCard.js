@@ -207,7 +207,7 @@ const WishCard = ({
 
           <CardDescriptionFooterContainer>
             {isMine ? (
-              <Button fullWidth disabled={isBumped} onClick={onBumpCardClick}>
+              <Button fullWidth disabled={isBumped || status !== PENDING} onClick={onBumpCardClick}>
                 Bump
               </Button>
             ) : (
