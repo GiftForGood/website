@@ -9,6 +9,7 @@ import {
 } from '../constants/npoRegisteredRegistrar.js';
 import { FIREBASE_EMAIL_ACTION_URL } from '../constants/siteUrl';
 import { DONOR, NPO } from '../constants/usersType';
+import { ALL_TEXT } from '../constants/imageVariation';
 import AuthError from './error/authError';
 
 const donorsCollection = db.collection('donors');
@@ -71,7 +72,7 @@ class AuthAPI {
    * @param {string} email The email of the NPO
    * @param {string} password The password of the NPO
    * @param {string} organization The organization name that the NPO belongs to
-   * @param {string} registeredRegistrar The registrar the the NPO is registered with
+   * @param {string} registeredRegistrar The registrar the the NPO is registered with. Reference to npoRegisteredRegistrar constant file
    * @param {string} registrationNumber The registration number
    * @param {string} dayOfRegistration The date when the NPO is registered with the registrar (day)
    * @param {string} monthOfRegistration The date when the NPO is registered with the registrar (day)
@@ -258,12 +259,17 @@ class AuthAPI {
       profileImageUrl = '';
     }
 
+    let profileImageUrlMapping = { raw: profileImageUrl };
+    for (const sizeText of ALL_TEXT) {
+      profileImageUrlMapping[sizeText] = '';
+    }
+
     const newDonor = donorsCollection.doc(userInfo.uid);
     const timeNow = Date.now();
     const data = {
       userId: userInfo.uid,
       name: name,
-      profileImageUrl: profileImageUrl,
+      profileImageUrl: profileImageUrlMapping,
       numberOfReviews: 0,
       donor: true,
       isCorporatePartner: false,
@@ -298,6 +304,11 @@ class AuthAPI {
   async _createNPO(userProfile, name, contact, organizationName) {
     const organizationInfo = await this._getCategoryInfo(organizationName);
 
+    let profileImageUrlMapping = { raw: '' };
+    for (const sizeText of ALL_TEXT) {
+      profileImageUrlMapping[sizeText] = '';
+    }
+
     const userId = userProfile.uid;
     const newNPO = nposCollection.doc(userId);
     const timeNow = Date.now();
@@ -305,7 +316,7 @@ class AuthAPI {
       userId: userId,
       name: name,
       contactNumber: contact,
-      profileImageUrl: '',
+      profileImageUrl: profileImageUrlMapping,
       npo: true,
       organization: organizationInfo,
       numberOfReviews: 0,
