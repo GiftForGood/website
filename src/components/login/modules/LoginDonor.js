@@ -164,7 +164,9 @@ const LoginDonor = () => {
             {...formik.getFieldProps('password')}
             help={
               <div>
-                <TextLink type="secondary"  href="/forget-password">Forget password?</TextLink>
+                <TextLink type="secondary" href="/forget-password">
+                  Forget password?
+                </TextLink>
               </div>
             }
           />
