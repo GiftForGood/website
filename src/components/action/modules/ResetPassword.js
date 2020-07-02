@@ -39,7 +39,7 @@ const ResetPassword = ({ oobCode, continueUrl }) => {
     password: Yup.string()
       .required('Required')
       .matches(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[\!\@\#\$%\^&\*\-\+\=\?\;\:\[\]\{\}\|\`\~\"\'\_])(?=.{12,})/,
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[\!\@\#\$%\^&\*\-\+\=\?\;\:\[\]\{\}\|\`\~\"\'\_\.])(?=.{12,})/,
         'Please create a password with at least 12 characters, comprising a mix of uppercase and lowercase letters, numbers and symbols'
       ),
     passwordConfirmation: Yup.string()
