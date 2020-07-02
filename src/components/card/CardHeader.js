@@ -1,6 +1,7 @@
+import React from 'react';
 import styled from 'styled-components';
 import BlackText from '../text/BlackText';
-import Avatar from '../imageContainers/Avatar';
+import ProfileAvatar from '../imageContainers/ProfileAvatar';
 import { Stack } from '@kiwicom/orbit-components/lib';
 import Replace from '@kiwicom/orbit-components/lib/icons/Replace';
 import { colors } from '../../../utils/constants/colors';
@@ -46,7 +47,7 @@ const CardHeader = ({ imageUrl, name, distance, timeAgo, isBumped }) => {
   return (
     <CardHeaderContainer>
       <AvatarContainer>
-        <Avatar imageUrl={imageUrl} />
+        <ProfileAvatar imageUrl={imageUrl.small || imageUrl.raw} />
       </AvatarContainer>
       <AvatarDetails name={name} distance={distance || '2.5km'} />
       <TimePostedContainer>
