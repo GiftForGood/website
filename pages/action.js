@@ -43,12 +43,6 @@ const Panel = styled.div`
 `;
 
 export async function getServerSideProps({ params, req, res, query }) {
-  let user = await isAuthenticated(req, res);
-  if (user) {
-    res.writeHead(302, { Location: '/' });
-    res.end();
-  }
-
   const { mode } = query; // resetPassword, verifyEmail
   const { oobCode, apiKey, continueUrl } = query;
   let isError = true;
