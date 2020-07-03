@@ -19,7 +19,7 @@ const TopNavigationBarContainer = styled.nav`
   width: 100%;
   display: flex;
   box-sizing: border-box;
-  z-index: 700;
+  z-index: 100;
   transition: ${transition(['transform'], 'normal', 'ease-in-out')};
   transform: translate3d(0, ${({ shown }) => (shown ? '0' : `-100px`)}, 0);
 

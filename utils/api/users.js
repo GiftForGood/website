@@ -1,6 +1,8 @@
 import { db, firebaseAuth, firebaseStorage } from '../firebase';
 import { v4 as uuidv4 } from 'uuid';
 import * as path from 'path';
+import { ALL_TEXT } from '../constants/imageVariation';
+import { uploadImage } from './common/images';
 import UserError from './error/userError';
 
 class UsersAPI {
@@ -44,7 +46,11 @@ class UsersAPI {
       this._validateImageExtension(profileImage);
 
       const profileImageUrl = await this._uploadProfileImage('npos', userId, profileImage);
-      data['profileImageUrl'] = profileImageUrl;
+      let profileImageUrlMapping = { raw: profileImageUrl };
+      for (const sizeText of ALL_TEXT) {
+        profileImageUrlMapping[sizeText] = '';
+      }
+      data['profileImageUrl'] = profileImageUrlMapping;
     }
 
     let npoDoc = db.collection('npos').doc(userId);
@@ -117,7 +123,11 @@ class UsersAPI {
       this._validateImageExtension(profileImage);
 
       const profileImageUrl = await this._uploadProfileImage('donors', userId, profileImage);
-      data['profileImageUrl'] = profileImageUrl;
+      let profileImageUrlMapping = { raw: profileImageUrl };
+      for (const sizeText of ALL_TEXT) {
+        profileImageUrlMapping[sizeText] = '';
+      }
+      data['profileImageUrl'] = profileImageUrlMapping;
     }
 
     let donorDoc = db.collection('donors').doc(userId);
@@ -145,12 +155,9 @@ class UsersAPI {
   async _uploadProfileImage(userType, userId, profileImage) {
     const ext = path.extname(profileImage.name);
     const imageName = `${userId}_${Date.now()}_${uuidv4()}${ext}`;
+    const pathToUpload = `${userType}/${userId}/profiles/`;
 
-    const storageRef = firebaseStorage.ref();
-    const imageRef = storageRef.child(`${userType}/${userId}/profiles/${imageName}`);
-    await imageRef.put(profileImage);
-
-    return imageRef.getDownloadURL();
+    return uploadImage(profileImage, imageName, pathToUpload);
   }
 
   async _uploadNPOProofFile(npoId, proofFile, version) {

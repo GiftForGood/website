@@ -113,7 +113,7 @@ const LoggedInButtons = () => {
 
       <Mobile>
         <Stack direction="row" justify="end" align="center" shrink spacing="extraTight">
-          <ButtonLink iconLeft={<Search />} transparent type="secondary" href="/mobile-search" />
+          <ButtonLink iconLeft={<Search />} transparent type="secondary" href="/search" />
           <ButtonLink iconLeft={<Messages />} transparent type="secondary" href="/chat" />
           <AccountButton onNotificationClick={onNotificationClick} onLogoutClick={onLogoutClick} user={user} />
         </Stack>
