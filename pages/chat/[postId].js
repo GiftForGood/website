@@ -3,6 +3,7 @@ import dynamic from 'next/dynamic';
 import SessionProvider from '../../src/components/session/modules/SessionProvider';
 import { isAuthenticated } from '../../utils/authentication/authentication';
 import api from '../../utils/api';
+import { useRouter } from 'next/router';
 import ChatPage from '../../src/components/chat/pages/ChatPage';
 const TopNavigationBar = dynamic(() => import('../../src/components/navbar/modules/TopNavigationBar'), {
   ssr: false,
@@ -48,6 +49,20 @@ export async function getServerSideProps({ params, req, res, query }) {
 }
 
 const Chats = ({ user, postId, postType }) => {
+  const router = useRouter();
+  /**
+   * Check if chat has already been created for post, if yes, redirect them to /chat?chatId=[chatId]
+   */
+  api.chats
+    .getChatsForPost(postId)
+    .then((rawChat) => {
+      if (rawChat.exists) {
+        const chat = rawChat.docs[0].data(); // assumption: should only have one chat since the chat is for another user's post
+        router.push(`/chat/chatId=${chat.chatId}`);
+      }
+    })
+    .catch((err) => console.error(err));
+
   return (
     <SessionProvider user={user}>
       <TopNavigationBar />

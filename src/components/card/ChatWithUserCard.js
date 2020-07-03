@@ -84,7 +84,7 @@ const ChatWithUserCard = ({
   chatId,
   profileImageUrl,
   name,
-  postTitle,
+  post,
   unreadCount,
   lastMessage,
   contentType,
@@ -114,7 +114,7 @@ const ChatWithUserCard = ({
               <Stack direction="column" spacing="extraTight">
                 <OneLineTextContainer style={{ width: '85%' }}>
                   <BlackText size="small" weight="bold">
-                    {postTitle}
+                    {post.title}
                   </BlackText>
                 </OneLineTextContainer>
                 <OneLineTextContainer style={{ width: '85%' }}>

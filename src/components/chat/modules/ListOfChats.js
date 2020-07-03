@@ -49,6 +49,9 @@ const ListOfChats = ({ user, selectedChatId, setSelectedChatId, postId, isViewin
   const updateChats = (changeType, changedDoc) => {
     if (changeType === ADDED) {
       setChatDocs((prevChatDocs) => {
+        if (isLatestNewChat(changedDoc, prevChatDocs)) {
+          return [changedDoc, ...prevChatDocs];
+        }
         return [...prevChatDocs, changedDoc];
       });
     }
@@ -59,15 +62,22 @@ const ListOfChats = ({ user, selectedChatId, setSelectedChatId, postId, isViewin
         const chatDocsWithModifiedChatRemoved = prevChatDocs.filter(
           (chat) => chat.data().chatId !== changedDoc.data().chatId
         );
-        if (
-          chatDocsWithModifiedChatRemoved.length == 0 ||
-          changedDoc.data().lastMessage.dateTime > chatDocsWithModifiedChatRemoved[0].data().lastMessage.dateTime
-        ) {
+        if (isLatestNewChat(changedDoc, chatDocsWithModifiedChatRemoved)) {
           return [changedDoc, ...chatDocsWithModifiedChatRemoved];
         }
         return prevChatDocs;
       });
     }
+  };
+
+  /**
+   * Check if the new chat is the latest chat, i.e. should be on top of all existing chats
+   */
+  const isLatestNewChat = (newChatDoc, existingChatDocs) => {
+    return (
+      existingChatDocs.length === 0 ||
+      newChatDoc.data().lastMessage.dateTime > existingChatDocs[0].data().lastMessage.dateTime
+    );
   };
 
   /**
@@ -141,7 +151,7 @@ const ListOfChats = ({ user, selectedChatId, setSelectedChatId, postId, isViewin
                     lastMessage={lastMessage.content}
                     contentType={lastMessage.contentType}
                     profileImageUrl={profileImageUrl}
-                    postTitle={post.title}
+                    post={post}
                     isSelected={isSelected}
                     setSelectedChatId={setSelectedChatId}
                     unreadCount={unreadCount}

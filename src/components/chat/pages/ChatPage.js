@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import { Grid } from '@kiwicom/orbit-components/lib';
 import ListOfChats from '../modules/ListOfChats';
 import ChatDialog from '../modules/ChatDialog';
@@ -13,10 +14,12 @@ const NoChatsContainer = styled.div`
   width: fit-content;
 `;
 
-const ChatPage = ({ user, postId, postType, isViewingChatsForMyPost }) => {
-  const [selectedChatId, setSelectedChatId] = useState(null);
-  const [isNewChat, setIsNewChat] = useState(false);
+const ChatPage = ({ user, chatId, postId, postType, isViewingChatsForMyPost }) => {
+  const hasSelectedAChat = typeof chatId !== 'undefined' && chatId !== null;
+  const [selectedChatId, setSelectedChatId] = useState(hasSelectedAChat ? chatId : null);
+  const [isNewChat, setIsNewChat] = useState(chatId == null);
   const [hasNoChatForOwnPost, setHasNoChatForOwnPost] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     // only get chats for post if postId query is given
@@ -40,6 +43,26 @@ const ChatPage = ({ user, postId, postType, isViewingChatsForMyPost }) => {
       setHasNoChatForOwnPost(false);
     }
   }, []);
+
+  useEffect(() => {
+    // modify url based on selected chat id
+    if (selectedChatId && router.query.chatId !== selectedChatId) {
+      let routeWithUpdatedChatId;
+      if (router.query.chatId) {
+        // replace if chatId query exists
+        routeWithUpdatedChatId = router.asPath.replace(router.query.chatId, selectedChatId);
+      } else {
+        // append if chatId query does not exist
+        routeWithUpdatedChatId =
+          Object.keys(router.query).length > 0
+            ? `${router.asPath}&chatId=${selectedChatId}`
+            : `${router.pathname}?chatId=${selectedChatId}`;
+      }
+      router.push(router.asPath, routeWithUpdatedChatId, {
+        shallow: true,
+      });
+    }
+  }, [selectedChatId]);
 
   const { isTablet } = useMediaQuery();
   const navBarConstant = isTablet ? 'DESKTOP' : 'MOBILE';
