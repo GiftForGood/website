@@ -46,18 +46,10 @@ const ChatPage = ({ user, chatId, postId, postType, isViewingChatsForMyPost }) =
 
   useEffect(() => {
     // modify url based on selected chat id
+    // note: with a selected chat id, the url can only be in the form of '/chat?chatId=[chatId]' or '/chat?chatId=[chatId]&postId=[postId]'
     if (selectedChatId && router.query.chatId !== selectedChatId) {
-      let routeWithUpdatedChatId;
-      if (router.query.chatId) {
-        // replace if chatId query exists
-        routeWithUpdatedChatId = router.asPath.replace(router.query.chatId, selectedChatId);
-      } else {
-        // append if chatId query does not exist
-        routeWithUpdatedChatId =
-          Object.keys(router.query).length > 0
-            ? `${router.asPath}&chatId=${selectedChatId}`
-            : `${router.pathname}?chatId=${selectedChatId}`;
-      }
+      const queries = isNewChat ? `chatId=${selectedChatId}` : `postId=${router.query.postId}&chatId=${selectedChatId}`;
+      const routeWithUpdatedChatId = `/chat?${queries}`;
       router.push(router.asPath, routeWithUpdatedChatId, {
         shallow: true,
       });
