@@ -2,9 +2,9 @@ import React from 'react';
 import dynamic from 'next/dynamic';
 import SessionProvider from '../../src/components/session/modules/SessionProvider';
 import { isAuthenticated } from '../../utils/authentication/authentication';
-import { useRouter } from 'next/router';
 import api from '../../utils/api';
 import ChatPage from '../../src/components/chat/pages/ChatPage';
+import Error from 'next/error';
 const TopNavigationBar = dynamic(() => import('../../src/components/navbar/modules/TopNavigationBar'), {
   ssr: false,
 });
@@ -19,10 +19,13 @@ const TopNavigationBar = dynamic(() => import('../../src/components/navbar/modul
 export async function getServerSideProps({ params, req, res, query }) {
   const user = await isAuthenticated(req, res);
   if (!user) {
-    res.writeHead(302, { Location: '/' });
-    res.end();
+    return {
+      props: {
+        hasError: true,
+      },
+    };
   }
-  const chatId = params.chatId ? params.chatId : null;
+  const chatId = query.chatId ? query.chatId : null;
   const postId = query.postId ? query.postId : null;
   const postType = query.postType ? query.postType : null;
   let isViewingChatsForMyPost = false;
@@ -31,8 +34,11 @@ export async function getServerSideProps({ params, req, res, query }) {
     // Check if post exists
     const rawPost = await api[postType].get(postId).catch((err) => console.error(err));
     if (!rawPost.exists) {
-      res.writeHead(302, { Location: '/' });
-      res.end();
+      return {
+        props: {
+          hasError: true,
+        },
+      };
     }
     const post = rawPost.data();
     isViewingChatsForMyPost = post.user.userId === user.user.userId;
@@ -49,26 +55,11 @@ export async function getServerSideProps({ params, req, res, query }) {
   };
 }
 
-const Chats = ({ user, chatId, postId, postType, isViewingChatsForMyPost }) => {
-  const router = useRouter();
-  if (chatId) {
-    api.chats
-      .getChat(chatId)
-      .then((rawChat) => {
-        // Check if chat exists
-        if (!rawChat.exists) {
-          router.push('/');
-        }
-        const chat = rawChat.data();
-        // Check if logged in user is part of the chat
-        if (chat.npo.id !== user.user.userId && chat.donor.id !== user.user.userId) {
-          router.push('/');
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+const Chats = ({ user, chatId, postId, postType, isViewingChatsForMyPost, hasError }) => {
+  if (hasError) {
+    return <Error />;
   }
+
   return (
     <SessionProvider user={user}>
       <TopNavigationBar />

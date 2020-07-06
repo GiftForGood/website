@@ -3,8 +3,8 @@ import dynamic from 'next/dynamic';
 import SessionProvider from '../../src/components/session/modules/SessionProvider';
 import { isAuthenticated } from '../../utils/authentication/authentication';
 import api from '../../utils/api';
+import Error from 'next/error';
 import ChatPage from '../../src/components/chat/pages/ChatPage';
-import { useRouter } from 'next/router';
 const TopNavigationBar = dynamic(() => import('../../src/components/navbar/modules/TopNavigationBar'), {
   ssr: false,
 });
@@ -19,8 +19,11 @@ const TopNavigationBar = dynamic(() => import('../../src/components/navbar/modul
 export async function getServerSideProps({ params, req, res, query }) {
   const user = await isAuthenticated(req, res);
   if (!user) {
-    res.writeHead(302, { Location: '/' });
-    res.end();
+    return {
+      props: {
+        hasError: true,
+      },
+    };
   }
 
   const postId = query.postId ? query.postId : null;
@@ -34,8 +37,11 @@ export async function getServerSideProps({ params, req, res, query }) {
     const rawPost = await api[postType].get(postId).catch((err) => console.error(err));
     if (!rawPost.exists) {
       // given postId does not exist
-      res.writeHead(302, { Location: '/' });
-      res.end();
+      return {
+        props: {
+          hasError: true,
+        },
+      };
     }
     const post = rawPost.data();
     isViewingChatsForMyPost = post.user.userId === user.user.userId;
@@ -47,25 +53,14 @@ export async function getServerSideProps({ params, req, res, query }) {
       user,
       isViewingChatsForMyPost,
       postType,
+      hasError,
     },
   };
 }
 
-const ViewOwnChats = ({ user, postId, isViewingChatsForMyPost, postType }) => {
-  const router = useRouter();
-  /**
-   * Check if already created a chat for a post that is not yours
-   */
-  if (!isViewingChatsForMyPost) {
-    api.chats
-      .getChatsForPost(postId)
-      .then((rawChat) => {
-        if (rawChat.docs.length > 0) {
-          const chat = rawChat.docs[0].data(); // assumption: should only have one chat since the chat is for another user's post
-          router.push(`/chat/${chat.chatId}?postId=${postId}&postType=${postType}`);
-        }
-      })
-      .catch(() => console.log('chat does not exist'));
+const ViewOwnChats = ({ user, postId, isViewingChatsForMyPost, postType, hasError }) => {
+  if (hasError) {
+    return <Error />;
   }
 
   return (
