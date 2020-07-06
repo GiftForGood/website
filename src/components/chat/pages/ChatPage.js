@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
 import { Grid } from '@kiwicom/orbit-components/lib';
 import ListOfChats from '../modules/ListOfChats';
 import ChatDialog from '../modules/ChatDialog';
@@ -17,9 +16,8 @@ const NoChatsContainer = styled.div`
 const ChatPage = ({ user, chatId, postId, postType, isViewingChatsForMyPost }) => {
   const hasSelectedAChat = typeof chatId !== 'undefined' && chatId !== null;
   const [selectedChatId, setSelectedChatId] = useState(hasSelectedAChat ? chatId : null);
-  const [isNewChat, setIsNewChat] = useState(chatId == null);
+  const [isNewChat, setIsNewChat] = useState(chatId == null || typeof chatId == 'undefined');
   const [hasNoChatForOwnPost, setHasNoChatForOwnPost] = useState(true);
-  const router = useRouter();
 
   useEffect(() => {
     // only get chats for post if postId query is given
@@ -32,29 +30,11 @@ const ChatPage = ({ user, chatId, postId, postType, isViewingChatsForMyPost }) =
         } else {
           setHasNoChatForOwnPost(false);
         }
-
-        // if continue to chat with a post that is not yours, automatically select chat and show the messsages
-        // note: assumes that you can only have one chat with a post that is not yours
-        if (!isViewingChatsForMyPost && rawChats.docs.length > 0) {
-          setSelectedChatId(rawChats.docs[0].data().chatId);
-        }
       });
     } else {
       setHasNoChatForOwnPost(false);
     }
   }, []);
-
-  useEffect(() => {
-    // modify url based on selected chat id
-    // note: with a selected chat id, the url can only be in the form of '/chat?chatId=[chatId]' or '/chat?chatId=[chatId]&postId=[postId]'
-    if (selectedChatId && router.query.chatId !== selectedChatId) {
-      const queries = isNewChat ? `chatId=${selectedChatId}` : `postId=${router.query.postId}&chatId=${selectedChatId}`;
-      const routeWithUpdatedChatId = `/chat?${queries}`;
-      router.push(router.asPath, routeWithUpdatedChatId, {
-        shallow: true,
-      });
-    }
-  }, [selectedChatId]);
 
   const { isTablet } = useMediaQuery();
   const navBarConstant = isTablet ? 'DESKTOP' : 'MOBILE';
@@ -77,6 +57,7 @@ const ChatPage = ({ user, chatId, postId, postType, isViewingChatsForMyPost }) =
           selectedChatId={selectedChatId}
           setSelectedChatId={setSelectedChatId}
           postId={postId}
+          isCreatingNewChat={isNewChat}
           isViewingChatsForMyPost={isViewingChatsForMyPost}
         />
         <ChatDialog

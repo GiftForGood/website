@@ -22,7 +22,14 @@ const ListOfChatsContainer = styled.div`
   border-right: 1px solid ${colors.chatBorders};
 `;
 
-const ListOfChats = ({ user, selectedChatId, setSelectedChatId, postId, isViewingChatsForMyPost }) => {
+const ListOfChats = ({
+  user,
+  selectedChatId,
+  setSelectedChatId,
+  postId,
+  isCreatingNewChat,
+  isViewingChatsForMyPost,
+}) => {
   const [chatDocs, setChatDocs] = useState([]);
   const [shouldSeeMore, setShouldSeeMore] = useState(true);
 
@@ -153,6 +160,8 @@ const ListOfChats = ({ user, selectedChatId, setSelectedChatId, postId, isViewin
                     profileImageUrl={profileImageUrl}
                     post={post}
                     isSelected={isSelected}
+                    isCreatingNewChat={isCreatingNewChat}
+                    isViewingChatsForMyPost={isViewingChatsForMyPost}
                     setSelectedChatId={setSelectedChatId}
                     unreadCount={unreadCount}
                   />

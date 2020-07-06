@@ -2,18 +2,18 @@ import React from 'react';
 import dynamic from 'next/dynamic';
 import SessionProvider from '../../src/components/session/modules/SessionProvider';
 import { isAuthenticated } from '../../utils/authentication/authentication';
+import { useRouter } from 'next/router';
 import api from '../../utils/api';
 import ChatPage from '../../src/components/chat/pages/ChatPage';
-import { useRouter } from 'next/router';
 const TopNavigationBar = dynamic(() => import('../../src/components/navbar/modules/TopNavigationBar'), {
   ssr: false,
 });
 
 /**
  *
- * URL when viewing all chats, creating a new chat or viewing an existing chat for a post
- * Viewing all chats: /chat
- * Viewing chats for a specific post: /chat?postId=[postId]&postType=[postType]
+ * URL when a chat is selected
+ * e.g. /chat/[chatId]?postId=[postId]&postType=[postType]
+ * postId and postType are used to filter chats based on a post
  *
  */
 export async function getServerSideProps({ params, req, res, query }) {
@@ -22,18 +22,15 @@ export async function getServerSideProps({ params, req, res, query }) {
     res.writeHead(302, { Location: '/' });
     res.end();
   }
-
+  const chatId = params.chatId ? params.chatId : null;
   const postId = query.postId ? query.postId : null;
   const postType = query.postType ? query.postType : null;
   let isViewingChatsForMyPost = false;
 
-  /**
-   * Check if logged in user is the post owner, if chats for a particular post is queried
-   */
-  if (postType && postId) {
+  if (postId && postId) {
+    // Check if post exists
     const rawPost = await api[postType].get(postId).catch((err) => console.error(err));
     if (!rawPost.exists) {
-      // given postId does not exist
       res.writeHead(302, { Location: '/' });
       res.end();
     }
@@ -43,37 +40,47 @@ export async function getServerSideProps({ params, req, res, query }) {
 
   return {
     props: {
+      chatId,
       postId,
       user,
-      isViewingChatsForMyPost,
       postType,
+      isViewingChatsForMyPost,
     },
   };
 }
 
-const ViewOwnChats = ({ user, postId, isViewingChatsForMyPost, postType }) => {
+const Chats = ({ user, chatId, postId, postType, isViewingChatsForMyPost }) => {
   const router = useRouter();
-  /**
-   * Check if already created a chat for a post that is not yours
-   */
-  if (!isViewingChatsForMyPost) {
+  if (chatId) {
     api.chats
-      .getChatsForPost(postId)
+      .getChat(chatId)
       .then((rawChat) => {
-        if (rawChat.docs.length > 0) {
-          const chat = rawChat.docs[0].data(); // assumption: should only have one chat since the chat is for another user's post
-          router.push(`/chat/${chat.chatId}?postId=${postId}&postType=${postType}`);
+        // Check if chat exists
+        if (!rawChat.exists) {
+          router.push('/');
+        }
+        const chat = rawChat.data();
+        // Check if logged in user is part of the chat
+        if (chat.npo.id !== user.user.userId && chat.donor.id !== user.user.userId) {
+          router.push('/');
         }
       })
-      .catch(() => console.log('chat does not exist'));
+      .catch((err) => {
+        console.log(err);
+      });
   }
-
   return (
     <SessionProvider user={user}>
       <TopNavigationBar />
-      <ChatPage user={user} postId={postId} isViewingChatsForMyPost={isViewingChatsForMyPost} postType={postType} />
+      <ChatPage
+        user={user}
+        chatId={chatId}
+        postId={postId}
+        postType={postType}
+        isViewingChatsForMyPost={isViewingChatsForMyPost}
+      />
     </SessionProvider>
   );
 };
 
-export default ViewOwnChats;
+export default Chats;

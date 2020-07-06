@@ -1,5 +1,6 @@
 import React from 'react';
 import { Stack, Tile, NotificationBadge } from '@kiwicom/orbit-components/lib';
+import { useRouter } from 'next/router';
 import styled, { css } from 'styled-components';
 import ProfileAvatar from '../../components/imageContainers/ProfileAvatar';
 import BlackText from '../../components/text/BlackText';
@@ -89,16 +90,35 @@ const ChatWithUserCard = ({
   lastMessage,
   contentType,
   isSelected,
+  isCreatingNewChat,
+  isViewingChatsForMyPost,
   setSelectedChatId,
 }) => {
+  const router = useRouter();
   const lastMessageDate = getFormattedDate(lastMessage.date);
+  const handleClickChat = () => {
+    if (isCreatingNewChat) {
+      // creating a new chat and haven't send the first message
+      router.push(`/chat/${chatId}`);
+    } else if (isViewingChatsForMyPost) {
+      router.push(`/chat/${chatId}?postId=${router.query.postId}&postType=${router.query.postType}`);
+    } else {
+      const queries = [];
+      if (router.query.postId) {
+        queries.push(`postId=${router.query.postId}`);
+      }
+      if (router.query.postType) {
+        queries.push(`postType=${router.query.postType}`);
+      }
+      let queryString = queries.join('&');
+      const routeWithUpdatedChatId = `/chat/${chatId}${queryString.length > 0 ? `?${queryString}` : ''}`;
+      setSelectedChatId(chatId);
+      router.push(`/chat/[chatId]`, routeWithUpdatedChatId, { shallow: true });
+    }
+  };
   return (
     <TileContainer isSelected={isSelected}>
-      <Tile
-        onClick={function () {
-          setSelectedChatId(chatId);
-        }}
-      >
+      <Tile onClick={handleClickChat}>
         <Stack direction="row">
           <AvatarContainer>
             <ProfileAvatar imageUrl={profileImageUrl} width={30} height={30} />
