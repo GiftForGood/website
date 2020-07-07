@@ -53,7 +53,6 @@ export async function getServerSideProps({ params, req, res, query }) {
       user,
       isViewingChatsForMyPost,
       postType,
-      hasError,
     },
   };
 }

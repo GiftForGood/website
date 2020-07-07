@@ -87,15 +87,15 @@ const ChatWithUserCard = ({
   name,
   post,
   unreadCount,
-  lastMessage,
-  contentType,
   isSelected,
+  lastMessage,
   isCreatingNewChat,
   isViewingChatsForMyPost,
   setSelectedChatId,
 }) => {
   const router = useRouter();
-  const lastMessageDate = getFormattedDate(lastMessage.date);
+  const { dateTime, contentType, content } = lastMessage;
+  const lastMessageDate = getFormattedDate(dateTime);
   const handleClickChat = () => {
     if (isCreatingNewChat) {
       // creating a new chat and haven't send the first message
@@ -141,11 +141,7 @@ const ChatWithUserCard = ({
                 </OneLineTextContainer>
                 <OneLineTextContainer style={{ width: '85%' }}>
                   <BlackText size="small">
-                    {contentType === IMAGE
-                      ? 'Sent an image'
-                      : contentType === CALENDAR
-                      ? 'Sent a calendar'
-                      : lastMessage}
+                    {contentType === IMAGE ? 'Sent an image' : contentType === CALENDAR ? 'Sent a calendar' : content}
                   </BlackText>
                 </OneLineTextContainer>
               </Stack>
