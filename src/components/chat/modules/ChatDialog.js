@@ -67,6 +67,7 @@ const ChatDialogContent = ({
           <ButtonLink
             onClick={function () {
               setSelectedChatId(null);
+              setIsNewChat(false);
             }}
             iconLeft={<ChevronLeft />}
             transparent
