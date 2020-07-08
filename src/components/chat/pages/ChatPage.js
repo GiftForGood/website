@@ -18,12 +18,12 @@ const NoChatsContainer = styled.div`
 const ChatPage = ({ user, chatId, postId, postType, isViewingChatsForMyPost }) => {
   const hasSelectedAChat = typeof chatId !== 'undefined' && chatId !== null;
   const [selectedChatId, setSelectedChatId] = useState(hasSelectedAChat ? chatId : null);
-  const [isNewChat, setIsNewChat] = useState(chatId == null); // default to false
+  const [isNewChat, setIsNewChat] = useState(chatId == null);
   const [hasNoChatForOwnPost, setHasNoChatForOwnPost] = useState(true);
   const [hasError, setHasError] = useState(false);
   const router = useRouter();
 
-  // checks if viewing a chat
+  // error checking for selected chat
   useEffect(() => {
     if (chatId) {
       api.chats
@@ -47,12 +47,11 @@ const ChatPage = ({ user, chatId, postId, postType, isViewingChatsForMyPost }) =
     }
   }, []);
 
-  // checks if viewing chats for a post
+  // error checking for viewing chats for a post
   useEffect(() => {
     if (postId) {
       api.chats.getChatsForPost(postId).then((rawChats) => {
         setIsNewChat(rawChats.docs.length === 0);
-        console.log(rawChats.docs);
 
         if (isViewingChatsForMyPost && rawChats.docs.length === 0) {
           setHasNoChatForOwnPost(true);
@@ -61,7 +60,7 @@ const ChatPage = ({ user, chatId, postId, postType, isViewingChatsForMyPost }) =
         }
 
         if (!isViewingChatsForMyPost && rawChats.docs.length > 0) {
-          const chat = rawChat.docs[0].data(); // assumption: should only have one chat since the chat is for another user's post
+          const chat = rawChats.docs[0].data(); // assumption: should only have one chat since the chat is for another user's post
           router.push(`/chat/[chatId]`, `/chat/${chat.chatId}?postId=${postId}&postType=${postType}`, {
             shallow: true,
           });
