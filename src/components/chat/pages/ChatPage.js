@@ -92,47 +92,57 @@ const ChatPageMobile = ({
 const ChatPage = ({ user, chatId, postId, postType, isViewingChatsForMyPost }) => {
   const hasSelectedAChat = typeof chatId !== 'undefined' && chatId !== null;
   const [selectedChatId, setSelectedChatId] = useState(hasSelectedAChat ? chatId : null);
-  const [isNewChat, setIsNewChat] = useState(chatId == null);
+  const [isNewChat, setIsNewChat] = useState(false);
   const [hasNoChatForOwnPost, setHasNoChatForOwnPost] = useState(true);
   const [hasError, setHasError] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
 
-  // error checking for selected chat
-  useEffect(() => {
-    if (chatId) {
-      api.chats
-        .getChat(chatId)
-        .then((rawChat) => {
-          // Check if chat exists
-          if (!rawChat.exists) {
-            setHasError(true);
-            return;
-          }
-          const chat = rawChat.data();
-          // Check if logged in user is part of the chat
-          if (chat.npo.id !== user.user.userId && chat.donor.id !== user.user.userId) {
-            setHasError(true);
-            return;
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+  const checkIfSelectedChatHasError = (rawChat) => {
+    // Check if chat exists
+    if (!rawChat.exists) {
+      setHasError(true);
+      return;
     }
-    if (postId) {
-      api.chats.getChatsForPost(postId).then((rawChats) => {
-        setIsNewChat(rawChats.docs.length === 0);
+    const chat = rawChat.data();
+    // Check if logged in user is part of the chat
+    if (chat.npo.id !== user.user.userId && chat.donor.id !== user.user.userId) {
+      setHasError(true);
+      return;
+    }
+  };
 
-        if (isViewingChatsForMyPost && rawChats.docs.length === 0) {
-          setHasNoChatForOwnPost(true);
-        } else {
-          setHasNoChatForOwnPost(false);
-        }
-      });
+  const setChatPropertiesForPost = (rawChats) => {
+    setIsNewChat(rawChats.docs.length === 0);
+
+    if (isViewingChatsForMyPost && rawChats.docs.length === 0) {
+      setHasNoChatForOwnPost(true);
     } else {
       setHasNoChatForOwnPost(false);
     }
-    setIsMounted(true);
+  };
+
+  const initialChecks = async () => {
+    if (chatId && postId) {
+      const [rawChat, rawChatsForPost] = await Promise.all([
+        api.chats.getChat(chatId),
+        api.chats.getChatsForPost(postId),
+      ]);
+      checkIfSelectedChatHasError(rawChat);
+      setChatPropertiesForPost(rawChatsForPost);
+    } else if (chatId) {
+      const rawChat = await api.chats.getChat(chatId);
+      checkIfSelectedChatHasError(rawChat);
+      setHasNoChatForOwnPost(false);
+    } else if (postId) {
+      const rawChatsForPost = await api.chats.getChatsForPost(postId);
+      setChatPropertiesForPost(rawChatsForPost);
+    } else {
+      setHasNoChatForOwnPost(false);
+    }
+  };
+
+  useEffect(() => {
+    initialChecks().then(() => setIsMounted(true));
   }, []);
 
   const { isTablet } = useMediaQuery();
