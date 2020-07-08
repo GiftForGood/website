@@ -70,7 +70,8 @@ const PostDetailsHeader = ({
     if (chatType === 'Chat') {
       api.chats.getChatsForPost(postId).then((rawChats) => {
         if (rawChats.docs.length > 0) {
-          // assumption: can only have one chat for a post that is not yours
+          // assumption: can only have one chat for a post that is not yours,
+          // bring user to the chat being selected
           destination = `/chat/${rawChats.docs[0].data().chatId}`;
         }
         router.push(destination);

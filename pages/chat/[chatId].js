@@ -30,7 +30,7 @@ export async function getServerSideProps({ params, req, res, query }) {
   const postType = query.postType ? query.postType : null;
   let isViewingChatsForMyPost = false;
 
-  if (postId && postId) {
+  if (postId && postType) {
     // Check if post exists
     const rawPost = await api[postType].get(postId).catch((err) => console.error(err));
     if (!rawPost.exists) {
