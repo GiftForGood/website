@@ -6,6 +6,7 @@ import { Button, Heading, Stack } from '@kiwicom/orbit-components/lib';
 import { getFormattedDateRange } from '../../../../utils/api/time';
 import Modal, { ModalSection, ModalFooter } from '@kiwicom/orbit-components/lib/Modal';
 import { donations } from '../../../../utils/constants/postType';
+import { useRouter } from 'next/router';
 import api from '../../../../utils/api';
 
 const okButton = styled.button`
@@ -37,6 +38,7 @@ const CalendarModal = ({
   onHide,
 }) => {
   const [selectedDates, setSelectedDates] = useState([]);
+  const router = useRouter();
   if (!onShow) {
     return <div></div>;
   }
@@ -64,6 +66,7 @@ const CalendarModal = ({
     const method =
       postType === donations ? 'sendInitialCalendarMessageForDonation' : 'sendInitialCalendarMessageForWish';
     const [rawChat, rawFirstMessage] = await api.chats[method](postId, calendarRawString);
+    router.push(`/chat/${rawChat.data().chatId}`);
     return rawChat.data();
   };
 

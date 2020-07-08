@@ -8,6 +8,7 @@ import { useDropzone } from 'react-dropzone';
 import { donations } from '../../../../utils/constants/postType';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import ChatError from '../../../../utils/api/error/chatError';
+import { useRouter } from 'next/router';
 
 const InputRowContainer = styled.div`
   width: 95%;
@@ -34,6 +35,7 @@ const AlertWrapper = styled.div`
 const ChatDialogInputRow = ({ selectedChatId, setSelectedChatId, isNewChat, setIsNewChat, postType, postId }) => {
   const [inputMessage, setInputMessage] = useState('');
   const [alertMessage, setAlertMessage] = useState('');
+  const router = useRouter();
 
   const handleSendTextMessage = () => {
     if (inputMessage.trim().length <= 0) {
@@ -69,12 +71,14 @@ const ChatDialogInputRow = ({ selectedChatId, setSelectedChatId, isNewChat, setI
   const sendFirstImageMessages = async (images) => {
     const method = postType === donations ? 'sendInitialImageMessagesForDonation' : 'sendInitialImageMessagesForWish';
     const [rawChat, rawFirstMessage] = await api.chats[method](postId, images);
+    router.push(`/chat/${rawChat.data().chatId}`);
     return rawChat.data();
   };
 
   const sendFirstMessage = async () => {
     const method = postType === donations ? 'sendInitialTextMessageForDonation' : 'sendInitialTextMessageForWish';
     const [rawChat, rawFirstMessage] = await api.chats[method](postId, inputMessage);
+    router.push(`/chat/${rawChat.data().chatId}`);
     return rawChat.data();
   };
 

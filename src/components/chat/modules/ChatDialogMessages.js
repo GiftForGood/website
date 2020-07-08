@@ -146,6 +146,10 @@ const ChatDialogMessages = ({ postType, loggedInUser, selectedChatId, isNewChat,
   const { isTablet } = useMediaQuery();
 
   useEffect(() => {
+    // reset values every time selectedChatId changes
+    setChatMessageDocs([]);
+    setShouldSeeMore(!isNewChat);
+
     let unsubscribeFunction;
     // when selected a chat, subscribe to the corresponding chat messages
     if (selectedChatId != null || !isNewChat) {
@@ -155,9 +159,9 @@ const ChatDialogMessages = ({ postType, loggedInUser, selectedChatId, isNewChat,
 
     return () => {
       if (unsubscribeFunction) {
-        api.chats
-          .unsubscribeFromChatMessages(selectedChatId, unsubscribeFunction)
-          .then(() => console.log('unsubscribe to messages successfully'));
+        api.chats.unsubscribeFromChatMessages(selectedChatId, unsubscribeFunction).then(() => {
+          console.log('unsubscribe to messages successfully');
+        });
       }
     };
   }, [selectedChatId]);

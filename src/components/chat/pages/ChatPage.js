@@ -6,7 +6,6 @@ import api from '../../../../utils/api';
 import Error from 'next/error';
 import styled from 'styled-components';
 import { EMAIL_BAR_HEIGHT, NAVBAR_HEIGHT } from '../../../../utils/constants/navbar';
-import { useRouter } from 'next/router';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 
 const NoChatsContainer = styled.div`
@@ -15,13 +14,88 @@ const NoChatsContainer = styled.div`
   width: fit-content;
 `;
 
+const ChatPageTabletAndDesktop = ({
+  user,
+  selectedChatId,
+  setSelectedChatId,
+  postId,
+  postType,
+  isNewChat,
+  setIsNewChat,
+  isViewingChatsForMyPost,
+  navBarHeight,
+  gridContainerStyle,
+}) => {
+  return (
+    <Grid style={gridContainerStyle} columns="1fr 3fr">
+      <ListOfChats
+        user={user}
+        selectedChatId={selectedChatId}
+        setSelectedChatId={setSelectedChatId}
+        postId={postId}
+        isCreatingNewChat={isNewChat}
+        isViewingChatsForMyPost={isViewingChatsForMyPost}
+      />
+      <ChatDialog
+        loggedInUser={user}
+        selectedChatId={selectedChatId}
+        setSelectedChatId={setSelectedChatId}
+        navBarHeight={navBarHeight}
+        isNewChat={isNewChat}
+        setIsNewChat={setIsNewChat}
+        postId={postId}
+        postType={postType}
+      />
+    </Grid>
+  );
+};
+
+const ChatPageMobile = ({
+  user,
+  selectedChatId,
+  setSelectedChatId,
+  postId,
+  postType,
+  isNewChat,
+  setIsNewChat,
+  isViewingChatsForMyPost,
+  navBarHeight,
+  gridContainerStyle,
+}) => {
+  return (
+    <Grid style={gridContainerStyle} columns="1fr">
+      {/* Show list of chats when no chat is selected and not creating a new chat */}
+      {selectedChatId == null && !isNewChat ? (
+        <ListOfChats
+          user={user}
+          selectedChatId={selectedChatId}
+          setSelectedChatId={setSelectedChatId}
+          postId={postId}
+          isViewingChatsForMyPost={isViewingChatsForMyPost}
+        />
+      ) : (
+        <ChatDialog
+          loggedInUser={user}
+          selectedChatId={selectedChatId}
+          setSelectedChatId={setSelectedChatId}
+          navBarHeight={navBarHeight}
+          isNewChat={isNewChat}
+          setIsNewChat={setIsNewChat}
+          postId={postId}
+          postType={postType}
+        />
+      )}
+    </Grid>
+  );
+};
+
 const ChatPage = ({ user, chatId, postId, postType, isViewingChatsForMyPost }) => {
   const hasSelectedAChat = typeof chatId !== 'undefined' && chatId !== null;
   const [selectedChatId, setSelectedChatId] = useState(hasSelectedAChat ? chatId : null);
   const [isNewChat, setIsNewChat] = useState(chatId == null);
   const [hasNoChatForOwnPost, setHasNoChatForOwnPost] = useState(true);
   const [hasError, setHasError] = useState(false);
-  const router = useRouter();
+  const [isMounted, setIsMounted] = useState(false);
 
   // error checking for selected chat
   useEffect(() => {
@@ -45,10 +119,6 @@ const ChatPage = ({ user, chatId, postId, postType, isViewingChatsForMyPost }) =
           console.log(err);
         });
     }
-  }, []);
-
-  // error checking for viewing chats for a post
-  useEffect(() => {
     if (postId) {
       api.chats.getChatsForPost(postId).then((rawChats) => {
         setIsNewChat(rawChats.docs.length === 0);
@@ -58,17 +128,11 @@ const ChatPage = ({ user, chatId, postId, postType, isViewingChatsForMyPost }) =
         } else {
           setHasNoChatForOwnPost(false);
         }
-
-        if (!isViewingChatsForMyPost && rawChats.docs.length > 0) {
-          const chat = rawChats.docs[0].data(); // assumption: should only have one chat since the chat is for another user's post
-          router.push(`/chat/[chatId]`, `/chat/${chat.chatId}?postId=${postId}&postType=${postType}`, {
-            shallow: true,
-          });
-        }
       });
     } else {
       setHasNoChatForOwnPost(false);
     }
+    setIsMounted(true);
   }, []);
 
   const { isTablet } = useMediaQuery();
@@ -84,67 +148,45 @@ const ChatPage = ({ user, chatId, postId, postType, isViewingChatsForMyPost }) =
     width: '100vw',
   };
 
-  const ChatPageTabletAndDesktop = () => {
-    return (
-      <Grid style={gridContainerStyle} columns="1fr 3fr">
-        <ListOfChats
-          user={user}
-          selectedChatId={selectedChatId}
-          setSelectedChatId={setSelectedChatId}
-          postId={postId}
-          isCreatingNewChat={isNewChat}
-          isViewingChatsForMyPost={isViewingChatsForMyPost}
-        />
-        <ChatDialog
-          loggedInUser={user}
-          selectedChatId={selectedChatId}
-          setSelectedChatId={setSelectedChatId}
-          navBarHeight={navBarOffsetHeight}
-          isNewChat={isNewChat}
-          setIsNewChat={setIsNewChat}
-          postId={postId}
-          postType={postType}
-        />
-      </Grid>
-    );
-  };
-
-  const ChatPageMobile = () => {
-    return (
-      <Grid style={gridContainerStyle} columns="1fr">
-        {selectedChatId == null && !isNewChat ? (
-          <ListOfChats
-            user={user}
-            selectedChatId={selectedChatId}
-            setSelectedChatId={setSelectedChatId}
-            postId={postId}
-            isViewingChatsForMyPost={isViewingChatsForMyPost}
-          />
-        ) : (
-          <ChatDialog
-            loggedInUser={user}
-            selectedChatId={selectedChatId}
-            setSelectedChatId={setSelectedChatId}
-            navBarHeight={navBarOffsetHeight}
-            isNewChat={isNewChat}
-            setIsNewChat={setIsNewChat}
-            postId={postId}
-            postType={postType}
-          />
-        )}
-      </Grid>
-    );
-  };
-
   if (hasError) {
     return <Error />;
+  }
+
+  if (!isMounted) {
+    return null;
   }
 
   if (hasNoChatForOwnPost && isViewingChatsForMyPost) {
     return <NoChatsContainer>No chats for this post yet.</NoChatsContainer>;
   }
 
-  return isTablet ? <ChatPageTabletAndDesktop /> : <ChatPageMobile />;
+  return isTablet ? (
+    <ChatPageTabletAndDesktop
+      user={user}
+      selectedChatId={selectedChatId}
+      setSelectedChatId={setSelectedChatId}
+      postId={postId}
+      postType={postType}
+      isNewChat={isNewChat}
+      setIsNewChat={setIsNewChat}
+      isViewingChatsForMyPost={isViewingChatsForMyPost}
+      navBarHeight={navBarOffsetHeight}
+      gridContainerStyle={gridContainerStyle}
+    />
+  ) : (
+    <ChatPageMobile
+      user={user}
+      selectedChatId={selectedChatId}
+      setSelectedChatId={setSelectedChatId}
+      postId={postId}
+      postType={postType}
+      isNewChat={isNewChat}
+      setIsNewChat={setIsNewChat}
+      isViewingChatsForMyPost={isViewingChatsForMyPost}
+      navBarHeight={navBarOffsetHeight}
+      gridContainerStyle={gridContainerStyle}
+    />
+  );
 };
 
 export default ChatPage;
