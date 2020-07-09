@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Stack } from '@kiwicom/orbit-components/lib';
 import CalendarModal from '../../calendar/modules/CalendarModal';
+import AppreciationMessageModal from '../modules/AppreciationMessageModal';
 import ProfileAvatar from '../../imageContainers/ProfileAvatar';
 import BlackText from '../../text/BlackText';
 import RatingStars from '../../ratingStars';
@@ -43,7 +44,9 @@ const ChatDialogUserRow = ({
   rating,
 }) => {
   const [showSuggestDateModal, setShowSuggestDateModal] = useState(false);
+  const [showAppreciationMessageModal, setShowAppreciationMessageModal] = useState(false);
 
+  const handleCloseAppreciationMessageModal = () => setShowAppreciationMessageModal(false);
   const handleShowSuggestDateModal = () => setShowSuggestDateModal(true);
   const handleCloseSuggestDateModal = () => setShowSuggestDateModal(false);
   const isLoggedInUserThePostOwner = loggedInUser.user.userId === postOwnerId;
@@ -52,6 +55,7 @@ const ChatDialogUserRow = ({
     api[postType].complete(postId, postEnquirerId).then(() => {
       console.log('Complete post successful.');
       // TODO/KIV: add review and appreciation message modal
+      setShowAppreciationMessageModal(true);
     });
   };
 
@@ -83,14 +87,27 @@ const ChatDialogUserRow = ({
               onHide={handleCloseSuggestDateModal}
             />
             {postStatus === PENDING ? (
-              <Button
-                size="small"
-                onClick={handleCompletePost}
-                asComponent={CompleteButton}
-                disabled={!isLoggedInUserThePostOwner}
-              >
-                Complete
-              </Button>
+              <>
+                <Button
+                  size="small"
+                  onClick={handleCompletePost}
+                  asComponent={CompleteButton}
+                  disabled={!isLoggedInUserThePostOwner}
+                >
+                  Complete
+                </Button>
+                <AppreciationMessageModal
+                  postType={postType}
+                  postId={postId}
+                  oppositeUserName={oppositeUser.name || oppositeUser.userName}
+                  selectedChatId={selectedChatId}
+                  setSelectedChatId={setSelectedChatId}
+                  isNewChat={isNewChat}
+                  setIsNewChat={setIsNewChat}
+                  onShow={showAppreciationMessageModal}
+                  onHide={handleCloseAppreciationMessageModal}
+                />
+              </>
             ) : (
               <StatusTag postStatus={postStatus} />
             )}
