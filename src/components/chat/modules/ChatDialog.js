@@ -151,7 +151,7 @@ const ChatDialog = ({
         setChat(rawChat.data());
       });
     }
-  }, []);
+  }, [selectedChatId]);
 
   // no chat selected yet and is not creating a new chat for a post
   if (!hasSelectedChat && !isNewChat) {
