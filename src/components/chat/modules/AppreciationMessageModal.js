@@ -69,8 +69,8 @@ const AppreciationMessageModal = ({
     return rawChat.data();
   };
 
-  const wishPlaceholder = `Dear ${oppositeUserName}, thank you for your donation! The beneficiary really love the item and they are grateful for the item.`;
-  const donationPlaceholder = `Dear ${oppositeUserName}, thank you!`;
+  const wishPlaceholder = `Appreciation Message: Dear ${oppositeUserName}, thank you for your donation! The beneficiary really love the item and they are grateful for the item.`;
+  const donationPlaceholder = `Appreciation Message: Dear ${oppositeUserName}, thank you!`;
 
   return (
     <Modal size="normal">
