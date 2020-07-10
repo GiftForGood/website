@@ -22,9 +22,29 @@ const ChatBubbleContainer = styled.div`
 const ChatBubbleForText = ({ text, isByLoggedInUser }) => {
   return (
     <ChatBubbleContainer isByLoggedInUser={isByLoggedInUser}>
-      <Linkify>
-        {isByLoggedInUser ? <WhiteText size="small">{text}</WhiteText> : <BlackText size="small">{text}</BlackText>}
-      </Linkify>
+      {isByLoggedInUser ? (
+        /* temporary solution to change the color of links, follow this issue thread 
+        for updates: https://github.com/tasti/react-linkify/issues/96 */
+        <Linkify
+          componentDecorator={(decoratedHref, decoratedText, key) => (
+            <a target="blank" href={decoratedHref} key={key} style={{ color: 'white' }}>
+              {decoratedText}
+            </a>
+          )}
+        >
+          <WhiteText size="small">{text}</WhiteText>
+        </Linkify>
+      ) : (
+        <Linkify
+          componentDecorator={(decoratedHref, decoratedText, key) => (
+            <a target="blank" href={decoratedHref} key={key}>
+              {decoratedText}
+            </a>
+          )}
+        >
+          <BlackText size="small">{text}</BlackText>
+        </Linkify>
+      )}
     </ChatBubbleContainer>
   );
 };
