@@ -103,7 +103,7 @@ const LeftMessageSection = ({ message, loggedInUser, selectedChatId }) => {
   return (
     <LeftMessageSectionContainer>
       <Stack direction="row" grow={false}>
-        <ProfileAvatar imageUrl={sender.profileImageUrl} width={25} height={25} />
+        <ProfileAvatar imageUrl={sender.profileImageUrl.small || sender.profileImageUrl.raw} width={25} height={25} />
         <LeftColumnStackContainer>
           <Stack direction="column" spacing="extraTight">
             {getMessageContent(contentType, content, false, sender, loggedInUser, selectedChatId)}
@@ -127,7 +127,7 @@ const RightMessageSection = ({ message, loggedInUser, selectedChatId }) => {
               <GreyText size="tiny">{getTimeDifferenceFromNow(dateTime)}</GreyText>
             </Stack>
           </RightColumnStackContainer>
-          <ProfileAvatar imageUrl={sender.profileImageUrl} width={25} height={25} />
+          <ProfileAvatar imageUrl={sender.profileImageUrl.small || sender.profileImageUrl.raw} width={25} height={25} />
         </Stack>
       </RightMessageSectionContainer>
     </Stack>

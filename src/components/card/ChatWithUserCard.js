@@ -123,7 +123,7 @@ const ChatWithUserCard = ({
       <Tile onClick={handleClickChat}>
         <Stack direction="row">
           <AvatarContainer>
-            <ProfileAvatar imageUrl={profileImageUrl} width={30} height={30} />
+            <ProfileAvatar imageUrl={profileImageUrl.small || profileImageUrl.raw} width={30} height={30} />
           </AvatarContainer>
           <DetailsContainer>
             <Stack direction="column" spacing="compact">

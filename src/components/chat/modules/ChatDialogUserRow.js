@@ -68,7 +68,7 @@ const ChatDialogUserRow = ({
       <Stack direction="row" justify="between" align="center">
         <AvatarContainer>
           <Stack direction="row" align="center">
-            <ProfileAvatar imageUrl={oppositeUser.profileImageUrl} />
+            <ProfileAvatar imageUrl={oppositeUser.profileImageUrl.small || oppositeUser.profileImageUrl.raw} />
             <Stack direction="column" align="start" spacing="extraTight">
               <BlackText size="small">{oppositeUser.name || oppositeUser.userName}</BlackText>
               <RatingStars rating={rating} showEmpty color={colors.ratingStarBackground} size="small" />
