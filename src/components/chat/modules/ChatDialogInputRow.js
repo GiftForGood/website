@@ -96,7 +96,7 @@ const ChatDialogInputRow = ({ selectedChatId, setSelectedChatId, isNewChat, setI
         api.chats.sendImageMessages(selectedChatId, uploadedFiles).catch((err) => handleImageUploadError(err));
       }
     }, []);
-    const { getRootProps, getInputProps } = useDropzone({ onDrop: onUpload });
+    const { getRootProps, getInputProps } = useDropzone({ onDrop: onUpload, accept: '.jpeg, .png, .jpg' });
     return (
       <div {...getRootProps()}>
         <input {...getInputProps()} />
