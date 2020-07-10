@@ -43,9 +43,10 @@ const AppreciationMessageModal = ({
   }
   const onClickSubmit = () => {
     if (message.length > 0) {
+      const appreciationMessage = `Appreciation Message: ${message}`;
       setError('');
       if (isNewChat) {
-        sendFirstMessage(message)
+        sendFirstMessage(appreciationMessage)
           .then((chat) => {
             // need to get the chat id from the newly created chat to select chat id
             setSelectedChatId(chat.chatId);
@@ -53,7 +54,7 @@ const AppreciationMessageModal = ({
           })
           .catch((err) => console.error(err));
       } else {
-        api.chats.sendTextMessage(selectedChatId, message).catch((err) => console.error(err));
+        api.chats.sendTextMessage(selectedChatId, appreciationMessage).catch((err) => console.error(err));
       }
       onHide();
     } else {
