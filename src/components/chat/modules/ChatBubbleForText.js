@@ -3,6 +3,7 @@ import BlackText from '../../text/BlackText';
 import WhiteText from '../../text/WhiteText';
 import styled from 'styled-components';
 import { colors } from '../../../../utils/constants/colors';
+import Linkify from 'react-linkify';
 
 const ChatBubbleContainer = styled.div`
   width: fit-content;
@@ -21,7 +22,9 @@ const ChatBubbleContainer = styled.div`
 const ChatBubbleForText = ({ text, isByLoggedInUser }) => {
   return (
     <ChatBubbleContainer isByLoggedInUser={isByLoggedInUser}>
-      {isByLoggedInUser ? <WhiteText size="small">{text}</WhiteText> : <BlackText size="small">{text}</BlackText>}
+      <Linkify>
+        {isByLoggedInUser ? <WhiteText size="small">{text}</WhiteText> : <BlackText size="small">{text}</BlackText>}
+      </Linkify>
     </ChatBubbleContainer>
   );
 };
