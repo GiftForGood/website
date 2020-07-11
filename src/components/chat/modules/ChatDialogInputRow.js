@@ -64,6 +64,13 @@ const ChatDialogInputRow = ({ selectedChatId, setSelectedChatId, isNewChat, setI
     }
   };
 
+  const handleImageExceedSizeLimitError = (message) => {
+    setAlertMessage(message);
+    setTimeout(() => {
+      closeAlert(); // hide alert message after 5 seconds
+    }, 5000);
+  };
+
   const closeAlert = () => {
     setAlertMessage('');
   };
@@ -84,6 +91,16 @@ const ChatDialogInputRow = ({ selectedChatId, setSelectedChatId, isNewChat, setI
 
   const ImageUpload = ({ selectedChatId, setSelectedChatId, setIsNewChat, isNewChat }) => {
     const onUpload = useCallback((uploadedFiles) => {
+      // check if file is more than 25 mb
+      if (uploadedFiles.some((file) => file.size > 25000000)) {
+        handleImageExceedSizeLimitError('Unable to upload files that are more than 25mb');
+        uploadedFiles = uploadedFiles.filter((file) => file.size <= 25000000);
+      }
+
+      if (uploadedFiles.length === 0) {
+        return;
+      }
+
       if (isNewChat) {
         sendFirstImageMessages(uploadedFiles)
           .then((chat) => {
@@ -96,6 +113,7 @@ const ChatDialogInputRow = ({ selectedChatId, setSelectedChatId, isNewChat, setI
         api.chats.sendImageMessages(selectedChatId, uploadedFiles).catch((err) => handleImageUploadError(err));
       }
     }, []);
+
     const { getRootProps, getInputProps } = useDropzone({ onDrop: onUpload, accept: '.jpeg, .png, .jpg' });
     return (
       <div {...getRootProps()}>
