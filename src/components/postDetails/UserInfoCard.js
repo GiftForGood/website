@@ -77,7 +77,7 @@ const UserInfoCard = ({
   const AvatarDetails = () => {
     return (
       <Stack direction="column" shrink inline align="center" spacing="extraTight">
-        <ProfileAvatar height="80px" width="80px" imageUrl={profileImageUrl} />
+        <ProfileAvatar height="80px" width="80px" imageUrl={profileImageUrl.small || profileImageUrl.raw} />
         <RatingStars rating={postUserReviewRating} size="small" color={colors.ratingStarBackground} showEmpty />
       </Stack>
     );

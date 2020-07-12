@@ -111,7 +111,7 @@ const NpoEditProfilePanel = () => {
 
               <Stack>
                 <Heading type="title2">Profile Picture</Heading>
-                <ProfileAvatar imageUrl={profileImage || user.profileImageUrl} height={100} width={100} />
+                <ProfileAvatar imageUrl={profileImage || user.profileImageUrl.raw} height={100} width={100} />
                 <InputFile
                   buttonLabel="Upload picture"
                   allowedFileTypes={['image/*']}
