@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Avatar from '../imageContainers/Avatar';
+import ProfileAvatar from '../imageContainers/ProfileAvatar';
 import ReportPostModal from '../modal/ReportPostModal';
 import ClosePostModal from '../modal/ClosePostModal';
 import SharePostModal from '../modal/SharePostModal';
@@ -164,7 +164,7 @@ const PostDetailsHeader = ({
   const AvatarDetails = () => {
     return (
       <Stack align="center" direction="row" spacing="condensed" shrink>
-        <Avatar imageUrl={profileImageUrl} />
+        <ProfileAvatar imageUrl={profileImageUrl.small || profileImageUrl.raw} />
         <Stack direction="column" shrink spacing="none">
           <Text>{postUserName}</Text>
           {postType === donations ? (

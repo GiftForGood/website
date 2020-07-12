@@ -60,7 +60,7 @@ const AccountButton = ({ onNotificationClick, onLogoutClick, user }) => {
         iconLeft={
           user ? (
             user.profileImageUrl ? (
-              <AccountImage src={user.profileImageUrl} />
+              <AccountImage src={user.profileImageUrl.small || user.profileImageUrl.raw} />
             ) : (
               <AccountCircle />
             )

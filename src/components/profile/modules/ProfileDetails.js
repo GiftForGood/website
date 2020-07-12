@@ -9,7 +9,7 @@ const ProfileDetails = ({ profileImageUrl, npoOrgName, userRating, npoOrgAddress
   const isNpo = userType === npo;
   return (
     <Stack direction="column" justify="center">
-      <ProfileAvatar imageUrl={profileImageUrl} height={120} width={120} />
+      <ProfileAvatar imageUrl={profileImageUrl.small || profileImageUrl.raw} height={120} width={120} />
       <Stack direction="column" spacing="tight" justify="start">
         <Heading type="title2">{name}</Heading>
         {isNpo && <Text weight="bold">{npoOrgName}</Text>}
