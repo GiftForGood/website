@@ -46,6 +46,8 @@ const ChatBubbleForCalendar = ({ dateTimes, isByLoggedInUser, sender, loggedInUs
                   .sendTextMessage(selectedChatId, message)
                   .then(() => {})
                   .catch((err) => console.error(err));
+
+                // TODO: Add system generated message for delivery partners and promo code
               }
             };
             return (
