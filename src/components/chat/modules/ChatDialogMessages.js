@@ -161,7 +161,6 @@ const ChatDialogMessages = ({ postType, loggedInUser, selectedChatId, isNewChat,
       if (unsubscribeFunction) {
         api.chats.unsubscribeFromChatMessages(selectedChatId, unsubscribeFunction).then(() => {
           setChatMessageDocs([]);
-          setShouldSeeMore(!isNewChat);
           console.log('unsubscribe to messages successfully');
         });
       }
