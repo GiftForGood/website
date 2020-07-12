@@ -37,8 +37,7 @@ const ChatDialogContent = ({
 }) => {
   const { isTablet } = useMediaQuery();
   let chatPostTitle, oppositeUser, chatPostType, chatPostId, postOwnerId, postEnquirerId, postStatus;
-  const isCreatingNewChatForAPost = postId && isNewChat;
-
+  const isCreatingNewChatForAPost = (postId !== null) && isNewChat;
   // obtain post details accordingly
   if (isCreatingNewChatForAPost) {
     // get from post
@@ -92,7 +91,6 @@ const ChatDialogContent = ({
           postType={chatPostType}
           postId={chatPostId}
           postTitle={chatPostTitle}
-          postStatus={postStatus}
         />
         <ChatDialogMessages
           postType={chatPostType}

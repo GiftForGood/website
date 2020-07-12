@@ -17,7 +17,7 @@ const TextContainer = styled.div`
  * @param {string} postId is the id of the post
  * @param {string} postTitle is the title of the post
  */
-const ChatDialogViewPostRow = ({ postType, postId, postTitle, postStatus }) => {
+const ChatDialogViewPostRow = ({ postType, postId, postTitle }) => {
   const handleSeePost = (event) => {
     event.preventDefault();
     router.push(`/${postType}/${postId}`);

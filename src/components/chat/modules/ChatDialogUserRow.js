@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Stack } from '@kiwicom/orbit-components/lib';
 import CalendarModal from '../../calendar/modules/CalendarModal';
 import AppreciationMessageModal from '../../modal/AppreciationMessageModal';
@@ -59,6 +59,11 @@ const ChatDialogUserRow = ({
   const handleCompletePost = () => {
     setShowConfirmCompletionModal(true);
   };
+
+  // set status state based on the changes in passed input parameter postStatus
+  useEffect(() => {
+    setStatus(postStatus);
+  }, [postStatus]);
 
   return (
     <CardSection>
