@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { Button, Stack } from '@kiwicom/orbit-components/lib';
 import CalendarModal from '../../calendar/modules/CalendarModal';
-import AppreciationMessageModal from '../modules/AppreciationMessageModal';
+import AppreciationMessageModal from '../../modal/AppreciationMessageModal';
+import ConfirmCompletionModal from '../../modal/ConfirmCompletionModal';
 import ProfileAvatar from '../../imageContainers/ProfileAvatar';
 import BlackText from '../../text/BlackText';
 import RatingStars from '../../ratingStars';
-import api from '../../../../utils/api';
 import SuggestDateButton from '../../../components/buttons/ChatSuggestDatesButton';
 import CompleteButton from '../../../components/buttons/ChatCompleteButton';
 import styled from 'styled-components';
@@ -45,22 +45,19 @@ const ChatDialogUserRow = ({
 }) => {
   const [showSuggestDateModal, setShowSuggestDateModal] = useState(false);
   const [showAppreciationMessageModal, setShowAppreciationMessageModal] = useState(false);
+  const [showConfirmCompletionModal, setShowConfirmCompletionModal] = useState(false);
   const [status, setStatus] = useState(postStatus);
 
-  const handleCloseAppreciationMessageModal = () => {
-    setShowAppreciationMessageModal(false);
-  };
+  const handleCloseAppreciationMessageModal = () => setShowAppreciationMessageModal(false);
+  const handleShowAppreciationMessageModal = () => setShowAppreciationMessageModal(true);
+  const handleCloseConfirmCompletionModal = () => setShowConfirmCompletionModal(false);
+  const handleSetStatusToComplete = () => setStatus(COMPLETED);
   const handleShowSuggestDateModal = () => setShowSuggestDateModal(true);
   const handleCloseSuggestDateModal = () => setShowSuggestDateModal(false);
   const isLoggedInUserThePostOwner = loggedInUser.user.userId === postOwnerId;
 
   const handleCompletePost = () => {
-    api[postType].complete(postId, postEnquirerId).then(() => {
-      console.log('Complete post successful.');
-      // TODO/KIV: add review and appreciation message modal
-      setShowAppreciationMessageModal(true);
-      setStatus(COMPLETED);
-    });
+    setShowConfirmCompletionModal(true);
   };
 
   return (
@@ -112,6 +109,15 @@ const ChatDialogUserRow = ({
               setIsNewChat={setIsNewChat}
               onShow={showAppreciationMessageModal}
               onHide={handleCloseAppreciationMessageModal}
+            />
+            <ConfirmCompletionModal
+              postType={postType}
+              postId={postId}
+              postEnquirerId={postEnquirerId}
+              onShow={showConfirmCompletionModal}
+              onClose={handleCloseConfirmCompletionModal}
+              setCompletedStatus={handleSetStatusToComplete}
+              setShowAppreciationMessageModal={handleShowAppreciationMessageModal}
             />
           </Stack>
         </ButtonsContainer>
