@@ -123,7 +123,7 @@ const ChatDialogInputRow = ({ selectedChatId, setSelectedChatId, isNewChat, setI
     );
   };
 
-  const handleKeyDownInput = (event) => {
+  const handleEnterInputter = (event) => {
     // enter pressed, send message
     if (event.keyCode == 13) {
       handleSendTextMessage();
@@ -151,7 +151,7 @@ const ChatDialogInputRow = ({ selectedChatId, setSelectedChatId, isNewChat, setI
           id="chat-input"
           value={inputMessage}
           onChange={(e) => setInputMessage(e.target.value)}
-          onKeyDown={handleKeyDownInput}
+          onKeyDown={handleEnterInputter}
         />
         <Button size="small" onClick={handleSendTextMessage} asComponent={ChatButton}>
           Send
