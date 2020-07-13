@@ -27,7 +27,12 @@ const CalendarButtonStyle = styled.button`
 
 const CalendarButton = ({ dateTime, onClickHandler, isByLoggedInUser }) => {
   return (
-    <Button asComponent={CalendarButtonStyle} size="small" onClick={onClickHandler} disabled={isByLoggedInUser}>
+    <Button
+      asComponent={CalendarButtonStyle}
+      size="small"
+      onClick={() => onClickHandler(dateTime)}
+      disabled={isByLoggedInUser}
+    >
       <GreyText>{dateTime}</GreyText>
     </Button>
   );

@@ -29,6 +29,19 @@ const ChatButtonsContainer = styled.div`
  */
 const ChatBubbleForCalendar = ({ dateTimes, isByLoggedInUser, sender, loggedInUser, selectedChatId }) => {
   const text = 'Here are the dates I have selected, please choose 1 that fits your timing';
+  const handleClickDateTime = (dateTime) => {
+    // Not sure if need this check as the button is disabled for the owner
+    if (sender.id !== loggedInUser.user.userId) {
+      // send auto generated message when the user that clicked isn't the one that sent
+      const message = `I am available for ${dateTime}`;
+      api.chats
+        .sendTextMessage(selectedChatId, message)
+        .then(() => {})
+        .catch((err) => console.error(err));
+
+      // TODO: Add system generated message for delivery partners and promo code
+    }
+  };
   return (
     <Stack direction="column" spacing="condensed" align={isByLoggedInUser ? 'end' : 'start'}>
       <ChatTextContainer isByLoggedInUser={isByLoggedInUser}>
@@ -37,19 +50,6 @@ const ChatBubbleForCalendar = ({ dateTimes, isByLoggedInUser, sender, loggedInUs
       <ChatButtonsContainer>
         <Stack direction="column" spacing="condensed">
           {dateTimes.map((dateTime, i) => {
-            const handleClickDateTime = () => {
-              // Not sure if need this check as the button is disabled for the owner
-              if (sender.id !== loggedInUser.user.userId) {
-                // send auto generated message when the user that clicked isn't the one that sent
-                const message = `I am available for ${dateTime}`;
-                api.chats
-                  .sendTextMessage(selectedChatId, message)
-                  .then(() => {})
-                  .catch((err) => console.error(err));
-
-                // TODO: Add system generated message for delivery partners and promo code
-              }
-            };
             return (
               <CalendarButton
                 dateTime={dateTime}
