@@ -37,8 +37,8 @@ const mobileHeights = {
 
 const MessageContainer = styled.div`
   width: 100%;
-  min-height: calc(100vh - ${(props) => props.offsetHeight}px);
-  max-height: calc(100vh - ${(props) => props.offsetHeight}px);
+  min-height: calc(100vh - ${({ offsetHeight }) => offsetHeight}px);
+  max-height: calc(100vh - ${({ offsetHeight }) => offsetHeight}px);
   position: relative;
   overflow-y: scroll;
   overflow-x: hidden;
@@ -152,7 +152,7 @@ const ChatDialogMessages = ({ postType, loggedInUser, selectedChatId, isNewChat,
 
     let unsubscribeFunction;
     // when selected a chat, subscribe to the corresponding chat messages
-    if (selectedChatId != null || !isNewChat) {
+    if (selectedChatId !== null || !isNewChat) {
       api.chats.subscribeToChatMessages(selectedChatId, updateChatMessages).then((fn) => (unsubscribeFunction = fn));
       disableFurtherLoadsIfMessagesLessThanOneBatch();
     }
@@ -161,7 +161,6 @@ const ChatDialogMessages = ({ postType, loggedInUser, selectedChatId, isNewChat,
       if (unsubscribeFunction) {
         api.chats.unsubscribeFromChatMessages(selectedChatId, unsubscribeFunction).then(() => {
           setChatMessageDocs([]);
-          console.log('unsubscribe to messages successfully');
         });
       }
     };
