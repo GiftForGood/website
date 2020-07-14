@@ -15,6 +15,11 @@ const GlobalStyle = createGlobalStyle`
     font-family: 'Trebuchet MS';
   }
 
+  pre {
+    font-family: 'Trebuchet MS';
+    margin: 0;
+  }
+
   .default-avatar {
     width: 40px;
     height: 40px;

@@ -35,7 +35,11 @@ const AppreciationMessageModal = ({
   onShow,
   onHide,
 }) => {
-  const [message, setMessage] = useState([]);
+  const defaultAppreciationForWish = `Dear ${oppositeUserName}, thank you for your donation! The beneficiary really love the item and they are grateful for the item.`;
+  const defaultAppreciationForDonation = `Dear ${oppositeUserName}, thank you!`;
+  const [message, setMessage] = useState(
+    postType === donations ? defaultAppreciationForDonation : defaultAppreciationForWish
+  );
   const [error, setError] = useState('');
   const router = useRouter();
   if (!onShow) {
@@ -43,7 +47,8 @@ const AppreciationMessageModal = ({
   }
   const onClickSubmit = () => {
     if (message.length > 0) {
-      const appreciationMessage = `Appreciation Message: ${message}`;
+      const appreciationMessage = `Appreciation Message:
+${message}`;
       setError('');
       if (isNewChat) {
         sendFirstMessage(appreciationMessage)
@@ -70,9 +75,6 @@ const AppreciationMessageModal = ({
     return rawChat.data();
   };
 
-  const wishPlaceholder = `Appreciation Message: Dear ${oppositeUserName}, thank you for your donation! The beneficiary really love the item and they are grateful for the item.`;
-  const donationPlaceholder = `Appreciation Message: Dear ${oppositeUserName}, thank you!`;
-
   return (
     <Modal size="normal">
       <ModalSection>
@@ -87,7 +89,6 @@ const AppreciationMessageModal = ({
           onChange={(e) => setMessage(e.target.value)}
           resize="none"
           error={error}
-          placeholder={postType === donations ? donationPlaceholder : wishPlaceholder}
         />
       </ModalSection>
       <ModalFooter>
