@@ -41,7 +41,7 @@ const ViewAllWishesPage = ({ sortByQuery }) => {
   const [sortBy, setSortBy] = useState(sortByQuery ? sortByQuery : wishesSortByRule().defaultRefinement);
   const category = {
     id: '',
-    name: "All wishes"
+    name: 'All wishes',
   };
 
   return (
@@ -57,11 +57,7 @@ const ViewAllWishesPage = ({ sortByQuery }) => {
           rows="1fr auto"
         >
           <GridSectionContainer>
-            <WishesSort
-              items={wishesSortByRule().items}
-              defaultRefinement={sortBy}
-              category={null}
-            />
+            <WishesSort items={wishesSortByRule().items} defaultRefinement={sortBy} category={null} />
           </GridSectionContainer>
 
           <GridSectionContainer>
