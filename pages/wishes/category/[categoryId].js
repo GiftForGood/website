@@ -1,6 +1,8 @@
 import React from 'react';
 import api from '../../../utils/api';
-import ViewCategoryPage from '../../../src/components/category/pages/WishesViewCategoryPage';
+//import ViewCategoryPage from '../../../src/components/category/pages/WishesViewCategoryPage';
+import ViewCategoryPage from '../../../src/components/category/pages/WishesViewCategoryPagea';
+
 import dynamic from 'next/dynamic';
 import SessionProvider from '../../../src/components/session/modules/SessionProvider';
 import { isAuthenticated } from '../../../utils/authentication/authentication';
