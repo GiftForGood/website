@@ -41,17 +41,19 @@ const ChatDialogInputRow = ({ selectedChatId, setSelectedChatId, isNewChat, setI
     if (inputMessage.trim().length <= 0) {
       return; // no content being sent if empty or all spaces
     }
+
+    const message = inputMessage;
+    // clear input message before send as opposed to after sending the message, to prevent duplicated messages
+    // being sent when spam enter button
+    setInputMessage('');
     if (isNewChat) {
-      sendFirstMessage().then((chat) => {
+      sendFirstMessage(message).then((chat) => {
         // need to get the chat id from the newly created chat to select chat id
         setSelectedChatId(chat.chatId);
-        setInputMessage(''); // clear input message after sent
         setIsNewChat(false);
       });
     } else {
-      api.chats.sendTextMessage(selectedChatId, inputMessage).then(() => {
-        setInputMessage(''); // clear input message after sent
-      });
+      api.chats.sendTextMessage(selectedChatId, message).then(() => {});
     }
   };
 
@@ -82,9 +84,9 @@ const ChatDialogInputRow = ({ selectedChatId, setSelectedChatId, isNewChat, setI
     return rawChat.data();
   };
 
-  const sendFirstMessage = async () => {
+  const sendFirstMessage = async (message) => {
     const method = postType === donations ? 'sendInitialTextMessageForDonation' : 'sendInitialTextMessageForWish';
-    const [rawChat, rawFirstMessage] = await api.chats[method](postId, inputMessage);
+    const [rawChat, rawFirstMessage] = await api.chats[method](postId, message);
     router.push(`/chat/${rawChat.data().chatId}`);
     return rawChat.data();
   };
