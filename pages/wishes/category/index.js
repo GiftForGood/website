@@ -14,17 +14,17 @@ export async function getServerSideProps({ query, req, res }) {
   let user = await isAuthenticated(req, res);
   return {
     props: {
-      filterQuery: query.filter ? query.filter : null,
+      sortByQuery: query.sortBy ? query.sortBy : null,
       user,
     },
   };
 }
 
-const ViewAllWishes = ({ filterQuery, user }) => {
+const ViewAllWishes = ({ sortByQuery, user }) => {
   return (
     <SessionProvider user={user}>
       <TopNavigationBar />
-      <ViewAllWishesPage filterQuery={filterQuery} />
+      <ViewAllWishesPage sortByQuery={sortByQuery} />
       <BottomNavigation />
     </SessionProvider>
   );

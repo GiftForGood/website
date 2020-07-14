@@ -62,7 +62,6 @@ const ViewCategoryPage = ({ categoryDetails, sortByQuery }) => {
             <WishesSort
               items={wishesSortByRule().items}
               defaultRefinement={sortBy}
-              sortByIndex={sortBy}
               category={category}
             />
           </GridSectionContainer>

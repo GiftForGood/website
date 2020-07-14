@@ -27,12 +27,6 @@ const WishesSortBy = ({ items, currentRefinement, refine, sortByIndex, category 
     }
   };
 
-  useEffect(() => {
-    if (sortByIndex) {
-      refine(sortByIndex)
-    }
-  }, [sortByIndex, refine])
-
   return (
     <>
       <BlackText style={{ marginBottom: '10px' }} size="large">
