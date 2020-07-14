@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Stack, Tile, NotificationBadge } from '@kiwicom/orbit-components/lib';
 import { useRouter } from 'next/router';
 import styled, { css } from 'styled-components';
@@ -93,10 +93,18 @@ const ChatWithUserCard = ({
   isViewingChatsForMyPost,
   setSelectedChatId,
 }) => {
+  const [unreadCnt, setUnreadCnt] = useState(unreadCount);
   const router = useRouter();
   const { dateTime, contentType, content } = lastMessage;
   const lastMessageDate = getFormattedDate(dateTime);
+
+  useEffect(() => {
+    setUnreadCnt(unreadCount);
+  }, [unreadCount]);
+
   const handleClickChat = () => {
+    // set unread count as 0 when clicked on the chat, instead of querying the chat again to get the unread count that will definitely be 0
+    setUnreadCnt(0);
     if (isCreatingNewChat) {
       // creating a new chat and haven't send the first message
       router.push(`/chat/${chatId}`);
@@ -146,9 +154,9 @@ const ChatWithUserCard = ({
                 </OneLineTextContainer>
               </Stack>
             </Stack>
-            {unreadCount > 0 && (
+            {unreadCnt > 0 && (
               <NotificationBadgeWrapper>
-                <NotificationBadge type="info">{unreadCount}</NotificationBadge>
+                <NotificationBadge type="info">{unreadCnt}</NotificationBadge>
               </NotificationBadgeWrapper>
             )}
           </DetailsContainer>
