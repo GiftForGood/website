@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { InstantSearch, connectSearchBox, Index, Configure, connectHits } from 'react-instantsearch-dom';
-import SearchBar from '../SearchBar';
+import SearchBar from './AlgoliaSearchBar';
 import Hits from './Hits';
 import algoliasearch from 'algoliasearch/lite';
 import styled from 'styled-components';
