@@ -18,6 +18,8 @@ const GlobalStyle = createGlobalStyle`
   pre {
     font-family: 'Trebuchet MS';
     margin: 0;
+    word-wrap: break-word;
+    white-space: pre-wrap; 
   }
 
   .default-avatar {

@@ -9,7 +9,6 @@ const ChatBubbleContainer = styled.div`
   width: fit-content;
   padding: 5px 15px 5px 15px;
   border-radius: 5px;
-  word-break: break-word;
   background-color: ${(props) =>
     props.isByLoggedInUser ? colors.myChatBubbleBackground : colors.oppositeChatBubbleBackground};
 `;
