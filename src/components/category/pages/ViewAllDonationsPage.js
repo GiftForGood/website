@@ -37,7 +37,7 @@ const GridSectionContainer = styled.div`
   margin-top: 20px;
 `;
 
-const ViewAllDonationsPage = ({ sortByQuery }) => {
+const ViewAllDonationsPage = ({ sortByQuery, query = '' }) => {
   const [sortBy, setSortBy] = useState(sortByQuery ? sortByQuery : donationsSortByRule().defaultRefinement);
   const category = {
     id: '',
@@ -66,7 +66,7 @@ const ViewAllDonationsPage = ({ sortByQuery }) => {
             </BlackText>
 
             {/* Algolia */}
-            <Configure filters={getByStatus('pending')} hitsPerPage={DONATIONS_BATCH_SIZE} />
+            <Configure filters={getByStatus('pending')} hitsPerPage={DONATIONS_BATCH_SIZE} query={query}/>
             <DonationsContainer>
               {/* Desktop,Tablet,Mobile has infinite scrolling  */}
               <DonationsInfiniteHit category={category} minHitsPerPage={DONATIONS_BATCH_SIZE} />

@@ -15,16 +15,17 @@ export async function getServerSideProps({ query, req, res }) {
   return {
     props: {
       sortByQuery: query.sortBy ? query.sortBy : null,
+      query: query.q ? query.q : '',
       user,
     },
   };
 }
 
-const ViewAllDonations = ({ sortByQuery, user }) => {
+const ViewAllDonations = ({ sortByQuery, user, query }) => {
   return (
     <SessionProvider user={user}>
       <TopNavigationBar />
-      <ViewAllDonationsPage sortByQuery={sortByQuery} />
+      <ViewAllDonationsPage sortByQuery={sortByQuery} query={query}/>
       <BottomNavigation />
     </SessionProvider>
   );

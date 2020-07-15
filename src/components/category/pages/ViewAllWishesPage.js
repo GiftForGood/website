@@ -37,7 +37,7 @@ const GridSectionContainer = styled.div`
   margin-top: 20px;
 `;
 
-const ViewAllWishesPage = ({ sortByQuery }) => {
+const ViewAllWishesPage = ({ sortByQuery, query = '' }) => {
   const [sortBy, setSortBy] = useState(sortByQuery ? sortByQuery : wishesSortByRule().defaultRefinement);
   const category = {
     id: '',
@@ -66,7 +66,7 @@ const ViewAllWishesPage = ({ sortByQuery }) => {
             </BlackText>
 
             {/* Algolia */}
-            <Configure filters={getByStatus('pending')} hitsPerPage={WISHES_BATCH_SIZE} />
+            <Configure filters={getByStatus('pending')} hitsPerPage={WISHES_BATCH_SIZE} query={query}/>
             <WishesContainer>
               {/* Desktop,Tablet,Mobile has infinite scrolling  */}
               <WishesInfiniteHit category={category} minHitsPerPage={WISHES_BATCH_SIZE} />
