@@ -6,7 +6,6 @@ import styled, { css } from 'styled-components';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 
-
 const SearchWrapper = styled.div`
   border-radius: ${({ theme }) => theme.orbit.borderRadiusNormal};
   box-shadow: inset 0 0 0

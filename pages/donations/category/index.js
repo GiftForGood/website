@@ -25,7 +25,7 @@ const ViewAllDonations = ({ sortByQuery, user, query }) => {
   return (
     <SessionProvider user={user}>
       <TopNavigationBar />
-      <ViewAllDonationsPage sortByQuery={sortByQuery} query={query}/>
+      <ViewAllDonationsPage sortByQuery={sortByQuery} query={query} />
       <BottomNavigation />
     </SessionProvider>
   );

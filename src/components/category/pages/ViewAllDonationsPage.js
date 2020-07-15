@@ -66,7 +66,7 @@ const ViewAllDonationsPage = ({ sortByQuery, query = '' }) => {
             </BlackText>
 
             {/* Algolia */}
-            <Configure filters={getByStatus('pending')} hitsPerPage={DONATIONS_BATCH_SIZE} query={query}/>
+            <Configure filters={getByStatus('pending')} hitsPerPage={DONATIONS_BATCH_SIZE} query={query} />
             <DonationsContainer>
               {/* Desktop,Tablet,Mobile has infinite scrolling  */}
               <DonationsInfiniteHit category={category} minHitsPerPage={DONATIONS_BATCH_SIZE} />

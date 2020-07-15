@@ -66,7 +66,7 @@ const ViewAllWishesPage = ({ sortByQuery, query = '' }) => {
             </BlackText>
 
             {/* Algolia */}
-            <Configure filters={getByStatus('pending')} hitsPerPage={WISHES_BATCH_SIZE} query={query}/>
+            <Configure filters={getByStatus('pending')} hitsPerPage={WISHES_BATCH_SIZE} query={query} />
             <WishesContainer>
               {/* Desktop,Tablet,Mobile has infinite scrolling  */}
               <WishesInfiniteHit category={category} minHitsPerPage={WISHES_BATCH_SIZE} />
