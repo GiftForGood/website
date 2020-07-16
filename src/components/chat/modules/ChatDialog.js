@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Measure from 'react-measure';
 import { Stack, ButtonLink } from '@kiwicom/orbit-components/lib';
 import ChatDialogUserRow from './ChatDialogUserRow';
 import ChatDialogViewPostRow from './ChatDialogViewPostRow';
@@ -36,6 +37,10 @@ const ChatDialogContent = ({
   postType,
 }) => {
   const { isTablet } = useMediaQuery();
+  // default as 68 px which is single line text area, modified when there
+  // is more than one line in the text area in input row
+  const [inputRowHeight, setInputRowHeight] = useState(68);
+
   let chatPostTitle, oppositeUser, chatPostType, chatPostId, postOwnerId, postEnquirerId, postStatus;
   const isCreatingNewChatForAPost = postId !== null && isNewChat;
   // obtain post details accordingly
@@ -94,16 +99,22 @@ const ChatDialogContent = ({
           selectedChatId={selectedChatId}
           isNewChat={isNewChat}
           navBarHeight={navBarHeight}
+          inputRowHeight={inputRowHeight}
         />
       </Stack>
-      <ChatDialogInputRow
-        selectedChatId={selectedChatId}
-        setSelectedChatId={setSelectedChatId}
-        isNewChat={isNewChat}
-        setIsNewChat={setIsNewChat}
-        postType={chatPostType}
-        postId={chatPostId}
-      />
+      <Measure bounds onResize={(contentRect) => setInputRowHeight(contentRect.bounds.height)}>
+        {({ measureRef }) => (
+          <ChatDialogInputRow
+            selectedChatId={selectedChatId}
+            setSelectedChatId={setSelectedChatId}
+            isNewChat={isNewChat}
+            setIsNewChat={setIsNewChat}
+            postType={chatPostType}
+            postId={chatPostId}
+            ref={measureRef}
+          />
+        )}
+      </Measure>
     </>
   );
 };

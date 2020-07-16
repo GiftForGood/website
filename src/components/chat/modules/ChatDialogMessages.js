@@ -23,7 +23,6 @@ const desktopHeights = {
   chatDialogBackButton: 0, // 0 as it does not exist in desktop
   chatDialogUserRow: 88 + 1,
   chatDialogSeePostRow: 113 + 1,
-  chatDialogInputRow: 74,
   chatDialogMessagesPadding: 48 + 2,
 };
 
@@ -31,7 +30,6 @@ const mobileHeights = {
   chatDialogBackButton: 44,
   chatDialogUserRow: 104 + 1,
   chatDialogSeePostRow: 96 + 1,
-  chatDialogInputRow: 74,
   chatDialogMessagesPadding: 32 + 2,
 };
 
@@ -138,7 +136,7 @@ const RightMessageSection = ({ message, loggedInUser, selectedChatId }) => {
  *
  * @param {number} navBarHeight is the height of the navbar
  */
-const ChatDialogMessages = ({ postType, loggedInUser, selectedChatId, isNewChat, navBarHeight }) => {
+const ChatDialogMessages = ({ postType, loggedInUser, selectedChatId, isNewChat, navBarHeight, inputRowHeight }) => {
   const [chatMessageDocs, setChatMessageDocs] = useState([]);
   // only consider loading more when it's not a new chat, since it's impossible to have a new chat
   // to have messages initially
@@ -212,17 +210,14 @@ const ChatDialogMessages = ({ postType, loggedInUser, selectedChatId, isNewChat,
     });
   };
 
-  // get all heights of components within the chatDialog
-  const {
-    chatDialogBackButton,
-    chatDialogInputRow,
-    chatDialogSeePostRow,
-    chatDialogUserRow,
-    chatDialogMessagesPadding,
-  } = isTablet ? desktopHeights : mobileHeights;
+  // get all heights of components within the chatDialog, only inputRowHeight is passed in as
+  // the height is not constant
+  const { chatDialogBackButton, chatDialogSeePostRow, chatDialogUserRow, chatDialogMessagesPadding } = isTablet
+    ? desktopHeights
+    : mobileHeights;
 
   const sumOfOtherComponentHeights =
-    chatDialogBackButton + chatDialogInputRow + chatDialogSeePostRow + chatDialogUserRow + chatDialogMessagesPadding;
+    chatDialogBackButton + chatDialogSeePostRow + chatDialogUserRow + chatDialogMessagesPadding + inputRowHeight;
 
   // offsetHeight is used to calculate the amount of height left for the ChatDialogMessages to occupy
   const offsetHeight = navBarHeight + sumOfOtherComponentHeights;

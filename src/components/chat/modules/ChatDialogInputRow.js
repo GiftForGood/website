@@ -1,5 +1,5 @@
-import React, { useState, useCallback } from 'react';
-import { Button, Stack, InputField, Alert } from '@kiwicom/orbit-components/lib';
+import React, { useState, useCallback, forwardRef } from 'react';
+import { Button, Stack, Alert } from '@kiwicom/orbit-components/lib';
 import ChatButton from '../../../components/buttons/ChatButton';
 import api from '../../../../utils/api';
 import styled, { css } from 'styled-components';
@@ -7,6 +7,7 @@ import Gallery from '@kiwicom/orbit-components/lib/icons/Gallery';
 import { useDropzone } from 'react-dropzone';
 import { donations } from '../../../../utils/constants/postType';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
+import TextareaAutosize from 'react-textarea-autosize';
 import ChatError from '../../../../utils/api/error/chatError';
 import { useRouter } from 'next/router';
 
@@ -32,7 +33,14 @@ const AlertWrapper = styled.div`
   width: fit-content;
 `;
 
-const ChatDialogInputRow = ({ selectedChatId, setSelectedChatId, isNewChat, setIsNewChat, postType, postId }) => {
+const StyledTextareaAutosize = styled(TextareaAutosize)`
+  width: 100%;
+  padding: 10px 10px;
+  font-family: 'Trebuchet MS';
+  resize: none;
+`;
+
+const ChatDialogInputRow = ({ selectedChatId, setSelectedChatId, isNewChat, setIsNewChat, postType, postId }, ref) => {
   const [inputMessage, setInputMessage] = useState('');
   const [alertMessage, setAlertMessage] = useState('');
   const router = useRouter();
@@ -42,7 +50,7 @@ const ChatDialogInputRow = ({ selectedChatId, setSelectedChatId, isNewChat, setI
       return; // no content being sent if empty or all spaces
     }
 
-    const message = inputMessage;
+    const message = inputMessage.trim(); // remove trailing spaces
     // clear input message before send as opposed to after sending the message, to prevent duplicated messages
     // being sent when spam enter button
     setInputMessage('');
@@ -126,14 +134,17 @@ const ChatDialogInputRow = ({ selectedChatId, setSelectedChatId, isNewChat, setI
   };
 
   const handleEnterInputter = (event) => {
-    // enter pressed, send message
+    // enter pressed, send message (except shift + enter)
     if (event.keyCode == 13) {
-      handleSendTextMessage();
+      if (!event.shiftKey) {
+        event.preventDefault(); // prevent enter from adding a new line in text area
+        handleSendTextMessage();
+      }
     }
   };
 
   return (
-    <InputRowContainer>
+    <InputRowContainer ref={ref}>
       {alertMessage.length > 0 && (
         <AlertWrapper>
           <Alert icon type="critical" title="Something has gone wrong" closable onClose={closeAlert}>
@@ -148,7 +159,10 @@ const ChatDialogInputRow = ({ selectedChatId, setSelectedChatId, isNewChat, setI
           setIsNewChat={setIsNewChat}
           isNewChat={isNewChat}
         />
-        <InputField
+        <StyledTextareaAutosize
+          minRows={1}
+          maxRows={5}
+          autoFocus={true}
           placeholder="Type your messages here..."
           id="chat-input"
           value={inputMessage}
@@ -163,4 +177,4 @@ const ChatDialogInputRow = ({ selectedChatId, setSelectedChatId, isNewChat, setI
   );
 };
 
-export default ChatDialogInputRow;
+export default forwardRef(ChatDialogInputRow);
