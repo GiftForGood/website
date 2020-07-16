@@ -201,7 +201,9 @@ const ChatDialogMessages = ({ postType, loggedInUser, selectedChatId, isNewChat,
 
   const handleOnSeeMore = () => {
     api.chats.getChatMessages(selectedChatId, chatMessageDocs[0]).then((rawNewChatMessages) => {
-      const newChatMessageDocs = rawNewChatMessages.docs;
+      // need to reverse the new chat message docs since the order of the array is latest -> oldest, but in our
+      // array the order is oldest -> latest
+      const newChatMessageDocs = rawNewChatMessages.docs.reverse();
       setChatMessageDocs([...newChatMessageDocs, ...chatMessageDocs]);
       if (newChatMessageDocs.length < CHAT_MESSAGES_BATCH_SIZE) {
         // loaded all chat messages
