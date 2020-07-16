@@ -49,6 +49,9 @@ const ViewAllWishesPage = ({ sortByQuery, query = '' }) => {
       <ViewAllWishesContainer>
         <Categories type="wishes" />
 
+        <BlackText style={{ marginTop: '20px' }} size="large">
+          {query ? `Search results for "${query}"` : null}
+        </BlackText>
         <Grid
           columnGap="20px"
           desktop={{

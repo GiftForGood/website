@@ -49,6 +49,10 @@ const ViewAllDonationsPage = ({ sortByQuery, query = '' }) => {
       <ViewAllDonationsContainer>
         <Categories type="donations" />
 
+        <BlackText style={{ marginTop: '10px' }} size="large">
+          {query ? `Search results for "${query}"` : null}
+        </BlackText>
+
         <Grid
           columnGap="20px"
           desktop={{
