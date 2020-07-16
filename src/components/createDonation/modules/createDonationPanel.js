@@ -20,7 +20,6 @@ import styled from 'styled-components';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { months } from '../../../../utils/constants/month';
-import GooglePlacesAutoCompleteField from '../../inputfield/GooglePlacesAutoCompleteField';
 import api from '../../../../utils/api';
 import DragNDropInputField from './DragNDropInputField';
 import moment from 'moment';
@@ -42,6 +41,7 @@ import ToastContainer from '../../toast/ToastContainer';
 import { useRouter } from 'next/router';
 import { getDay, getMonth, getYear } from '../../../../utils/api/time';
 import { v4 as uuidv4 } from 'uuid';
+import MrtDropdownField from '../../inputfield/MrtDropdownField';
 
 const Container = styled.div`
   min-width: 300px;
@@ -398,7 +398,7 @@ const CreateDonationPanel = ({ mode, donation }) => {
         validToMonth: getMonth(donation.validPeriodTo),
         validToYear: getYear(donation.validPeriodTo),
         dimensions: donation.dimensions,
-        location: donation.locations[0].fullAddress,
+        location: donation.locations[0].name,
         itemCondition: donation.itemCondition,
         categories: donation.categories,
         selectedImages: donation.imageUrls.map((imageUrl) => ({
@@ -577,12 +577,10 @@ const CreateDonationPanel = ({ mode, donation }) => {
                   {...formik.getFieldProps('dimensions')}
                 />
 
-                <GooglePlacesAutoCompleteField
+                <MrtDropdownField
                   label={'Nearest MRT/LRT to you'}
-                  storeLocally={true}
-                  help={'The most recently used address will be stored on device.'}
-                  storageKey={'location_donation'}
-                  onChange={(location) => {
+                  onSelectedStation={(location) => {
+                    console.log(location)
                     formik.setFieldValue('location', location);
                   }}
                   error={formik.touched.location && formik.errors.location ? formik.errors.location : ''}
