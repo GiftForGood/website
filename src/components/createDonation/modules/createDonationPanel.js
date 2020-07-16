@@ -580,11 +580,11 @@ const CreateDonationPanel = ({ mode, donation }) => {
                 <MrtDropdownField
                   label={'Nearest MRT/LRT to you'}
                   onSelectedStation={(location) => {
-                    console.log(location)
                     formik.setFieldValue('location', location);
                   }}
                   error={formik.touched.location && formik.errors.location ? formik.errors.location : ''}
                   disabled={formik.isSubmitting}
+                  value={formik.values.location}
                 />
 
                 <ChoiceGroup

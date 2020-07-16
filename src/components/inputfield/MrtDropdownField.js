@@ -9,22 +9,23 @@ const ContentContainer = styled.div`
   padding: 0px 10px 8px 10px;
 `;
 
-const MrtDropdownField = ({ onSelectedStation, error, label, disabled }) => {
+const MrtDropdownField = ({ onSelectedStation, error, label, disabled, value }) => {
   const inputRef = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
-
   const [currentList, setCurrentList] = useState([]);
   const [stations, setStations] = useState([]);
-
   const [selectedStation, setSelectedStation] = useState('');
 
   useEffect(() => {
     client.get('/api/mrt').then((resp) => {
-      console.log(resp.data);
       setStations(resp.data);
       setCurrentList(resp.data);
     });
   }, []);
+
+  useEffect(() => {
+    setSelectedStation(value);
+  }, [value]);
 
   const setMrtValue = (station) => {
     setSelectedStation(station.name);
@@ -96,7 +97,17 @@ const MRTInputField = ({ inputRef, stations, setCurrentList, value, error, label
     setCurrentList(shouldBeInList);
   };
 
-  return <InputField ref={inputRef} placeholder="Choose an MRT Station" value={search} onChange={onChange} error={error} label={label} disabled={disabled}/>;
+  return (
+    <InputField
+      ref={inputRef}
+      placeholder="Choose an MRT Station"
+      value={search}
+      onChange={onChange}
+      error={error}
+      label={label}
+      disabled={disabled}
+    />
+  );
 };
 
 export default MrtDropdownField;
