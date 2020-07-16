@@ -6,7 +6,9 @@ const NavSearchBar = () => {
   const router = useRouter();
 
   const onEnterPressed = (query, selectedIndex) => {
-    router.push(`/${selectedIndex}/category`, `/${selectedIndex}/category?q=${query}`);
+    if (query.trim().length !== 0) {
+      router.push(`/${selectedIndex}/category`, `/${selectedIndex}/category?q=${query}`);
+    }
   };
 
   return (
