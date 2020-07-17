@@ -70,7 +70,10 @@ const ListOfChats = ({
         if (isLatestNewChat(changedDoc, chatDocsWithModifiedChatRemoved)) {
           return [changedDoc, ...chatDocsWithModifiedChatRemoved];
         }
-        return prevChatDocs;
+
+        // replace chat to the corresponding position
+        const matchingIndex = prevChatDocs.findIndex((chatDoc) => chatDoc.data().chatId === changedDoc.data().chatId);
+        return [...prevChatDocs.slice(0, matchingIndex), changedDoc, ...prevChatDocs.slice(matchingIndex + 1)];
       });
     }
   };
