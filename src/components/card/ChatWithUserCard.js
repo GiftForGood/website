@@ -122,8 +122,7 @@ const ChatWithUserCard = ({
       const routeWithUpdatedChatId = `/chat/${chatId}${queryString.length > 0 ? `?${queryString}` : ''}`;
       setSelectedChatId(chatId);
 
-      // use replace instead of push as we do not need to set the highlighting of chat as a new route in history
-      router.replace(`/chat/[chatId]`, routeWithUpdatedChatId, { shallow: true });
+      router.push(`/chat/[chatId]`, routeWithUpdatedChatId, { shallow: true });
     }
   };
   return (
