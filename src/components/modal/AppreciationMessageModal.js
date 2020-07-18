@@ -42,8 +42,8 @@ const AppreciationMessageModal = ({
   );
 
   useEffect(() => {
-    setMessage(postType === donations ? defaultAppreciationForDonation : defaultAppreciationForWish)
-  }, [oppositeUserName])
+    setMessage(postType === donations ? defaultAppreciationForDonation : defaultAppreciationForWish);
+  }, [oppositeUserName]);
 
   const [error, setError] = useState('');
   const router = useRouter();
