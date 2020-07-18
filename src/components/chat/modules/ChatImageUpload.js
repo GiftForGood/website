@@ -40,7 +40,7 @@ const ChatImageUpload = ({
     }, 5000);
   };
 
-  const onUpload = useCallback((uploadedFiles) => {
+  const onUpload = useCallback((uploadedFiles, isNewChat, selectedChatId) => {
     // check if file is more than 25 mb
     if (uploadedFiles.some((file) => file.size > 25000000)) {
       handleImageExceedSizeLimitError('Unable to upload files that are more than 25mb');
@@ -64,7 +64,10 @@ const ChatImageUpload = ({
     }
   }, []);
 
-  const { getRootProps, getInputProps } = useDropzone({ onDrop: onUpload, accept: '.jpeg, .png, .jpg' });
+  const { getRootProps, getInputProps } = useDropzone({
+    onDrop: (files) => onUpload(files, isNewChat, selectedChatId),
+    accept: '.jpeg, .png, .jpg',
+  });
   return (
     <div {...getRootProps()}>
       <input {...getInputProps()} />
