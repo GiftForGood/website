@@ -1,14 +1,12 @@
-import React, { useState, useCallback, forwardRef } from 'react';
+import React, { useState, forwardRef } from 'react';
 import { Button, Stack, Alert } from '@kiwicom/orbit-components/lib';
 import ChatButton from '../../../components/buttons/ChatButton';
+import ChatImageUpload from './ChatImageUpload';
 import api from '../../../../utils/api';
 import styled, { css } from 'styled-components';
-import Gallery from '@kiwicom/orbit-components/lib/icons/Gallery';
-import { useDropzone } from 'react-dropzone';
 import { donations } from '../../../../utils/constants/postType';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import TextareaAutosize from 'react-textarea-autosize';
-import ChatError from '../../../../utils/api/error/chatError';
 import { useRouter } from 'next/router';
 
 const InputRowContainer = styled.div`
@@ -65,31 +63,8 @@ const ChatDialogInputRow = ({ selectedChatId, setSelectedChatId, isNewChat, setI
     }
   };
 
-  const handleImageUploadError = (err) => {
-    if (err instanceof ChatError) {
-      setAlertMessage(err.message);
-      setTimeout(() => {
-        closeAlert(); // hide alert message after 5 seconds
-      }, 5000);
-    }
-  };
-
-  const handleImageExceedSizeLimitError = (message) => {
-    setAlertMessage(message);
-    setTimeout(() => {
-      closeAlert(); // hide alert message after 5 seconds
-    }, 5000);
-  };
-
   const closeAlert = () => {
     setAlertMessage('');
-  };
-
-  const sendFirstImageMessages = async (images) => {
-    const method = postType === donations ? 'sendInitialImageMessagesForDonation' : 'sendInitialImageMessagesForWish';
-    const [rawChat, rawFirstMessage] = await api.chats[method](postId, images);
-    router.push(`/chat/${rawChat.data().chatId}`);
-    return rawChat.data();
   };
 
   const sendFirstMessage = async (message) => {
@@ -97,40 +72,6 @@ const ChatDialogInputRow = ({ selectedChatId, setSelectedChatId, isNewChat, setI
     const [rawChat, rawFirstMessage] = await api.chats[method](postId, message);
     router.push(`/chat/${rawChat.data().chatId}`);
     return rawChat.data();
-  };
-
-  const ImageUpload = ({ selectedChatId, setSelectedChatId, setIsNewChat, isNewChat }) => {
-    const onUpload = useCallback((uploadedFiles) => {
-      // check if file is more than 25 mb
-      if (uploadedFiles.some((file) => file.size > 25000000)) {
-        handleImageExceedSizeLimitError('Unable to upload files that are more than 25mb');
-        uploadedFiles = uploadedFiles.filter((file) => file.size <= 25000000);
-      }
-
-      if (uploadedFiles.length === 0) {
-        return;
-      }
-
-      if (isNewChat) {
-        sendFirstImageMessages(uploadedFiles)
-          .then((chat) => {
-            setSelectedChatId(chat.chatId);
-            setIsNewChat(false);
-            uploadedFiles = [];
-          })
-          .catch((err) => handleImageUploadError(err));
-      } else {
-        api.chats.sendImageMessages(selectedChatId, uploadedFiles).catch((err) => handleImageUploadError(err));
-      }
-    }, []);
-
-    const { getRootProps, getInputProps } = useDropzone({ onDrop: onUpload, accept: '.jpeg, .png, .jpg' });
-    return (
-      <div {...getRootProps()}>
-        <input {...getInputProps()} />
-        <Gallery size="normal" />
-      </div>
-    );
   };
 
   const handleEnterInputter = (event) => {
@@ -153,10 +94,14 @@ const ChatDialogInputRow = ({ selectedChatId, setSelectedChatId, isNewChat, setI
         </AlertWrapper>
       )}
       <Stack direction="row" justify="between" align="center">
-        <ImageUpload
+        <ChatImageUpload
+          postType={postType}
+          postId={postId}
           selectedChatId={selectedChatId}
           setSelectedChatId={setSelectedChatId}
           setIsNewChat={setIsNewChat}
+          setAlertMessage={setAlertMessage}
+          onCloseAlert={closeAlert}
           isNewChat={isNewChat}
         />
         <StyledTextareaAutosize
