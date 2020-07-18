@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { colors } from '../../../utils/constants/colors';
 import { Button, Heading, Stack, Textarea } from '@kiwicom/orbit-components/lib';
@@ -22,7 +22,7 @@ const submitButton = styled.button`
 `;
 
 const title = 'Thank you.';
-const description = 'Write a thank you message. This will be automatically sent to the donor.';
+const description = 'Write a thank you message. This will be automatically sent to the user.';
 
 const AppreciationMessageModal = ({
   postType,
@@ -40,6 +40,11 @@ const AppreciationMessageModal = ({
   const [message, setMessage] = useState(
     postType === donations ? defaultAppreciationForDonation : defaultAppreciationForWish
   );
+
+  useEffect(() => {
+    setMessage(postType === donations ? defaultAppreciationForDonation : defaultAppreciationForWish)
+  }, [oppositeUserName])
+
   const [error, setError] = useState('');
   const router = useRouter();
   if (!onShow) {
