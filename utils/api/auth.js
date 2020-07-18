@@ -337,6 +337,7 @@ class AuthAPI {
     const organizationInfo = await this._getCategoryInfo(organizationName);
 
     const dateOfRegistration = dayOfRegistration + '-' + monthOfRegistration + '-' + yearOfRegistration;
+    const timeNow = Date.now();
 
     const organization = {
       ...organizationInfo,
@@ -356,6 +357,8 @@ class AuthAPI {
         name: '',
       },
       isVerifiedByAdmin: false,
+      appliedDateTime: timeNow,
+      lastUpdatedDateTime: timeNow,
     };
     await newVerificationData.set(data);
 
