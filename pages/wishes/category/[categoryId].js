@@ -1,6 +1,7 @@
 import React from 'react';
 import api from '../../../utils/api';
 import ViewCategoryPage from '../../../src/components/category/pages/WishesViewCategoryPage';
+
 import dynamic from 'next/dynamic';
 import SessionProvider from '../../../src/components/session/modules/SessionProvider';
 import { isAuthenticated } from '../../../utils/authentication/authentication';
@@ -17,7 +18,7 @@ export async function getServerSideProps({ params, query, req, res }) {
   return {
     props: {
       categoryDetails,
-      filterQuery: query.filter ? query.filter : null,
+      sortByQuery: query.sortBy ? query.sortBy : null,
       user,
     },
   };
@@ -31,14 +32,14 @@ const getCategoryDetails = async (categoryId) => {
   return rawCategory.data();
 };
 
-const ViewCategory = ({ categoryDetails, filterQuery, user }) => {
+const ViewCategory = ({ categoryDetails, sortByQuery, user }) => {
   if (Object.keys(categoryDetails).length === 0) {
     return <Error />;
   }
   return (
     <SessionProvider user={user}>
       <TopNavigationBar />
-      <ViewCategoryPage categoryDetails={categoryDetails} filterQuery={filterQuery} />
+      <ViewCategoryPage categoryDetails={categoryDetails} sortByQuery={sortByQuery} />
       <BottomNavigation />
     </SessionProvider>
   );

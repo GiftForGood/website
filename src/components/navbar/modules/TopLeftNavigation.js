@@ -9,7 +9,7 @@ import NavSearchBar from '../../search/modules/NavSearchBar';
 import Link from 'next/link';
 
 const SearchBarContainer = styled.div`
-  min-width: 350px;
+  min-width: 450px;
   margin-right: 15px !important;
 `;
 const TopLeftNavigation = ({ onHamburgerClick }) => {
