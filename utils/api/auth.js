@@ -335,7 +335,7 @@ class AuthAPI {
     activities
   ) {
     const organizationInfo = await this._getCategoryInfo(organizationName);
-  
+
     const dateOfRegistration = dayOfRegistration + '-' + monthOfRegistration + '-' + yearOfRegistration;
 
     const organization = {
