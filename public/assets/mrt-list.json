@@ -1,0 +1,839 @@
+{
+  "stations": [
+    {
+      "code": "NS10",
+      "name": "Admiralty",
+      "operational": true
+    },
+    {
+      "code": "EW9",
+      "name": "Aljunied",
+      "operational": true
+    },
+    {
+      "code": "NS16 CR11",
+      "name": "Ang Mo Kio",
+      "operational": true
+    },
+    {
+      "code": "SE3",
+      "name": "Bakau",
+      "operational": true
+    },
+    {
+      "code": "BP9",
+      "name": "Bangkit",
+      "operational": true
+    },
+    {
+      "code": "CC12",
+      "name": "Bartley",
+      "operational": true
+    },
+    {
+      "code": "DT16 CE1",
+      "name": "Bayfront",
+      "operational": true
+    },
+    {
+      "code": "DT5",
+      "name": "Beauty World",
+      "operational": true
+    },
+    {
+      "code": "EW5",
+      "name": "Bedok",
+      "operational": true
+    },
+    {
+      "code": "DT29",
+      "name": "Bedok North",
+      "operational": true
+    },
+    {
+      "code": "DT30",
+      "name": "Bedok Reservoir",
+      "operational": true
+    },
+    {
+      "code": "DT21",
+      "name": "Bencoolen",
+      "operational": true
+    },
+    {
+      "code": "DT23",
+      "name": "Bendemeer",
+      "operational": true
+    },
+    {
+      "code": "CC15 NS17",
+      "name": "Bishan",
+      "operational": true
+    },
+    {
+      "code": "NE9",
+      "name": "Boon Keng",
+      "operational": true
+    },
+    {
+      "code": "EW27 JS8",
+      "name": "Boon Lay",
+      "operational": true
+    },
+    {
+      "code": "CC19 DT9",
+      "name": "Botanic Gardens",
+      "operational": true
+    },
+    {
+      "code": "NS18",
+      "name": "Braddell",
+      "operational": true
+    },
+    {
+      "code": "CC2",
+      "name": "Bras Basah",
+      "operational": true
+    },
+    {
+      "code": "NE15",
+      "name": "Buangkok",
+      "operational": true
+    },
+    {
+      "code": "EW12 DT14",
+      "name": "Bugis",
+      "operational": true
+    },
+    {
+      "code": "NS2",
+      "name": "Bukit Batok",
+      "operational": true
+    },
+    {
+      "code": "NS3",
+      "name": "Bukit Gombak",
+      "operational": true
+    },
+    {
+      "code": "DT1 BP6",
+      "name": "Bukit Panjang",
+      "operational": true
+    },
+    {
+      "code": "EW21 CC22",
+      "name": "Buona Vista",
+      "operational": true
+    },
+    {
+      "code": "CC17 TE9",
+      "name": "Caldecott",
+      "operational": true
+    },
+    {
+      "code": "NS12",
+      "name": "Canberra",
+      "operational": true
+    },
+    {
+      "code": "CC31",
+      "name": "Cantonment",
+      "operational": false
+    },
+    {
+      "code": "DT2",
+      "name": "Cashew",
+      "operational": true
+    },
+    {
+      "code": "CG2",
+      "name": "Changi Airport",
+      "operational": true
+    },
+    {
+      "code": "SW1",
+      "name": "Cheng Lim",
+      "operational": true
+    },
+    {
+      "code": "NE4 DT19",
+      "name": "Chinatown",
+      "operational": true
+    },
+    {
+      "code": "EW25",
+      "name": "Chinese Garden",
+      "operational": true
+    },
+    {
+      "code": "NS4 JS1 BP1",
+      "name": "Choa Chu Kang",
+      "operational": true
+    },
+    {
+      "code": "NS25 EW13",
+      "name": "City Hall",
+      "operational": true
+    },
+    {
+      "code": "NE5",
+      "name": "Clarke Quay",
+      "operational": true
+    },
+    {
+      "code": "EW23",
+      "name": "Clementi",
+      "operational": true
+    },
+    {
+      "code": "EW20",
+      "name": "Commonwealth",
+      "operational": true
+    },
+    {
+      "code": "SE1",
+      "name": "Compassvale",
+      "operational": true
+    },
+    {
+      "code": "PE3",
+      "name": "Coral Edge",
+      "operational": true
+    },
+    {
+      "code": "PE1",
+      "name": "Cove",
+      "operational": true
+    },
+    {
+      "code": "CC8",
+      "name": "Dakota",
+      "operational": true
+    },
+    {
+      "code": "PE7",
+      "name": "Damai",
+      "operational": true
+    },
+    {
+      "code": "NS24 NE6 CC1",
+      "name": "Dhoby Ghaut",
+      "operational": true
+    },
+    {
+      "code": "EW22",
+      "name": "Dover",
+      "operational": true
+    },
+    {
+      "code": "DT17",
+      "name": "Downtown",
+      "operational": true
+    },
+    {
+      "code": "SE",
+      "name": "East Loop",
+      "operational": true
+    },
+    {
+      "code": "CC3",
+      "name": "Esplanade",
+      "operational": true
+    },
+    {
+      "code": "EW7",
+      "name": "Eunos",
+      "operational": true
+    },
+    {
+      "code": "DT35 CG1",
+      "name": "Expo",
+      "operational": true
+    },
+    {
+      "code": "BP10",
+      "name": "Fajar",
+      "operational": true
+    },
+    {
+      "code": "SW2",
+      "name": "Farmway",
+      "operational": true
+    },
+    {
+      "code": "NE8",
+      "name": "Farrer Park",
+      "operational": true
+    },
+    {
+      "code": "CC20",
+      "name": "Farrer Road",
+      "operational": true
+    },
+    {
+      "code": "SW5",
+      "name": "Fernvale",
+      "operational": true
+    },
+    {
+      "code": "DT20",
+      "name": "Fort Canning",
+      "operational": true
+    },
+    {
+      "code": "DT24",
+      "name": "Geylang Bahru",
+      "operational": true
+    },
+    {
+      "code": "EW30",
+      "name": "Gul Circle",
+      "operational": true
+    },
+    {
+      "code": "CC29 NE1",
+      "name": "HarbourFront",
+      "operational": true
+    },
+    {
+      "code": "CC25",
+      "name": "Haw Par Villa",
+      "operational": true
+    },
+    {
+      "code": "DT3",
+      "name": "Hillview",
+      "operational": true
+    },
+    {
+      "code": "CC21",
+      "name": "Holland Village",
+      "operational": true
+    },
+    {
+      "code": "NE14 CR8",
+      "name": "Hougang",
+      "operational": true
+    },
+    {
+      "code": "DT4",
+      "name": "Hume",
+      "operational": false
+    },
+    {
+      "code": "DT22",
+      "name": "Jalan Besar",
+      "operational": true
+    },
+    {
+      "code": "BP12",
+      "name": "Jelapang",
+      "operational": true
+    },
+    {
+      "code": "EW29",
+      "name": "Joo Koon",
+      "operational": true
+    },
+    {
+      "code": "EW24 NS1 JE5",
+      "name": "Jurong East",
+      "operational": true
+    },
+    {
+      "code": "PE5",
+      "name": "Kadaloor",
+      "operational": true
+    },
+    {
+      "code": "DT28",
+      "name": "Kaki Bukit",
+      "operational": true
+    },
+    {
+      "code": "EW10",
+      "name": "Kallang",
+      "operational": true
+    },
+    {
+      "code": "SE4",
+      "name": "Kangkar",
+      "operational": true
+    },
+    {
+      "code": "BP6",
+      "name": "Keat Hong",
+      "operational": true
+    },
+    {
+      "code": "EW6",
+      "name": "Kembangan",
+      "operational": true
+    },
+    {
+      "code": "CC24",
+      "name": "Kent Ridge",
+      "operational": true
+    },
+    {
+      "code": "CC30",
+      "name": "Keppel",
+      "operational": false
+    },
+    {
+      "code": "NS14",
+      "name": "Khatib",
+      "operational": true
+    },
+    {
+      "code": "DT6",
+      "name": "King Albert Park",
+      "operational": true
+    },
+    {
+      "code": "NE13",
+      "name": "Kovan",
+      "operational": true
+    },
+    {
+      "code": "NS7",
+      "name": "Kranji",
+      "operational": true
+    },
+    {
+      "code": "SW3",
+      "name": "Kupang",
+      "operational": true
+    },
+    {
+      "code": "CC27",
+      "name": "Labrador Park",
+      "operational": true
+    },
+    {
+      "code": "EW26",
+      "name": "Lakeside",
+      "operational": true
+    },
+    {
+      "code": "EW11",
+      "name": "Lavender",
+      "operational": true
+    },
+    {
+      "code": "SW6",
+      "name": "Layar",
+      "operational": true
+    },
+    {
+      "code": "DT12 NE7",
+      "name": "Little India",
+      "operational": true
+    },
+    {
+      "code": "CC14",
+      "name": "Lorong Chuan",
+      "operational": true
+    },
+    {
+      "code": "CC10 DT26",
+      "name": "MacPherson",
+      "operational": true
+    },
+    {
+      "code": "CE2 NS27 TE20",
+      "name": "Marina Bay",
+      "operational": true
+    },
+    {
+      "code": "NS28",
+      "name": "Marina South Pier",
+      "operational": true
+    },
+    {
+      "code": "NS8",
+      "name": "Marsiling",
+      "operational": true
+    },
+    {
+      "code": "CC16",
+      "name": "Marymount",
+      "operational": true
+    },
+    {
+      "code": "DT25",
+      "name": "Mattar",
+      "operational": true
+    },
+    {
+      "code": "PE2",
+      "name": "Meridian",
+      "operational": true
+    },
+    {
+      "code": "CC7",
+      "name": "Mountbatten",
+      "operational": true
+    },
+    {
+      "code": "NS21 DT11",
+      "name": "Newton",
+      "operational": true
+    },
+    {
+      "code": "PW5",
+      "name": "Nibong",
+      "operational": true
+    },
+    {
+      "code": "CC5",
+      "name": "Nicoll Highway",
+      "operational": true
+    },
+    {
+      "code": "NS20",
+      "name": "Novena",
+      "operational": true
+    },
+    {
+      "code": "PE6",
+      "name": "Oasis",
+      "operational": true
+    },
+    {
+      "code": "NS22 TE14",
+      "name": "Orchard",
+      "operational": true
+    },
+    {
+      "code": "EW16 NE3 TE17",
+      "name": "Outram Park",
+      "operational": true
+    },
+    {
+      "code": "CC26",
+      "name": "Pasir Panjang",
+      "operational": true
+    },
+    {
+      "code": "EW1 CR5 CP1",
+      "name": "Pasir Ris",
+      "operational": true
+    },
+    {
+      "code": "CC9 EW8",
+      "name": "Paya Lebar",
+      "operational": true
+    },
+    {
+      "code": "BP8",
+      "name": "Pending",
+      "operational": true
+    },
+    {
+      "code": "BP7",
+      "name": "Petir",
+      "operational": true
+    },
+    {
+      "code": "BP5",
+      "name": "Phoenix",
+      "operational": true
+    },
+    {
+      "code": "EW28",
+      "name": "Pioneer",
+      "operational": true
+    },
+    {
+      "code": "NE10",
+      "name": "Potong Pasir",
+      "operational": true
+    },
+    {
+      "code": "CC32",
+      "name": "Prince Edward Road",
+      "operational": false
+    },
+    {
+      "code": "CC4 DT15",
+      "name": "Promenade",
+      "operational": true
+    },
+    {
+      "code": "PTC NE17 CP4",
+      "name": "Punggol",
+      "operational": true
+    },
+    {
+      "code": "NE18",
+      "name": "Punggol Coast",
+      "operational": false
+    },
+    {
+      "code": "PW3",
+      "name": "Punggol Point",
+      "operational": true
+    },
+    {
+      "code": "EW19",
+      "name": "Queenstown",
+      "operational": true
+    },
+    {
+      "code": "EW14 NS26",
+      "name": "Raffles Place",
+      "operational": true
+    },
+    {
+      "code": "SE5",
+      "name": "Ranggung",
+      "operational": true
+    },
+    {
+      "code": "EW18",
+      "name": "Redhill",
+      "operational": true
+    },
+    {
+      "code": "SW8",
+      "name": "Renjong",
+      "operational": true
+    },
+    {
+      "code": "PE4 CP3",
+      "name": "Riviera",
+      "operational": true
+    },
+    {
+      "code": "DT13",
+      "name": "Rochor",
+      "operational": true
+    },
+    {
+      "code": "SE2",
+      "name": "Rumbia",
+      "operational": true
+    },
+    {
+      "code": "PW1",
+      "name": "Sam Kee",
+      "operational": true
+    },
+    {
+      "code": "PW4",
+      "name": "Samudera",
+      "operational": true
+    },
+    {
+      "code": "BP11",
+      "name": "Segar",
+      "operational": true
+    },
+    {
+      "code": "NS11",
+      "name": "Sembawang",
+      "operational": true
+    },
+    {
+      "code": "STC NE16",
+      "name": "Sengkang",
+      "operational": true
+    },
+    {
+      "code": "BP13",
+      "name": "Senja",
+      "operational": true
+    },
+    {
+      "code": "CC13 NE12",
+      "name": "Serangoon",
+      "operational": true
+    },
+    {
+      "code": "EW3",
+      "name": "Simei",
+      "operational": true
+    },
+    {
+      "code": "DT7",
+      "name": "Sixth Avenue",
+      "operational": true
+    },
+    {
+      "code": "NS23",
+      "name": "Somerset",
+      "operational": true
+    },
+    {
+      "code": "PW7",
+      "name": "Soo Teck",
+      "operational": true
+    },
+    {
+      "code": "BP2",
+      "name": "South View",
+      "operational": true
+    },
+    {
+      "code": "CC6",
+      "name": "Stadium",
+      "operational": true
+    },
+    {
+      "code": "DT10 TE11",
+      "name": "Stevens",
+      "operational": true
+    },
+    {
+      "code": "PW6",
+      "name": "Sumang",
+      "operational": true
+    },
+    {
+      "code": "DT37 TE31",
+      "name": "Sungei Bedok",
+      "operational": false
+    },
+    {
+      "code": "CC11",
+      "name": "Tai Seng",
+      "operational": true
+    },
+    {
+      "code": "EW2 DT32",
+      "name": "Tampines",
+      "operational": true
+    },
+    {
+      "code": "DT33",
+      "name": "Tampines East",
+      "operational": true
+    },
+    {
+      "code": "DT31",
+      "name": "Tampines West",
+      "operational": true
+    },
+    {
+      "code": "DT8",
+      "name": "Tan Kah Kee",
+      "operational": true
+    },
+    {
+      "code": "EW4 CG",
+      "name": "Tanah Merah",
+      "operational": true
+    },
+    {
+      "code": "EW15",
+      "name": "Tanjong Pagar",
+      "operational": true
+    },
+    {
+      "code": "BP4",
+      "name": "Tech Whye",
+      "operational": true
+    },
+    {
+      "code": "PW2",
+      "name": "Teck Lee",
+      "operational": false
+    },
+    {
+      "code": "DT18",
+      "name": "Telok Ayer",
+      "operational": true
+    },
+    {
+      "code": "CC28",
+      "name": "Telok Blangah",
+      "operational": true
+    },
+    {
+      "code": "SW4",
+      "name": "Thanggam",
+      "operational": true
+    },
+    {
+      "code": "EW17",
+      "name": "Tiong Bahru",
+      "operational": true
+    },
+    {
+      "code": "NS19",
+      "name": "Toa Payoh",
+      "operational": true
+    },
+    {
+      "code": "SW7",
+      "name": "Tongkang",
+      "operational": true
+    },
+    {
+      "code": "EW31",
+      "name": "Tuas Crescent",
+      "operational": true
+    },
+    {
+      "code": "EW33",
+      "name": "Tuas Link",
+      "operational": true
+    },
+    {
+      "code": "EW32",
+      "name": "Tuas West Road",
+      "operational": true
+    },
+    {
+      "code": "DT27",
+      "name": "Ubi",
+      "operational": true
+    },
+    {
+      "code": "DT34",
+      "name": "Upper Changi",
+      "operational": true
+    },
+    {
+      "code": "PW",
+      "name": "West Loop",
+      "operational": true
+    },
+    {
+      "code": "NS9 TE2",
+      "name": "Woodlands",
+      "operational": true
+    },
+    {
+      "code": "NE11",
+      "name": "Woodleigh",
+      "operational": true
+    },
+    {
+      "code": "DT36",
+      "name": "Xilin",
+      "operational": false
+    },
+    {
+      "code": "NS5",
+      "name": "Yew Tee",
+      "operational": true
+    },
+    {
+      "code": "NS15",
+      "name": "Yio Chu Kang",
+      "operational": true
+    },
+    {
+      "code": "NS13",
+      "name": "Yishun",
+      "operational": true
+    },
+    {
+      "code": "CC23",
+      "name": "one-north",
+      "operational": true
+    }
+  ]
+}
