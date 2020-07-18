@@ -40,6 +40,7 @@ const ChatDialogUserRow = ({
   loggedInUser,
   selectedChatId,
   setSelectedChatId,
+  setHasError,
   isNewChat,
   setIsNewChat,
   oppositeUser,
@@ -149,6 +150,7 @@ const ChatDialogUserRow = ({
               postEnquirerId={postEnquirerId}
               onShow={showConfirmCompletionModal}
               onClose={handleCloseConfirmCompletionModal}
+              setHasError={setHasError}
               setCompletedStatus={handleSetStatusToComplete}
               setShowAppreciationMessageModal={handleShowAppreciationMessageModal}
             />

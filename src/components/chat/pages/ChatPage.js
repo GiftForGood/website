@@ -16,6 +16,7 @@ const NoChatsContainer = styled.div`
 
 const ChatPageTabletAndDesktop = ({
   user,
+  setHasError,
   selectedChatId,
   setSelectedChatId,
   postId,
@@ -38,6 +39,7 @@ const ChatPageTabletAndDesktop = ({
       />
       <ChatDialog
         loggedInUser={user}
+        setHasError={setHasError}
         selectedChatId={selectedChatId}
         setSelectedChatId={setSelectedChatId}
         navBarHeight={navBarHeight}
@@ -52,6 +54,7 @@ const ChatPageTabletAndDesktop = ({
 
 const ChatPageMobile = ({
   user,
+  setHasError,
   selectedChatId,
   setSelectedChatId,
   postId,
@@ -76,6 +79,7 @@ const ChatPageMobile = ({
       ) : (
         <ChatDialog
           loggedInUser={user}
+          setHasError={setHasError}
           selectedChatId={selectedChatId}
           setSelectedChatId={setSelectedChatId}
           navBarHeight={navBarHeight}
@@ -173,6 +177,7 @@ const ChatPage = ({ user, chatId, postId, postType, isViewingChatsForMyPost }) =
   return isTablet ? (
     <ChatPageTabletAndDesktop
       user={user}
+      setHasError={setHasError}
       selectedChatId={selectedChatId}
       setSelectedChatId={setSelectedChatId}
       postId={postId}
@@ -186,6 +191,7 @@ const ChatPage = ({ user, chatId, postId, postType, isViewingChatsForMyPost }) =
   ) : (
     <ChatPageMobile
       user={user}
+      setHasError={setHasError}
       selectedChatId={selectedChatId}
       setSelectedChatId={setSelectedChatId}
       postId={postId}

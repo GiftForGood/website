@@ -27,6 +27,7 @@ const MessageContainer = styled.div`
 const ChatDialogContent = ({
   loggedInUser,
   navBarHeight,
+  setHasError,
   selectedChatId,
   setSelectedChatId,
   isNewChat,
@@ -87,6 +88,7 @@ const ChatDialogContent = ({
           oppositeUser={oppositeUser}
           postOwnerId={postOwnerId}
           postEnquirerId={postEnquirerId}
+          setHasError={setHasError}
           selectedChatId={selectedChatId}
           setSelectedChatId={setSelectedChatId}
           isNewChat={isNewChat}
@@ -121,6 +123,7 @@ const ChatDialogContent = ({
 
 const ChatDialog = ({
   loggedInUser,
+  setHasError,
   selectedChatId,
   setSelectedChatId,
   navBarHeight,
@@ -184,6 +187,7 @@ const ChatDialog = ({
       <ChatDialogContent
         loggedInUser={loggedInUser}
         navBarHeight={navBarHeight}
+        setHasError={setHasError}
         selectedChatId={selectedChatId}
         setSelectedChatId={setSelectedChatId}
         isNewChat={isNewChat}

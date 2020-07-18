@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import ChatCompleteButton from '../buttons/ChatCompleteButton';
 import api from '../../../utils/api';
 import { Button, Stack } from '@kiwicom/orbit-components/lib';
@@ -10,6 +10,7 @@ const ConfirmCompletionModal = ({
   postEnquirerId,
   onShow,
   onClose,
+  setHasError,
   setCompletedStatus,
   setShowAppreciationMessageModal,
 }) => {
@@ -18,12 +19,17 @@ const ConfirmCompletionModal = ({
   }
 
   const onConfirm = () => {
-    api[postType].complete(postId, postEnquirerId).then(() => {
-      console.log('Complete post successful.');
-      setCompletedStatus();
-      onClose();
-      setShowAppreciationMessageModal(); // show appreciation message modal after completing post
-    });
+    api[postType]
+      .complete(postId, postEnquirerId)
+      .then(() => {
+        setCompletedStatus();
+        onClose();
+        setShowAppreciationMessageModal(); // show appreciation message modal after completing post
+      })
+      .catch(() => {
+        // occurs when completing has error: post does not exist etc
+        setHasError(true);
+      });
   };
 
   return (
