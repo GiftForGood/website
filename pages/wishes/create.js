@@ -4,7 +4,7 @@ import { isVerified } from '../../utils/authentication/verification';
 import { isNpo } from '../../utils/authentication/userType';
 import SessionProvider from '../../src/components/session/modules/SessionProvider';
 import CreateWishPage from '../../src/components/createWish/pages/createWishPage';
-
+import Footer from '../../src/components/footer/Footer';
 import dynamic from 'next/dynamic';
 const TopNavigationBar = dynamic(() => import('../../src/components/navbar/modules/TopNavigationBar'), { ssr: false });
 
@@ -28,6 +28,7 @@ const CreateWishes = ({ user }) => {
     <SessionProvider user={user}>
       <TopNavigationBar />
       <CreateWishPage mode="create" />
+      <Footer />
     </SessionProvider>
   );
 };

@@ -8,6 +8,7 @@ import { isAuthenticated } from '../../utils/authentication/authentication';
 import Error from 'next/error';
 import { ogImagePath } from '../../utils/constants/imagePaths';
 import { useRouter } from 'next/router';
+import Footer from '../../src/components/footer/Footer';
 const TopNavigationBar = dynamic(() => import('../../src/components/navbar/modules/TopNavigationBar'), {
   ssr: false,
 });
@@ -70,6 +71,7 @@ const Donation = ({ donationId, donationDetails, donorDetails, user, prevHref, c
         prevHref={prevHref}
         categoryName={categoryName}
       />
+      <Footer />
     </SessionProvider>
   );
 };

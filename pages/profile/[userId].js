@@ -7,6 +7,7 @@ import api from '../../utils/api';
 import { containsNPO, containsDonor } from '../../utils/authentication/userType';
 import Error from 'next/error';
 import DonorProfilePage from '../../src/components/profile/pages/DonorProfilePage';
+import Footer from '../../src/components/footer/Footer';
 const TopNavigationBar = dynamic(() => import('../../src/components/navbar/modules/TopNavigationBar'), {
   ssr: false,
 });
@@ -37,6 +38,7 @@ const Profile = ({ user, userId, userTypes }) => {
         <DonorProfilePage userId={userId} />
       ) : null}
       <BottomNavigation />
+      <Footer />
     </SessionProvider>
   );
 };

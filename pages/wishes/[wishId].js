@@ -8,6 +8,7 @@ import { isAuthenticated } from '../../utils/authentication/authentication';
 import Error from 'next/error';
 import { ogImagePath } from '../../utils/constants/imagePaths';
 import { useRouter } from 'next/router';
+import Footer from '../../src/components/footer/Footer';
 const TopNavigationBar = dynamic(() => import('../../src/components/navbar/modules/TopNavigationBar'), {
   ssr: false,
 });
@@ -69,6 +70,7 @@ const Wish = ({ wishId, wishDetails, npoDetails, user, prevHref, categoryName })
         prevHref={prevHref}
         categoryName={categoryName}
       />
+      <Footer />
     </SessionProvider>
   );
 };
