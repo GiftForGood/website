@@ -7,6 +7,7 @@ import CreateWishPage from '../../src/components/createWish/pages/createWishPage
 import dynamic from 'next/dynamic';
 import api from '../../utils/api';
 import Error from 'next/error';
+import Footer from '../../src/components/footer/Footer';
 
 const TopNavigationBar = dynamic(() => import('../../src/components/navbar/modules/TopNavigationBar'), { ssr: false });
 
@@ -45,6 +46,7 @@ const CreateWishes = ({ user, wish, isMine }) => {
       {wish ? null : <Error statusCode={404} />}
       {isMine ? null : <Error statusCode={404} />}
       {wish && isMine && <CreateWishPage wish={wish} mode="edit" />}
+      <Footer />
     </SessionProvider>
   );
 };

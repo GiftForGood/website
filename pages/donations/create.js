@@ -4,7 +4,7 @@ import { isVerified } from '../../utils/authentication/verification';
 import { isDonor } from '../../utils/authentication/userType';
 import SessionProvider from '../../src/components/session/modules/SessionProvider';
 import CreateDonationPage from '../../src/components/createDonation/pages/createDonationPage';
-
+import Footer from '../../src/components/footer/Footer';
 import dynamic from 'next/dynamic';
 const TopNavigationBar = dynamic(() => import('../../src/components/navbar/modules/TopNavigationBar'), { ssr: false });
 
@@ -28,6 +28,7 @@ const CreateDonations = ({ user }) => {
     <SessionProvider user={user}>
       <TopNavigationBar />
       <CreateDonationPage mode="create" />
+      <Footer />
     </SessionProvider>
   );
 };

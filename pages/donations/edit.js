@@ -7,6 +7,7 @@ import CreateDonationPage from '../../src/components/createDonation/pages/create
 import dynamic from 'next/dynamic';
 import api from '../../utils/api';
 import Error from 'next/error';
+import Footer from '../../src/components/footer/Footer';
 
 const TopNavigationBar = dynamic(() => import('../../src/components/navbar/modules/TopNavigationBar'), { ssr: false });
 
@@ -45,6 +46,7 @@ const CreateWishes = ({ user, donation, isMine }) => {
       {donation ? null : <Error statusCode={404} />}
       {isMine ? null : <Error statusCode={404} />}
       {donation && isMine && <CreateDonationPage donation={donation} mode="edit" />}
+      <Footer />
     </SessionProvider>
   );
 };

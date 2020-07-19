@@ -14,6 +14,9 @@ const Wrapper = styled.div`
   margin: 0 auto;
   max-width: 1280px;
   box-sizing: border-box;
+  ${media.desktop(css`
+    padding-bottom: 40px;
+  `)};
 `;
 
 const RightPanel = styled.div`

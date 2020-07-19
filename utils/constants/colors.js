@@ -41,4 +41,5 @@ export const colors = {
   dndBackgroundActive: '#CAD4DE',
   bannerBackground: '#ffffff',
   imageLoadingBackground: '#f0f1f1',
+  footerBackground: '#fafafa',
 };
