@@ -5,6 +5,8 @@ import accountCircle from '../../../public/assets/account-circle.svg';
 const CircularImage = styled.img`
   width: ${(props) => (props.width ? props.width : 40)}px;
   height: ${(props) => (props.height ? props.height : 40)}px;
+  min-width: ${(props) => (props.width ? props.width : 40)}px;
+  min-height: ${(props) => (props.height ? props.height : 40)}px;
   border-radius: 50%;
   object-fit: cover;
 `;

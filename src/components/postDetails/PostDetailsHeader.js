@@ -5,6 +5,7 @@ import ClosePostModal from '../modal/ClosePostModal';
 import SharePostModal from '../modal/SharePostModal';
 import ChatButton from '../buttons/ChatButton';
 import Verified from '../session/modules/Verified';
+import api from '../../../utils/api';
 import { AlertCircle, Edit, CloseCircle, MenuKebab, ShareAndroid } from '@kiwicom/orbit-components/lib/icons';
 import { Button, Stack, Text, Popover, ButtonLink } from '@kiwicom/orbit-components/lib';
 import { useRouter } from 'next/router';
@@ -65,7 +66,19 @@ const PostDetailsHeader = ({
 
   const handleOnClickChatBtn = (event) => {
     event.preventDefault();
-    router.push(chatType === 'Chat' ? `/chat/${postId}?postType=${postType}` : `/chat/?postId=${postId}`);
+    let destination = `/chat?postId=${postId}&postType=${postType}`;
+    if (chatType === 'Chat') {
+      api.chats.getChatsForPost(postId).then((rawChats) => {
+        if (rawChats.docs.length > 0) {
+          // assumption: can only have one chat for a post that is not yours,
+          // bring user to the chat being selected
+          destination = `/chat/${rawChats.docs[0].data().chatId}`;
+        }
+        router.push(destination);
+      });
+    } else {
+      router.push(destination);
+    }
   };
 
   const handleOnClickShareBtn = () => {

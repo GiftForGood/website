@@ -23,7 +23,7 @@ const generateTimeslots = (startTime, endTime, interval) => {
   return slots;
 };
 
-const Calendar = ({ timeslot, maxSlots, renderDays }) => {
+const Calendar = ({ timeslot, maxSlots, renderDays, updateSelectedDates }) => {
   const { isTablet } = useMediaQuery();
 
   renderDays = updateRenderDays(renderDays);
@@ -87,12 +87,14 @@ const Calendar = ({ timeslot, maxSlots, renderDays }) => {
 
     setLastUpdatedDate(moment(newTimeslot.startDate));
     setSelectedTimeslots(newSelectedTimeslots);
+    updateSelectedDates(newSelectedTimeslots);
   };
 
   const removeKeyByIndex = (index) => {
     const newSelectedTimeslots = selectedTimeslots.slice();
     newSelectedTimeslots.splice(index, 1);
     setSelectedTimeslots(newSelectedTimeslots);
+    updateSelectedDates(newSelectedTimeslots);
   };
 
   const DisplaySelectedSlot = () => {
