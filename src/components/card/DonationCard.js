@@ -169,7 +169,7 @@ const DonationCard = ({
 
   return (
     <CardContainer>
-      <Grid style={{ height: '100%' }} desktop={{ rows: '1fr 3fr 2fr' }} cols="1fr">
+      <Grid style={{ height: '100%' }} rows="1fr 3fr 2fr" cols="1fr">
         <CardHeaderContainer>
           <CardHeader name={name} imageUrl={profileImageUrl} timeAgo={timeAgo} />
         </CardHeaderContainer>
