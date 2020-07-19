@@ -2,11 +2,6 @@ import { db, firebaseAuth, firebaseStorage } from '../firebase';
 import firebase from 'firebase/app';
 import * as moment from 'moment';
 import * as path from 'path';
-import {
-  REGISTRY_OF_SOCIETIES,
-  COMMISSIONER_OF_CHARITIES,
-  AFFILIATED_NATIONAL_COUNCIL_OF_SOCIAL_SERVICE,
-} from '../constants/npoRegisteredRegistrar.js';
 import { FIREBASE_EMAIL_ACTION_URL } from '../constants/siteUrl';
 import { DONOR, NPO } from '../constants/usersType';
 import { ALL_TEXT } from '../constants/imageVariation';
@@ -91,15 +86,12 @@ class AuthAPI {
     email,
     password,
     organization,
-    registeredRegistrar,
     registrationNumber,
     dayOfRegistration,
     monthOfRegistration,
     yearOfRegistration,
-    proofImage,
     activities
   ) {
-    this._validateNPOData(registeredRegistrar, proofImage);
     await firebaseAuth.createUserWithEmailAndPassword(email, password);
     const token = await firebaseAuth.currentUser.getIdToken();
     const userProfile = firebaseAuth.currentUser;
@@ -112,12 +104,10 @@ class AuthAPI {
         name,
         contact,
         organization,
-        registeredRegistrar,
         registrationNumber,
         dayOfRegistration,
         monthOfRegistration,
         yearOfRegistration,
-        proofImage,
         activities
       ),
       this._createUser(userProfile.uid, NPO),
@@ -302,7 +292,7 @@ class AuthAPI {
   }
 
   async _createNPO(userProfile, name, contact, organizationName) {
-    const organizationInfo = await this._getCategoryInfo(organizationName);
+    const organizationInfo = await this._getOrganizationInfo(organizationName);
 
     let profileImageUrlMapping = { raw: '' };
     for (const sizeText of ALL_TEXT) {
@@ -338,28 +328,21 @@ class AuthAPI {
     name,
     contact,
     organizationName,
-    registeredRegistrar,
     registrationNumber,
     dayOfRegistration,
     monthOfRegistration,
     yearOfRegistration,
-    proofImage,
     activities
   ) {
-    const [organizationInfo, uploadedImageUrl] = await Promise.all([
-      this._getCategoryInfo(organizationName),
-      this._uploadNPOProofImage(userProfile.uid, proofImage),
-    ]);
+    const organizationInfo = await this._getOrganizationInfo(organizationName);
 
     const dateOfRegistration = dayOfRegistration + '-' + monthOfRegistration + '-' + yearOfRegistration;
+    const timeNow = Date.now();
 
     const organization = {
       ...organizationInfo,
-      registeredRegistrar: registeredRegistrar,
       registrationNumber: registrationNumber,
       dateOfRegistration: moment(dateOfRegistration, 'DD-MM-YYYY').valueOf(),
-      proofImageUrl: uploadedImageUrl,
-      proofImageVersion: 1,
       activities: activities,
     };
     const newVerificationData = db.collection('npoVerifications').doc(userProfile.uid);
@@ -368,7 +351,14 @@ class AuthAPI {
       name: name,
       contactNumber: contact,
       organization: organization,
+      status: 'pending',
+      admin: {
+        id: '',
+        name: '',
+      },
       isVerifiedByAdmin: false,
+      appliedDateTime: timeNow,
+      lastUpdatedDateTime: timeNow,
     };
     await newVerificationData.set(data);
 
@@ -400,7 +390,7 @@ class AuthAPI {
     return proofFileRef.getDownloadURL();
   }
 
-  async _getCategoryInfo(name) {
+  async _getOrganizationInfo(name) {
     const snapshot = await db.collection('npoOrganizations').where('name', '==', name).get();
 
     if (snapshot.empty) {
@@ -445,32 +435,6 @@ class AuthAPI {
 
     if (await this._doesDonorExist(userInfo.uid)) {
       throw new AuthError('unable-to-create-user', 'User already sign up as a Donor');
-    }
-  }
-
-  _validateNPOData(registeredRegistrar, proofImage) {
-    this._validateRegistrar(registeredRegistrar);
-    this._validateProofImage(proofImage);
-  }
-
-  _validateRegistrar(registeredRegistrar) {
-    const validRegistrar = [
-      AFFILIATED_NATIONAL_COUNCIL_OF_SOCIAL_SERVICE,
-      REGISTRY_OF_SOCIETIES,
-      COMMISSIONER_OF_CHARITIES,
-    ];
-
-    if (!validRegistrar.includes(registeredRegistrar)) {
-      throw new AuthError('invalid-arguments', registeredRegistrar + ' is not a valid registrar');
-    }
-  }
-
-  _validateProofImage(proofImage) {
-    const validExtensions = ['.pdf'];
-    const imageExt = path.extname(proofImage.name).toLowerCase();
-
-    if (!validExtensions.includes(imageExt)) {
-      throw new AuthError('invalid-arguments', imageExt + ' is not a valid file ext');
     }
   }
 }
