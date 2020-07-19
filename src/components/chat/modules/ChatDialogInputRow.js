@@ -1,4 +1,4 @@
-import React, { useState, forwardRef } from 'react';
+import React, { useState, forwardRef, useRef } from 'react';
 import { Button, Stack, Alert } from '@kiwicom/orbit-components/lib';
 import ChatButton from '../../../components/buttons/ChatButton';
 import ChatImageUpload from './ChatImageUpload';
@@ -41,6 +41,7 @@ const StyledTextareaAutosize = styled(TextareaAutosize)`
 const ChatDialogInputRow = ({ selectedChatId, setSelectedChatId, isNewChat, setIsNewChat, postType, postId }, ref) => {
   const [inputMessage, setInputMessage] = useState('');
   const [alertMessage, setAlertMessage] = useState('');
+  const textAreaRef = useRef(null);
   const router = useRouter();
 
   const handleSendTextMessage = () => {
@@ -52,6 +53,7 @@ const ChatDialogInputRow = ({ selectedChatId, setSelectedChatId, isNewChat, setI
     // clear input message before send as opposed to after sending the message, to prevent duplicated messages
     // being sent when spam enter button
     setInputMessage('');
+    textAreaRef.current.focus();
     if (isNewChat) {
       sendFirstMessage(message).then((chat) => {
         // need to get the chat id from the newly created chat to select chat id
@@ -105,6 +107,7 @@ const ChatDialogInputRow = ({ selectedChatId, setSelectedChatId, isNewChat, setI
           isNewChat={isNewChat}
         />
         <StyledTextareaAutosize
+          ref={textAreaRef}
           minRows={1}
           maxRows={5}
           autoFocus={true}
