@@ -292,7 +292,7 @@ class AuthAPI {
   }
 
   async _createNPO(userProfile, name, contact, organizationName) {
-    const organizationInfo = await this._getCategoryInfo(organizationName);
+    const organizationInfo = await this._getOrganizationInfo(organizationName);
 
     let profileImageUrlMapping = { raw: '' };
     for (const sizeText of ALL_TEXT) {
@@ -334,7 +334,7 @@ class AuthAPI {
     yearOfRegistration,
     activities
   ) {
-    const organizationInfo = await this._getCategoryInfo(organizationName);
+    const organizationInfo = await this._getOrganizationInfo(organizationName);
 
     const dateOfRegistration = dayOfRegistration + '-' + monthOfRegistration + '-' + yearOfRegistration;
     const timeNow = Date.now();
@@ -390,7 +390,7 @@ class AuthAPI {
     return proofFileRef.getDownloadURL();
   }
 
-  async _getCategoryInfo(name) {
+  async _getOrganizationInfo(name) {
     const snapshot = await db.collection('npoOrganizations').where('name', '==', name).get();
 
     if (snapshot.empty) {
