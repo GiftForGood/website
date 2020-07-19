@@ -36,6 +36,7 @@ const ChatPageTabletAndDesktop = ({
         postId={postId}
         isCreatingNewChat={isNewChat}
         isViewingChatsForMyPost={isViewingChatsForMyPost}
+        isShow={true}
       />
       <ChatDialog
         loggedInUser={user}
@@ -47,6 +48,7 @@ const ChatPageTabletAndDesktop = ({
         setIsNewChat={setIsNewChat}
         postId={postId}
         postType={postType}
+        isShow={true}
       />
     </Grid>
   );
