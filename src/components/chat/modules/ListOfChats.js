@@ -20,6 +20,9 @@ const ListOfChatsContainer = styled.div`
   max-height: 100vh;
   overflow-y: scroll;
   border-right: 1px solid ${colors.chatBorders};
+  display: ${({ isShow }) => {
+    isShow ? 'unset' : 'none';
+  }};
 `;
 
 const ListOfChats = ({
@@ -29,6 +32,7 @@ const ListOfChats = ({
   postId,
   isCreatingNewChat,
   isViewingChatsForMyPost,
+  isShow,
 }) => {
   const [chatDocs, setChatDocs] = useState([]);
   const [shouldSeeMore, setShouldSeeMore] = useState(true);
@@ -132,7 +136,7 @@ const ListOfChats = ({
   };
 
   return (
-    <ListOfChatsContainer>
+    <ListOfChatsContainer isShow={isShow}>
       <InfiniteScroll
         loadMore={handleOnSeeMore}
         hasMore={shouldSeeMore}

@@ -16,6 +16,7 @@ const ChatDialogContainer = styled.div`
   width: 100%;
   height: 100%;
   position: relative;
+  display: ${({ isShow }) => (isShow ? 'unset' : 'none')};
 `;
 
 const MessageContainer = styled.div`
@@ -131,6 +132,7 @@ const ChatDialog = ({
   setIsNewChat,
   postId,
   postType,
+  isShow,
 }) => {
   /**
    * note that the post is only needed when creating a new chat for a post, in order to get
@@ -164,7 +166,7 @@ const ChatDialog = ({
   // no chat selected yet and is not creating a new chat for a post
   if (!hasSelectedChat && !isNewChat) {
     return (
-      <ChatDialogContainer>
+      <ChatDialogContainer isShow={isShow}>
         <MessageContainer>
           <BlackText>Select a chat to view the messages.</BlackText>
         </MessageContainer>
@@ -183,7 +185,7 @@ const ChatDialog = ({
   }
 
   return (
-    <ChatDialogContainer>
+    <ChatDialogContainer isShow={isShow}>
       <ChatDialogContent
         loggedInUser={loggedInUser}
         navBarHeight={navBarHeight}

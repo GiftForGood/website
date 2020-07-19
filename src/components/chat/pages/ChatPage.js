@@ -67,28 +67,27 @@ const ChatPageMobile = ({
 }) => {
   return (
     <Grid style={gridContainerStyle} columns="1fr">
-      {/* Show list of chats when no chat is selected and not creating a new chat */}
-      {selectedChatId == null && !isNewChat ? (
-        <ListOfChats
-          user={user}
-          selectedChatId={selectedChatId}
-          setSelectedChatId={setSelectedChatId}
-          postId={postId}
-          isViewingChatsForMyPost={isViewingChatsForMyPost}
-        />
-      ) : (
-        <ChatDialog
-          loggedInUser={user}
-          setHasError={setHasError}
-          selectedChatId={selectedChatId}
-          setSelectedChatId={setSelectedChatId}
-          navBarHeight={navBarHeight}
-          isNewChat={isNewChat}
-          setIsNewChat={setIsNewChat}
-          postId={postId}
-          postType={postType}
-        />
-      )}
+      {/* Using the isShow props to conditionally display ListOfChats when has not selected a chat */}
+      <ListOfChats
+        user={user}
+        selectedChatId={selectedChatId}
+        setSelectedChatId={setSelectedChatId}
+        postId={postId}
+        isViewingChatsForMyPost={isViewingChatsForMyPost}
+        isShow={selectedChatId === null && !isNewChat}
+      />
+      <ChatDialog
+        loggedInUser={user}
+        setHasError={setHasError}
+        selectedChatId={selectedChatId}
+        setSelectedChatId={setSelectedChatId}
+        navBarHeight={navBarHeight}
+        isNewChat={isNewChat}
+        setIsNewChat={setIsNewChat}
+        postId={postId}
+        postType={postType}
+        isShow={selectedChatId !== null || isNewChat}
+      />
     </Grid>
   );
 };
