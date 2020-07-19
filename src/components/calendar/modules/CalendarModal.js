@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Calendar from './Calendar';
 import styled from 'styled-components';
 import { colors } from '../../../../utils/constants/colors';
@@ -23,10 +23,14 @@ const DATE = '5';
 const title = 'Suggest Dates to deliver';
 const description = '*Please select up to ' + DATE + ' dates';
 
-const CalendarModal = ({ onShow, onHide }) => {
+const CalendarModal = ({ onShow, onHide, sendCalendarMessage }) => {
+  const [selectedDates, setSelectedDates] = useState([]);
   if (!onShow) {
     return <div></div>;
   }
+  const onClickOk = () => {
+    sendCalendarMessage(selectedDates);
+  };
 
   return (
     <Modal size="large">
@@ -36,7 +40,12 @@ const CalendarModal = ({ onShow, onHide }) => {
           <Heading type="title5">{description}</Heading>
         </Stack>
         <Stack>
-          <Calendar timeslot={{ startTime: 9, endTime: 18, interval: 1 }} maxSlots={DATE} renderDays={{}} />
+          <Calendar
+            timeslot={{ startTime: 9, endTime: 18, interval: 1 }}
+            maxSlots={DATE}
+            renderDays={{}}
+            updateSelectedDates={setSelectedDates}
+          />
         </Stack>
       </ModalSection>
       <ModalFooter>
@@ -44,7 +53,7 @@ const CalendarModal = ({ onShow, onHide }) => {
           <Button type="secondary" onClick={onHide}>
             Cancel
           </Button>
-          <Button onClick={onHide} asComponent={okButton}>
+          <Button onClick={onClickOk} asComponent={okButton}>
             Ok
           </Button>
         </Stack>

@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
-const BlackText = styled.div`
-  color: black;
+const WhiteText = styled.div`
+  color: white;
   font-weight: ${(props) => {
     return props.weight === 'bold' ? 'bold' : 'normal';
   }};
@@ -24,4 +24,4 @@ const BlackText = styled.div`
   }};
 `;
 
-export default BlackText;
+export default WhiteText;
