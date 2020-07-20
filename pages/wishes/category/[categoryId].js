@@ -7,6 +7,8 @@ import SessionProvider from '../../../src/components/session/modules/SessionProv
 import { isAuthenticated } from '../../../utils/authentication/authentication';
 import Error from 'next/error';
 import Footer from '../../../src/components/footer/Footer';
+import Header from '../../../src/components/header';
+
 const TopNavigationBar = dynamic(() => import('../../../src/components/navbar/modules/TopNavigationBar'), {
   ssr: false,
 });
@@ -39,6 +41,7 @@ const ViewCategory = ({ categoryDetails, sortByQuery, user }) => {
   }
   return (
     <SessionProvider user={user}>
+      <Header title={`${categoryDetails.name} | Wishes`}/>
       <TopNavigationBar />
       <ViewCategoryPage categoryDetails={categoryDetails} sortByQuery={sortByQuery} />
       <BottomNavigation />

@@ -6,6 +6,8 @@ import SessionProvider from '../../src/components/session/modules/SessionProvide
 import CreateWishPage from '../../src/components/createWish/pages/createWishPage';
 import Footer from '../../src/components/footer/Footer';
 import dynamic from 'next/dynamic';
+import Header from '../../src/components/header';
+
 const TopNavigationBar = dynamic(() => import('../../src/components/navbar/modules/TopNavigationBar'), { ssr: false });
 
 export async function getServerSideProps({ params, req, res, query }) {
@@ -26,6 +28,7 @@ export async function getServerSideProps({ params, req, res, query }) {
 const CreateWishes = ({ user }) => {
   return (
     <SessionProvider user={user}>
+      <Header title="Create Wishes | GiftForGood"/>
       <TopNavigationBar />
       <CreateWishPage mode="create" />
       <Footer />

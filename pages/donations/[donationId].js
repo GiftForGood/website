@@ -9,6 +9,7 @@ import Error from 'next/error';
 import { ogImagePath } from '../../utils/constants/imagePaths';
 import { useRouter } from 'next/router';
 import Footer from '../../src/components/footer/Footer';
+import Header from '../../src/components/header';
 const TopNavigationBar = dynamic(() => import('../../src/components/navbar/modules/TopNavigationBar'), {
   ssr: false,
 });
@@ -52,6 +53,7 @@ const Donation = ({ donationId, donationDetails, donorDetails, user, prevHref, c
 
   return (
     <SessionProvider user={user}>
+      <Header title={donationDetails.title}/>
       <Head>
         {/* meta property for sharing purposes */}
         <meta property="og:url" content={`https://www.giftforgood.io${router.asPath}`} />

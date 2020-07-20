@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { withRouter } from 'next/router';
 import { isAuthenticated } from '../utils/authentication/authentication';
 import LoginPage from '../src/components/login/pages/LoginPage';
+import Header from '../src/components/header';
 
 // Route back to home page if already authenticated
 export async function getServerSideProps({ params, req, res, query }) {
@@ -20,6 +21,7 @@ export async function getServerSideProps({ params, req, res, query }) {
 const Login = () => {
   return (
     <div>
+      <Header title="Login | GiftForGood"/>
       <LoginPage />
     </div>
   );
