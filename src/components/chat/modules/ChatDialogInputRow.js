@@ -1,4 +1,4 @@
-import React, { useState, forwardRef } from 'react';
+import React, { useState, forwardRef, useRef } from 'react';
 import { Button, Stack, Alert } from '@kiwicom/orbit-components/lib';
 import ChatButton from '../../../components/buttons/ChatButton';
 import ChatImageUpload from './ChatImageUpload';
@@ -36,11 +36,22 @@ const StyledTextareaAutosize = styled(TextareaAutosize)`
   padding: 10px 10px;
   font-family: 'Trebuchet MS';
   resize: none;
+
+  /* 
+     To prevent auto zoom in on iphones, since inputs with font size that are less than 16px will be auto zoomed in.
+     Solution taken from: https://thingsthemselves.com/no-input-zoom-in-safari-on-iphone-the-pixel-perfect-way/
+   */
+  font-size: 16px;
+  width: 133.333333333%;
+  margin-right: calc(-33.333333333% + 48px) !important;
+  transform: scale(0.75);
+  transform-origin: left;
 `;
 
 const ChatDialogInputRow = ({ selectedChatId, setSelectedChatId, isNewChat, setIsNewChat, postType, postId }, ref) => {
   const [inputMessage, setInputMessage] = useState('');
   const [alertMessage, setAlertMessage] = useState('');
+  const textAreaRef = useRef(null);
   const router = useRouter();
 
   const handleSendTextMessage = () => {
@@ -52,6 +63,7 @@ const ChatDialogInputRow = ({ selectedChatId, setSelectedChatId, isNewChat, setI
     // clear input message before send as opposed to after sending the message, to prevent duplicated messages
     // being sent when spam enter button
     setInputMessage('');
+    textAreaRef.current.focus();
     if (isNewChat) {
       sendFirstMessage(message).then((chat) => {
         // need to get the chat id from the newly created chat to select chat id
@@ -105,6 +117,7 @@ const ChatDialogInputRow = ({ selectedChatId, setSelectedChatId, isNewChat, setI
           isNewChat={isNewChat}
         />
         <StyledTextareaAutosize
+          ref={textAreaRef}
           minRows={1}
           maxRows={5}
           autoFocus={true}
