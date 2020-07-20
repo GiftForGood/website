@@ -54,7 +54,7 @@ const ChatDialogInputRow = ({ selectedChatId, setSelectedChatId, isNewChat, setI
   const [alertMessage, setAlertMessage] = useState('');
   const textAreaRef = useRef(null);
   const router = useRouter();
-  const { isTablet } = useMediaQuery();
+  const { isDesktop } = useMediaQuery();
 
   const handleSendTextMessage = () => {
     if (inputMessage.trim().length <= 0) {
@@ -122,7 +122,7 @@ const ChatDialogInputRow = ({ selectedChatId, setSelectedChatId, isNewChat, setI
           ref={textAreaRef}
           minRows={1}
           maxRows={5}
-          autoFocus={isTablet}
+          autoFocus={isDesktop}
           placeholder="Type your messages here..."
           id="chat-input"
           value={inputMessage}
