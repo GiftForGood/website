@@ -79,16 +79,20 @@ const ChatDialogMessages = ({ postType, loggedInUser, selectedChatId, isNewChat,
   };
 
   const updateChatMessages = (chatMessageDoc) => {
+    let isNewlySentMessage = false;
     setChatMessageDocs((prevChatMessageDocs) => {
       const newChatMessage = chatMessageDoc.data();
       const lastChatMessageDoc = prevChatMessageDocs[prevChatMessageDocs.length - 1];
-      // insert chat message doc to correct position
+      // insert chat message doc to the back if it is a newly sent message
       if (lastChatMessageDoc && lastChatMessageDoc.data().dateTime <= newChatMessage.dateTime) {
+        isNewlySentMessage = true;
         return [...prevChatMessageDocs, chatMessageDoc];
       }
       return [chatMessageDoc, ...prevChatMessageDocs];
     });
-    scrollToBottomIfSentByLoggedInUser(chatMessageDoc.data());
+    if (isNewlySentMessage) {
+      scrollToBottomIfSentByLoggedInUser(chatMessageDoc.data());
+    }
   };
 
   /**
