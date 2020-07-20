@@ -21,7 +21,7 @@ export async function getServerSideProps({ params, req, res, query }) {
 const Login = () => {
   return (
     <div>
-      <Header title="Login | GiftForGood"/>
+      <Header title="Login | GiftForGood" />
       <LoginPage />
     </div>
   );

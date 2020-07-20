@@ -28,7 +28,7 @@ export async function getServerSideProps({ params, req, res, query }) {
 const CreateWishes = ({ user }) => {
   return (
     <SessionProvider user={user}>
-      <Header title="Create Wishes | GiftForGood"/>
+      <Header title="Create Wishes | GiftForGood" />
       <TopNavigationBar />
       <CreateWishPage mode="create" />
       <Footer />

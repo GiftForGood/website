@@ -26,7 +26,7 @@ export async function getServerSideProps({ params, req, res, query }) {
 const SettingsProfilePage = ({ user }) => {
   return (
     <SessionProvider user={user}>
-      <Header title="Settings | GiftForGood"/>
+      <Header title="Settings | GiftForGood" />
       <TopNavigationBar />
       {isNpoUser(user.user) ? <NpoSettingProfilePage /> : isDonorUser(user.user) ? <DonorSettingProfilePage /> : null}
       <Footer />

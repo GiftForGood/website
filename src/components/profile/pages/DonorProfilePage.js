@@ -52,7 +52,7 @@ const DonorProfilePage = ({ userId }) => {
 
   return (
     <Wrapper>
-      <Header title={donor ? donor.name : 'Profile'}/>
+      <Header title={donor ? donor.name : 'Profile'} />
       <Grid desktop={{ columns: '1fr 5fr' }}>
         <ProfilePanel user={donor} />
         <Stack>

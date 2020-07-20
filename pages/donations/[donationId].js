@@ -53,7 +53,7 @@ const Donation = ({ donationId, donationDetails, donorDetails, user, prevHref, c
 
   return (
     <SessionProvider user={user}>
-      <Header title={donationDetails.title}/>
+      <Header title={donationDetails.title} />
       <Head>
         {/* meta property for sharing purposes */}
         <meta property="og:url" content={`https://www.giftforgood.io${router.asPath}`} />

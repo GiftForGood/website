@@ -52,7 +52,7 @@ const NpoProfilePage = ({ userId }) => {
 
   return (
     <Wrapper>
-      <Header title={npo ? npo.name : 'Profile'}/>
+      <Header title={npo ? npo.name : 'Profile'} />
       <Grid desktop={{ columns: '1fr 5fr' }}>
         <ProfilePanel user={npo} />
         <Stack>

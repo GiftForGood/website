@@ -66,7 +66,7 @@ const ViewOwnChats = ({ user, postId, isViewingChatsForMyPost, postType, hasErro
 
   return (
     <SessionProvider user={user}>
-      <Header title="Chats | GiftForGood"/>
+      <Header title="Chats | GiftForGood" />
       <TopNavigationBar />
       <ChatPage user={user} postId={postId} isViewingChatsForMyPost={isViewingChatsForMyPost} postType={postType} />
     </SessionProvider>

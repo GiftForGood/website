@@ -9,7 +9,7 @@ const Container = styled.div`
 const Search = () => {
   return (
     <Container>
-      <Header title="Search"/>
+      <Header title="Search" />
       <SearchPage />
     </Container>
   );

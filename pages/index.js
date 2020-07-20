@@ -23,7 +23,7 @@ const WishesHome = ({ user }) => {
   const userData = useUser();
   return (
     <SessionProvider user={user}>
-      <Header title="Wishes | GiftForGood"/>
+      <Header title="Wishes | GiftForGood" />
       <TopNavigationBar />
       <WishesHomePage />
       <BottomNavigation />

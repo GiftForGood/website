@@ -43,7 +43,7 @@ const Panel = styled.div`
 const ForgetPassword = () => {
   return (
     <Wrapper>
-      <Header title="Forget Password | GiftForGood"/>
+      <Header title="Forget Password | GiftForGood" />
       <Container>
         <Panel>
           <ForgetPasswordPage />
