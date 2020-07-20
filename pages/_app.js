@@ -20,6 +20,7 @@ const GlobalStyle = createGlobalStyle`
     margin: 0;
     word-wrap: break-word;
     white-space: pre-wrap; 
+    word-break: break-word;
   }
 
   .default-avatar {
