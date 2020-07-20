@@ -36,7 +36,7 @@ const AccountImage = ({ src }) => {
 };
 
 const AccountButton = ({ onNotificationClick, onLogoutClick, user }) => {
-  console.log("damn",user.profileImageUrl.small || user.profileImageUrl.raw)
+  console.log('damn', user.profileImageUrl.small || user.profileImageUrl.raw);
   return (
     <Popover
       content={
