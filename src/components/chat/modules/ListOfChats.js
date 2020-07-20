@@ -21,7 +21,7 @@ const ListOfChatsContainer = styled.div`
   overflow-y: scroll;
   border-right: 1px solid ${colors.chatBorders};
   display: ${({ isShow }) => {
-    isShow ? 'unset' : 'none';
+    return isShow ? 'unset' : 'none';
   }};
 `;
 
