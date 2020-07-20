@@ -4,15 +4,13 @@ import {
   Button,
   InputGroup,
   InputField,
-  InputFile,
-  ChoiceGroup,
-  Radio,
   Select,
   Stack,
   Textarea,
   Text,
   Heading,
   Alert,
+  TextLink,
 } from '@kiwicom/orbit-components/lib';
 import ChevronLeft from '@kiwicom/orbit-components/lib/icons/ChevronLeft';
 
@@ -33,11 +31,6 @@ import BlueButton from '../../buttons/BlueButton';
 import { colors } from '../../../../utils/constants/colors';
 import api from '../../../../utils/api';
 import moment from 'moment';
-import {
-  REGISTRY_OF_SOCIETIES,
-  COMMISSIONER_OF_CHARITIES,
-  AFFILIATED_NATIONAL_COUNCIL_OF_SOCIAL_SERVICE,
-} from '../../../../utils/constants/npoRegisteredRegistrar';
 
 const currentYear = moment().year();
 const HeadingColor = styled.div`
@@ -85,7 +78,6 @@ const RegisterNpoOrganization = () => {
 
   const validationSchema = Yup.object().shape({
     name: Yup.string().required('Required'),
-    registeredUnder: Yup.string().required('Required'),
     registrationNumber: Yup.string().required('Required'),
     dateOfRegistrationDay: Yup.number()
       .min(1, 'Day must be in the range 1-31')
@@ -98,7 +90,6 @@ const RegisterNpoOrganization = () => {
       .min(1900, `Year must be in the range 1900-${currentYear}`)
       .max(currentYear, `Year must be in the range 1900-${currentYear}`)
       .required('Required'),
-    proofImage: Yup.mixed().required('Required'),
     activities: Yup.string()
       .min(1, 'Please fill in something about your organization')
       .max(2000, 'You have reached the limit of 2000 characters')
@@ -122,12 +113,10 @@ const RegisterNpoOrganization = () => {
   const formik = useFormik({
     initialValues: submittedForm || {
       name: '',
-      registeredUnder: '',
       registrationNumber: '',
       dateOfRegistrationDay: '',
       dateOfRegistrationMonth: '',
       dateOfRegistrationYear: '',
-      proofImage: null,
       activities: '',
     },
     enableReinitialize: true,
@@ -163,39 +152,22 @@ const RegisterNpoOrganization = () => {
       />
       <form onSubmit={formik.handleSubmit}>
         <Stack spacing="loose">
-          <Select
-            label="Organization you are from"
-            name="name"
-            options={organizations}
-            placeholder="Organization"
-            {...formik.getFieldProps('name')}
-            error={formik.touched.name && formik.errors.name ? formik.errors.name : ''}
-          />
-          <ChoiceGroup
-            name="registeredUnder"
-            label="Declare who your organization registered under"
-            {...formik.getFieldProps('registeredUnder')}
-            error={formik.touched.registeredUnder && formik.errors.registeredUnder ? formik.errors.registeredUnder : ''}
-            onChange={(event) => {
-              formik.setFieldValue('registeredUnder', event.target.value);
-            }}
-          >
-            <Radio
-              label="Registry of Societies"
-              value={REGISTRY_OF_SOCIETIES}
-              checked={REGISTRY_OF_SOCIETIES === formik.values.registeredUnder}
+          <Stack spacing="none">
+            <Select
+              label="Organization you are from"
+              name="name"
+              options={organizations}
+              placeholder="Organization"
+              {...formik.getFieldProps('name')}
+              error={formik.touched.name && formik.errors.name ? formik.errors.name : ''}
             />
-            <Radio
-              label="Commissioner of Charities"
-              value={COMMISSIONER_OF_CHARITIES}
-              checked={COMMISSIONER_OF_CHARITIES === formik.values.registeredUnder}
-            />
-            <Radio
-              label="Affiliated to the National Council of Social Service"
-              value={AFFILIATED_NATIONAL_COUNCIL_OF_SOCIAL_SERVICE}
-              checked={AFFILIATED_NATIONAL_COUNCIL_OF_SOCIAL_SERVICE === formik.values.registeredUnder}
-            />
-          </ChoiceGroup>
+            {formik.touched.name && formik.errors.name ? null : (
+              <TextLink size="small" type="secondary">
+                Email us at support.giftforgood@gmail.com if your organization is not on the list.
+              </TextLink>
+            )}
+          </Stack>
+
           <InputField
             label="Registration Number"
             name="registrationNumber"
@@ -238,22 +210,6 @@ const RegisterNpoOrganization = () => {
               {...formik.getFieldProps('dateOfRegistrationYear')}
             />
           </InputGroup>
-
-          <InputFile
-            label="Proof of Registration"
-            allowedFileTypes={['.pdf']}
-            {...formik.getFieldProps('proofImage')}
-            error={formik.touched.proofImage && formik.errors.proofImage ? formik.errors.proofImage : ''}
-            fileName={formik.values.proofImage ? formik.values.proofImage.name : ''}
-            help={
-              <div>
-                Supported files: <strong>PDF</strong>
-              </div>
-            }
-            onChange={(event) => {
-              formik.setFieldValue('proofImage', event.currentTarget.files[0]);
-            }}
-          />
 
           <Textarea
             label="Organization activities"
