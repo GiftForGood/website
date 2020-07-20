@@ -36,6 +36,16 @@ const StyledTextareaAutosize = styled(TextareaAutosize)`
   padding: 10px 10px;
   font-family: 'Trebuchet MS';
   resize: none;
+
+  /* 
+     To prevent auto zoom in on iphones, since inputs with font size that are less than 16px will be auto zoomed in.
+     Solution taken from: https://thingsthemselves.com/no-input-zoom-in-safari-on-iphone-the-pixel-perfect-way/
+   */
+  font-size: 16px;
+  width: 133.333333333%;
+  margin-right: calc(-33.333333333% + 48px) !important;
+  transform: scale(0.75);
+  transform-origin: left;
 `;
 
 const ChatDialogInputRow = ({ selectedChatId, setSelectedChatId, isNewChat, setIsNewChat, postType, postId }, ref) => {
