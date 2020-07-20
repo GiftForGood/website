@@ -45,19 +45,13 @@ const getMessageContent = (
   sender,
   loggedInUser,
   selectedChatId,
-  messageContainerHeight
+  offsetHeight
 ) => {
   if (messageContentType === 'text') {
     return <ChatBubbleForText text={content} isByLoggedInUser={isByLoggedInUser} />;
   }
   if (messageContentType === 'image') {
-    return (
-      <ChatBubbleForImage
-        imageUrl={content}
-        isByLoggedInUser={isByLoggedInUser}
-        messageContainerHeight={messageContainerHeight}
-      />
-    );
+    return <ChatBubbleForImage imageUrl={content} isByLoggedInUser={isByLoggedInUser} offsetHeight={offsetHeight} />;
   }
   if (messageContentType === 'calendar') {
     const dateTimes = content.split(','); // dateTimes are separated by comma delimiter
@@ -75,7 +69,7 @@ const getMessageContent = (
   return <div>N.A.</div>;
 };
 
-export const LeftMessageSection = ({ message, loggedInUser, selectedChatId, messageContainerHeight }) => {
+export const LeftMessageSection = ({ message, loggedInUser, selectedChatId, offsetHeight }) => {
   const { content, sender, dateTime, contentType } = message;
   return (
     <LeftMessageSectionContainer>
@@ -83,15 +77,7 @@ export const LeftMessageSection = ({ message, loggedInUser, selectedChatId, mess
         <ProfileAvatar imageUrl={sender.profileImageUrl.small || sender.profileImageUrl.raw} width={25} height={25} />
         <LeftColumnStackContainer>
           <Stack direction="column" spacing="extraTight">
-            {getMessageContent(
-              contentType,
-              content,
-              false,
-              sender,
-              loggedInUser,
-              selectedChatId,
-              messageContainerHeight
-            )}
+            {getMessageContent(contentType, content, false, sender, loggedInUser, selectedChatId, offsetHeight)}
             <GreyText size="tiny">{getTimeDifferenceFromNow(dateTime)}</GreyText>
           </Stack>
         </LeftColumnStackContainer>
@@ -100,7 +86,7 @@ export const LeftMessageSection = ({ message, loggedInUser, selectedChatId, mess
   );
 };
 
-export const RightMessageSection = ({ message, loggedInUser, selectedChatId, messageContainerHeight }) => {
+export const RightMessageSection = ({ message, loggedInUser, selectedChatId, offsetHeight }) => {
   const { content, sender, dateTime, contentType } = message;
   return (
     <Stack direction="column" align="end" spaceAfter="none" grow={false}>
@@ -108,15 +94,7 @@ export const RightMessageSection = ({ message, loggedInUser, selectedChatId, mes
         <Stack direction="row">
           <RightColumnStackContainer>
             <Stack direction="column" spacing="extraTight" align="end">
-              {getMessageContent(
-                contentType,
-                content,
-                true,
-                sender,
-                loggedInUser,
-                selectedChatId,
-                messageContainerHeight
-              )}
+              {getMessageContent(contentType, content, true, sender, loggedInUser, selectedChatId, offsetHeight)}
               <GreyText size="tiny">{getTimeDifferenceFromNow(dateTime)}</GreyText>
             </Stack>
           </RightColumnStackContainer>
