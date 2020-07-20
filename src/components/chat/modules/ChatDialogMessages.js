@@ -74,7 +74,7 @@ const ChatDialogMessages = ({ postType, loggedInUser, selectedChatId, isNewChat,
 
   const scrollToBottomIfSentByLoggedInUser = (chatMessage) => {
     if (messagesEndRef && messagesEndRef.current && chatMessage.sender.id === loggedInUser.user.userId) {
-      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+      messagesEndRef.current.scrollIntoView();
     }
   };
 
