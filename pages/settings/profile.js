@@ -6,6 +6,7 @@ import NpoSettingProfilePage from '../../src/components/settings-profile/npo/pag
 import DonorSettingProfilePage from '../../src/components/settings-profile/donor/pages/DonorSettingProfilePage';
 import { isNpoUser, isDonorUser } from '../../utils/authentication/userType';
 import Footer from '../../src/components/footer/Footer';
+import Header from '../../src/components/header';
 
 const TopNavigationBar = dynamic(() => import('../../src/components/navbar/modules/TopNavigationBar'), { ssr: false });
 
@@ -25,6 +26,7 @@ export async function getServerSideProps({ params, req, res, query }) {
 const SettingsProfilePage = ({ user }) => {
   return (
     <SessionProvider user={user}>
+      <Header title="Settings | GiftForGood" />
       <TopNavigationBar />
       {isNpoUser(user.user) ? <NpoSettingProfilePage /> : isDonorUser(user.user) ? <DonorSettingProfilePage /> : null}
       <Footer />

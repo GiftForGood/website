@@ -5,6 +5,8 @@ import { isAuthenticated } from '../../utils/authentication/authentication';
 import api from '../../utils/api';
 import Error from 'next/error';
 import ChatPage from '../../src/components/chat/pages/ChatPage';
+import Header from '../../src/components/header';
+
 const TopNavigationBar = dynamic(() => import('../../src/components/navbar/modules/TopNavigationBar'), {
   ssr: false,
 });
@@ -64,6 +66,7 @@ const ViewOwnChats = ({ user, postId, isViewingChatsForMyPost, postType, hasErro
 
   return (
     <SessionProvider user={user}>
+      <Header title="Chats | GiftForGood" />
       <TopNavigationBar />
       <ChatPage user={user} postId={postId} isViewingChatsForMyPost={isViewingChatsForMyPost} postType={postType} />
     </SessionProvider>

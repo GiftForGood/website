@@ -11,6 +11,7 @@ import ProfileHeaderBar from '../modules/ProfileHeaderBar';
 import ReviewPanel from '../modules/ReviewPanel';
 import ProfilePanel from '../modules/ProfilePanel';
 import PastDonationsPanel from '../modules/PastDonationsPanel';
+import Header from '../../header';
 
 const Wrapper = styled.div`
   margin: 0 auto;
@@ -51,6 +52,7 @@ const DonorProfilePage = ({ userId }) => {
 
   return (
     <Wrapper>
+      <Header title={donor ? donor.name : 'Profile'} />
       <Grid desktop={{ columns: '1fr 5fr' }}>
         <ProfilePanel user={donor} />
         <Stack>
