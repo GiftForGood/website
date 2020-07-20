@@ -29,8 +29,8 @@ const mobileHeights = {
 
 const MessageContainer = styled.div`
   width: 100%;
-  min-height: ${({ messageContainerHeight }) => messageContainerHeight}px;
-  max-height: ${({ messageContainerHeight }) => messageContainerHeight}px;
+  min-height: calc(100vh - ${({ offsetHeight }) => offsetHeight}px);
+  max-height: calc(100vh - ${({ offsetHeight }) => offsetHeight}px);
   position: relative;
   overflow-y: scroll;
   overflow-x: hidden;
@@ -129,21 +129,15 @@ const ChatDialogMessages = ({ postType, loggedInUser, selectedChatId, isNewChat,
     : mobileHeights;
 
   const sumOfOtherComponentHeights =
-    chatDialogBackButton +
-    chatDialogSeePostRow +
-    chatDialogUserRow +
-    chatDialogMessagesPadding +
-    inputRowHeight +
-    navBarHeight;
+    chatDialogBackButton + chatDialogSeePostRow + chatDialogUserRow + chatDialogMessagesPadding + inputRowHeight;
 
-  // get the height left for the ChatDialogMessages component
-  const messageContainerHeight = window.innerHeight - sumOfOtherComponentHeights;
+  const offsetHeight = navBarHeight + sumOfOtherComponentHeights;
 
   // display tips before first message is being sent for a wish
   if (isNewChat && !selectedChatId && postType === wishes) {
     return (
       <CardSection>
-        <MessageContainer messageContainerHeight={messageContainerHeight}>
+        <MessageContainer offsetHeight={offsetHeight}>
           <NewChatTips postType={postType} />
         </MessageContainer>
       </CardSection>
@@ -152,7 +146,7 @@ const ChatDialogMessages = ({ postType, loggedInUser, selectedChatId, isNewChat,
 
   return (
     <CardSection>
-      <MessageContainer messageContainerHeight={messageContainerHeight}>
+      <MessageContainer offsetHeight={offsetHeight}>
         <InfiniteScroll
           loadMore={handleOnSeeMore}
           hasMore={shouldSeeMore}
@@ -172,7 +166,7 @@ const ChatDialogMessages = ({ postType, loggedInUser, selectedChatId, isNewChat,
                     message={message}
                     loggedInUser={loggedInUser}
                     selectedChatId={selectedChatId}
-                    messageContainerHeight={messageContainerHeight}
+                    offsetHeight={offsetHeight}
                   />
                 ) : (
                   <LeftMessageSection
@@ -180,7 +174,7 @@ const ChatDialogMessages = ({ postType, loggedInUser, selectedChatId, isNewChat,
                     message={message}
                     loggedInUser={loggedInUser}
                     selectedChatId={selectedChatId}
-                    messageContainerHeight={messageContainerHeight}
+                    offsetHeight={offsetHeight}
                   />
                 );
               })}
