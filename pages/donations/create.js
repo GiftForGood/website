@@ -6,6 +6,8 @@ import SessionProvider from '../../src/components/session/modules/SessionProvide
 import CreateDonationPage from '../../src/components/createDonation/pages/createDonationPage';
 import Footer from '../../src/components/footer/Footer';
 import dynamic from 'next/dynamic';
+import Header from '../../src/components/header';
+
 const TopNavigationBar = dynamic(() => import('../../src/components/navbar/modules/TopNavigationBar'), { ssr: false });
 
 export async function getServerSideProps({ params, req, res, query }) {
@@ -26,6 +28,7 @@ export async function getServerSideProps({ params, req, res, query }) {
 const CreateDonations = ({ user }) => {
   return (
     <SessionProvider user={user}>
+      <Header title="Create Donations | GiftForGood" />
       <TopNavigationBar />
       <CreateDonationPage mode="create" />
       <Footer />

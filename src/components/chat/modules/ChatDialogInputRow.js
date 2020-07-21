@@ -8,6 +8,7 @@ import { donations } from '../../../../utils/constants/postType';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import TextareaAutosize from 'react-textarea-autosize';
 import { useRouter } from 'next/router';
+import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 
 const InputRowContainer = styled.div`
   width: 95%;
@@ -53,6 +54,7 @@ const ChatDialogInputRow = ({ selectedChatId, setSelectedChatId, isNewChat, setI
   const [alertMessage, setAlertMessage] = useState('');
   const textAreaRef = useRef(null);
   const router = useRouter();
+  const { isDesktop } = useMediaQuery();
 
   const handleSendTextMessage = () => {
     if (inputMessage.trim().length <= 0) {
@@ -120,7 +122,7 @@ const ChatDialogInputRow = ({ selectedChatId, setSelectedChatId, isNewChat, setI
           ref={textAreaRef}
           minRows={1}
           maxRows={5}
-          autoFocus={true}
+          autoFocus={isDesktop}
           placeholder="Type your messages here..."
           id="chat-input"
           value={inputMessage}

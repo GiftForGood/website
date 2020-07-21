@@ -8,6 +8,7 @@ import dynamic from 'next/dynamic';
 import api from '../../utils/api';
 import Error from 'next/error';
 import Footer from '../../src/components/footer/Footer';
+import Header from '../../src/components/header';
 
 const TopNavigationBar = dynamic(() => import('../../src/components/navbar/modules/TopNavigationBar'), { ssr: false });
 
@@ -42,6 +43,8 @@ export async function getServerSideProps({ params, req, res, query }) {
 const CreateWishes = ({ user, wish, isMine }) => {
   return (
     <SessionProvider user={user}>
+      <Header title="Edit Wishes | GiftForGood" />
+
       <TopNavigationBar />
       {wish ? null : <Error statusCode={404} />}
       {isMine ? null : <Error statusCode={404} />}
