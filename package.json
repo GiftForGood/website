@@ -24,6 +24,7 @@
     "next-redux-wrapper": "^6.0.0",
     "react": "^16.13.1",
     "react-beautiful-dnd": "^13.0.0",
+    "react-device-detect": "^1.13.1",
     "react-dom": "^16.13.1",
     "react-dropzone": "^11.0.1",
     "react-instantsearch-dom": "^6.6.0",
