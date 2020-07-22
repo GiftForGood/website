@@ -1,3 +1,8 @@
+/**
+ * Credits to @danbovey with his infinite scroller implementation here: 
+ * https://github.com/danbovey/react-infinite-scroller
+ */
+
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
