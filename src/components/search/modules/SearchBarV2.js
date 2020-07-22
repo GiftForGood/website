@@ -17,7 +17,7 @@ const ButtonWrapper = styled.div`
   min-width: 125px;
   width: 95vw;
   ${media.largeMobile(css`
-    width: 0;
+    width: 0vw;
   `)};
 `;
 
