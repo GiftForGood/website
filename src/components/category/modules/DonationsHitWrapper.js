@@ -33,7 +33,7 @@ const DonationsHitWrapper = ({ hits, category, hasPrevious, hasMore, refinePrevi
       >
         {hits.map((hit) => {
           const {
-            donationId,
+            objectID,
             coverImageUrl,
             title,
             description,
@@ -43,11 +43,11 @@ const DonationsHitWrapper = ({ hits, category, hasPrevious, hasMore, refinePrevi
             validPeriodFrom,
             validPeriodTo,
           } = hit;
-          const postHref = `/donations/${donationId}`;
+          const postHref = `/donations/${objectID}`;
           const validPeriod = `${getFormattedDate(validPeriodFrom)} - ${getFormattedDate(validPeriodTo)}`;
           return (
             <DonationCard
-              key={donationId}
+              key={objectID}
               name={user.userName}
               title={title}
               description={description}
