@@ -31,59 +31,58 @@ const SearchBar = ({ onEnterPressed }) => {
     setSearchQuery(e.target.value);
   };
 
+  const PopoverDesktopTablet = () => (
+    <Popover
+      content={
+        <div>
+          <ListChoice title="Wishes" onClick={() => setSelectedIndex('Wishes')} />
+          <ListChoice title="Donations" onClick={() => setSelectedIndex('Donations')} />
+        </div>
+      }
+      noPadding
+      preferredPosition="bottom"
+    >
+      <ButtonWrapper>
+        <ButtonLink iconRight={<ChevronDown />} size="normal" transparent type="secondary">
+          {selectedIndex}
+        </ButtonLink>
+      </ButtonWrapper>
+    </Popover>
+  );
+
+  const PopoverMobile = () => (
+    <Popover
+      content={
+        <div>
+          <ListChoice title="Wishes" onClick={() => setSelectedIndex('Wishes')} />
+          <ListChoice title="Donations" onClick={() => setSelectedIndex('Donations')} />
+        </div>
+      }
+      noPadding
+      preferredPosition="bottom"
+    >
+      <ButtonWrapper>
+        <ButtonLink iconRight={<ChevronDown />} size="normal" transparent type="secondary" fullWidth>
+          {selectedIndex}
+        </ButtonLink>
+      </ButtonWrapper>
+    </Popover>
+  );
+
   return (
     <SearchWrapper>
       <Stack
         spacing="none"
         direction="column"
+        align="center"
         tablet={{
-          spacing: 'none',
           direction: 'row',
         }}
         desktop={{
-          spacing: 'none',
           direction: 'row',
         }}
       >
-        {isDesktop || isTablet ? null : (
-          <Stack justify="center">
-            <Popover
-              content={
-                <div>
-                  <ListChoice title="Wishes" onClick={() => setSelectedIndex('Wishes')} />
-                  <ListChoice title="Donations" onClick={() => setSelectedIndex('Donations')} />
-                </div>
-              }
-              noPadding
-              preferredPosition="bottom"
-            >
-              <ButtonWrapper>
-                <ButtonLink iconRight={<ChevronDown />} size="normal" transparent type="secondary" fullWidth>
-                  {selectedIndex}
-                </ButtonLink>
-              </ButtonWrapper>
-            </Popover>
-          </Stack>
-        )}
-
-        {isDesktop || isTablet ? (
-          <Popover
-            content={
-              <div>
-                <ListChoice title="Wishes" onClick={() => setSelectedIndex('Wishes')} />
-                <ListChoice title="Donations" onClick={() => setSelectedIndex('Donations')} />
-              </div>
-            }
-            noPadding
-            preferredPosition="bottom"
-          >
-            <ButtonWrapper>
-              <ButtonLink iconRight={<ChevronDown />} size="normal" transparent type="secondary" fullWidth>
-                {selectedIndex}
-              </ButtonLink>
-            </ButtonWrapper>
-          </Popover>
-        ) : null}
+        {isDesktop || isTablet ? <PopoverDesktopTablet /> : <PopoverMobile />}
 
         <InputField
           inputMode="search"
