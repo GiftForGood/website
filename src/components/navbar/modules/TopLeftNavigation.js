@@ -14,27 +14,21 @@ const SearchBarContainer = styled.div`
   margin-right: 15px !important;
 
   ${media.largeMobile(css`
-    min-width: 350px;
+    min-width: 380px;
   `)};
 
   ${media.largeDesktop(css`
     min-width: 450px;
   `)};
 `;
+
 const TopLeftNavigation = ({ onHamburgerClick }) => {
-  const { isDesktop, isLargeDesktop } = useMediaQuery();
+  const { isDesktop } = useMediaQuery();
   return (
     <Stack direction="row" shrink spacing="tight">
       {isDesktop ? (
-        isLargeDesktop ? (
-          <LogoButton src={companyLogoImagePath} height={45} href={'/'} />
-        ) : (
-          <LogoButton src={companyLogoImagePath} height={35} href={'/'} />
-        )
-      ) : null}
-
-      {isDesktop ? (
         <>
+          <LogoButton src={companyLogoImagePath} height={45} href={'/'} />
           <SearchBarContainer>
             <NavSearchBar />
           </SearchBarContainer>
