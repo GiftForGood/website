@@ -6,7 +6,7 @@ import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import { colors } from '../../../../utils/constants/colors';
 import { MODIFIED, ADDED } from '../../../../utils/constants/chatSubscriptionChange';
-import InfiniteScroll from 'react-infinite-scroller';
+import InfiniteScroll from '../../scroller/InfiniteScroller';
 import { USER_CHATS_BATCH_SIZE } from '../../../../utils/api/constants';
 
 const ListOfChatsContainer = styled.div`

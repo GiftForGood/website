@@ -5,10 +5,11 @@ import styled from 'styled-components';
 import { CardSection } from '@kiwicom/orbit-components/lib/Card';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 import NewChatTips from './NewChatTipsForWish';
-import InfiniteScroll from 'react-infinite-scroller';
+import InfiniteScroll from '../../scroller/InfiniteScroller';
 import { wishes } from '../../../../utils/constants/postType';
 import { CHAT_MESSAGES_BATCH_SIZE } from '../../../../utils/api/constants';
 import { LeftMessageSection, RightMessageSection } from './ChatMessageSection';
+import useStayScrolled from 'react-stay-scrolled';
 
 /**
  * To be changed if any of the heights change, the extra "+1 or +2" for the top/bottom borders
@@ -48,6 +49,8 @@ const ChatDialogMessages = ({ postType, loggedInUser, selectedChatId, isNewChat,
   // to have messages initially
   const [shouldSeeMore, setShouldSeeMore] = useState(!isNewChat);
   const { isTablet } = useMediaQuery();
+  const scrollerRef = useRef(null);
+  const { stayScrolled, scrollBottom } = useStayScrolled(scrollerRef);
 
   useEffect(() => {
     // reset values every time selectedChatId changes
@@ -70,11 +73,9 @@ const ChatDialogMessages = ({ postType, loggedInUser, selectedChatId, isNewChat,
     };
   }, [selectedChatId]);
 
-  const messagesEndRef = useRef(null); // to keep track of the bottom of the messages
-
   const scrollToBottomIfSentByLoggedInUser = (chatMessage) => {
-    if (messagesEndRef && messagesEndRef.current && chatMessage.sender.id === loggedInUser.user.userId) {
-      messagesEndRef.current.scrollIntoView();
+    if (chatMessage.sender.id === loggedInUser.user.userId) {
+      scrollBottom();
     }
   };
 
@@ -119,6 +120,7 @@ const ChatDialogMessages = ({ postType, loggedInUser, selectedChatId, isNewChat,
         // loaded all chat messages
         setShouldSeeMore(false);
       }
+      stayScrolled(); // so that adding new messages won't shift the scroll position
     });
   };
 
@@ -137,7 +139,7 @@ const ChatDialogMessages = ({ postType, loggedInUser, selectedChatId, isNewChat,
   if (isNewChat && !selectedChatId && postType === wishes) {
     return (
       <CardSection>
-        <MessageContainer offsetHeight={offsetHeight}>
+        <MessageContainer offsetHeight={offsetHeight} ref={scrollerRef}>
           <NewChatTips postType={postType} />
         </MessageContainer>
       </CardSection>
@@ -146,7 +148,7 @@ const ChatDialogMessages = ({ postType, loggedInUser, selectedChatId, isNewChat,
 
   return (
     <CardSection>
-      <MessageContainer offsetHeight={offsetHeight}>
+      <MessageContainer offsetHeight={offsetHeight} ref={scrollerRef}>
         <InfiniteScroll
           loadMore={handleOnSeeMore}
           hasMore={shouldSeeMore}
@@ -178,7 +180,6 @@ const ChatDialogMessages = ({ postType, loggedInUser, selectedChatId, isNewChat,
                   />
                 );
               })}
-            <div ref={messagesEndRef} />
           </Stack>
         </InfiniteScroll>
       </MessageContainer>

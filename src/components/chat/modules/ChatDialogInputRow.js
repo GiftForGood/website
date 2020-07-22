@@ -9,6 +9,7 @@ import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import TextareaAutosize from 'react-textarea-autosize';
 import { useRouter } from 'next/router';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
+import { isMobile } from 'react-device-detect';
 
 const InputRowContainer = styled.div`
   width: 95%;
@@ -91,7 +92,8 @@ const ChatDialogInputRow = ({ selectedChatId, setSelectedChatId, isNewChat, setI
   const handleEnterInputter = (event) => {
     // enter pressed, send message (except shift + enter)
     if (event.keyCode == 13) {
-      if (!event.shiftKey) {
+      // only send message when press enter on desktop without holding shift key
+      if (!event.shiftKey && !isMobile) {
         event.preventDefault(); // prevent enter from adding a new line in text area
         handleSendTextMessage();
       }
