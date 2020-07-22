@@ -1,7 +1,7 @@
 import React from 'react';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import styled, { css } from 'styled-components';
-
+import Header from '../src/components/header';
 import ForgetPasswordPage from '../src/components/forgetPassword/pages/ForgetPasswordPage';
 
 const Wrapper = styled.div`
@@ -43,6 +43,7 @@ const Panel = styled.div`
 const ForgetPassword = () => {
   return (
     <Wrapper>
+      <Header title="Forget Password | GiftForGood" />
       <Container>
         <Panel>
           <ForgetPasswordPage />
