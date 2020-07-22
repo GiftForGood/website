@@ -9,7 +9,6 @@ import InfiniteScroll from '../../scroller/InfiniteScroller';
 import { wishes } from '../../../../utils/constants/postType';
 import { CHAT_MESSAGES_BATCH_SIZE } from '../../../../utils/api/constants';
 import { LeftMessageSection, RightMessageSection } from './ChatMessageSection';
-import useStayScrolled from 'react-stay-scrolled';
 
 /**
  * To be changed if any of the heights change, the extra "+1 or +2" for the top/bottom borders
@@ -49,8 +48,7 @@ const ChatDialogMessages = ({ postType, loggedInUser, selectedChatId, isNewChat,
   // to have messages initially
   const [shouldSeeMore, setShouldSeeMore] = useState(!isNewChat);
   const { isTablet } = useMediaQuery();
-  const scrollerRef = useRef(null);
-  const { stayScrolled, scrollBottom } = useStayScrolled(scrollerRef);
+  const bottomOfScrollerRef = useRef(null);
 
   useEffect(() => {
     // reset values every time selectedChatId changes
@@ -75,7 +73,7 @@ const ChatDialogMessages = ({ postType, loggedInUser, selectedChatId, isNewChat,
 
   const scrollToBottomIfSentByLoggedInUser = (chatMessage) => {
     if (chatMessage.sender.id === loggedInUser.user.userId) {
-      scrollBottom();
+      bottomOfScrollerRef.current.scrollIntoView();
     }
   };
 
@@ -120,7 +118,6 @@ const ChatDialogMessages = ({ postType, loggedInUser, selectedChatId, isNewChat,
         // loaded all chat messages
         setShouldSeeMore(false);
       }
-      stayScrolled(); // so that adding new messages won't shift the scroll position
     });
   };
 
@@ -148,7 +145,7 @@ const ChatDialogMessages = ({ postType, loggedInUser, selectedChatId, isNewChat,
 
   return (
     <CardSection>
-      <MessageContainer offsetHeight={offsetHeight} ref={scrollerRef}>
+      <MessageContainer offsetHeight={offsetHeight}>
         <InfiniteScroll
           loadMore={handleOnSeeMore}
           hasMore={shouldSeeMore}
@@ -181,6 +178,7 @@ const ChatDialogMessages = ({ postType, loggedInUser, selectedChatId, isNewChat,
                 );
               })}
           </Stack>
+          <div ref={bottomOfScrollerRef} />
         </InfiniteScroll>
       </MessageContainer>
     </CardSection>
