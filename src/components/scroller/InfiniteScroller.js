@@ -1,5 +1,5 @@
 /**
- * Credits to @danbovey with his infinite scroller implementation here: 
+ * Credits to @danbovey with his infinite scroller implementation here:
  * https://github.com/danbovey/react-infinite-scroller
  */
 
