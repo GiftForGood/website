@@ -129,7 +129,7 @@ const NotLoggedInButtons = () => {
   return (
     <>
       <Mobile>
-        <ButtonLink iconLeft={<Search />} transparent type="secondary" href="/search" width="20px"/>
+        <ButtonLink iconLeft={<Search />} transparent type="secondary" href="/search" width="20px" />
       </Mobile>
 
       <ButtonLink transparent type="secondary" onClick={onRegisterClick}>
