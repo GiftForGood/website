@@ -7,7 +7,7 @@ import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import SeeMoreButtonStyle from '../../buttons/SeeMoreButton';
 import BlackText from '../../text/BlackText';
 import { DONATIONS_BATCH_SIZE } from '../../../../utils/api/constants';
-import InfiniteScroll from 'react-infinite-scroller';
+import InfiniteScroll from '../../scroller/InfiniteScroller';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 import { getFormattedDate } from '../../../../utils/api/time';
 
