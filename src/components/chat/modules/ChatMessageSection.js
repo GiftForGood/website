@@ -16,6 +16,11 @@ const RightColumnStackContainer = styled.div`
 `;
 
 const RightMessageSectionContainer = styled.div`
+  /* 
+    Needed to prevent negative z-index for ios safari: 
+    https://css-tricks.com/forums/topic/safari-for-ios-z-index-ordering-bug-while-scrolling-a-page-with-a-fixed-element/  
+  */
+  -webkit-transform: translate3d(0, 0, 0);
   width: fit-content;
   max-width: 90%;
   ${media.tablet(css`
@@ -28,6 +33,11 @@ const LeftColumnStackContainer = styled.div`
 `;
 
 const LeftMessageSectionContainer = styled.div`
+  /* 
+    Needed to prevent negative z-index for ios safari: 
+    https://css-tricks.com/forums/topic/safari-for-ios-z-index-ordering-bug-while-scrolling-a-page-with-a-fixed-element/  
+  */
+  -webkit-transform: translate3d(0, 0, 0);
   width: fit-content;
   max-width: 90%;
   ${media.tablet(css`
