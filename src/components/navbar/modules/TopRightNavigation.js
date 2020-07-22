@@ -128,6 +128,10 @@ const NotLoggedInButtons = () => {
   const onRegisterClick = () => router.push('/register');
   return (
     <>
+      <Mobile>
+        <ButtonLink iconLeft={<Search />} transparent type="secondary" href="/search" width="20px"/>
+      </Mobile>
+
       <ButtonLink transparent type="secondary" onClick={onRegisterClick}>
         Register
       </ButtonLink>
