@@ -4,26 +4,35 @@ import { MenuHamburger } from '@kiwicom/orbit-components/lib/icons';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 import LogoButton from '../../buttons/LogoButton';
 import { companyLogoImagePath } from '../../../../utils/constants/imagePaths';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import NavSearchBar from '../../search/modules/NavSearchBar';
 import Link from 'next/link';
+import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 
 const SearchBarContainer = styled.div`
   min-width: 450px;
   margin-right: 15px !important;
+
+  ${media.largeMobile(css`
+    min-width: 380px;
+  `)};
+
+  ${media.largeDesktop(css`
+    min-width: 450px;
+  `)};
 `;
+
 const TopLeftNavigation = ({ onHamburgerClick }) => {
-  const { isDesktop, isTablet } = useMediaQuery();
+  const { isDesktop } = useMediaQuery();
   return (
     <Stack direction="row" shrink spacing="tight">
-      {isDesktop || isTablet ? (
+      {isDesktop ? (
         <>
           <LogoButton src={companyLogoImagePath} height={45} href={'/'} />
-          {isDesktop && (
-            <SearchBarContainer>
-              <NavSearchBar />
-            </SearchBarContainer>
-          )}
+          <SearchBarContainer>
+            <NavSearchBar />
+          </SearchBarContainer>
+
           <Link href="/">
             <ButtonLink transparent type="secondary" href={'/'}>
               Wishes
