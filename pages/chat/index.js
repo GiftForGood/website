@@ -28,6 +28,7 @@ export async function getServerSideProps({ params, req, res, query }) {
     };
   }
 
+  const chatId = query.chatId ? query.chatId : null;
   const postId = query.postId ? query.postId : null;
   const postType = query.postType ? query.postType : null;
   let isViewingChatsForMyPost = false;
@@ -52,6 +53,7 @@ export async function getServerSideProps({ params, req, res, query }) {
   return {
     props: {
       postId,
+      chatId,
       user,
       isViewingChatsForMyPost,
       postType,
@@ -59,7 +61,7 @@ export async function getServerSideProps({ params, req, res, query }) {
   };
 }
 
-const ViewOwnChats = ({ user, postId, isViewingChatsForMyPost, postType, hasError }) => {
+const ViewOwnChats = ({ user, postId, chatId, isViewingChatsForMyPost, postType, hasError }) => {
   if (hasError) {
     return <Error />;
   }
@@ -68,7 +70,13 @@ const ViewOwnChats = ({ user, postId, isViewingChatsForMyPost, postType, hasErro
     <SessionProvider user={user}>
       <Header title="Chats | GiftForGood" />
       <TopNavigationBar />
-      <ChatPage user={user} postId={postId} isViewingChatsForMyPost={isViewingChatsForMyPost} postType={postType} />
+      <ChatPage
+        user={user}
+        chatId={chatId}
+        postId={postId}
+        isViewingChatsForMyPost={isViewingChatsForMyPost}
+        postType={postType}
+      />
     </SessionProvider>
   );
 };

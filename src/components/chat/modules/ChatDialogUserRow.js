@@ -60,7 +60,6 @@ const ChatDialogUserRow = ({
   const handleSetStatusToComplete = () => setStatus(COMPLETED);
   const handleShowSuggestDateModal = () => setShowSuggestDateModal(true);
   const handleCloseSuggestDateModal = () => setShowSuggestDateModal(false);
-  const isLoggedInUserThePostOwner = loggedInUser.user.userId === postOwnerId;
 
   const handleCompletePost = () => {
     setShowConfirmCompletionModal(true);
@@ -78,11 +77,7 @@ const ChatDialogUserRow = ({
         .join(','); // dates are separated by comma
       if (isNewChat) {
         sendFirstCalendarMessage(message)
-          .then((chat) => {
-            // need to get the chat id from the newly created chat to select chat id
-            setSelectedChatId(chat.chatId);
-            setIsNewChat(false);
-          })
+          .then(() => {})
           .catch((err) => console.error(err));
       } else {
         api.chats.sendCalendarMessage(selectedChatId, message).catch((err) => console.error(err));
@@ -95,8 +90,10 @@ const ChatDialogUserRow = ({
     const method =
       postType === donations ? 'sendInitialCalendarMessageForDonation' : 'sendInitialCalendarMessageForWish';
     const [rawChat, rawFirstMessage] = await api.chats[method](postId, calendarRawString);
-    router.push(`/chat/${rawChat.data().chatId}`);
-    return rawChat.data();
+    const chatId = rawChat.data().chatId;
+    setIsNewChat(false);
+    setSelectedChatId(chatId);
+    router.push(`/chat`, `/chat?chatId=${chatId}`, { shallow: true });
   };
 
   return (
@@ -126,7 +123,7 @@ const ChatDialogUserRow = ({
                 size="small"
                 onClick={handleCompletePost}
                 asComponent={CompleteButton}
-                disabled={!isLoggedInUserThePostOwner}
+                disabled={loggedInUser.user.userId !== postOwnerId}
               >
                 Complete
               </Button>
