@@ -55,7 +55,7 @@ const DonationsHitWrapper = ({ hits, category, hasPrevious, hasMore, refinePrevi
               coverImageUrl={coverImageUrl}
               postedDateTime={postedDateTime}
               postHref={postHref}
-              locations={''}
+              locations={locations.map((location) => location.name).join(', ')}
               validPeriod={validPeriod}
               categoryId={category.id}
               categoryName={category.name}
