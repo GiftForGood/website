@@ -7,6 +7,7 @@ import Error from 'next/error';
 import styled from 'styled-components';
 import { EMAIL_BAR_HEIGHT, NAVBAR_HEIGHT } from '../../../../utils/constants/navbar';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
+import useWindowDimensions from '../../../../utils/hooks/useWindowDimensions';
 
 const NoChatsContainer = styled.div`
   margin: 0 auto;
@@ -147,6 +148,7 @@ const ChatPage = ({ user, chatId, postId, postType, isViewingChatsForMyPost }) =
   }, [selectedChatId]);
 
   const { isTablet } = useMediaQuery();
+  const { height } = useWindowDimensions();
   const navBarConstant = isTablet ? 'DESKTOP' : 'MOBILE';
   const navBarOffsetHeight = user
     ? user.user.emailVerified
@@ -155,7 +157,7 @@ const ChatPage = ({ user, chatId, postId, postType, isViewingChatsForMyPost }) =
     : NAVBAR_HEIGHT[navBarConstant];
 
   const gridContainerStyle = {
-    height: `calc(100vh - ${navBarOffsetHeight}px)`,
+    height: `${height - navBarOffsetHeight}px`,
     width: '100vw',
   };
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import Measure from 'react-measure';
 import { Stack, ButtonLink } from '@kiwicom/orbit-components/lib';
 import ChatDialogUserRow from './ChatDialogUserRow';
@@ -42,7 +42,6 @@ const ChatDialogContent = ({
   // default as 68 px which is single line text area, modified when there
   // is more than one line in the text area in input row
   const [inputRowHeight, setInputRowHeight] = useState(68);
-  const chatDialogEndRef = useRef(null);
 
   let chatPostTitle, oppositeUser, chatPostType, chatPostId, postOwnerId, postEnquirerId, postStatus;
   const isCreatingNewChatForAPost = postId !== null && isNewChat;
@@ -66,10 +65,6 @@ const ChatDialogContent = ({
     postEnquirerId = chat.post.type === donations ? chat.npo.id : chat.donor.id;
     postStatus = chat.post.status;
   }
-
-  useEffect(() => {
-    chatDialogEndRef.current.scrollIntoView();
-  }, []);
 
   return (
     <>
@@ -123,7 +118,6 @@ const ChatDialogContent = ({
           />
         )}
       </Measure>
-      <div ref={chatDialogEndRef} />
     </>
   );
 };
