@@ -9,6 +9,7 @@ import InfiniteScroll from '../../scroller/InfiniteScroller';
 import { wishes } from '../../../../utils/constants/postType';
 import { CHAT_MESSAGES_BATCH_SIZE } from '../../../../utils/api/constants';
 import { LeftMessageSection, RightMessageSection } from './ChatMessageSection';
+import useWindowDimensions from '../../../../utils/hooks/useWindowDimensions';
 
 /**
  * To be changed if any of the heights change, the extra "+1 or +2" for the top/bottom borders
@@ -22,15 +23,15 @@ const desktopHeights = {
 
 const mobileHeights = {
   chatDialogBackButton: 44,
-  chatDialogUserRow: 104 + 1,
+  chatDialogUserRow: 108 + 1,
   chatDialogSeePostRow: 96 + 1,
   chatDialogMessagesPadding: 32 + 2,
 };
 
 const MessageContainer = styled.div`
   width: 100%;
-  min-height: calc(100vh - ${({ offsetHeight }) => offsetHeight}px);
-  max-height: calc(100vh - ${({ offsetHeight }) => offsetHeight}px);
+  min-height: ${({ offsetHeight, viewportHeight }) => viewportHeight - offsetHeight}px;
+  max-height: ${({ offsetHeight, viewportHeight }) => viewportHeight - offsetHeight}px;
   position: relative;
   overflow-y: scroll;
   overflow-x: hidden;
@@ -49,6 +50,7 @@ const ChatDialogMessages = ({ postType, loggedInUser, selectedChatId, isNewChat,
   const [shouldSeeMore, setShouldSeeMore] = useState(!isNewChat);
   const { isTablet } = useMediaQuery();
   const bottomOfScrollerRef = useRef(null);
+  const { height: viewportHeight } = useWindowDimensions();
 
   useEffect(() => {
     // reset values every time selectedChatId changes
@@ -136,7 +138,7 @@ const ChatDialogMessages = ({ postType, loggedInUser, selectedChatId, isNewChat,
   if (isNewChat && !selectedChatId && postType === wishes) {
     return (
       <CardSection>
-        <MessageContainer offsetHeight={offsetHeight} ref={scrollerRef}>
+        <MessageContainer offsetHeight={offsetHeight} ref={scrollerRef} viewportHeight={viewportHeight}>
           <NewChatTips postType={postType} />
         </MessageContainer>
       </CardSection>
@@ -145,7 +147,7 @@ const ChatDialogMessages = ({ postType, loggedInUser, selectedChatId, isNewChat,
 
   return (
     <CardSection>
-      <MessageContainer offsetHeight={offsetHeight}>
+      <MessageContainer offsetHeight={offsetHeight} viewportHeight={viewportHeight}>
         <InfiniteScroll
           loadMore={handleOnSeeMore}
           hasMore={shouldSeeMore}
