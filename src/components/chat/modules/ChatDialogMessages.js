@@ -138,7 +138,7 @@ const ChatDialogMessages = ({ postType, loggedInUser, selectedChatId, isNewChat,
   if (isNewChat && !selectedChatId && postType === wishes) {
     return (
       <CardSection>
-        <MessageContainer offsetHeight={offsetHeight} ref={scrollerRef} viewportHeight={viewportHeight}>
+        <MessageContainer offsetHeight={offsetHeight} viewportHeight={viewportHeight}>
           <NewChatTips postType={postType} />
         </MessageContainer>
       </CardSection>
