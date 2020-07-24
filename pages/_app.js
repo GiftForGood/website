@@ -8,6 +8,7 @@ import { colors } from '../utils/constants/colors';
 import store from '../store';
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
+import { initGA, logPageView } from '../utils/analytics';
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -44,6 +45,16 @@ const GlobalStyle = createGlobalStyle`
 const tokens = getTokens();
 
 class MyApp extends App {
+  
+  componentDidMount() {
+    if (!window.GA_INITIALIZED && process.env.NODE_ENV !== "development") {
+      initGA();
+      window.GA_INITIALIZED = true
+    }
+    logPageView()
+  }
+
+
   render() {
     const { Component, pageProps } = this.props;
     return (
