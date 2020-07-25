@@ -45,15 +45,13 @@ const GlobalStyle = createGlobalStyle`
 const tokens = getTokens();
 
 class MyApp extends App {
-  
   componentDidMount() {
-    if (!window.GA_INITIALIZED && process.env.NODE_ENV !== "development") {
+    if (!window.GA_INITIALIZED && process.env.NODE_ENV !== 'development') {
       initGA();
-      window.GA_INITIALIZED = true
+      window.GA_INITIALIZED = true;
     }
-    logPageView()
+    logPageView();
   }
-
 
   render() {
     const { Component, pageProps } = this.props;
