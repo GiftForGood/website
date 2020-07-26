@@ -61,8 +61,8 @@ const ChatDialogContent = ({
     oppositeUser = chat.npo.id === loggedInUser.user.userId ? chat.donor : chat.npo;
     chatPostType = chat.post.type;
     chatPostId = chat.post.id;
-    postOwnerId = chatPostType === donations ? chat.donor.id : chat.npo.id;
-    postEnquirerId = chatPostType === donations ? chat.npo.id : chat.donor.id;
+    postOwnerId = chat.post.type === donations ? chat.donor.id : chat.npo.id;
+    postEnquirerId = chat.post.type === donations ? chat.npo.id : chat.donor.id;
     postStatus = chat.post.status;
   }
 

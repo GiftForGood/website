@@ -35,7 +35,8 @@ const ChatPageTabletAndDesktop = ({
         selectedChatId={selectedChatId}
         setSelectedChatId={setSelectedChatId}
         postId={postId}
-        isCreatingNewChat={isNewChat}
+        isNewChat={isNewChat}
+        setIsNewChat={setIsNewChat}
         isViewingChatsForMyPost={isViewingChatsForMyPost}
         isShow={true}
       />
@@ -75,6 +76,8 @@ const ChatPageMobile = ({
         user={user}
         selectedChatId={selectedChatId}
         setSelectedChatId={setSelectedChatId}
+        isNewChat={isNewChat}
+        setIsNewChat={setIsNewChat}
         postId={postId}
         isViewingChatsForMyPost={isViewingChatsForMyPost}
         isShow={selectedChatId === null && !isNewChat}
@@ -128,15 +131,8 @@ const ChatPage = ({ user, chatId, postId, postType, isViewingChatsForMyPost }) =
   };
 
   const initialChecks = async () => {
-    if (chatId && postId) {
-      const [rawChat, rawChatsForPost] = await Promise.all([
-        api.chats.getChat(chatId),
-        api.chats.getChatsForPost(postId),
-      ]);
-      checkIfSelectedChatHasError(rawChat);
-      setChatPropertiesForPost(rawChatsForPost);
-    } else if (chatId) {
-      const rawChat = await api.chats.getChat(chatId);
+    if (selectedChatId) {
+      const rawChat = await api.chats.getChat(selectedChatId);
       checkIfSelectedChatHasError(rawChat);
       setHasNoChatForOwnPost(false);
     } else if (postId) {
@@ -149,7 +145,7 @@ const ChatPage = ({ user, chatId, postId, postType, isViewingChatsForMyPost }) =
 
   useEffect(() => {
     initialChecks().then(() => setIsMounted(true));
-  }, []);
+  }, [selectedChatId]);
 
   const { isTablet } = useMediaQuery();
   const { height } = useWindowDimensions();

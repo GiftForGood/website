@@ -5,6 +5,7 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { isSafari } from 'react-device-detect';
 
 export default class InfiniteScroll extends Component {
   static propTypes = {
@@ -187,13 +188,14 @@ export default class InfiniteScroll extends Component {
         offset = this.calculateOffset(el, scrollTop);
       }
     } else if (this.props.isReverse) {
-      if (parentNode.scrollTop >= 0) {
-        offset = parentNode.scrollTop;
-      } else {
+      if (isSafari) {
         // known issue with safari:
-        // scrollTop will be a negative value instead of positive, need to handle separately
+        // scrollTop will be starting from 0 (instead of scrollHeight) even when `flex-direction: column-reverse`,
+        // hence the scroll top will be a negative value when scrolling from the div, need to handle separately
         // reference: https://bugzilla.mozilla.org/show_bug.cgi?id=1042151#c36
         offset = parentNode.scrollHeight + parentNode.scrollTop - parentNode.clientHeight;
+      } else {
+        offset = parentNode.scrollTop;
       }
     } else {
       offset = el.scrollHeight - parentNode.scrollTop - parentNode.clientHeight;
