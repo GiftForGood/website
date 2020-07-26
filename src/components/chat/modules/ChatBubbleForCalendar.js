@@ -39,8 +39,35 @@ const ChatBubbleForCalendar = ({ dateTimes, isByLoggedInUser, sender, loggedInUs
         .then(() => {})
         .catch((err) => console.error(err));
 
-      // TODO: Add system generated message for delivery partners and promo code
+      sendSystemGeneratedMessage();
     }
+  };
+
+  // system generated message that consists of the delivery partners with their corresponding promo code and url
+  const sendSystemGeneratedMessage = () => {
+    let logisticPartners;
+    api.logistics.getAll().then((res) => {
+      logisticPartners = res.docs.map((rawLogisticPartner) => rawLogisticPartner.data());
+      // only send system generated message if logistic partners exist
+      if (logisticPartners && logisticPartners.length > 0) {
+        const partnersMessage = logisticPartners
+          .map((partner) => {
+            return `${partner.name}: ${partner.url}
+Promo Code: ${partner.promoCode ? partner.promoCode : 'Not Required'}`;
+          })
+          .join('\n\n');
+
+        const systemGeneratedMessage = `---System generated message---
+
+The following are delivery partners of GiftForGood:
+${partnersMessage}
+`;
+        api.chats
+          .sendTextMessage(selectedChatId, systemGeneratedMessage)
+          .then(() => {})
+          .catch((err) => console.error(err));
+      }
+    });
   };
   return (
     <Stack direction="column" spacing="condensed" align={isByLoggedInUser ? 'end' : 'start'}>
