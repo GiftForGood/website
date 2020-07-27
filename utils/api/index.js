@@ -9,6 +9,7 @@ import WishesAPI from './wishes';
 import BannersAPI from './banners';
 import TermsAndConditionsAPI from './termsandconditions';
 import ChatsAPI from './chats';
+import LogisticsAPI from './logistics';
 
 class API {
   auth = new AuthAPI();
@@ -22,6 +23,7 @@ class API {
   banners = new BannersAPI();
   termsandconditions = new TermsAndConditionsAPI();
   chats = new ChatsAPI();
+  logistics = new LogisticsAPI();
 }
 
 const api = new API();

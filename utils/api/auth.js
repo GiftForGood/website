@@ -348,6 +348,7 @@ class AuthAPI {
     const newVerificationData = db.collection('npoVerifications').doc(userProfile.uid);
     const data = {
       userId: userProfile.uid,
+      email: userProfile.email,
       name: name,
       contactNumber: contact,
       organization: organization,
