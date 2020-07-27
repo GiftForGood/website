@@ -7,11 +7,12 @@ import ChatDialogMessages from './ChatDialogMessages';
 import ChatDialogInputRow from './ChatDialogInputRow';
 import BlackText from '../../text/BlackText';
 import api from '../../../../utils/api';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import ChevronLeft from '@kiwicom/orbit-components/lib/icons/ChevronLeft';
 import ChevronDown from '@kiwicom/orbit-components/lib/icons/ChevronDown';
 import ChevronUp from '@kiwicom/orbit-components/lib/icons/ChevronUp';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
+import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import { donations } from '../../../../utils/constants/postType';
 
 const ChatDialogContainer = styled.div`
@@ -30,6 +31,31 @@ const MessageContainer = styled.div`
 const ButtonsWrapper = styled.div`
   margin: 0 auto;
   width: 90%;
+`;
+
+const ChatDialogPostDetails = styled.div`
+  @keyframes slideInFromTop {
+    0% {
+      transform: translateY(-50%);
+      opacity: 0%;
+    }
+
+    50% {
+      opacity: 0%;
+    }
+
+    100% {
+      transform: translateY(0);
+      opacity: 100%;
+    }
+  }
+  ${media.tablet(css`
+    animation-duration: 0s;
+  `)}
+  animation-name: slideInFromTop;
+  animation-duration: 0.5s;
+  width: 100%;
+  display: ${({ isShow }) => (isShow ? 'unset' : 'none')};
 `;
 
 const ChatDialogContent = ({
@@ -100,26 +126,24 @@ const ChatDialogContent = ({
             </Stack>
           </ButtonsWrapper>
         )}
-        {isShowPostDetails && (
-          <>
-            <ChatDialogUserRow
-              postId={chatPostId}
-              postType={chatPostType}
-              postStatus={postStatus}
-              rating={5} // apparently rating is not within the user in donations/wishes, default val for now
-              loggedInUser={loggedInUser}
-              oppositeUser={oppositeUser}
-              postOwnerId={postOwnerId}
-              postEnquirerId={postEnquirerId}
-              setHasError={setHasError}
-              selectedChatId={selectedChatId}
-              setSelectedChatId={setSelectedChatId}
-              isNewChat={isNewChat}
-              setIsNewChat={setIsNewChat}
-            />
-            <ChatDialogViewPostRow postType={chatPostType} postId={chatPostId} postTitle={chatPostTitle} />
-          </>
-        )}
+        <ChatDialogPostDetails isShow={isShowPostDetails}>
+          <ChatDialogUserRow
+            postId={chatPostId}
+            postType={chatPostType}
+            postStatus={postStatus}
+            rating={5} // apparently rating is not within the user in donations/wishes, default val for now
+            loggedInUser={loggedInUser}
+            oppositeUser={oppositeUser}
+            postOwnerId={postOwnerId}
+            postEnquirerId={postEnquirerId}
+            setHasError={setHasError}
+            selectedChatId={selectedChatId}
+            setSelectedChatId={setSelectedChatId}
+            isNewChat={isNewChat}
+            setIsNewChat={setIsNewChat}
+          />
+          <ChatDialogViewPostRow postType={chatPostType} postId={chatPostId} postTitle={chatPostTitle} />
+        </ChatDialogPostDetails>
         <ChatDialogMessages
           postType={chatPostType}
           loggedInUser={loggedInUser}
