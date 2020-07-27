@@ -14,7 +14,7 @@ import { donations, wishes } from '../../../utils/constants/postType';
 import { donor, npo } from '../../../utils/constants/userType';
 import RatingStars from '../ratingStars';
 import { colors } from '../../../utils/constants/colors';
-import { logStartChatToAnalytics } from '../../../utils/analytics'
+import { logStartChatToAnalytics } from '../../../utils/analytics';
 
 const PostDetailsHeader = ({
   loginUserId,
@@ -40,7 +40,7 @@ const PostDetailsHeader = ({
   const [showReportPostModal, setShowPostPostModal] = useState(false);
   const [showClosePostModal, setShowClosePostModal] = useState(false);
   const [showSharePostModal, setShowSharePostModal] = useState(false);
-  
+
   const handleReportPostModal = () => {
     if (showReportPostModal) {
       setShowPostPostModal(false);
@@ -69,7 +69,7 @@ const PostDetailsHeader = ({
     event.preventDefault();
     let destination = `/chat?postId=${postId}&postType=${postType}`;
     if (chatType === 'Chat') {
-      logStartChatToAnalytics()
+      logStartChatToAnalytics();
       api.chats.getChatsForPost(postId).then((rawChats) => {
         if (rawChats.docs.length > 0) {
           // assumption: can only have one chat for a post that is not yours,
