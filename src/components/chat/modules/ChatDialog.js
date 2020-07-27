@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Measure from 'react-measure';
-import { Stack, ButtonLink } from '@kiwicom/orbit-components/lib';
+import { Stack, ButtonLink, Button } from '@kiwicom/orbit-components/lib';
 import ChatDialogUserRow from './ChatDialogUserRow';
 import ChatDialogViewPostRow from './ChatDialogViewPostRow';
 import ChatDialogMessages from './ChatDialogMessages';
@@ -9,6 +9,8 @@ import BlackText from '../../text/BlackText';
 import api from '../../../../utils/api';
 import styled from 'styled-components';
 import ChevronLeft from '@kiwicom/orbit-components/lib/icons/ChevronLeft';
+import ChevronDown from '@kiwicom/orbit-components/lib/icons/ChevronDown';
+import ChevronUp from '@kiwicom/orbit-components/lib/icons/ChevronUp';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 import { donations } from '../../../../utils/constants/postType';
 
@@ -23,6 +25,11 @@ const MessageContainer = styled.div`
   width: fit-content;
   margin: 0 auto;
   margin-top: 40vh;
+`;
+
+const ButtonsWrapper = styled.div`
+  margin: 0 auto;
+  width: 90%;
 `;
 
 const ChatDialogContent = ({
@@ -42,6 +49,7 @@ const ChatDialogContent = ({
   // default as 68 px which is single line text area, modified when there
   // is more than one line in the text area in input row
   const [inputRowHeight, setInputRowHeight] = useState(68);
+  const [isShowPostDetails, setIsShowPostDetails] = useState(isTablet); // hide post details initially if using mobile
 
   let chatPostTitle, oppositeUser, chatPostType, chatPostId, postOwnerId, postEnquirerId, postStatus;
   const isCreatingNewChatForAPost = postId !== null && isNewChat;
@@ -61,8 +69,8 @@ const ChatDialogContent = ({
     oppositeUser = chat.npo.id === loggedInUser.user.userId ? chat.donor : chat.npo;
     chatPostType = chat.post.type;
     chatPostId = chat.post.id;
-    postOwnerId = chatPostType === donations ? chat.donor.id : chat.npo.id;
-    postEnquirerId = chatPostType === donations ? chat.npo.id : chat.donor.id;
+    postOwnerId = chat.post.type === donations ? chat.donor.id : chat.npo.id;
+    postEnquirerId = chat.post.type === donations ? chat.npo.id : chat.donor.id;
     postStatus = chat.post.status;
   }
 
@@ -70,32 +78,48 @@ const ChatDialogContent = ({
     <>
       <Stack direction="column" spacing="none">
         {!isTablet && (
-          <ButtonLink
-            onClick={function () {
-              setSelectedChatId(null);
-              setIsNewChat(false);
-            }}
-            iconLeft={<ChevronLeft />}
-            transparent
-            type="secondary"
-          />
+          <ButtonsWrapper>
+            <Stack direction="row" justify="between" align="center">
+              <ButtonLink
+                onClick={function () {
+                  setSelectedChatId(null);
+                  setIsNewChat(false);
+                }}
+                iconLeft={<ChevronLeft />}
+                transparent
+                type="secondary"
+              />
+              <Button
+                iconRight={isShowPostDetails ? <ChevronUp /> : <ChevronDown />}
+                onClick={() => setIsShowPostDetails(!isShowPostDetails)}
+                size="small"
+                style={{ marginRight: '10px' }}
+              >
+                {isShowPostDetails ? 'Hide Post Details' : 'Show Post Details'}
+              </Button>
+            </Stack>
+          </ButtonsWrapper>
         )}
-        <ChatDialogUserRow
-          postId={chatPostId}
-          postType={chatPostType}
-          postStatus={postStatus}
-          rating={5} // apparently rating is not within the user in donations/wishes, default val for now
-          loggedInUser={loggedInUser}
-          oppositeUser={oppositeUser}
-          postOwnerId={postOwnerId}
-          postEnquirerId={postEnquirerId}
-          setHasError={setHasError}
-          selectedChatId={selectedChatId}
-          setSelectedChatId={setSelectedChatId}
-          isNewChat={isNewChat}
-          setIsNewChat={setIsNewChat}
-        />
-        <ChatDialogViewPostRow postType={chatPostType} postId={chatPostId} postTitle={chatPostTitle} />
+        {isShowPostDetails && (
+          <>
+            <ChatDialogUserRow
+              postId={chatPostId}
+              postType={chatPostType}
+              postStatus={postStatus}
+              rating={5} // apparently rating is not within the user in donations/wishes, default val for now
+              loggedInUser={loggedInUser}
+              oppositeUser={oppositeUser}
+              postOwnerId={postOwnerId}
+              postEnquirerId={postEnquirerId}
+              setHasError={setHasError}
+              selectedChatId={selectedChatId}
+              setSelectedChatId={setSelectedChatId}
+              isNewChat={isNewChat}
+              setIsNewChat={setIsNewChat}
+            />
+            <ChatDialogViewPostRow postType={chatPostType} postId={chatPostId} postTitle={chatPostTitle} />
+          </>
+        )}
         <ChatDialogMessages
           postType={chatPostType}
           loggedInUser={loggedInUser}
@@ -103,6 +127,7 @@ const ChatDialogContent = ({
           isNewChat={isNewChat}
           navBarHeight={navBarHeight}
           inputRowHeight={inputRowHeight}
+          isShowPostDetails={isShowPostDetails}
         />
       </Stack>
       <Measure bounds onResize={(contentRect) => setInputRowHeight(contentRect.bounds.height)}>

@@ -43,7 +43,15 @@ const MessageContainer = styled.div`
  *
  * @param {number} navBarHeight is the height of the navbar
  */
-const ChatDialogMessages = ({ postType, loggedInUser, selectedChatId, isNewChat, navBarHeight, inputRowHeight }) => {
+const ChatDialogMessages = ({
+  postType,
+  loggedInUser,
+  selectedChatId,
+  isNewChat,
+  navBarHeight,
+  inputRowHeight,
+  isShowPostDetails,
+}) => {
   const [chatMessageDocs, setChatMessageDocs] = useState([]);
   // only consider loading more when it's not a new chat, since it's impossible to have a new chat
   // to have messages initially
@@ -129,8 +137,12 @@ const ChatDialogMessages = ({ postType, loggedInUser, selectedChatId, isNewChat,
     ? desktopHeights
     : mobileHeights;
 
-  const sumOfOtherComponentHeights =
-    chatDialogBackButton + chatDialogSeePostRow + chatDialogUserRow + chatDialogMessagesPadding + inputRowHeight;
+  let sumOfOtherComponentHeights = chatDialogBackButton + chatDialogMessagesPadding + inputRowHeight;
+
+  if (isShowPostDetails) {
+    // only add the heights of see post row and user row if it is going to be shown
+    sumOfOtherComponentHeights += chatDialogSeePostRow + chatDialogUserRow;
+  }
 
   const offsetHeight = navBarHeight + sumOfOtherComponentHeights;
 

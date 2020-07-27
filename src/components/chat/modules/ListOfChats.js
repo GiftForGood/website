@@ -30,7 +30,8 @@ const ListOfChats = ({
   selectedChatId,
   setSelectedChatId,
   postId,
-  isCreatingNewChat,
+  isNewChat,
+  setIsNewChat,
   isViewingChatsForMyPost,
   isShow,
 }) => {
@@ -164,7 +165,8 @@ const ListOfChats = ({
                     profileImageUrl={profileImageUrl}
                     post={post}
                     isSelected={isSelected}
-                    isCreatingNewChat={isCreatingNewChat}
+                    isNewChat={isNewChat}
+                    setIsNewChat={setIsNewChat}
                     isViewingChatsForMyPost={isViewingChatsForMyPost}
                     setSelectedChatId={setSelectedChatId}
                     unreadCount={unreadCount}

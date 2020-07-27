@@ -68,11 +68,7 @@ const ChatDialogInputRow = ({ selectedChatId, setSelectedChatId, isNewChat, setI
     setInputMessage('');
     textAreaRef.current.focus();
     if (isNewChat) {
-      sendFirstMessage(message).then((chat) => {
-        // need to get the chat id from the newly created chat to select chat id
-        setSelectedChatId(chat.chatId);
-        setIsNewChat(false);
-      });
+      sendFirstMessage(message).then(() => {});
     } else {
       api.chats.sendTextMessage(selectedChatId, message).then(() => {});
     }
@@ -85,8 +81,9 @@ const ChatDialogInputRow = ({ selectedChatId, setSelectedChatId, isNewChat, setI
   const sendFirstMessage = async (message) => {
     const method = postType === donations ? 'sendInitialTextMessageForDonation' : 'sendInitialTextMessageForWish';
     const [rawChat, rawFirstMessage] = await api.chats[method](postId, message);
-    router.push(`/chat/${rawChat.data().chatId}`);
-    return rawChat.data();
+    const chatId = rawChat.data().chatId;
+    setSelectedChatId(chatId);
+    router.push(`/chat`, `/chat?chatId=${chatId}`, { shallow: true });
   };
 
   const handleEnterInputter = (event) => {
