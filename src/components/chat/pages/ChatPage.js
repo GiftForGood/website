@@ -7,6 +7,7 @@ import Error from 'next/error';
 import styled from 'styled-components';
 import { EMAIL_BAR_HEIGHT, NAVBAR_HEIGHT } from '../../../../utils/constants/navbar';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
+import Router from 'next/router';
 import useWindowDimensions from '../../../../utils/hooks/useWindowDimensions';
 
 const NoChatsContainer = styled.div`
@@ -35,7 +36,8 @@ const ChatPageTabletAndDesktop = ({
         selectedChatId={selectedChatId}
         setSelectedChatId={setSelectedChatId}
         postId={postId}
-        isCreatingNewChat={isNewChat}
+        isNewChat={isNewChat}
+        setIsNewChat={setIsNewChat}
         isViewingChatsForMyPost={isViewingChatsForMyPost}
         isShow={true}
       />
@@ -75,6 +77,8 @@ const ChatPageMobile = ({
         user={user}
         selectedChatId={selectedChatId}
         setSelectedChatId={setSelectedChatId}
+        isNewChat={isNewChat}
+        setIsNewChat={setIsNewChat}
         postId={postId}
         isViewingChatsForMyPost={isViewingChatsForMyPost}
         isShow={selectedChatId === null && !isNewChat}
@@ -128,15 +132,8 @@ const ChatPage = ({ user, chatId, postId, postType, isViewingChatsForMyPost }) =
   };
 
   const initialChecks = async () => {
-    if (chatId && postId) {
-      const [rawChat, rawChatsForPost] = await Promise.all([
-        api.chats.getChat(chatId),
-        api.chats.getChatsForPost(postId),
-      ]);
-      checkIfSelectedChatHasError(rawChat);
-      setChatPropertiesForPost(rawChatsForPost);
-    } else if (chatId) {
-      const rawChat = await api.chats.getChat(chatId);
+    if (selectedChatId) {
+      const rawChat = await api.chats.getChat(selectedChatId);
       checkIfSelectedChatHasError(rawChat);
       setHasNoChatForOwnPost(false);
     } else if (postId) {
@@ -148,8 +145,28 @@ const ChatPage = ({ user, chatId, postId, postType, isViewingChatsForMyPost }) =
   };
 
   useEffect(() => {
+    // handle changes in url param `chatId`, when clicked on back/forward button
+    const handleRouteChange = () => {
+      if (typeof window === 'undefined') {
+        return;
+      }
+      const queryString = window.location.search;
+      const urlParams = new URLSearchParams(queryString);
+      const chatIdParam = urlParams.get('chatId');
+      if (chatIdParam !== selectedChatId) {
+        setSelectedChatId(chatIdParam);
+      }
+    };
+
+    Router.events.on('routeChangeComplete', handleRouteChange);
+    return () => {
+      Router.events.off('routeChangeComplete', handleRouteChange);
+    };
+  }, [selectedChatId]); // compare url param with the most recently updated selectedChatId
+
+  useEffect(() => {
     initialChecks().then(() => setIsMounted(true));
-  }, []);
+  }, [selectedChatId]);
 
   const { isTablet } = useMediaQuery();
   const { height } = useWindowDimensions();

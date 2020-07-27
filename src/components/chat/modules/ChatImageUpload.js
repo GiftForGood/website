@@ -20,8 +20,10 @@ const ChatImageUpload = ({
   const sendFirstImageMessages = async (images) => {
     const method = postType === donations ? 'sendInitialImageMessagesForDonation' : 'sendInitialImageMessagesForWish';
     const [rawChat, rawFirstMessage] = await api.chats[method](postId, images);
-    router.push(`/chat/${rawChat.data().chatId}`);
-    return rawChat.data();
+    const chatId = rawChat.data().chatId;
+    setIsNewChat(false);
+    setSelectedChatId(chatId);
+    router.push(`/chat`, `/chat?chatId=${chatId}`, { shallow: true });
   };
 
   const handleImageUploadError = (err) => {
@@ -53,9 +55,7 @@ const ChatImageUpload = ({
 
     if (isNewChat) {
       sendFirstImageMessages(uploadedFiles)
-        .then((chat) => {
-          setSelectedChatId(chat.chatId);
-          setIsNewChat(false);
+        .then(() => {
           uploadedFiles = [];
         })
         .catch((err) => handleImageUploadError(err));

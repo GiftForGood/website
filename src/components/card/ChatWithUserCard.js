@@ -89,7 +89,8 @@ const ChatWithUserCard = ({
   unreadCount,
   isSelected,
   lastMessage,
-  isCreatingNewChat,
+  isNewChat,
+  setIsNewChat,
   isViewingChatsForMyPost,
   setSelectedChatId,
 }) => {
@@ -98,13 +99,18 @@ const ChatWithUserCard = ({
   const lastMessageDate = getFormattedDate(dateTime);
 
   const handleClickChat = () => {
-    if (isCreatingNewChat) {
+    setIsNewChat(false);
+    setSelectedChatId(chatId);
+    if (isNewChat) {
       // creating a new chat and haven't send the first message
-      router.push(`/chat/${chatId}`);
+      router.push(`/chat`, `/chat?chatId=${chatId}`, { shallow: true });
     } else if (isViewingChatsForMyPost) {
-      router.push(`/chat/${chatId}?postId=${router.query.postId}&postType=${router.query.postType}`);
+      router.push(`/chat`, `/chat?chatId=${chatId}&postId=${router.query.postId}&postType=${router.query.postType}`, {
+        shallow: true,
+      });
     } else {
       const queries = [];
+      queries.push(`?chatId=${chatId}`);
       if (router.query.postId) {
         queries.push(`postId=${router.query.postId}`);
       }
@@ -112,10 +118,8 @@ const ChatWithUserCard = ({
         queries.push(`postType=${router.query.postType}`);
       }
       let queryString = queries.join('&');
-      const routeWithUpdatedChatId = `/chat/${chatId}${queryString.length > 0 ? `?${queryString}` : ''}`;
-      setSelectedChatId(chatId);
-
-      router.push(`/chat/[chatId]`, routeWithUpdatedChatId, { shallow: true });
+      const routeWithUpdatedChatId = `/chat${queryString}`;
+      router.push(`/chat`, routeWithUpdatedChatId, { shallow: true });
     }
   };
   return (
