@@ -1,10 +1,17 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { Button } from '@kiwicom/orbit-components/';
 import { colors } from '../../../utils/constants/colors';
 import useUser from '../session/modules/useUser';
 import Verified from '../session/modules/Verified';
 import { useRouter } from 'next/router';
+import {
+  logMobilePostDonationToAnalytics,
+  logDesktopPostDonationToAnalytics,
+  logMobilePostWishToAnalytics,
+  logDesktopPostWishToAnalytics,
+} from '../../../utils/analytics';
+import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 
 const CallToActionButtonStyle = styled.button`
   background: ${colors.donorBackground};
@@ -44,11 +51,22 @@ const BottomCallToActionButtonStyle = styled.button`
 const CallToActionButton = ({ fullWidth, rounded }) => {
   const user = useUser();
   const router = useRouter();
+  const { isDesktop } = useMediaQuery();
 
   const onButtonClick = () => {
     if (user.npo) {
+      if (isDesktop) {
+        logDesktopPostWishToAnalytics();
+      } else {
+        logMobilePostWishToAnalytics();
+      }
       router.push('/wishes/create');
     } else if (user.donor) {
+      if (isDesktop) {
+        logDesktopPostDonationToAnalytics();
+      } else {
+        logMobilePostDonationToAnalytics();
+      }
       router.push('/donations/create');
     }
   };
