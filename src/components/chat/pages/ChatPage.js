@@ -7,6 +7,7 @@ import Error from 'next/error';
 import styled from 'styled-components';
 import { EMAIL_BAR_HEIGHT, NAVBAR_HEIGHT } from '../../../../utils/constants/navbar';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
+import Router from 'next/router';
 import useWindowDimensions from '../../../../utils/hooks/useWindowDimensions';
 
 const NoChatsContainer = styled.div`
@@ -142,6 +143,26 @@ const ChatPage = ({ user, chatId, postId, postType, isViewingChatsForMyPost }) =
       setHasNoChatForOwnPost(false);
     }
   };
+
+  useEffect(() => {
+    // handle changes in url param `chatId`, when clicked on back/forward button
+    const handleRouteChange = () => {
+      if (typeof window === 'undefined') {
+        return;
+      }
+      const queryString = window.location.search;
+      const urlParams = new URLSearchParams(queryString);
+      const chatIdParam = urlParams.get('chatId');
+      if (chatIdParam !== selectedChatId) {
+        setSelectedChatId(chatIdParam);
+      }
+    };
+
+    Router.events.on('routeChangeComplete', handleRouteChange);
+    return () => {
+      Router.events.off('routeChangeComplete', handleRouteChange);
+    };
+  }, [selectedChatId]); // compare url param with the most recently updated selectedChatId
 
   useEffect(() => {
     initialChecks().then(() => setIsMounted(true));
