@@ -14,6 +14,18 @@ const ClickableDiv = styled.a`
   z-index: 1;
 `;
 
+const OneLineTextContainer = styled.div`
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  line-height: 1.5em;
+  max-height: 1.5em;
+  font-size: 14px;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  word-break: break-word;
+`;
+
 const TwoLineTextContainer = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
@@ -24,6 +36,7 @@ const TwoLineTextContainer = styled.div`
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   text-align: start;
+  word-break: break-word;
 `;
 
 const CardContentContainer = styled.div`
@@ -34,9 +47,11 @@ const CardContentContainer = styled.div`
 const CardDescription = ({ title, description }) => {
   return (
     <Stack direction="column" spacing="tight">
-      <Text size="normal" weight="bold">
-        {title}
-      </Text>
+      <OneLineTextContainer>
+        <Text size="normal" weight="bold">
+          {title}
+        </Text>
+      </OneLineTextContainer>
       <TwoLineTextContainer>{description}</TwoLineTextContainer>
     </Stack>
   );
