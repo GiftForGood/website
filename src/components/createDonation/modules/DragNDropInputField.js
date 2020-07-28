@@ -123,7 +123,7 @@ const Image = ({ src, onDeleteClick }) => {
 
 const DragNDropInputField = ({ onChange, error, initialImages = null }) => {
   const { acceptedFiles, getRootProps, getInputProps, isDragActive, isDragAccept, isDragReject } = useDropzone({
-    accept: 'image/*',
+    accept: '.jpeg, .png, .jpg',
   });
   const [selectedImages, setSelectedImages] = useState([]);
 
