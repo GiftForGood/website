@@ -10,7 +10,6 @@ import { ON, OFF } from '../constants/chatStatus';
 import { ADDED, MODIFIED } from '../constants/chatSubscriptionChange';
 import { uploadImage } from './common/images';
 import { getCurrentUser } from './common/user';
-import { isValidUserType } from '../constants/userType';
 import ChatError from './error/chatError';
 
 const chatsCollection = db.collection('chats');
