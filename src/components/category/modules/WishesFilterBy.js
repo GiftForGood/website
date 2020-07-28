@@ -51,7 +51,7 @@ const WishesFilterBy = ({ onLatLngUpdated }) => {
         <Stack>
           <InputField
             placeholder="postal code"
-            label="Nearest - Futherest"
+            label="Nearest - Furthest"
             error={formik.touched.postalCode && formik.errors.postalCode ? formik.errors.postalCode : ''}
             {...formik.getFieldProps('postalCode')}
           />

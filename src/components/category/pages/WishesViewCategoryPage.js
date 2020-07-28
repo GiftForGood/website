@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Categories from '../modules/Categories';
 import BlackText from '../../text/BlackText';
-import { Grid, Stack } from '@kiwicom/orbit-components/lib';
+import { Grid, Stack, Collapse } from '@kiwicom/orbit-components/lib';
 import { WISHES_BATCH_SIZE } from '../../../../utils/api/constants';
 import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
@@ -12,6 +12,7 @@ import { getByCategoryIdAndStatus } from '../../../../utils/algolia/filteringRul
 import { wishesSortByRule } from '../../../../utils/algolia/sortByRules';
 import WishesSortBy from '../modules/WishesSortBy';
 import WishesFilterby from '../modules/WishesFilterBy';
+import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 
 const searchClient = algoliasearch(process.env.ALGOLIA_APP_ID, process.env.ALGOLIA_SEARCH_KEY);
 const WishesInfiniteHit = connectInfiniteHits(WishesHitWrapper);
@@ -47,6 +48,7 @@ const ViewCategoryPage = ({ categoryDetails, sortByQuery }) => {
   const category = categoryDetails;
   const [sortBy, setSortBy] = useState(sortByQuery ? sortByQuery : wishesSortByRule().defaultRefinement);
   const [latLngFilter, setLatLngFilter] = useState('');
+  const { isDesktop } = useMediaQuery();
 
   const onLatLngUpdated = (latLng) => {
     setLatLngFilter(latLng);
@@ -65,10 +67,19 @@ const ViewCategoryPage = ({ categoryDetails, sortByQuery }) => {
           rows="1fr auto"
         >
           <GridSectionContainer>
-            <Stack>
-              <WishesSort items={wishesSortByRule().items} defaultRefinement={sortBy} category={category} />
-              <WishesFilterby onLatLngUpdated={onLatLngUpdated} />
-            </Stack>
+            {isDesktop ? (
+              <Stack>
+                <WishesSort items={wishesSortByRule().items} defaultRefinement={sortBy} category={category} />
+                <WishesFilterby onLatLngUpdated={onLatLngUpdated} />
+              </Stack>
+            ) : (
+              <Collapse label="Filter/Sort Settings">
+                <Stack>
+                  <WishesSort items={wishesSortByRule().items} defaultRefinement={sortBy} category={category} />
+                  <WishesFilterby onLatLngUpdated={onLatLngUpdated} />
+                </Stack>
+              </Collapse>
+            )}
           </GridSectionContainer>
 
           <GridSectionContainer>
