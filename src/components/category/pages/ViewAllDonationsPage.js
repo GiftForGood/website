@@ -12,7 +12,7 @@ import { getByStatus } from '../../../../utils/algolia/filteringRules';
 import { donationsSortByRule } from '../../../../utils/algolia/sortByRules';
 import DonationsSortBy from '../modules/DonationsSortBy';
 
-const searchClient = algoliasearch(process.env.ALGOLIA_APP_ID, process.env.ALGOLIA_SEARCH_KEY);
+const searchClient = algoliasearch(process.env.NEXT_PUBLIC_ALGOLIA_APP_ID, process.env.NEXT_PUBLIC_ALGOLIA_SEARCH_KEY);
 const DonationsInfiniteHit = connectInfiniteHits(DonationsHitWrapper);
 const DonationsSort = connectSortBy(DonationsSortBy);
 

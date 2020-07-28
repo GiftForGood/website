@@ -3,7 +3,7 @@ const admin = require('firebase-admin');
 if (!admin.apps.length) {
   admin.initializeApp({
     credential: admin.credential.cert(require('./server-cert')),
-    databaseURL: process.env.FIREBASE_DATABASE_URL,
+    databaseURL: process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL,
   });
 }
 
