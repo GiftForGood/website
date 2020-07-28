@@ -6,6 +6,7 @@ import api from '../../utils/api';
 import Error from 'next/error';
 import ChatPage from '../../src/components/chat/pages/ChatPage';
 import Header from '../../src/components/header';
+import { donations, wishes } from '../../utils/constants/postType';
 
 const TopNavigationBar = dynamic(() => import('../../src/components/navbar/modules/TopNavigationBar'), {
   ssr: false,
@@ -21,6 +22,15 @@ const TopNavigationBar = dynamic(() => import('../../src/components/navbar/modul
 export async function getServerSideProps({ params, req, res, query }) {
   const user = await isAuthenticated(req, res);
   if (!user) {
+    return {
+      props: {
+        hasError: true,
+      },
+    };
+  }
+
+  if (!user.user.emailVerified) {
+    // user is not email verified
     return {
       props: {
         hasError: true,
@@ -48,6 +58,18 @@ export async function getServerSideProps({ params, req, res, query }) {
     }
     const post = rawPost.data();
     isViewingChatsForMyPost = post.user.userId === user.user.userId;
+
+    if (
+      !isViewingChatsForMyPost &&
+      ((user.user.donor && postType === donations) || (user.user.npo && postType === wishes))
+    ) {
+      // creating a new chat, but is donor -> donation, npo -> wishes
+      return {
+        props: {
+          hasError: true,
+        },
+      };
+    }
   }
 
   return {
@@ -61,7 +83,7 @@ export async function getServerSideProps({ params, req, res, query }) {
   };
 }
 
-const ViewOwnChats = ({ user, postId, chatId, isViewingChatsForMyPost, postType, hasError }) => {
+const ViewChats = ({ user, postId, chatId, isViewingChatsForMyPost, postType, hasError }) => {
   if (hasError) {
     return <Error />;
   }
@@ -81,4 +103,4 @@ const ViewOwnChats = ({ user, postId, chatId, isViewingChatsForMyPost, postType,
   );
 };
 
-export default ViewOwnChats;
+export default ViewChats;
