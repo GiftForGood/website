@@ -575,6 +575,7 @@ const CreateDonationPanel = ({ mode, donation }) => {
                   disabled={formik.isSubmitting}
                   label="Dimensions"
                   name="dimensions"
+                  help="Allow 140 characters only"
                   error={formik.touched.dimensions && formik.errors.dimensions ? formik.errors.dimensions : ''}
                   {...formik.getFieldProps('dimensions')}
                 />
