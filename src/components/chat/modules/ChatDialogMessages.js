@@ -66,15 +66,18 @@ const ChatDialogMessages = ({
     setShouldSeeMore(!isNewChat);
 
     let unsubscribeFunction;
+    const { userId } = loggedInUser.user;
     // when selected a chat, subscribe to the corresponding chat messages
     if (selectedChatId !== null || !isNewChat) {
-      api.chats.subscribeToChatMessages(selectedChatId, updateChatMessages).then((fn) => (unsubscribeFunction = fn));
+      api.chats
+        .subscribeToChatMessages(selectedChatId, userId, updateChatMessages)
+        .then((fn) => (unsubscribeFunction = fn));
       disableFurtherLoadsIfMessagesLessThanOneBatch();
     }
 
     return () => {
       if (unsubscribeFunction) {
-        api.chats.unsubscribeFromChatMessages(selectedChatId, unsubscribeFunction).then(() => {
+        api.chats.unsubscribeFromChatMessages(selectedChatId, userId, unsubscribeFunction).then(() => {
           setChatMessageDocs([]);
         });
       }
