@@ -29,5 +29,6 @@ module.exports = withImages({
     FIREBASE_ADMIN_CERT: process.env.FIREBASE_ADMIN_CERT,
     ALGOLIA_APP_ID: process.env.ALGOLIA_APP_ID,
     ALGOLIA_SEARCH_KEY: process.env.ALGOLIA_SEARCH_KEY,
+    FIREBASE_MEASUREMENT_ID: process.env.FIREBASE_MEASUREMENT_ID,
   },
 });
