@@ -260,7 +260,7 @@ const CreateDonationPanel = ({ mode, donation }) => {
       .min(currentYear, `Year must start from ${currentYear}`)
 
       .required('Required'),
-    dimensions: Yup.string(),
+    dimensions: Yup.string().max(140, 'Dimensions too long and exceeds 140 character limit'),
     itemCondition: Yup.string().required('Required'),
     customValidFromValidation: Yup.boolean().test('Date Checker', 'Invalid Date', function (val) {
       const { validFromDay, validFromMonth, validFromYear } = this.parent;
@@ -575,6 +575,7 @@ const CreateDonationPanel = ({ mode, donation }) => {
                   disabled={formik.isSubmitting}
                   label="Dimensions"
                   name="dimensions"
+                  help="Allow 140 characters only"
                   error={formik.touched.dimensions && formik.errors.dimensions ? formik.errors.dimensions : ''}
                   {...formik.getFieldProps('dimensions')}
                 />

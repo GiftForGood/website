@@ -29,6 +29,10 @@ const DonationDescriptionContainer = styled.div`
   `)};
 `;
 
+const DimensionTextContainer = styled.div`
+  word-break: break-word;
+`;
+
 const BadgeWrapper = styled.div`
   margin-bottom: 8px !important;
 `;
@@ -102,7 +106,9 @@ const DonationInformation = ({
     return (
       <Stack direction="row" align="center">
         <img src={donationDimensionIconPath} height="24px" />
-        <Text>{dimensions === '' ? 'Not provided' : dimensions}</Text>
+        <DimensionTextContainer>
+          <Text>{dimensions === '' ? 'Not provided' : dimensions}</Text>
+        </DimensionTextContainer>
       </Stack>
     );
   };
