@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Categories from '../modules/Categories';
 import BlackText from '../../text/BlackText';
-import { Grid } from '@kiwicom/orbit-components/lib';
+import { Grid, Stack, Collapse } from '@kiwicom/orbit-components/lib';
 import { WISHES_BATCH_SIZE } from '../../../../utils/api/constants';
 import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
@@ -11,6 +11,9 @@ import WishesHitWrapper from '../modules/WishesHitWrapper';
 import { getByStatus } from '../../../../utils/algolia/filteringRules';
 import { wishesSortByRule } from '../../../../utils/algolia/sortByRules';
 import WishesSortBy from '../modules/WishesSortBy';
+import WishesFilterby from '../modules/WishesFilterBy';
+import Desktop from '@kiwicom/orbit-components/lib/Desktop';
+import Mobile from '@kiwicom/orbit-components/lib/Mobile';
 
 const searchClient = algoliasearch(process.env.ALGOLIA_APP_ID, process.env.ALGOLIA_SEARCH_KEY);
 const WishesInfiniteHit = connectInfiniteHits(WishesHitWrapper);
@@ -43,6 +46,11 @@ const ViewAllWishesPage = ({ sortByQuery, query = '' }) => {
     id: '',
     name: 'All wishes',
   };
+  const [latLngFilter, setLatLngFilter] = useState('');
+
+  const onLatLngUpdated = (latLng) => {
+    setLatLngFilter(latLng);
+  };
 
   return (
     <InstantSearch searchClient={searchClient} indexName="wishes">
@@ -60,7 +68,21 @@ const ViewAllWishesPage = ({ sortByQuery, query = '' }) => {
           rows="1fr auto"
         >
           <GridSectionContainer>
-            <WishesSort items={wishesSortByRule().items} defaultRefinement={sortBy} category={null} />
+            <Desktop>
+              <Stack>
+                <WishesSort items={wishesSortByRule().items} defaultRefinement={sortBy} category={null} />
+                <WishesFilterby onLatLngUpdated={onLatLngUpdated} />
+              </Stack>
+            </Desktop>
+
+            <Mobile>
+              <Collapse label="Filter/Sort Settings">
+                <Stack>
+                  <WishesSort items={wishesSortByRule().items} defaultRefinement={sortBy} category={null} />
+                  <WishesFilterby onLatLngUpdated={onLatLngUpdated} />
+                </Stack>
+              </Collapse>
+            </Mobile>
           </GridSectionContainer>
 
           <GridSectionContainer>
@@ -69,7 +91,13 @@ const ViewAllWishesPage = ({ sortByQuery, query = '' }) => {
             </BlackText>
 
             {/* Algolia */}
-            <Configure filters={getByStatus('pending')} hitsPerPage={WISHES_BATCH_SIZE} query={query} />
+            <Configure
+              filters={getByStatus('pending')}
+              hitsPerPage={WISHES_BATCH_SIZE}
+              query={query}
+              aroundLatLng={latLngFilter}
+              aroundRadius={10000}
+            />
             <WishesContainer>
               {/* Desktop,Tablet,Mobile has infinite scrolling  */}
               <WishesInfiniteHit category={category} minHitsPerPage={WISHES_BATCH_SIZE} />

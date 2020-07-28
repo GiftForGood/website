@@ -12,7 +12,8 @@ import { getByCategoryIdAndStatus } from '../../../../utils/algolia/filteringRul
 import { wishesSortByRule } from '../../../../utils/algolia/sortByRules';
 import WishesSortBy from '../modules/WishesSortBy';
 import WishesFilterby from '../modules/WishesFilterBy';
-import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
+import Desktop from '@kiwicom/orbit-components/lib/Desktop';
+import Mobile from '@kiwicom/orbit-components/lib/Mobile';
 
 const searchClient = algoliasearch(process.env.ALGOLIA_APP_ID, process.env.ALGOLIA_SEARCH_KEY);
 const WishesInfiniteHit = connectInfiniteHits(WishesHitWrapper);
@@ -48,7 +49,6 @@ const ViewCategoryPage = ({ categoryDetails, sortByQuery }) => {
   const category = categoryDetails;
   const [sortBy, setSortBy] = useState(sortByQuery ? sortByQuery : wishesSortByRule().defaultRefinement);
   const [latLngFilter, setLatLngFilter] = useState('');
-  const { isDesktop } = useMediaQuery();
 
   const onLatLngUpdated = (latLng) => {
     setLatLngFilter(latLng);
@@ -67,19 +67,21 @@ const ViewCategoryPage = ({ categoryDetails, sortByQuery }) => {
           rows="1fr auto"
         >
           <GridSectionContainer>
-            {isDesktop ? (
+            <Desktop>
               <Stack>
                 <WishesSort items={wishesSortByRule().items} defaultRefinement={sortBy} category={category} />
                 <WishesFilterby onLatLngUpdated={onLatLngUpdated} />
               </Stack>
-            ) : (
+            </Desktop>
+
+            <Mobile>
               <Collapse label="Filter/Sort Settings">
                 <Stack>
                   <WishesSort items={wishesSortByRule().items} defaultRefinement={sortBy} category={category} />
                   <WishesFilterby onLatLngUpdated={onLatLngUpdated} />
                 </Stack>
               </Collapse>
-            )}
+            </Mobile>
           </GridSectionContainer>
 
           <GridSectionContainer>
