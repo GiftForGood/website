@@ -10,6 +10,7 @@ import { ON, OFF } from '../constants/chatStatus';
 import { ADDED, MODIFIED } from '../constants/chatSubscriptionChange';
 import { uploadImage } from './common/images';
 import { getCurrentUser } from './common/user';
+import { isValidUserType } from '../constants/userType';
 import ChatError from './error/chatError';
 
 const chatsCollection = db.collection('chats');
@@ -493,6 +494,7 @@ class ChatsAPI {
   /**
    * Subscribe to messages belonging a chat
    * @param {string} id The id of the chat
+   * @param {string} userId The id of the user
    * @param {function(object): void} callback The function to call to handle the new chat message
    * It will also return a CHAT_MESSAGES_BATCH_SIZE of chat messages belonging to the chat on the initial subscription
    * It is recommended to use this function to fetch the first batch of chat messages and use the getChatMessages to get older chat messages
@@ -500,8 +502,8 @@ class ChatsAPI {
    * @throws {FirebaseError}
    * @return {function} The subscriber function. Needed to unsubscribe from the listener
    */
-  async subscribeToChatMessages(id, callback) {
-    await this._updateChatStatus(id, ON);
+  async subscribeToChatMessages(id, userId, callback) {
+    await this._updateChatStatus(id, userId, ON);
 
     return chatsCollection
       .doc(id)
@@ -520,15 +522,16 @@ class ChatsAPI {
   /**
    * Unsubscribe from messages belonging to a chat
    * @param {string} id The id of the chat
+   * @param {string} userId The id of the user
    * @param {function} unsubscribeFunction The function to unsubscribe to. It is the function that is returned when subscribing to the chat messages
    * @throws {ChatError}
    */
-  async unsubscribeFromChatMessages(id, unsubscribeFunction) {
+  async unsubscribeFromChatMessages(id, userId, unsubscribeFunction) {
     if (typeof unsubscribeFunction !== 'function') {
       throw new ChatError('invalid-unsubscribe-function', 'only can unsubscribe using a function');
     }
 
-    await this._updateChatStatus(id, OFF);
+    await this._updateChatStatus(id, userId, OFF);
     unsubscribeFunction();
   }
 
@@ -739,13 +742,7 @@ class ChatsAPI {
     chatsCollection.doc(chatInfo.chatId).update(data);
   }
 
-  async _updateChatStatus(id, status) {
-    const user = await getCurrentUser();
-    if (user == null) {
-      throw new ChatError('invalid-user-id');
-    }
-    const userId = user.uid;
-
+  async _updateChatStatus(id, userId, status) {
     const doc = chatsCollection.doc(id);
     const snapshot = await doc.get();
     if (!snapshot.exists) {
