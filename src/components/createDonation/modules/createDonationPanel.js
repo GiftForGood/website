@@ -42,6 +42,7 @@ import { useRouter } from 'next/router';
 import { getDay, getMonth, getYear } from '../../../../utils/api/time';
 import { v4 as uuidv4 } from 'uuid';
 import MrtDropdownField from '../../inputfield/MrtDropdownField';
+import { logSuccessfullyCreatedDonation } from '../../../../utils/analytics';
 
 const Container = styled.div`
   min-width: 300px;
@@ -155,6 +156,7 @@ const CreateDonationPanel = ({ mode, donation }) => {
         selectedImages
       );
       const donationId = donationDoc.data().donationId;
+      logSuccessfullyCreatedDonation();
       router.push(`/donations/${donationId}`);
     } catch (error) {
       console.error(error);
