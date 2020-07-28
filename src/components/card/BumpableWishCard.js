@@ -49,6 +49,7 @@ const ThreeLineTextContainer = styled.div`
   font-size: 14px;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
+  word-break: break-word;
 `;
 
 const LineTextContainer = styled.div`
@@ -60,6 +61,7 @@ const LineTextContainer = styled.div`
   font-size: 14px;
   -webkit-line-clamp: ${(props) => (props.isTablet ? '7' : '8')};
   -webkit-box-orient: vertical;
+  word-break: break-word;
 `;
 
 const CardDescriptionContainer = styled.div`
