@@ -129,6 +129,10 @@ class AuthAPI {
     await this._googleAuth();
     const token = await firebaseAuth.currentUser.getIdToken();
     const userProfile = firebaseAuth.currentUser;
+    if (!await this._doesDonorExist(userProfile.uid)) {
+      this.logout()
+      throw new AuthError('invalid-user', 'donor account does not exist');
+    }
     const donorDoc = await this._updateDonorLoginTime(userProfile.uid);
 
     return [token, userProfile, donorDoc];
@@ -149,6 +153,10 @@ class AuthAPI {
     await firebaseAuth.signInWithEmailAndPassword(email, password);
     const token = await firebaseAuth.currentUser.getIdToken();
     const userProfile = firebaseAuth.currentUser;
+    if (!await this._doesDonorExist(userProfile.uid)) {
+      this.logout()
+      throw new AuthError('invalid-user', 'donor account does not exist');
+    }
     const donorDoc = await this._updateDonorLoginTime(userProfile.uid);
 
     return [token, userProfile, donorDoc];
@@ -169,6 +177,10 @@ class AuthAPI {
     await firebaseAuth.signInWithEmailAndPassword(email, password);
     const token = await firebaseAuth.currentUser.getIdToken();
     const userProfile = firebaseAuth.currentUser;
+    if (!await this._doesNPOExist(userProfile.uid)) {
+      this.logout()
+      throw new AuthError('invalid-user', 'npo account does not exist');
+    }
     const userDoc = await this._updateNPOLoginTime(userProfile.uid);
 
     return [token, userProfile, userDoc];
