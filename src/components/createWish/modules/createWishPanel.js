@@ -28,6 +28,7 @@ import { useRouter } from 'next/router';
 
 import { getExpireWishDate, getExpireWishDateFormat } from '../../../../utils/api/time';
 import GooglePlacesAutoCompleteField from '../../inputfield/GooglePlacesAutoCompleteField';
+import { logSuccessfullyCreatedWish } from '../../../../utils/analytics';
 
 const Container = styled.div`
   min-width: 300px;
@@ -73,6 +74,7 @@ const CreateWishPanel = ({ wish, mode }) => {
       let locations = [values.location];
       const wishDoc = await api.wishes.create(title, description, categoryIds, locations);
       let wishId = wishDoc.data().wishId;
+      logSuccessfullyCreatedWish();
       router.push(`/wishes/${wishId}`);
     } catch (error) {
       console.error(error);

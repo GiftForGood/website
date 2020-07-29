@@ -42,6 +42,7 @@ import { useRouter } from 'next/router';
 import { getDay, getMonth, getYear } from '../../../../utils/api/time';
 import { v4 as uuidv4 } from 'uuid';
 import MrtDropdownField from '../../inputfield/MrtDropdownField';
+import { logSuccessfullyCreatedDonation } from '../../../../utils/analytics';
 
 const Container = styled.div`
   min-width: 300px;
@@ -155,6 +156,7 @@ const CreateDonationPanel = ({ mode, donation }) => {
         selectedImages
       );
       const donationId = donationDoc.data().donationId;
+      logSuccessfullyCreatedDonation();
       router.push(`/donations/${donationId}`);
     } catch (error) {
       console.error(error);
@@ -258,7 +260,7 @@ const CreateDonationPanel = ({ mode, donation }) => {
       .min(currentYear, `Year must start from ${currentYear}`)
 
       .required('Required'),
-    dimensions: Yup.string(),
+    dimensions: Yup.string().max(140, 'Dimensions too long and exceeds 140 character limit'),
     itemCondition: Yup.string().required('Required'),
     customValidFromValidation: Yup.boolean().test('Date Checker', 'Invalid Date', function (val) {
       const { validFromDay, validFromMonth, validFromYear } = this.parent;
@@ -573,6 +575,7 @@ const CreateDonationPanel = ({ mode, donation }) => {
                   disabled={formik.isSubmitting}
                   label="Dimensions"
                   name="dimensions"
+                  help="Allow 140 characters only"
                   error={formik.touched.dimensions && formik.errors.dimensions ? formik.errors.dimensions : ''}
                   {...formik.getFieldProps('dimensions')}
                 />
