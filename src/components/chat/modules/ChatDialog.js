@@ -7,13 +7,13 @@ import ChatDialogMessages from './ChatDialogMessages';
 import ChatDialogInputRow from './ChatDialogInputRow';
 import BlackText from '../../text/BlackText';
 import api from '../../../../utils/api';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import ChevronLeft from '@kiwicom/orbit-components/lib/icons/ChevronLeft';
 import ChevronDown from '@kiwicom/orbit-components/lib/icons/ChevronDown';
 import ChevronUp from '@kiwicom/orbit-components/lib/icons/ChevronUp';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
-import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import { donations } from '../../../../utils/constants/postType';
+import useDelayUnmount from '../../../../utils/hooks/useDelayedUnmount';
 
 const ChatDialogContainer = styled.div`
   width: 100%;
@@ -49,13 +49,23 @@ const ChatDialogPostDetails = styled.div`
       opacity: 100%;
     }
   }
-  ${media.tablet(css`
-    animation-duration: 0s;
-  `)}
-  animation-name: slideInFromTop;
-  animation-duration: 0.5s;
+
+  @keyframes slideOutFromBottom {
+    0% {
+      transform: translateY(0);
+      opacity: 100%;
+    }
+
+    50% {
+      opacity: 0%;
+    }
+
+    100% {
+      transform: translateY(-50%);
+      opacity: 0%;
+    }
+  }
   width: 100%;
-  display: ${({ isShow }) => (isShow ? 'unset' : 'none')};
 `;
 
 const ChatDialogContent = ({
@@ -100,6 +110,11 @@ const ChatDialogContent = ({
     postStatus = chat.post.status;
   }
 
+  // used to determine when to mount/unmount the post details with animations
+  const shouldMountPostDetails = useDelayUnmount(isShowPostDetails, 200);
+  const mountedAnimationStyle = { animation: 'slideInFromTop 0.5s' };
+  const unmountedAnimationStyle = { animation: 'slideOutFromBottom 0.5s' };
+
   return (
     <>
       <Stack direction="column" spacing="none">
@@ -126,24 +141,26 @@ const ChatDialogContent = ({
             </Stack>
           </ButtonsWrapper>
         )}
-        <ChatDialogPostDetails isShow={isShowPostDetails}>
-          <ChatDialogUserRow
-            postId={chatPostId}
-            postType={chatPostType}
-            postStatus={postStatus}
-            rating={5} // apparently rating is not within the user in donations/wishes, default val for now
-            loggedInUser={loggedInUser}
-            oppositeUser={oppositeUser}
-            postOwnerId={postOwnerId}
-            postEnquirerId={postEnquirerId}
-            setHasError={setHasError}
-            selectedChatId={selectedChatId}
-            setSelectedChatId={setSelectedChatId}
-            isNewChat={isNewChat}
-            setIsNewChat={setIsNewChat}
-          />
-          <ChatDialogViewPostRow postType={chatPostType} postId={chatPostId} postTitle={chatPostTitle} />
-        </ChatDialogPostDetails>
+        {shouldMountPostDetails && (
+          <ChatDialogPostDetails style={isShowPostDetails ? mountedAnimationStyle : unmountedAnimationStyle}>
+            <ChatDialogUserRow
+              postId={chatPostId}
+              postType={chatPostType}
+              postStatus={postStatus}
+              rating={5} // apparently rating is not within the user in donations/wishes, default val for now
+              loggedInUser={loggedInUser}
+              oppositeUser={oppositeUser}
+              postOwnerId={postOwnerId}
+              postEnquirerId={postEnquirerId}
+              setHasError={setHasError}
+              selectedChatId={selectedChatId}
+              setSelectedChatId={setSelectedChatId}
+              isNewChat={isNewChat}
+              setIsNewChat={setIsNewChat}
+            />
+            <ChatDialogViewPostRow postType={chatPostType} postId={chatPostId} postTitle={chatPostTitle} />
+          </ChatDialogPostDetails>
+        )}
         <ChatDialogMessages
           postType={chatPostType}
           loggedInUser={loggedInUser}
@@ -151,7 +168,7 @@ const ChatDialogContent = ({
           isNewChat={isNewChat}
           navBarHeight={navBarHeight}
           inputRowHeight={inputRowHeight}
-          isShowPostDetails={isShowPostDetails}
+          shouldMountPostDetails={shouldMountPostDetails}
         />
       </Stack>
       <Measure bounds onResize={(contentRect) => setInputRowHeight(contentRect.bounds.height)}>

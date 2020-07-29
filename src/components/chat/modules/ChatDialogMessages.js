@@ -17,14 +17,14 @@ import useWindowDimensions from '../../../../utils/hooks/useWindowDimensions';
 const desktopHeights = {
   chatDialogBackButton: 0, // 0 as it does not exist in desktop
   chatDialogUserRow: 88 + 1,
-  chatDialogSeePostRow: 113 + 1,
+  chatDialogSeePostRow: 113 + 2,
   chatDialogMessagesPadding: 48 + 2,
 };
 
 const mobileHeights = {
   chatDialogBackButton: 44,
   chatDialogUserRow: 108 + 1,
-  chatDialogSeePostRow: 96 + 1,
+  chatDialogSeePostRow: 96 + 2,
   chatDialogMessagesPadding: 32 + 2,
 };
 
@@ -50,7 +50,7 @@ const ChatDialogMessages = ({
   isNewChat,
   navBarHeight,
   inputRowHeight,
-  isShowPostDetails,
+  shouldMountPostDetails,
 }) => {
   const [chatMessageDocs, setChatMessageDocs] = useState([]);
   // only consider loading more when it's not a new chat, since it's impossible to have a new chat
@@ -139,7 +139,7 @@ const ChatDialogMessages = ({
 
   let sumOfOtherComponentHeights = chatDialogBackButton + chatDialogMessagesPadding + inputRowHeight;
 
-  if (isShowPostDetails) {
+  if (shouldMountPostDetails) {
     // only add the heights of see post row and user row if it is going to be shown
     sumOfOtherComponentHeights += chatDialogSeePostRow + chatDialogUserRow;
   }
