@@ -10,7 +10,6 @@ import { InstantSearch, Configure, connectInfiniteHits } from 'react-instantsear
 import WishesHitWrapper from '../modules/WishesHitWrapper';
 import { getByCategoryIdAndStatus } from '../../../../utils/algolia/filteringRules';
 import { wishesSortByRule } from '../../../../utils/algolia/sortByRules';
-import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 import dynamic from 'next/dynamic';
 const WishesSortFilterPanel = dynamic(() => import('../modules/WishesSortFilterPanel'), {
   ssr: false,
@@ -49,7 +48,6 @@ const ViewCategoryPage = ({ categoryDetails, sortByQuery }) => {
   const category = categoryDetails;
   const [sortBy, setSortBy] = useState(sortByQuery ? sortByQuery : wishesSortByRule().defaultRefinement);
   const [latLngFilter, setLatLngFilter] = useState('');
-  const { isDesktop } = useMediaQuery();
 
   const onLatLngUpdated = (latLng) => {
     setLatLngFilter(latLng);
