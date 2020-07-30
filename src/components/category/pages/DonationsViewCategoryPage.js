@@ -1,24 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import Categories from '../modules/Categories';
 import BlackText from '../../text/BlackText';
-import { Grid, Stack, Collapse } from '@kiwicom/orbit-components/lib';
-import * as DonationsSortTypeConstant from '../../../../utils/constants/donationsSortType';
+import { Grid } from '@kiwicom/orbit-components/lib';
 import { DONATIONS_BATCH_SIZE } from '../../../../utils/api/constants';
 import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import algoliasearch from 'algoliasearch/lite';
-import { InstantSearch, Configure, connectInfiniteHits, connectSortBy } from 'react-instantsearch-dom';
+import { InstantSearch, Configure, connectInfiniteHits } from 'react-instantsearch-dom';
 import DonationsHitWrapper from '../modules/DonationsHitWrapper';
 import { getByCategoryIdAndStatus } from '../../../../utils/algolia/filteringRules';
 import { donationsSortByRule } from '../../../../utils/algolia/sortByRules';
-import DonationsSortBy from '../modules/DonationsSortBy';
-import DonationsFilterby from '../modules/DonationsFilterBy';
-import Desktop from '@kiwicom/orbit-components/lib/Desktop';
-import Mobile from '@kiwicom/orbit-components/lib/Mobile';
+import dynamic from 'next/dynamic';
+const DonationsSortFilterPanel = dynamic(() => import('../modules/DonationsSortFilterPanel'), {
+  ssr: false,
+});
 
 const searchClient = algoliasearch(process.env.ALGOLIA_APP_ID, process.env.ALGOLIA_SEARCH_KEY);
 const DonationsInfiniteHit = connectInfiniteHits(DonationsHitWrapper);
-const DonationsSort = connectSortBy(DonationsSortBy);
 
 const ViewCategoryContainer = styled.div`
   width: 90vw;
@@ -63,21 +61,12 @@ const ViewCategoryPage = ({ categoryDetails, sortByQuery }) => {
           rows="1fr auto"
         >
           <GridSectionContainer>
-            <Desktop>
-              <Stack>
-                <DonationsSort items={donationsSortByRule().items} defaultRefinement={sortBy} category={category} />
-                <DonationsFilterby onLatLngUpdated={onLatLngUpdated} />
-              </Stack>
-            </Desktop>
-
-            <Mobile>
-              <Collapse label="Filter/Sort Settings">
-                <Stack>
-                  <DonationsSort items={donationsSortByRule().items} defaultRefinement={sortBy} category={category} />
-                  <DonationsFilterby onLatLngUpdated={onLatLngUpdated} />
-                </Stack>
-              </Collapse>
-            </Mobile>
+            <DonationsSortFilterPanel
+              sortItems={donationsSortByRule().items}
+              sortDefaultRefinement={sortBy}
+              category={category}
+              onLatLngUpdated={onLatLngUpdated}
+            />
           </GridSectionContainer>
 
           <GridSectionContainer>

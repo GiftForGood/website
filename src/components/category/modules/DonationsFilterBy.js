@@ -26,7 +26,6 @@ const DonationsFilterBy = ({ onLatLngUpdated }) => {
       if (postalCode.trim().length > 0) {
         const postalCodeArray = [postalCode];
         const locations = await getLocations(postalCodeArray);
-        console.log(locations);
         if (locations.length > 0) {
           const latLng = `${locations[0].latitude},${locations[0].longitude}`;
           onLatLngUpdated(latLng);

@@ -1,23 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import Categories from '../modules/Categories';
 import BlackText from '../../text/BlackText';
-import { Grid, Stack, Collapse } from '@kiwicom/orbit-components/lib';
+import { Grid } from '@kiwicom/orbit-components/lib';
 import { WISHES_BATCH_SIZE } from '../../../../utils/api/constants';
 import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import algoliasearch from 'algoliasearch/lite';
-import { InstantSearch, Configure, connectInfiniteHits, connectSortBy } from 'react-instantsearch-dom';
+import { InstantSearch, Configure, connectInfiniteHits } from 'react-instantsearch-dom';
 import WishesHitWrapper from '../modules/WishesHitWrapper';
 import { getByStatus } from '../../../../utils/algolia/filteringRules';
 import { wishesSortByRule } from '../../../../utils/algolia/sortByRules';
-import WishesSortBy from '../modules/WishesSortBy';
-import WishesFilterby from '../modules/WishesFilterBy';
-import Desktop from '@kiwicom/orbit-components/lib/Desktop';
-import Mobile from '@kiwicom/orbit-components/lib/Mobile';
+import dynamic from 'next/dynamic';
+const WishesSortFilterPanel = dynamic(() => import('../modules/WishesSortFilterPanel'), {
+  ssr: false,
+});
 
 const searchClient = algoliasearch(process.env.ALGOLIA_APP_ID, process.env.ALGOLIA_SEARCH_KEY);
 const WishesInfiniteHit = connectInfiniteHits(WishesHitWrapper);
-const WishesSort = connectSortBy(WishesSortBy);
 
 const ViewAllWishesContainer = styled.div`
   width: 90vw;
@@ -68,21 +67,12 @@ const ViewAllWishesPage = ({ sortByQuery, query = '' }) => {
           rows="1fr auto"
         >
           <GridSectionContainer>
-            <Desktop>
-              <Stack>
-                <WishesSort items={wishesSortByRule().items} defaultRefinement={sortBy} category={null} />
-                <WishesFilterby onLatLngUpdated={onLatLngUpdated} />
-              </Stack>
-            </Desktop>
-
-            <Mobile>
-              <Collapse label="Filter/Sort Settings">
-                <Stack>
-                  <WishesSort items={wishesSortByRule().items} defaultRefinement={sortBy} category={null} />
-                  <WishesFilterby onLatLngUpdated={onLatLngUpdated} />
-                </Stack>
-              </Collapse>
-            </Mobile>
+            <WishesSortFilterPanel
+              sortItems={wishesSortByRule().items}
+              sortDefaultRefinement={sortBy}
+              category={null}
+              onLatLngUpdated={onLatLngUpdated}
+            />
           </GridSectionContainer>
 
           <GridSectionContainer>

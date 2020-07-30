@@ -1,23 +1,23 @@
 import React, { useState } from 'react';
 import Categories from '../modules/Categories';
 import BlackText from '../../text/BlackText';
-import { Grid, Stack, Collapse } from '@kiwicom/orbit-components/lib';
+import { Grid } from '@kiwicom/orbit-components/lib';
 import { WISHES_BATCH_SIZE } from '../../../../utils/api/constants';
 import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import algoliasearch from 'algoliasearch/lite';
-import { InstantSearch, Configure, connectInfiniteHits, connectSortBy } from 'react-instantsearch-dom';
+import { InstantSearch, Configure, connectInfiniteHits } from 'react-instantsearch-dom';
 import WishesHitWrapper from '../modules/WishesHitWrapper';
 import { getByCategoryIdAndStatus } from '../../../../utils/algolia/filteringRules';
 import { wishesSortByRule } from '../../../../utils/algolia/sortByRules';
-import WishesSortBy from '../modules/WishesSortBy';
-import WishesFilterby from '../modules/WishesFilterBy';
-import Desktop from '@kiwicom/orbit-components/lib/Desktop';
-import Mobile from '@kiwicom/orbit-components/lib/Mobile';
+import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
+import dynamic from 'next/dynamic';
+const WishesSortFilterPanel = dynamic(() => import('../modules/WishesSortFilterPanel'), {
+  ssr: false,
+});
 
 const searchClient = algoliasearch(process.env.ALGOLIA_APP_ID, process.env.ALGOLIA_SEARCH_KEY);
 const WishesInfiniteHit = connectInfiniteHits(WishesHitWrapper);
-const WishesSort = connectSortBy(WishesSortBy);
 
 const ViewCategoryContainer = styled.div`
   width: 90vw;
@@ -49,6 +49,7 @@ const ViewCategoryPage = ({ categoryDetails, sortByQuery }) => {
   const category = categoryDetails;
   const [sortBy, setSortBy] = useState(sortByQuery ? sortByQuery : wishesSortByRule().defaultRefinement);
   const [latLngFilter, setLatLngFilter] = useState('');
+  const { isDesktop } = useMediaQuery();
 
   const onLatLngUpdated = (latLng) => {
     setLatLngFilter(latLng);
@@ -67,21 +68,12 @@ const ViewCategoryPage = ({ categoryDetails, sortByQuery }) => {
           rows="1fr auto"
         >
           <GridSectionContainer>
-            <Desktop>
-              <Stack>
-                <WishesSort items={wishesSortByRule().items} defaultRefinement={sortBy} category={category} />
-                <WishesFilterby onLatLngUpdated={onLatLngUpdated} />
-              </Stack>
-            </Desktop>
-
-            <Mobile>
-              <Collapse label="Filter/Sort Settings">
-                <Stack>
-                  <WishesSort items={wishesSortByRule().items} defaultRefinement={sortBy} category={category} />
-                  <WishesFilterby onLatLngUpdated={onLatLngUpdated} />
-                </Stack>
-              </Collapse>
-            </Mobile>
+            <WishesSortFilterPanel
+              sortItems={wishesSortByRule().items}
+              sortDefaultRefinement={sortBy}
+              category={category}
+              onLatLngUpdated={onLatLngUpdated}
+            />
           </GridSectionContainer>
 
           <GridSectionContainer>
