@@ -56,7 +56,7 @@ const TopNavigationBar = () => {
   const [prevScrollPosition, setPrevScrollPosition] = useState(0);
 
   const ref = useRef(null);
-  const [height, setHeight] = useState(0)
+  const [height, setHeight] = useState(0);
 
   const onHamburgerClick = () => {
     setShowDrawer(true);
@@ -87,8 +87,8 @@ const TopNavigationBar = () => {
   });
 
   useEffect(() => {
-    setHeight(ref.current.clientHeight)
-  })
+    setHeight(ref.current.clientHeight);
+  });
 
   return (
     <>
@@ -104,7 +104,7 @@ const TopNavigationBar = () => {
         </NavigationBarContainer>
       </TopNavigationBarContainer>
 
-      <FakeContainer height={height}/>
+      <FakeContainer height={height} />
 
       <Drawer shown={showDrawer} position="left" onClose={onHamburgerClose} suppressed={false}>
         <Stack direction="column">

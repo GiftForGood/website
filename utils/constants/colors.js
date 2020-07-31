@@ -59,5 +59,5 @@ export const colors = {
   appreciationSelectedHoverActive: '#35ada0',
   appreciationSelectedFocus: '#16a595',
   footerBackground: '#fafafa',
-  newsBackground: '#f3f4f5'
+  newsBackground: '#f3f4f5',
 };
