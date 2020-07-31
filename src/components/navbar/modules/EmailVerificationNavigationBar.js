@@ -5,20 +5,17 @@ import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import { colors } from '../../../../utils/constants/colors';
 import useUser from '../../session/modules/useUser';
 import AlertCircle from '@kiwicom/orbit-components/lib/icons/AlertCircle';
-import { EMAIL_BAR_HEIGHT } from '../../../../utils/constants/navbar';
 import api from '../../../../utils/api';
 
 const Container = styled.div`
   display: ${({ shown }) => (shown ? 'flex' : 'none')};
-  height: ${EMAIL_BAR_HEIGHT.MOBILE}px;
   background-color: ${colors.donorBackground};
   z-index: 700;
-  width: 100%;
   padding-left: 10px;
-
-  ${media.largeMobile(css`
-    height: ${EMAIL_BAR_HEIGHT.DESKTOP}px;
-  `)};
+  padding-bottom: 10px;
+  padding-top: 10px;
+  padding-right: 10px;
+  word-break: break-all;
 `;
 
 const EmailVerificationNavigationBar = () => {
