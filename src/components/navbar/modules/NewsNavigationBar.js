@@ -19,7 +19,7 @@ const NewsNavigationBar = () => {
   return (
     <Container shown={shown}>
       <Stack justify="center" align="center" direction="row">
-        <Text>
+        <Text >
           Disclaimer: This website is still under development and all posts are meant for illustration purposes only.
           the official launch of GiftForGood will be in Sept 2020.
         </Text>
