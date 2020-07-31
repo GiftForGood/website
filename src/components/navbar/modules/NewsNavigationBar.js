@@ -14,7 +14,7 @@ const Container = styled.div`
 `;
 
 const NewsNavigationBar = () => {
-  const [shown, setShown] = useState(false);
+  const [shown, setShown] = useState(true);
 
   return (
     <Container shown={shown}>
