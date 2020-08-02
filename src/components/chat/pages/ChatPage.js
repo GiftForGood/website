@@ -9,6 +9,7 @@ import { EMAIL_BAR_HEIGHT, NAVBAR_HEIGHT } from '../../../../utils/constants/nav
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 import Router from 'next/router';
 import useWindowDimensions from '../../../../utils/hooks/useWindowDimensions';
+import { isSafari } from 'react-device-detect';
 
 const NoChatsContainer = styled.div`
   margin: 0 auto;
@@ -180,6 +181,7 @@ const ChatPage = ({ user, chatId, postId, postType, isViewingChatsForMyPost }) =
   const gridContainerStyle = {
     height: `${height - navBarOffsetHeight}px`,
     width: '100vw',
+    position: isSafari ? 'fixed' : 'initial', // disable elastic scroll in safari
   };
 
   if (hasError) {
