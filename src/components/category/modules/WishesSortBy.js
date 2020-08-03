@@ -35,7 +35,9 @@ const WishesSortBy = ({ items, currentRefinement, refine, sortByIndex, category 
       <Separator />
       <ChoiceGroup style={{ flexDirection: 'row' }} onChange={(event) => handleSelect(event)}>
         {items.map((item) => {
-          return <Radio label={item.label} checked={currentRefinement === item.value} value={item.value} />;
+          return (
+            <Radio label={item.label} checked={currentRefinement === item.value} value={item.value} key={item.value} />
+          );
         })}
       </ChoiceGroup>
     </>
