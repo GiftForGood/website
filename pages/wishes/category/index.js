@@ -28,7 +28,7 @@ const ViewAllWishes = ({ sortByQuery, user, query }) => {
   return (
     <SessionProvider user={user}>
       <Header title={`All | Wishes`} />
-      <TopNavigationBar />
+      <TopNavigationBar showNews={true}/>
       <ViewAllWishesPage sortByQuery={sortByQuery} query={query} />
       <BottomNavigation />
       <Footer />

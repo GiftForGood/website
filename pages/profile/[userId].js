@@ -30,7 +30,7 @@ export async function getServerSideProps({ params, req, res, query }) {
 const Profile = ({ user, userId, userTypes }) => {
   return (
     <SessionProvider user={user}>
-      <TopNavigationBar />
+      <TopNavigationBar showNews={true}/>
       {userTypes ? null : <Error statusCode={404} />}
       {containsNPO(userTypes) ? (
         <NpoProfilePage userId={userId} />
