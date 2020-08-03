@@ -169,7 +169,7 @@ const RegisterNpoOrganization = () => {
           </Stack>
 
           <InputField
-            label="Registration Number"
+            label="Registration Number (UEN)"
             name="registrationNumber"
             placeholder="Registration Number"
             error={
@@ -181,7 +181,7 @@ const RegisterNpoOrganization = () => {
           />
 
           <InputGroup
-            label="Date of Registration"
+            label="Entity Registration Date"
             error={
               formik.touched.dateOfRegistrationDay ||
               formik.touched.dateOfRegistrationMonth ||
