@@ -74,7 +74,6 @@ const WishPage = ({ wishId, wishDetails, npoDetails, user, prevHref, categoryNam
             postUserName={wish.user.userName}
             profileImageUrl={wish.user.profileImageUrl}
             npoOrgName={wish.organization.name}
-            postUserReviewRating={npo.reviewRating}
             isNpoVerifiedByAdmin={npo.isVerifiedByAdmin}
           />
         </RightPanel>
