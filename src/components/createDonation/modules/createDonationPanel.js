@@ -421,6 +421,10 @@ const CreateDonationPanel = ({ mode, donation }) => {
     if (!selectedCategories.includes(category) && selectedCategories.length <= 2) {
       setSelectedCategories([...selectedCategories, category]);
       formik.setFieldValue('categories', [...selectedCategories, category]);
+    } else {
+      const remainingSelectedCategories = selectedCategories.filter((selectedCat) => selectedCat !== category);
+      setSelectedCategories(remainingSelectedCategories);
+      formik.setFieldValue('categories', remainingSelectedCategories);
     }
   };
 
@@ -438,7 +442,13 @@ const CreateDonationPanel = ({ mode, donation }) => {
     return (
       <div>
         {categories.map((category) => (
-          <ListChoice title={category.name} key={category.id} onClick={() => onChoiceClicked(category)} />
+          <ListChoice
+            title={category.name}
+            key={category.id}
+            onClick={() => onChoiceClicked(category)}
+            selectable
+            selected={selectedCategories.includes(category)}
+          />
         ))}
       </div>
     );
@@ -525,8 +535,6 @@ const CreateDonationPanel = ({ mode, donation }) => {
                       placeholder="DD"
                       type="number"
                       inputMode="numeric"
-                      maxValue={31}
-                      minValue={1}
                       {...formik.getFieldProps('validFromDay')}
                     />
                     <Select options={months} placeholder="Month" {...formik.getFieldProps('validFromMonth')} />
@@ -557,8 +565,6 @@ const CreateDonationPanel = ({ mode, donation }) => {
                       placeholder="DD"
                       type="number"
                       inputMode="numeric"
-                      maxValue={31}
-                      minValue={1}
                       {...formik.getFieldProps('validToDay')}
                     />
                     <Select options={months} placeholder="Month" {...formik.getFieldProps('validToMonth')} />

@@ -5,6 +5,7 @@ import * as path from 'path';
 import { FIREBASE_EMAIL_ACTION_URL } from '../constants/siteUrl';
 import { DONOR, NPO } from '../constants/usersType';
 import { ALL_TEXT } from '../constants/imageVariation';
+import { NPO_NOTIFICATION, DONOR_NOTIFICATION } from '../constants/notification';
 import AuthError from './error/authError';
 
 const donorsCollection = db.collection('donors');
@@ -129,6 +130,10 @@ class AuthAPI {
     await this._googleAuth();
     const token = await firebaseAuth.currentUser.getIdToken();
     const userProfile = firebaseAuth.currentUser;
+    if (!(await this._doesDonorExist(userProfile.uid))) {
+      this.logout();
+      throw new AuthError('invalid-user', 'donor account does not exist');
+    }
     const donorDoc = await this._updateDonorLoginTime(userProfile.uid);
 
     return [token, userProfile, donorDoc];
@@ -149,6 +154,10 @@ class AuthAPI {
     await firebaseAuth.signInWithEmailAndPassword(email, password);
     const token = await firebaseAuth.currentUser.getIdToken();
     const userProfile = firebaseAuth.currentUser;
+    if (!(await this._doesDonorExist(userProfile.uid))) {
+      this.logout();
+      throw new AuthError('invalid-user', 'donor account does not exist');
+    }
     const donorDoc = await this._updateDonorLoginTime(userProfile.uid);
 
     return [token, userProfile, donorDoc];
@@ -169,6 +178,10 @@ class AuthAPI {
     await firebaseAuth.signInWithEmailAndPassword(email, password);
     const token = await firebaseAuth.currentUser.getIdToken();
     const userProfile = firebaseAuth.currentUser;
+    if (!(await this._doesNPOExist(userProfile.uid))) {
+      this.logout();
+      throw new AuthError('invalid-user', 'npo account does not exist');
+    }
     const userDoc = await this._updateNPOLoginTime(userProfile.uid);
 
     return [token, userProfile, userDoc];
@@ -269,6 +282,7 @@ class AuthAPI {
       isForcedRefreshRequired: false,
       joinedDateTime: timeNow,
       lastLoggedInDateTime: timeNow,
+      notifications: DONOR_NOTIFICATION,
     };
     await newDonor.set(data);
 
@@ -317,6 +331,7 @@ class AuthAPI {
       isForcedRefreshRequired: false,
       joinedDateTime: timeNow,
       lastLoggedInDateTime: timeNow,
+      notifications: NPO_NOTIFICATION,
     };
     await newNPO.set(data);
 

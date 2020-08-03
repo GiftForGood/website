@@ -12,7 +12,6 @@ import { useRouter } from 'next/router';
 import { COMPLETED, CLOSED } from '../../../utils/constants/postStatus';
 import { donations, wishes } from '../../../utils/constants/postType';
 import { donor, npo } from '../../../utils/constants/userType';
-import RatingStars from '../ratingStars';
 import { colors } from '../../../utils/constants/colors';
 import { logStartChatToAnalytics } from '../../../utils/analytics';
 
@@ -26,7 +25,6 @@ const PostDetailsHeader = ({
   postId,
   postStatus,
   postType,
-  postUserReviewRating,
 }) => {
   const router = useRouter();
   const isOwnPost = loginUserId === postUserId; // whether login user is the post owner
@@ -169,11 +167,7 @@ const PostDetailsHeader = ({
         <ProfileAvatar imageUrl={profileImageUrl.small || profileImageUrl.raw} />
         <Stack direction="column" shrink spacing="none">
           <Text>{postUserName}</Text>
-          {postType === donations ? (
-            <RatingStars rating={postUserReviewRating} size="small" color={colors.ratingStarBackground} showEmpty />
-          ) : (
-            <Text>{npoOrgName}</Text>
-          )}
+          {postType === wishes && <Text>{npoOrgName}</Text>}
         </Stack>
       </Stack>
     );
