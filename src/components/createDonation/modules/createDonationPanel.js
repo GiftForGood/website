@@ -535,8 +535,6 @@ const CreateDonationPanel = ({ mode, donation }) => {
                       placeholder="DD"
                       type="number"
                       inputMode="numeric"
-                      maxValue={31}
-                      minValue={1}
                       {...formik.getFieldProps('validFromDay')}
                     />
                     <Select options={months} placeholder="Month" {...formik.getFieldProps('validFromMonth')} />
@@ -567,8 +565,6 @@ const CreateDonationPanel = ({ mode, donation }) => {
                       placeholder="DD"
                       type="number"
                       inputMode="numeric"
-                      maxValue={31}
-                      minValue={1}
                       {...formik.getFieldProps('validToDay')}
                     />
                     <Select options={months} placeholder="Month" {...formik.getFieldProps('validToMonth')} />
