@@ -5,7 +5,6 @@ import styled from 'styled-components';
 import { colors } from '../../../utils/constants/colors';
 import { Stack, Text, TextLink } from '@kiwicom/orbit-components/lib';
 import { CardSection } from '@kiwicom/orbit-components/lib/Card';
-import RatingStars from '../ratingStars';
 import { wishes } from '../../../utils/constants/postType';
 
 const CheckProfileLink = styled.a`
@@ -36,15 +35,7 @@ const CardContainer = styled.div`
   box-shadow: 0px 0px 5px 0px rgba(37, 42, 49, 0.16), 0px 2px 8px 0px rgba(37, 42, 49, 0.12);
 `;
 
-const UserInfoCard = ({
-  postType,
-  postUserId,
-  postUserName,
-  profileImageUrl,
-  npoOrgName,
-  postUserReviewRating,
-  isNpoVerifiedByAdmin,
-}) => {
+const UserInfoCard = ({ postType, postUserId, postUserName, profileImageUrl, npoOrgName, isNpoVerifiedByAdmin }) => {
   const isWishPost = postType === wishes;
   const checkProfileHref = `/profile/${postUserId}`;
 
@@ -78,7 +69,6 @@ const UserInfoCard = ({
     return (
       <Stack direction="column" shrink inline align="center" spacing="extraTight">
         <ProfileAvatar height="80px" width="80px" imageUrl={profileImageUrl.small || profileImageUrl.raw} />
-        <RatingStars rating={postUserReviewRating} size="small" color={colors.ratingStarBackground} showEmpty />
       </Stack>
     );
   };

@@ -55,7 +55,15 @@ const MrtDropdownField = ({ onSelectedStation, error, label, disabled, value }) 
           <ContentContainer>
             <>
               {currentList.map((station) => {
-                return <ListChoice title={station.name} onClick={() => setMrtValue(station)} />;
+                return (
+                  <ListChoice
+                    title={station.name}
+                    onClick={() => {
+                      setMrtValue(station);
+                      setIsOpen(false);
+                    }}
+                  />
+                );
               })}
             </>
           </ContentContainer>
