@@ -51,7 +51,7 @@ const FakeContainer = styled.div`
   height: ${(props) => props.height}px;
 `;
 
-const TopNavigationBar = () => {
+const TopNavigationBar = ({ showNews }) => {
   const user = useUser();
   const [showDrawer, setShowDrawer] = useState(false);
   const [shown, setShown] = useState(true);
@@ -92,12 +92,12 @@ const TopNavigationBar = () => {
   useEffect(() => {
     setHeight(ref.current.clientHeight);
     dispatch(setNavbarHeight(ref.current.clientHeight));
-  });
+  },[ref]);
 
   return (
     <>
       <TopNavigationBarContainer shown={shown} ref={ref} height={height}>
-        <NewsNavigationBar />
+        <NewsNavigationBar show={showNews}/>
         <EmailVerificationNavigationBar />
 
         <NavigationBarContainer>

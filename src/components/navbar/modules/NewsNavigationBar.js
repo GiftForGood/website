@@ -7,14 +7,11 @@ const Container = styled.div`
   display: ${({ shown }) => (shown ? 'flex' : 'none')};
   background-color: ${colors.newsBackground};
   z-index: 700;
-  padding-left: 10px;
-  padding-bottom: 10px;
-  padding-top: 10px;
-  padding-right: 10px;
+  padding: 10px;
 `;
 
-const NewsNavigationBar = () => {
-  const [shown, setShown] = useState(true);
+const NewsNavigationBar = ({ show = false }) => {
+  const [shown, setShown] = useState(show);
 
   return (
     <Container shown={shown}>

@@ -11,10 +11,7 @@ const Container = styled.div`
   display: ${({ shown }) => (shown ? 'flex' : 'none')};
   background-color: ${colors.donorBackground};
   z-index: 700;
-  padding-left: 10px;
-  padding-bottom: 10px;
-  padding-top: 10px;
-  padding-right: 10px;
+  padding: 10px;
   word-break: break-all;
 `;
 
