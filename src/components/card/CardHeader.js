@@ -32,24 +32,23 @@ const TimePosted = ({ timeAgo }) => {
   return <BlackText size="small">{timeAgo}</BlackText>;
 };
 
-const AvatarDetails = ({ name, distance }) => {
+const AvatarDetails = ({ name }) => {
   return (
     <AvatarDetailsContainer>
       <Stack direction="column" spacing="extraTight">
         <BlackText size="small">{name}</BlackText>
-        <BlackText size="small">{distance} away</BlackText>
       </Stack>
     </AvatarDetailsContainer>
   );
 };
 
-const CardHeader = ({ imageUrl, name, distance, timeAgo, isBumped }) => {
+const CardHeader = ({ imageUrl, name, timeAgo, isBumped }) => {
   return (
     <CardHeaderContainer>
       <AvatarContainer>
         <ProfileAvatar imageUrl={imageUrl.small || imageUrl.raw} />
       </AvatarContainer>
-      <AvatarDetails name={name} distance={distance || '2.5km'} />
+      <AvatarDetails name={name} />
       <TimePostedContainer>
         {isBumped ? <Replace customColor={colors.bump} /> : <TimePosted timeAgo={timeAgo} />}
       </TimePostedContainer>
