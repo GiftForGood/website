@@ -23,7 +23,7 @@ const DonationsHome = ({ user }) => {
   return (
     <SessionProvider user={user}>
       <Header title="Donations | GiftForGood" />
-      <TopNavigationBar showNews={true}/>
+      <TopNavigationBar showNews={true} />
       <DonationsHomePage />
       <BottomNavigation />
       <Footer />

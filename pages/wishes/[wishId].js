@@ -63,7 +63,7 @@ const Wish = ({ wishId, wishDetails, npoDetails, user, prevHref, categoryName })
         <meta property="og:image:secure_url" content={ogImagePath} />
         <meta property="og:image:type" content="image/jpeg" />
       </Head>
-      <TopNavigationBar showNews={true}/>
+      <TopNavigationBar showNews={true} />
       <WishPage
         wishId={wishId}
         wishDetails={wishDetails}

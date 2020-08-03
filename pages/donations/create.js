@@ -29,7 +29,7 @@ const CreateDonations = ({ user }) => {
   return (
     <SessionProvider user={user}>
       <Header title="Create Donations | GiftForGood" />
-      <TopNavigationBar showNews={true}/>
+      <TopNavigationBar showNews={true} />
       <CreateDonationPage mode="create" />
       <Footer />
     </SessionProvider>

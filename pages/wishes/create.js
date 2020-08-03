@@ -29,7 +29,7 @@ const CreateWishes = ({ user }) => {
   return (
     <SessionProvider user={user}>
       <Header title="Create Wishes | GiftForGood" />
-      <TopNavigationBar showNews={true}/>
+      <TopNavigationBar showNews={true} />
       <CreateWishPage mode="create" />
       <Footer />
     </SessionProvider>

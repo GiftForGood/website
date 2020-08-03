@@ -64,7 +64,7 @@ const Donation = ({ donationId, donationDetails, donorDetails, user, prevHref, c
         <meta property="og:image:secure_url" content={ogImagePath} />
         <meta property="og:image:type" content="image/jpeg" />
       </Head>
-      <TopNavigationBar showNews={true}/>
+      <TopNavigationBar showNews={true} />
       <DonationPage
         donationId={donationId}
         donationDetails={donationDetails}

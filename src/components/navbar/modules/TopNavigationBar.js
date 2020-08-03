@@ -92,12 +92,12 @@ const TopNavigationBar = ({ showNews }) => {
   useEffect(() => {
     setHeight(ref.current.clientHeight);
     dispatch(setNavbarHeight(ref.current.clientHeight));
-  },[ref]);
+  }, [ref]);
 
   return (
     <>
       <TopNavigationBarContainer shown={shown} ref={ref} height={height}>
-        <NewsNavigationBar show={showNews}/>
+        <NewsNavigationBar show={showNews} />
         <EmailVerificationNavigationBar />
 
         <NavigationBarContainer>
