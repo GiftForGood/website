@@ -61,7 +61,7 @@ const ReportPostModal = ({ postId, postType, loginUserId, onClose }) => {
             <Reasons />
           </ChoiceGroup>
           <Textarea
-            placeholder="Reason for reporting post"
+            placeholder="If selected 'Others', please specify the reason for reporting this post."
             rows="4"
             disabled={reason !== OTHERS}
             error={reason === OTHERS && otherReason === '' ? '*required' : null}

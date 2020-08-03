@@ -82,6 +82,7 @@ const ChatDialogInputRow = ({ selectedChatId, setSelectedChatId, isNewChat, setI
     const method = postType === donations ? 'sendInitialTextMessageForDonation' : 'sendInitialTextMessageForWish';
     const [rawChat, rawFirstMessage] = await api.chats[method](postId, message);
     const chatId = rawChat.data().chatId;
+    setIsNewChat(false);
     setSelectedChatId(chatId);
     router.push(`/chat`, `/chat?chatId=${chatId}`, { shallow: true });
   };
