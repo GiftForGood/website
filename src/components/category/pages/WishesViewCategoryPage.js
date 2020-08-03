@@ -6,15 +6,17 @@ import { WISHES_BATCH_SIZE } from '../../../../utils/api/constants';
 import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import algoliasearch from 'algoliasearch/lite';
-import { InstantSearch, Configure, connectInfiniteHits, connectSortBy } from 'react-instantsearch-dom';
+import { InstantSearch, Configure, connectInfiniteHits } from 'react-instantsearch-dom';
 import WishesHitWrapper from '../modules/WishesHitWrapper';
 import { getByCategoryIdAndStatus } from '../../../../utils/algolia/filteringRules';
 import { wishesSortByRule } from '../../../../utils/algolia/sortByRules';
-import WishesSortBy from '../modules/WishesSortBy';
+import dynamic from 'next/dynamic';
+const WishesSortFilterPanel = dynamic(() => import('../modules/WishesSortFilterPanel'), {
+  ssr: false,
+});
 
 const searchClient = algoliasearch(process.env.ALGOLIA_APP_ID, process.env.ALGOLIA_SEARCH_KEY);
 const WishesInfiniteHit = connectInfiniteHits(WishesHitWrapper);
-const WishesSort = connectSortBy(WishesSortBy);
 
 const ViewCategoryContainer = styled.div`
   width: 90vw;
@@ -45,6 +47,11 @@ const GridSectionContainer = styled.div`
 const ViewCategoryPage = ({ categoryDetails, sortByQuery }) => {
   const category = categoryDetails;
   const [sortBy, setSortBy] = useState(sortByQuery ? sortByQuery : wishesSortByRule().defaultRefinement);
+  const [latLngFilter, setLatLngFilter] = useState('');
+
+  const onLatLngUpdated = (latLng) => {
+    setLatLngFilter(latLng);
+  };
 
   return (
     <InstantSearch searchClient={searchClient} indexName="wishes">
@@ -59,7 +66,12 @@ const ViewCategoryPage = ({ categoryDetails, sortByQuery }) => {
           rows="1fr auto"
         >
           <GridSectionContainer>
-            <WishesSort items={wishesSortByRule().items} defaultRefinement={sortBy} category={category} />
+            <WishesSortFilterPanel
+              sortItems={wishesSortByRule().items}
+              sortDefaultRefinement={sortBy}
+              category={category}
+              onLatLngUpdated={onLatLngUpdated}
+            />
           </GridSectionContainer>
 
           <GridSectionContainer>
@@ -68,7 +80,12 @@ const ViewCategoryPage = ({ categoryDetails, sortByQuery }) => {
             </BlackText>
 
             {/* Algolia */}
-            <Configure filters={getByCategoryIdAndStatus(category.id, 'pending')} hitsPerPage={WISHES_BATCH_SIZE} />
+            <Configure
+              filters={getByCategoryIdAndStatus(category.id, 'pending')}
+              hitsPerPage={WISHES_BATCH_SIZE}
+              aroundLatLng={latLngFilter}
+              aroundRadius={10000}
+            />
             <WishesContainer>
               {/* Desktop,Tablet,Mobile has infinite scrolling  */}
               <WishesInfiniteHit category={category} minHitsPerPage={WISHES_BATCH_SIZE} />
