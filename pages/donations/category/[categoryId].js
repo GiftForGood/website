@@ -41,7 +41,7 @@ const ViewCategory = ({ categoryDetails, sortByQuery, user }) => {
   return (
     <SessionProvider user={user}>
       <Header title={`${categoryDetails.name} | Donations`} />
-      <TopNavigationBar />
+      <TopNavigationBar showNews={true} />
       <ViewCategoryPage categoryDetails={categoryDetails} sortByQuery={sortByQuery} />
       <BottomNavigation />
       <Footer />

@@ -44,7 +44,7 @@ const CreateWishes = ({ user, donation, isMine }) => {
   return (
     <SessionProvider user={user}>
       <Header title="Edit Donations | GiftForGood" />
-      <TopNavigationBar />
+      <TopNavigationBar showNews={true} />
       {donation ? null : <Error statusCode={404} />}
       {isMine ? null : <Error statusCode={404} />}
       {donation && isMine && <CreateDonationPage donation={donation} mode="edit" />}

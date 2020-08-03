@@ -27,7 +27,7 @@ const SettingsProfilePage = ({ user }) => {
   return (
     <SessionProvider user={user}>
       <Header title="Settings | GiftForGood" />
-      <TopNavigationBar />
+      <TopNavigationBar showNews={true} />
       {isNpoUser(user.user) ? <NpoSettingProfilePage /> : isDonorUser(user.user) ? <DonorSettingProfilePage /> : null}
       <Footer />
     </SessionProvider>

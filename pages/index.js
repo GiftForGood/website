@@ -24,7 +24,7 @@ const WishesHome = ({ user }) => {
   return (
     <SessionProvider user={user}>
       <Header title="Wishes | GiftForGood" />
-      <TopNavigationBar />
+      <TopNavigationBar showNews={true} />
       <WishesHomePage />
       <BottomNavigation />
       <Footer />

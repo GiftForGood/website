@@ -28,7 +28,7 @@ const ViewAllDonations = ({ sortByQuery, user, query }) => {
   return (
     <SessionProvider user={user}>
       <Header title={`All | Donations`} />
-      <TopNavigationBar />
+      <TopNavigationBar showNews={true} />
       <ViewAllDonationsPage sortByQuery={sortByQuery} query={query} />
       <BottomNavigation />
       <Footer />
