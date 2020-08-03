@@ -9,6 +9,8 @@ import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import useUser from '../../session/modules/useUser';
 import transition from '@kiwicom/orbit-components/lib/utils/transition';
 import NewsNavigationBar from '../modules/NewsNavigationBar';
+import { useDispatch } from 'react-redux';
+import { setNavbarHeight } from '../actions';
 
 const TopNavigationBarContainer = styled.nav`
   position: fixed;
@@ -54,6 +56,7 @@ const TopNavigationBar = () => {
   const [showDrawer, setShowDrawer] = useState(false);
   const [shown, setShown] = useState(true);
   const [prevScrollPosition, setPrevScrollPosition] = useState(0);
+  const dispatch = useDispatch();
 
   const ref = useRef(null);
   const [height, setHeight] = useState(0);
@@ -88,6 +91,7 @@ const TopNavigationBar = () => {
 
   useEffect(() => {
     setHeight(ref.current.clientHeight);
+    dispatch(setNavbarHeight(ref.current.clientHeight));
   });
 
   return (
