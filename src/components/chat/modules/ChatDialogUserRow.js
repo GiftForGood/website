@@ -5,7 +5,6 @@ import AppreciationMessageModal from '../../modal/AppreciationMessageModal';
 import ConfirmCompletionModal from '../../modal/ConfirmCompletionModal';
 import ProfileAvatar from '../../imageContainers/ProfileAvatar';
 import BlackText from '../../text/BlackText';
-import RatingStars from '../../ratingStars';
 import SuggestDateButton from '../../../components/buttons/ChatSuggestDatesButton';
 import CompleteButton from '../../../components/buttons/ChatCompleteButton';
 import styled from 'styled-components';
@@ -31,7 +30,6 @@ const ButtonsContainer = styled.div`
  *
  * @param {string} name is the name of the opposite user
  * @param {string} profileImageUrl is the url of the opposite user's profile image
- * @param {string} rating is the rating of the opposite user
  */
 const ChatDialogUserRow = ({
   postId,
@@ -46,7 +44,6 @@ const ChatDialogUserRow = ({
   oppositeUser,
   postOwnerId,
   postEnquirerId,
-  rating,
 }) => {
   const [showSuggestDateModal, setShowSuggestDateModal] = useState(false);
   const [showAppreciationMessageModal, setShowAppreciationMessageModal] = useState(false);
@@ -102,10 +99,7 @@ const ChatDialogUserRow = ({
         <AvatarContainer>
           <Stack direction="row" align="center">
             <ProfileAvatar imageUrl={oppositeUser.profileImageUrl.small || oppositeUser.profileImageUrl.raw} />
-            <Stack direction="column" align="start" spacing="extraTight">
-              <BlackText size="small">{oppositeUser.name || oppositeUser.userName}</BlackText>
-              <RatingStars rating={rating} showEmpty color={colors.ratingStarBackground} size="small" />
-            </Stack>
+            <BlackText size="small">{oppositeUser.name || oppositeUser.userName}</BlackText>
           </Stack>
         </AvatarContainer>
         <ButtonsContainer>

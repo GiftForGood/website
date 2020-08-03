@@ -61,7 +61,6 @@ const DonationInformation = ({
   validPeriodTo,
   locations,
   categoryTags,
-  postUserReviewRating,
 }) => {
   const CategoryTags = () => {
     return categoryTags.map((category) => {
@@ -164,7 +163,6 @@ const DonationInformation = ({
         postId={donationId}
         postStatus={status}
         postType={donations}
-        postUserReviewRating={postUserReviewRating}
       />
       <DonationInformationBody />
     </Stack>
