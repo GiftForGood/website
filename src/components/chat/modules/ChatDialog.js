@@ -106,7 +106,6 @@ const ChatDialogContent = ({
               postId={chatPostId}
               postType={chatPostType}
               postStatus={postStatus}
-              rating={5} // apparently rating is not within the user in donations/wishes, default val for now
               loggedInUser={loggedInUser}
               oppositeUser={oppositeUser}
               postOwnerId={postOwnerId}
