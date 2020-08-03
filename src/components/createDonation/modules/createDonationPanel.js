@@ -421,6 +421,10 @@ const CreateDonationPanel = ({ mode, donation }) => {
     if (!selectedCategories.includes(category) && selectedCategories.length <= 2) {
       setSelectedCategories([...selectedCategories, category]);
       formik.setFieldValue('categories', [...selectedCategories, category]);
+    } else {
+      const remainingSelectedCategories = selectedCategories.filter((selectedCat) => selectedCat !== category);
+      setSelectedCategories(remainingSelectedCategories);
+      formik.setFieldValue('categories', remainingSelectedCategories);
     }
   };
 
