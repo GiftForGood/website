@@ -198,8 +198,6 @@ const RegisterNpoOrganization = () => {
               placeholder="DD"
               type="number"
               inputMode="numeric"
-              maxValue={31}
-              minValue={1}
               {...formik.getFieldProps('dateOfRegistrationDay')}
             />
             <Select options={months} placeholder="Month" {...formik.getFieldProps('dateOfRegistrationMonth')} />

@@ -510,13 +510,13 @@ const CreateDonationPanel = ({ mode, donation }) => {
                     flex={['0 0 60px', '1 1 100%', '0 0 90px']}
                     label="Valid From"
                     error={
-                      formik.touched.validFromDay || formik.touched.validFromMonth || formik.touched.validFromYear
-                        ? formik.errors.validFromDay ||
+                      (formik.touched.validFromDay || formik.touched.validFromMonth || formik.touched.validFromYear)
+                        ? (formik.errors.validFromDay ||
                           formik.errors.validFromMonth ||
                           formik.errors.validFromYear ||
                           formik.errors.customValidFromValidation ||
                           formik.errors.customValidFromValidationMoreThanZeroDayFromToday ||
-                          formik.errors.customValidateDateRange
+                          formik.errors.customValidateDateRange)
                         : ''
                     }
                     required
@@ -525,8 +525,6 @@ const CreateDonationPanel = ({ mode, donation }) => {
                       placeholder="DD"
                       type="number"
                       inputMode="numeric"
-                      maxValue={31}
-                      minValue={1}
                       {...formik.getFieldProps('validFromDay')}
                     />
                     <Select options={months} placeholder="Month" {...formik.getFieldProps('validFromMonth')} />
@@ -542,13 +540,13 @@ const CreateDonationPanel = ({ mode, donation }) => {
                     flex={['0 0 60px', '1 1 100%', '0 0 90px']}
                     label="To"
                     error={
-                      formik.touched.validToDay || formik.touched.validToMonth || formik.touched.validToYear
-                        ? formik.errors.validToDay ||
+                      (formik.touched.validToDay || formik.touched.validToMonth || formik.touched.validToYear)
+                        ? (formik.errors.validToDay ||
                           formik.errors.validToMonth ||
                           formik.errors.validToYear ||
                           formik.errors.customValidToValidation ||
                           formik.errors.customValidToValidationMoreThanZeroDayFromToday ||
-                          formik.errors.customValidateDateRange
+                          formik.errors.customValidateDateRange)
                         : ''
                     }
                     required
@@ -557,8 +555,6 @@ const CreateDonationPanel = ({ mode, donation }) => {
                       placeholder="DD"
                       type="number"
                       inputMode="numeric"
-                      maxValue={31}
-                      minValue={1}
                       {...formik.getFieldProps('validToDay')}
                     />
                     <Select options={months} placeholder="Month" {...formik.getFieldProps('validToMonth')} />
