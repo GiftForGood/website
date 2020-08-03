@@ -438,7 +438,13 @@ const CreateDonationPanel = ({ mode, donation }) => {
     return (
       <div>
         {categories.map((category) => (
-          <ListChoice title={category.name} key={category.id} onClick={() => onChoiceClicked(category)} />
+          <ListChoice
+            title={category.name}
+            key={category.id}
+            onClick={() => onChoiceClicked(category)}
+            selectable
+            selected={selectedCategories.includes(category)}
+          />
         ))}
       </div>
     );
