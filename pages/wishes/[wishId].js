@@ -8,11 +8,11 @@ import { isAuthenticated } from '../../utils/authentication/authentication';
 import Error from 'next/error';
 import { ogImagePath } from '../../utils/constants/imagePaths';
 import { useRouter } from 'next/router';
-import Footer from '../../src/components/footer/Footer';
 import Header from '../../src/components/header';
 const TopNavigationBar = dynamic(() => import('../../src/components/navbar/modules/TopNavigationBar'), {
   ssr: false,
 });
+const Footer = dynamic(() => import('../../src/components/footer/Footer'), { ssr: false });
 
 export async function getServerSideProps({ params, req, res, query }) {
   const wishId = params.wishId;

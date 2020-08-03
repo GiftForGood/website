@@ -5,10 +5,10 @@ import dynamic from 'next/dynamic';
 import NpoSettingProfilePage from '../../src/components/settings-profile/npo/pages/NpoSettingProfilePage';
 import DonorSettingProfilePage from '../../src/components/settings-profile/donor/pages/DonorSettingProfilePage';
 import { isNpoUser, isDonorUser } from '../../utils/authentication/userType';
-import Footer from '../../src/components/footer/Footer';
 import Header from '../../src/components/header';
 
 const TopNavigationBar = dynamic(() => import('../../src/components/navbar/modules/TopNavigationBar'), { ssr: false });
+const Footer = dynamic(() => import('../../src/components/footer/Footer'), { ssr: false });
 
 export async function getServerSideProps({ params, req, res, query }) {
   let user = await isAuthenticated(req, res);

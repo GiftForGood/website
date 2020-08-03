@@ -7,13 +7,13 @@ import api from '../../utils/api';
 import { containsNPO, containsDonor } from '../../utils/authentication/userType';
 import Error from 'next/error';
 import DonorProfilePage from '../../src/components/profile/pages/DonorProfilePage';
-import Footer from '../../src/components/footer/Footer';
 const TopNavigationBar = dynamic(() => import('../../src/components/navbar/modules/TopNavigationBar'), {
   ssr: false,
 });
 const BottomNavigation = dynamic(() => import('../../src/components/navbar/modules/BottomNavigation'), {
   ssr: false,
 });
+const Footer = dynamic(() => import('../../src/components/footer/Footer'), { ssr: false });
 
 export async function getServerSideProps({ params, req, res, query }) {
   let userId = params.userId;
