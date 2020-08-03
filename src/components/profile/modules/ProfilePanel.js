@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import styled, { css } from 'styled-components';
 import { npo } from '../../../../utils/constants/userType';
@@ -17,7 +17,6 @@ const ProfilePanel = ({ user }) => {
       <ProfileDetails
         profileImageUrl={user ? user.profileImageUrl : ''}
         npoOrgName={user ? (user.organization ? user.organization.name : '') : ''}
-        userRating={user ? user.reviewRating : ''}
         npoOrgAddress={user ? (user.organization ? user.organization.address : '') : ''}
         npoContact={user ? (user.organization ? user.organization.contact : '') : ''}
         name={user ? user.name : ''}

@@ -68,14 +68,12 @@ const DonationPage = ({ donationId, donationDetails, donorDetails, user, prevHre
             validPeriodTo={donation.validPeriodTo}
             locations={donation.locations}
             categoryTags={categoryTags}
-            postUserReviewRating={donor.reviewRating}
           />
           <DonorInformation
             postType={donations}
             postUserId={donation.user.userId}
             postUserName={donation.user.userName}
             profileImageUrl={donation.user.profileImageUrl}
-            postUserReviewRating={donor.reviewRating}
           />
         </RightPanel>
       </Grid>
