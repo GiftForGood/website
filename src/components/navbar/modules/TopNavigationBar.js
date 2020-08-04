@@ -51,7 +51,7 @@ const FakeContainer = styled.div`
   height: ${(props) => props.height}px;
 `;
 
-const TopNavigationBar = ({ showNews }) => {
+const TopNavigationBar = ({ showNews, searchDefaultIndex }) => {
   const user = useUser();
   const [showDrawer, setShowDrawer] = useState(false);
   const [shown, setShown] = useState(true);
@@ -102,7 +102,7 @@ const TopNavigationBar = ({ showNews }) => {
 
         <NavigationBarContainer>
           <Stack justify="between" spacing="none">
-            <TopLeftNavigation onHamburgerClick={onHamburgerClick} />
+            <TopLeftNavigation onHamburgerClick={onHamburgerClick} searchDefaultIndex={searchDefaultIndex}/>
             <TopRightNavigation />
           </Stack>
         </NavigationBarContainer>

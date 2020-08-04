@@ -5,6 +5,7 @@ import ChevronDown from '@kiwicom/orbit-components/lib/icons/ChevronDown';
 import styled, { css } from 'styled-components';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
+import { WISHES } from '../../../../utils/constants/search';
 
 const SearchWrapper = styled.div`
   border-radius: ${({ theme }) => theme.orbit.borderRadiusNormal};
@@ -21,9 +22,9 @@ const ButtonWrapper = styled.div`
   `)};
 `;
 
-const SearchBar = ({ onEnterPressed }) => {
+const SearchBar = ({ onEnterPressed, defaultIndex = WISHES }) => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedIndex, setSelectedIndex] = useState('Wishes');
+  const [selectedIndex, setSelectedIndex] = useState(defaultIndex);
   const { isDesktop, isTablet } = useMediaQuery();
 
   const onChange = (e) => {
