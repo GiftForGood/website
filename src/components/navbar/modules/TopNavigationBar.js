@@ -102,7 +102,7 @@ const TopNavigationBar = ({ showNews, searchDefaultIndex }) => {
 
         <NavigationBarContainer>
           <Stack justify="between" spacing="none">
-            <TopLeftNavigation onHamburgerClick={onHamburgerClick} searchDefaultIndex={searchDefaultIndex}/>
+            <TopLeftNavigation onHamburgerClick={onHamburgerClick} searchDefaultIndex={searchDefaultIndex} />
             <TopRightNavigation />
           </Stack>
         </NavigationBarContainer>
