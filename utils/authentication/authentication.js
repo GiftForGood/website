@@ -8,6 +8,7 @@ import cookie from 'cookie';
  */
 export async function isAuthenticated(req, res) {
   try {
+    console.log('isAuth COOKIE', req.headers.cookie)
     const response = await client.get('/api/silentLogin', {
       headers: {
         cookie: req.headers.cookie,
@@ -15,6 +16,7 @@ export async function isAuthenticated(req, res) {
     });
     return response.data;
   } catch (error) {
+    console.error('error at isAuth', error.message);
     return null;
   }
 }
