@@ -92,7 +92,7 @@ const TopNavigationBar = ({ showNews }) => {
   useEffect(() => {
     setHeight(ref.current.clientHeight);
     dispatch(setNavbarHeight(ref.current.clientHeight));
-  }, [ref]);
+  });
 
   return (
     <>
