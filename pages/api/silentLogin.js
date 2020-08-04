@@ -50,7 +50,7 @@ async function getUser(decodedClaims, uid) {
       let doc = await admin.firestore().collection('donors').doc(uid).get();
       return doc.data();
     } catch (error) {
-      console.log('here2')
+      console.log('here2');
       throw new AuthError('user-does-not-exist', 'User does not exists');
     }
   } else if (decodedClaims.npo) {
@@ -58,7 +58,7 @@ async function getUser(decodedClaims, uid) {
       let doc = await admin.firestore().collection('npos').doc(uid).get();
       return doc.data();
     } catch (error) {
-      console.log('here3')
+      console.log('here3');
       throw new AuthError('user-does-not-exist', 'User does not exists');
     }
   } else {
@@ -71,7 +71,7 @@ async function getUser(decodedClaims, uid) {
         return doc.data();
       }
     } catch (error) {
-      console.log('here4')
+      console.log('here4');
       throw new AuthError('user-does-not-exist', 'User does not exists');
     }
   }
