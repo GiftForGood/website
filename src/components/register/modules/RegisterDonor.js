@@ -14,6 +14,7 @@ import api from '../../../../utils/api';
 import { useRouter } from 'next/router';
 import client from '../../../../utils/axios';
 import Field from '../../inputfield';
+import { timeout } from '../utils/timeout';
 
 const HeadingColor = styled.div`
   color: ${colors.donorBackground};
@@ -40,10 +41,6 @@ const RegisterDonor = () => {
     setAlertType(type);
   };
 
-  const timeout = (delay) => {
-    return new Promise((res) => setTimeout(res, delay));
-  }
-
   const handleFormSubmission = async (values) => {
     try {
       setIsLoading(true);
@@ -51,9 +48,8 @@ const RegisterDonor = () => {
       await api.auth.sendVerificationEmail();
       displayAlert('Successfully Registered!', `A verification email has been sent to ${user.email}`, 'success');
       let response = await client.post('/api/sessionLogin', { token });
-      console.log(response.headers);
       if (response.status === 200) {
-        //await timeout(2000);
+        await timeout(1000);
         router.push('/');
       } else {
         throw response.error;
@@ -80,6 +76,7 @@ const RegisterDonor = () => {
       const [token, user, userDoc] = await api.auth.registerDonorWithGoogle();
       let response = await client.post('/api/sessionLogin', { token });
       if (response.status === 200) {
+        await timeout(1000);
         router.push('/');
       } else {
         throw response.error;

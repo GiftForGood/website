@@ -14,11 +14,8 @@ async function handler(req, res) {
       // Verify the session cookie. In this case an additional check is added to detect
       // if the user's Firebase session was revoked, user deleted/disabled, etc.
       try {
-        console.log('silentLogin sessionCookie>>>>>', sessionCookie);
         let decodedClaims = await admin.auth().verifySessionCookie(sessionCookie, true /** checkRevoked */);
-        console.log('after decodedClaims')
         let currentUser = await admin.auth().getUser(decodedClaims.uid);
-        console.log('after currentUser')
         let user = await getUser(currentUser.customClaims, currentUser.uid);
         // Checking for user type from 3 different sources because Cloud function doesnt update the claims fast enough.
         res.json({
@@ -32,8 +29,7 @@ async function handler(req, res) {
         });
       } catch (error) {
         // Session cookie is unavailable or invalid. Force user to login.
-        console.log('silentLogin', error.message);
-        console.log('silentLogin 401, unauth')
+        console.log('silentLogin Error', error.message);
         res.status(401).json({
           error: {
             message: 'Unauthorized request',
