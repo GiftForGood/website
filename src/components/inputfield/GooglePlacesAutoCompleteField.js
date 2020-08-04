@@ -83,6 +83,10 @@ const GooglePlacesAutoCompleteField = ({ label, storeLocally, help, storageKey, 
       label={label}
       ref={autoCompleteRef}
       onChange={(event) => {
+        if (event.target.value.length === 0) {
+          setLocation('');
+          onChange('');
+        }
         setQuery(event.target.value);
       }}
       placeholder=""
