@@ -46,7 +46,14 @@ const RegisterDonor = () => {
       const [token, user, userDoc] = await api.auth.registerDonorWithEmailAndPassword(values.email, values.password);
       await api.auth.sendVerificationEmail();
       displayAlert('Successfully Registered!', `A verification email has been sent to ${user.email}`, 'success');
-      let response = await client.post('/api/sessionLogin', { token });
+      let claimsResponse = await client.post('/api/setCustomClaimDonor', { token });
+      let updatedToken = token;
+      if (claimsResponse.status === 200) {
+         updatedToken = await user.getIdToken(true);
+      } else {
+        throw claimsResponse.error;
+      }
+      let response = await client.post('/api/sessionLogin', { token: updatedToken });
       if (response.status === 200) {
         router.push('/');
       } else {

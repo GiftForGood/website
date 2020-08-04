@@ -16,6 +16,8 @@ import client from '../../../../utils/axios';
 import { useRouter } from 'next/router';
 import Field from '../../inputfield';
 
+import { firebaseAuth } from '../../../../utils/firebase';
+
 const RegisterNpoDetails = () => {
   const dispatch = useDispatch();
   const [openTnC, setOpenTnC] = useState(false);
@@ -76,7 +78,14 @@ const RegisterNpoDetails = () => {
       );
       await api.auth.sendVerificationEmail();
       displayAlert('Successfully Registered!', `A verification email has been sent to ${user.email}`, 'success');
-      let response = await client.post('/api/sessionLogin', { token });
+      let claimsResponse = await client.post('/api/setCustomClaimNpo', { token });
+      let updatedToken = token;
+      if (claimsResponse.status === 200) {
+         updatedToken = await firebaseAuth.currentUser.getIdToken(true);
+      } else {
+        throw claimsResponse.error;
+      }
+      let response = await client.post('/api/sessionLogin', { token: updatedToken });
       if (response.status === 200) {
         router.push('/');
       } else {
