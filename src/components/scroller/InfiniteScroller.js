@@ -55,7 +55,11 @@ export default class InfiniteScroll extends Component {
   componentDidUpdate() {
     if (this.props.isReverse && this.loadMore) {
       const parentElement = this.getParentElement(this.scrollComponent);
-      parentElement.scrollTop = parentElement.scrollHeight - this.beforeScrollHeight + this.beforeScrollTop;
+      // after loading more, safari's scrollTop need not to be adjusted as it is not
+      // affected (since it is a negative value w.r.t the bottom instead of the top)
+      if (!isSafari) {
+        parentElement.scrollTop = parentElement.scrollHeight - this.beforeScrollHeight + this.beforeScrollTop;
+      }
       this.loadMore = false;
     }
     this.attachScrollListener();
