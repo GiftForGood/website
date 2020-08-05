@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import SearchBar from '../modules/SearchBarV2';
 import { useRouter } from 'next/router';
 
-const NavSearchBar = () => {
+const NavSearchBar = ({ searchDefaultIndex }) => {
   const router = useRouter();
 
   const onEnterPressed = (query, selectedIndex) => {
@@ -13,7 +13,7 @@ const NavSearchBar = () => {
 
   return (
     <>
-      <SearchBar onEnterPressed={onEnterPressed} />
+      <SearchBar onEnterPressed={onEnterPressed} defaultIndex={searchDefaultIndex} />
     </>
   );
 };
