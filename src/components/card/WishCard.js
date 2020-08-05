@@ -91,7 +91,9 @@ const CardDescription = ({ title, description }) => {
           {title}
         </Text>
       </ThreeLineTextContainer>
-      <EightLineTextContainer>{description}</EightLineTextContainer>
+      <EightLineTextContainer>
+        <pre>{description}</pre>
+      </EightLineTextContainer>
     </Stack>
   );
 };
