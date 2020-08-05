@@ -1,12 +1,12 @@
 import React from 'react';
 import api from '../../../utils/api';
 import ViewCategoryPage from '../../../src/components/category/pages/WishesViewCategoryPage';
-
 import dynamic from 'next/dynamic';
 import SessionProvider from '../../../src/components/session/modules/SessionProvider';
 import { isAuthenticated } from '../../../utils/authentication/authentication';
 import Error from 'next/error';
 import Header from '../../../src/components/header';
+import { WISHES } from '../../../utils/constants/search';
 
 const TopNavigationBar = dynamic(() => import('../../../src/components/navbar/modules/TopNavigationBar'), {
   ssr: false,
@@ -42,7 +42,7 @@ const ViewCategory = ({ categoryDetails, sortByQuery, user }) => {
   return (
     <SessionProvider user={user}>
       <Header title={`${categoryDetails.name} | Wishes`} />
-      <TopNavigationBar showNews={true} />
+      <TopNavigationBar showNews={true} searchDefaultIndex={WISHES} />
       <ViewCategoryPage categoryDetails={categoryDetails} sortByQuery={sortByQuery} />
       <BottomNavigation />
       <Footer />
