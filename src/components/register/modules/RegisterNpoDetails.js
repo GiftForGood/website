@@ -17,8 +17,6 @@ import { useRouter } from 'next/router';
 import Field from '../../inputfield';
 import { timeout } from '../utils/timeout';
 
-import { firebaseAuth } from '../../../../utils/firebase';
-
 const RegisterNpoDetails = () => {
   const dispatch = useDispatch();
   const [openTnC, setOpenTnC] = useState(false);
