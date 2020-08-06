@@ -146,7 +146,7 @@ const PostDetailsHeader = ({
                   type="secondary"
                   iconLeft={<AlertCircle />}
                   onClick={handleReportPostModal}
-                  disabled={isDisabled || isClosedPost || isCompletedPost}
+                  disabled={isDisabled || isClosedPost || isCompletedPost || true}
                 >
                   Report post
                 </ButtonLink>
