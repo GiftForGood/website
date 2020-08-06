@@ -78,14 +78,7 @@ const RegisterNpoDetails = () => {
       );
       await api.auth.sendVerificationEmail();
       displayAlert('Successfully Registered!', `A verification email has been sent to ${user.email}`, 'success');
-      let claimsResponse = await client.post('/api/setCustomClaimNpo', { token });
-      let updatedToken = token;
-      if (claimsResponse.status === 200) {
-         updatedToken = await firebaseAuth.currentUser.getIdToken(true);
-      } else {
-        throw claimsResponse.error;
-      }
-      let response = await client.post('/api/sessionLogin', { token: updatedToken });
+      let response = await client.post('/api/sessionLogin', { token });
       if (response.status === 200) {
         router.push('/');
       } else {
