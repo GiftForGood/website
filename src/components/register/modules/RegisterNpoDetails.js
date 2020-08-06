@@ -15,6 +15,7 @@ import api from '../../../../utils/api';
 import client from '../../../../utils/axios';
 import { useRouter } from 'next/router';
 import Field from '../../inputfield';
+import { timeout } from '../utils/timeout';
 
 import { firebaseAuth } from '../../../../utils/firebase';
 
@@ -80,6 +81,7 @@ const RegisterNpoDetails = () => {
       displayAlert('Successfully Registered!', `A verification email has been sent to ${user.email}`, 'success');
       let response = await client.post('/api/sessionLogin', { token });
       if (response.status === 200) {
+        await timeout(1000);
         router.push('/');
       } else {
         throw response.error;
