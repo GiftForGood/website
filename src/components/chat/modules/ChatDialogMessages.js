@@ -102,6 +102,7 @@ const ChatDialogMessages = ({
       } else if (lastChatMessageDoc && lastChatMessageDoc.data().dateTime > newChatMessage.dateTime) {
         // the new chat added has dateTime less than the last message's dateTime
         for (let i = prevChatMessageDocs.length - 1; i >= 0; i--) {
+          console.log('newly added chat message that has a wrong order');
           const currMessage = prevChatMessageDocs[i].data();
           if (newChatMessage.dateTime > currMessage.dateTime) {
             return [...prevChatMessageDocs.slice(0, i + 1), chatMessageDoc, ...prevChatMessageDocs.slice(i + 1)];
