@@ -90,6 +90,11 @@ const ChatDialogMessages = ({
     }
   };
 
+  /**
+   * Callback function that is called when:
+   * i) fetching the initial batch of chat messages
+   * ii) when new chat messages are received
+   */
   const updateChatMessages = (chatMessageDoc) => {
     let isNewlySentMessage = false;
     setChatMessageDocs((prevChatMessageDocs) => {
@@ -102,15 +107,13 @@ const ChatDialogMessages = ({
         return [chatMessageDoc, ...prevChatMessageDocs];
       }
 
-      // insert chat message doc to the back if it is a newly sent message
-      if (lastChatMessageDoc && lastChatMessageDoc.data().dateTime <= newChatMessage.dateTime) {
+      if (lastChatMessageDoc.data().dateTime <= newChatMessage.dateTime) {
+        // insert chat message doc to the back if it is a newly sent message
         isNewlySentMessage = true;
         return [...prevChatMessageDocs, chatMessageDoc];
-      }
-
-      // insert chat message doc to the correct position if message does not have the latest dateTime
-      // note: this occurs when there are concurrency issues when sending and receiving messages
-      if (lastChatMessageDoc && lastChatMessageDoc.data().dateTime > newChatMessage.dateTime) {
+      } else {
+        // insert chat message doc to the correct position if not newly sent message
+        // note: this occurs when there are concurrency issues when sending and receiving messages
         for (let i = prevChatMessageDocs.length - 1; i >= 0; i--) {
           const currMessage = prevChatMessageDocs[i].data();
           if (newChatMessage.dateTime > currMessage.dateTime) {
