@@ -95,13 +95,22 @@ const ChatDialogMessages = ({
     setChatMessageDocs((prevChatMessageDocs) => {
       const newChatMessage = chatMessageDoc.data();
       const lastChatMessageDoc = prevChatMessageDocs[prevChatMessageDocs.length - 1];
+      const firstChatMessageDoc = prevChatMessageDocs[0];
+
+      // insert chat message doc to the front if no messages or the message is an older message
+      if (!firstChatMessageDoc || firstChatMessageDoc.data().dateTime >= newChatMessage.dateTime) {
+        return [chatMessageDoc, ...prevChatMessageDocs];
+      }
+
       // insert chat message doc to the back if it is a newly sent message
       if (lastChatMessageDoc && lastChatMessageDoc.data().dateTime <= newChatMessage.dateTime) {
         isNewlySentMessage = true;
         return [...prevChatMessageDocs, chatMessageDoc];
-      } else if (lastChatMessageDoc && lastChatMessageDoc.data().dateTime > newChatMessage.dateTime) {
-        console.log('newly added chat message that has a wrong order');
-        // the new chat added has dateTime less than the last message's dateTime
+      }
+
+      // insert chat message doc to the correct position if message does not have the latest dateTime
+      // note: this occurs when there are concurrency issues when sending and receiving messages
+      if (lastChatMessageDoc && lastChatMessageDoc.data().dateTime > newChatMessage.dateTime) {
         for (let i = prevChatMessageDocs.length - 1; i >= 0; i--) {
           const currMessage = prevChatMessageDocs[i].data();
           if (newChatMessage.dateTime > currMessage.dateTime) {
@@ -109,7 +118,6 @@ const ChatDialogMessages = ({
           }
         }
       }
-      return [chatMessageDoc, ...prevChatMessageDocs];
     });
     if (isNewlySentMessage) {
       scrollToBottomIfSentByLoggedInUser(chatMessageDoc.data());
