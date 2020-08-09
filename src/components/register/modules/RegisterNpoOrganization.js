@@ -162,7 +162,6 @@ const RegisterNpoOrganization = () => {
               label="Organization you are from"
               options={organizations}
               value={formik.values.name}
-              help
             />
             {formik.touched.name && formik.errors.name ? null : (
               <TextLink size="small" type="secondary">
