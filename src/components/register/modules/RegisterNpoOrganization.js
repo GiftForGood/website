@@ -31,6 +31,7 @@ import BlueButton from '../../buttons/BlueButton';
 import { colors } from '../../../../utils/constants/colors';
 import api from '../../../../utils/api';
 import moment from 'moment';
+import NpoOrganizationDropdownField from '../../inputfield/NpoOrganizationDropdownField';
 
 const currentYear = moment().year();
 const HeadingColor = styled.div`
@@ -153,13 +154,15 @@ const RegisterNpoOrganization = () => {
       <form onSubmit={formik.handleSubmit}>
         <Stack spacing="loose">
           <Stack spacing="none">
-            <Select
-              label="Organization you are from"
-              name="name"
-              options={organizations}
-              placeholder="Organization"
-              {...formik.getFieldProps('name')}
+            <NpoOrganizationDropdownField
+              onSelected={(name) => {
+                formik.setFieldValue('name', name);
+              }}
               error={formik.touched.name && formik.errors.name ? formik.errors.name : ''}
+              label="Organization you are from"
+              options={organizations}
+              value={formik.values.name}
+              help
             />
             {formik.touched.name && formik.errors.name ? null : (
               <TextLink size="small" type="secondary">
