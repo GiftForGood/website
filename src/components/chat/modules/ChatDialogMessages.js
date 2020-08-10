@@ -90,17 +90,37 @@ const ChatDialogMessages = ({
     }
   };
 
+  /**
+   * Callback function that is called when:
+   * i) fetching the initial batch of chat messages
+   * ii) when new chat messages are received
+   */
   const updateChatMessages = (chatMessageDoc) => {
     let isNewlySentMessage = false;
     setChatMessageDocs((prevChatMessageDocs) => {
       const newChatMessage = chatMessageDoc.data();
       const lastChatMessageDoc = prevChatMessageDocs[prevChatMessageDocs.length - 1];
-      // insert chat message doc to the back if it is a newly sent message
-      if (lastChatMessageDoc && lastChatMessageDoc.data().dateTime <= newChatMessage.dateTime) {
+      const firstChatMessageDoc = prevChatMessageDocs[0];
+
+      // insert chat message doc to the front if no messages or the message is an older message
+      if (!firstChatMessageDoc || firstChatMessageDoc.data().dateTime >= newChatMessage.dateTime) {
+        return [chatMessageDoc, ...prevChatMessageDocs];
+      }
+
+      if (lastChatMessageDoc.data().dateTime <= newChatMessage.dateTime) {
+        // insert chat message doc to the back if it is a newly sent message
         isNewlySentMessage = true;
         return [...prevChatMessageDocs, chatMessageDoc];
+      } else {
+        // insert chat message doc to the correct position if not newly sent message
+        // note: this occurs when there are concurrency issues when sending and receiving messages
+        for (let i = prevChatMessageDocs.length - 1; i >= 0; i--) {
+          const currMessage = prevChatMessageDocs[i].data();
+          if (newChatMessage.dateTime > currMessage.dateTime) {
+            return [...prevChatMessageDocs.slice(0, i + 1), chatMessageDoc, ...prevChatMessageDocs.slice(i + 1)];
+          }
+        }
       }
-      return [chatMessageDoc, ...prevChatMessageDocs];
     });
     if (isNewlySentMessage) {
       scrollToBottomIfSentByLoggedInUser(chatMessageDoc.data());
