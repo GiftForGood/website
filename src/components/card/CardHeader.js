@@ -25,7 +25,21 @@ const AvatarDetailsContainer = styled.div`
   width: fit-content;
   float: left;
   margin-left: 5px;
+`;
+
+const ProfileDetailsContainer = styled.div`
+  float: left;
+  display: flex;
+  align-items: center;
+  position: relative;
   margin-right: auto;
+`;
+
+const ClickableProfile = styled.a`
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: 2; /* must be more than 1, since clickable div in wish card has z-index of 1 */
 `;
 
 const TimePosted = ({ timeAgo }) => {
@@ -42,13 +56,16 @@ const AvatarDetails = ({ name }) => {
   );
 };
 
-const CardHeader = ({ imageUrl, name, timeAgo, isBumped }) => {
+const CardHeader = ({ imageUrl, name, timeAgo, isBumped, profileHref }) => {
   return (
     <CardHeaderContainer>
-      <AvatarContainer>
-        <ProfileAvatar imageUrl={imageUrl.small || imageUrl.raw} />
-      </AvatarContainer>
-      <AvatarDetails name={name} />
+      <ProfileDetailsContainer>
+        <AvatarContainer>
+          <ProfileAvatar imageUrl={imageUrl.small || imageUrl.raw} />
+        </AvatarContainer>
+        <AvatarDetails name={name} />
+        <ClickableProfile href={profileHref} />
+      </ProfileDetailsContainer>
       <TimePostedContainer>
         {isBumped ? <Replace customColor={colors.bump} /> : <TimePosted timeAgo={timeAgo} />}
       </TimePostedContainer>
