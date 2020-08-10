@@ -111,6 +111,7 @@ const TopDonations = ({ numberOfPosts, numberOfCategories }) => {
             <Stack direction="row" align="start" spacing="extraLoose">
               {donations.map((donation) => {
                 const donationPostHref = `/donations/${donation.donationId}`;
+                const profileHref = `/profile/${donation.user.userId}`;
                 const locations = donation.locations.map((location) => {
                   return location.name;
                 });
@@ -127,6 +128,7 @@ const TopDonations = ({ numberOfPosts, numberOfCategories }) => {
                     postedDateTime={donation.postedDateTime}
                     coverImageUrl={donation.coverImageUrl}
                     postHref={donationPostHref}
+                    profileHref={profileHref}
                     validPeriod={validPeriod}
                     locations={locations.join(', ')}
                     categoryId={category.id}

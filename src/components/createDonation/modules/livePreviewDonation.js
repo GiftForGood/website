@@ -18,6 +18,7 @@ const LivePreviewDonation = () => {
   const location = useSelector(getLocation);
   const validFrom = useSelector(getValidFrom);
   const validTo = useSelector(getValidTo);
+  const profileHref = `/profile/${user._id}`;
 
   if (!user) {
     return null;
@@ -41,6 +42,7 @@ const LivePreviewDonation = () => {
               coverImageUrl={coverImage ? coverImage.preview : ''}
               postedDateTime={Date.now()}
               postHref={''}
+              profileHref={profileHref}
               locations={location}
               validPeriod={validFrom + ' - ' + validTo}
             />
