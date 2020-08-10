@@ -34,7 +34,10 @@ const ConfirmCompletionModal = ({
 
   return (
     <Modal size="small">
-      <ModalHeader title="Confirm completion of post?" description="This action is irreversible!" />
+      <ModalHeader
+        title="Confirm completion of post?"
+        description="Completing a post means that your post has been fulfilled."
+      />
       <ModalSection>
         <Stack direction="row">
           <Button type="secondary" fullWidth="100%" onClick={onClose}>
