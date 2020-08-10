@@ -25,10 +25,12 @@ async function handler(req, res) {
             npo: decodedClaims.npo || currentUser.customClaims.npo || user.npo,
             emailVerified: currentUser.emailVerified,
             email: decodedClaims.email,
+            isClaimSet: currentUser.customClaims.npo || currentUser.customClaims.donor,
           },
         });
       } catch (error) {
         // Session cookie is unavailable or invalid. Force user to login.
+        console.error('silentLogin', error.message);
         res.status(401).json({
           error: {
             message: 'Unauthorized request',

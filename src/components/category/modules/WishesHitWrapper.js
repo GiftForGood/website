@@ -34,6 +34,7 @@ const WishesHitWrapper = ({ hits, category, hasPrevious, hasMore, refinePrevious
         {hits.map((hit) => {
           const { objectID, categories, organization, title, description, user, postedDateTime, isBumped } = hit;
           const postHref = `/wishes/${objectID}`;
+          const profileHref = `/profile/${user.userId}`;
           const categoryTags = categories.map((category) => category.name);
           return (
             <WishCard
@@ -45,6 +46,7 @@ const WishesHitWrapper = ({ hits, category, hasPrevious, hasMore, refinePrevious
               profileImageUrl={user.profileImageUrl}
               postedDateTime={postedDateTime}
               postHref={postHref}
+              profileHref={profileHref}
               categoryTags={categoryTags}
               isBumped={isBumped}
               categoryId={category.id}

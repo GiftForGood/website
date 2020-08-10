@@ -139,6 +139,7 @@ const LoginDonor = () => {
         spaceAfter="normal"
         onClick={handleGoogleLogin}
         loading={isGoogleLoading}
+        disabled={isLoading}
       >
         Login with Google
       </SocialButton>
@@ -171,7 +172,7 @@ const LoginDonor = () => {
             }
           />
 
-          <Button submit fullWidth={true} asComponent={RedButton} loading={isLoading}>
+          <Button submit fullWidth={true} asComponent={RedButton} loading={isLoading} disabled={isGoogleLoading}>
             Login
           </Button>
         </Stack>
