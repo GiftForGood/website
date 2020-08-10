@@ -51,7 +51,7 @@ const ProfileHeaderBar = ({ profileType, isShowPastPosts, setIsShowPastPosts, is
                 setIsShowPastPosts(true);
               }}
             >
-              {profileType === npo ? 'Past Wishes' : 'Past Donations'}
+              {profileType === npo ? 'Wishes' : 'Donations'}
             </TextLink>
           </Stack>
 
