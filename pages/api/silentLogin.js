@@ -29,6 +29,7 @@ async function handler(req, res) {
         });
       } catch (error) {
         // Session cookie is unavailable or invalid. Force user to login.
+        console.error('silentLogin', error.message);
         res.status(401).json({
           error: {
             message: 'Unauthorized request',
