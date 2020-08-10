@@ -15,6 +15,7 @@ export async function isAuthenticated(req, res) {
     });
     return response.data;
   } catch (error) {
+    console.error(error.message);
     return null;
   }
 }

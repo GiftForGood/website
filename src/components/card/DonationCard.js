@@ -143,6 +143,7 @@ const DonationCard = ({
   coverImageUrl,
   postedDateTime,
   postHref,
+  profileHref,
   locations,
   status = null,
   validPeriod,
@@ -186,7 +187,7 @@ const DonationCard = ({
     <CardContainer>
       <Grid style={{ height: '100%' }} rows="1fr 3fr 2fr" cols="1fr">
         <CardHeaderContainer>
-          <CardHeader name={name} imageUrl={profileImageUrl} timeAgo={timeAgo} />
+          <CardHeader name={name} imageUrl={profileImageUrl} timeAgo={timeAgo} profileHref={profileHref} />
         </CardHeaderContainer>
         <CardImageContainer>
           {hasImage ? <CardImage src={imageUrl} loading="lazy" onError={handleImageOnError} /> : null}

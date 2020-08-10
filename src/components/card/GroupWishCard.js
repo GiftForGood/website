@@ -60,12 +60,12 @@ const CardDescription = ({ title, description }) => {
 /**
  * TODO: implement and pass the distance between NPO and Donor
  */
-const CardContent = ({ name, imageUrl, title, description, postedDateTime }) => {
+const CardContent = ({ name, imageUrl, title, description, postedDateTime, profileHref }) => {
   const timeAgo = getTimeDifferenceFromNow(postedDateTime);
   return (
     <CardContentContainer>
       <div style={{ marginBottom: '1vh' }}>
-        <CardHeader name={name} imageUrl={imageUrl} timeAgo={timeAgo} />
+        <CardHeader name={name} imageUrl={imageUrl} timeAgo={timeAgo} profileHref={profileHref} />
       </div>
       <CardDescription title={title} description={description} />
     </CardContentContainer>
@@ -84,7 +84,17 @@ const CardContent = ({ name, imageUrl, title, description, postedDateTime }) => 
  * @param {string} categoryId is the category id
  * @param {string} categoryName is the category name of the wish currently displayed in
  */
-const GroupWishCard = ({ name, title, description, imageUrl, postedDateTime, postHref, categoryId, categoryName }) => {
+const GroupWishCard = ({
+  name,
+  title,
+  description,
+  imageUrl,
+  postedDateTime,
+  postHref,
+  profileHref,
+  categoryId,
+  categoryName,
+}) => {
   const router = useRouter();
   const handleOnClickWishPost = (event) => {
     event.preventDefault();
@@ -102,6 +112,7 @@ const GroupWishCard = ({ name, title, description, imageUrl, postedDateTime, pos
           description={description}
           imageUrl={imageUrl}
           postedDateTime={postedDateTime}
+          profileHref={profileHref}
         />
       }
     >

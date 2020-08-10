@@ -184,6 +184,7 @@ const PastDonationsPanel = ({ isMine, userId }) => {
       } = pastDonation.data();
       const locationNames = locations.map((location) => location.name).join(', ');
       const postHref = `/donations/${donationId}`;
+      const profileHref = `/profile/${user.userId}`;
       const validPeriod = `${getFormattedDate(validPeriodFrom)} - ${getFormattedDate(validPeriodTo)}`;
       return (
         <DonationCard
@@ -194,6 +195,7 @@ const PastDonationsPanel = ({ isMine, userId }) => {
           profileImageUrl={user.profileImageUrl}
           postedDateTime={postedDateTime}
           postHref={postHref}
+          profileHref={profileHref}
           coverImageUrl={coverImageUrl}
           status={status}
           validPeriod={validPeriod}
