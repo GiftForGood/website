@@ -25,6 +25,7 @@ async function handler(req, res) {
             npo: decodedClaims.npo || currentUser.customClaims.npo || user.npo,
             emailVerified: currentUser.emailVerified,
             email: decodedClaims.email,
+            isClaimSet: currentUser.customClaims.npo || currentUser.customClaims.donor,
           },
         });
       } catch (error) {
