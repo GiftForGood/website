@@ -188,6 +188,7 @@ const PastWishesPanel = ({ isMine, userId }) => {
           profileImageUrl={pastWish.data().user.profileImageUrl}
           postedDateTime={pastWish.data().postedDateTime}
           postHref={`/wishes/${pastWish.data().wishId}`}
+          profileHref={`/profile/${userId}`}
           categoryTags={categoryTags}
           isBumped={pastWish.data().isBumped}
           expireDateTime={pastWish.data().expireDateTime}
