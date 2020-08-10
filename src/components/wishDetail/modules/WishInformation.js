@@ -56,7 +56,9 @@ const WishInformation = ({
               <Heading type="title2">{title}</Heading>
             </TitleTextContainer>
             <DescriptionTextContainer>
-              <Text>{description}</Text>
+              <pre>
+                <Text>{description}</Text>
+              </pre>
             </DescriptionTextContainer>
           </Stack>
           <Stack direction="row" wrap="true">
