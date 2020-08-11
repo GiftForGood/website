@@ -58,7 +58,7 @@ const NpoOrganizationDropdownField = ({ onSelected, error, label, disabled, valu
       }}
       containerStyle={{
         zIndex: 1000,
-        width: '350px',
+        width: '300px',
         boxShadow: '0 8px 13px 0 rgba(44, 44, 45, 0.27)',
         borderRadius: '5px',
         position: 'fixed',
