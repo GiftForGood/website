@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter } from 'next/router';
-import { Button, InputField, Stack, Alert } from '@kiwicom/orbit-components/lib';
+import { Button, InputField, Stack, Alert, Tooltip } from '@kiwicom/orbit-components/lib';
 import ChevronLeft from '@kiwicom/orbit-components/lib/icons/ChevronLeft';
 
 import { useDispatch, useSelector } from 'react-redux';
@@ -157,6 +157,17 @@ const RegisterNpoDetails = () => {
             placeholder="Your full name"
             error={formik.touched.name && formik.errors.name ? formik.errors.name : ''}
             {...formik.getFieldProps('name')}
+            help={
+              <Tooltip
+                content="Use your own name even though there might be multiple people sharing a single account."
+                enabled
+                preferredAlign="start"
+                preferredPosition="bottom"
+                size="medium"
+              >
+                <span>Not sure whose name to put?</span>
+              </Tooltip>
+            }
           />
 
           <InputField
