@@ -151,6 +151,7 @@ const WishCard = ({
   profileImageUrl,
   postedDateTime,
   postHref,
+  profileHref,
   categoryTags = [],
   isBumped,
   expireDateTime,
@@ -198,7 +199,13 @@ const WishCard = ({
       <CardContainer>
         <Grid style={{ height: '100%' }} rows={status !== PENDING ? '2fr 0.5fr 6fr 2fr' : '2fr 6fr 2fr'} cols="1fr">
           <CardHeaderContainer>
-            <CardHeader name={name} imageUrl={profileImageUrl} timeAgo={timeAgo} isBumped={isBumped} />
+            <CardHeader
+              name={name}
+              imageUrl={profileImageUrl}
+              timeAgo={timeAgo}
+              isBumped={isBumped}
+              profileHref={profileHref}
+            />
           </CardHeaderContainer>
 
           {status !== PENDING ? <WishCardStatus status={status} /> : null}

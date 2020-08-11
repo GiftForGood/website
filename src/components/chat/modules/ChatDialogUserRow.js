@@ -20,6 +20,16 @@ import { getFormattedDateRange } from '../../../../utils/api/time';
 const AvatarContainer = styled.div`
   float: left;
   width: fit-content;
+  position: relative;
+`;
+
+const ClickableProfile = styled.a`
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: 2;
 `;
 
 const ButtonsContainer = styled.div`
@@ -93,6 +103,8 @@ const ChatDialogUserRow = ({
     router.push(`/chat`, `/chat?chatId=${chatId}`, { shallow: true });
   };
 
+  const profileHref = `/profile/${oppositeUser.id || oppositeUser.userId}`;
+
   return (
     <CardSection>
       <Stack direction="row" justify="between" align="center">
@@ -101,6 +113,7 @@ const ChatDialogUserRow = ({
             <ProfileAvatar imageUrl={oppositeUser.profileImageUrl.small || oppositeUser.profileImageUrl.raw} />
             <BlackText size="small">{oppositeUser.name || oppositeUser.userName}</BlackText>
           </Stack>
+          <ClickableProfile href={profileHref} />
         </AvatarContainer>
         <ButtonsContainer>
           <Stack tablet={{ direction: 'row', spacing: 'condensed' }} direction="column" spacing="tight" align="end">

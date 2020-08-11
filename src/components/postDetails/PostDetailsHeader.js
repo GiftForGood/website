@@ -14,6 +14,20 @@ import { donations, wishes } from '../../../utils/constants/postType';
 import { donor, npo } from '../../../utils/constants/userType';
 import { colors } from '../../../utils/constants/colors';
 import { logStartChatToAnalytics } from '../../../utils/analytics';
+import styled from 'styled-components';
+
+const AvatarDetailsContainer = styled.div`
+  position: relative;
+`;
+
+const ClickableProfile = styled.a`
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: 1;
+`;
 
 const PostDetailsHeader = ({
   loginUserId,
@@ -32,6 +46,7 @@ const PostDetailsHeader = ({
     (postType === donations && loginUserType === donor) || (postType === wishes && loginUserType === npo);
   const chatType = isOwnPost ? 'View Chats' : 'Chat';
   const postUrl = `https://www.giftforgood.io${router.asPath}`;
+  const profileHref = `/profile/${postUserId}`;
   const isCompletedPost = postStatus === COMPLETED;
 
   const [isClosedPost, setIsClosedPost] = useState(postStatus === CLOSED);
@@ -164,11 +179,16 @@ const PostDetailsHeader = ({
   const AvatarDetails = () => {
     return (
       <Stack align="center" direction="row" spacing="condensed" shrink>
-        <ProfileAvatar imageUrl={profileImageUrl.small || profileImageUrl.raw} />
-        <Stack direction="column" shrink spacing="none">
-          <Text>{postUserName}</Text>
-          {postType === wishes && <Text>{npoOrgName}</Text>}
-        </Stack>
+        <AvatarDetailsContainer>
+          <Stack align="center" direction="row" spacing="condensed" shrink>
+            <ProfileAvatar imageUrl={profileImageUrl.small || profileImageUrl.raw} />
+            <Stack direction="column" shrink spacing="none" space>
+              <Text>{postUserName}</Text>
+              {postType === wishes && <Text>{npoOrgName}</Text>}
+            </Stack>
+          </Stack>
+          <ClickableProfile href={profileHref} />
+        </AvatarDetailsContainer>
       </Stack>
     );
   };

@@ -142,6 +142,7 @@ const RegisterDonor = () => {
         spaceAfter="normal"
         onClick={handleGoogleRegister}
         loading={googleLoading}
+        disabled={isLoading}
       >
         Sign in with Google
       </SocialButton>
@@ -184,7 +185,14 @@ const RegisterDonor = () => {
             {...formik.getFieldProps('passwordConfirmation')}
           />
 
-          <Button submit fullWidth={true} asComponent={RedButton} disabled={formik.isSubmitting} loading={isLoading}>
+          <Button
+            submit
+            fullWidth={true}
+            asComponent={RedButton}
+            disabled={formik.isSubmitting}
+            loading={isLoading}
+            disabled={googleLoading}
+          >
             Register
           </Button>
         </Stack>

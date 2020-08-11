@@ -13,6 +13,7 @@ import client from '../../../../utils/axios';
 import styled from 'styled-components';
 import { useDispatch } from 'react-redux';
 import { logout } from '../../session/actions';
+import useLocalStorage from '../../../../utils/hooks/useLocalStorage';
 
 const AccountImageContainer = styled.div`
   width: 24px;
@@ -79,6 +80,10 @@ const LoggedInButtons = () => {
   const user = useUser();
   const router = useRouter();
   const dispatch = useDispatch();
+  const [registeredObjectString, setRegisteredObjectString] = useLocalStorage(
+    'registered',
+    '{"isNewlyRegistered":true}'
+  );
 
   const onLogoutClick = async () => {
     try {
@@ -86,6 +91,7 @@ const LoggedInButtons = () => {
       let response = await client.post('/api/sessionLogout');
       if (response.status === 200) {
         dispatch(logout());
+        setRegisteredObjectString('{"isNewlyRegistered":true}');
         router.push('/');
       } else {
         throw response.error;

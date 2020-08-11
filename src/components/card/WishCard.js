@@ -91,7 +91,9 @@ const CardDescription = ({ title, description }) => {
           {title}
         </Text>
       </ThreeLineTextContainer>
-      <EightLineTextContainer>{description}</EightLineTextContainer>
+      <EightLineTextContainer>
+        <pre>{description}</pre>
+      </EightLineTextContainer>
     </Stack>
   );
 };
@@ -132,6 +134,7 @@ const WishCard = ({
   profileImageUrl,
   postedDateTime,
   postHref,
+  profileHref,
   categoryTags,
   isBumped,
   categoryId,
@@ -150,7 +153,13 @@ const WishCard = ({
     <CardContainer>
       <Grid style={{ height: '100%', paddingLeft: '10px', paddingRight: '10px' }} rows="2fr 6fr 2fr" cols="1fr">
         <CardHeaderContainer>
-          <CardHeader name={name} imageUrl={profileImageUrl} timeAgo={timeAgo} isBumped={isBumped} />
+          <CardHeader
+            name={name}
+            imageUrl={profileImageUrl}
+            timeAgo={timeAgo}
+            isBumped={isBumped}
+            profileHref={profileHref}
+          />
         </CardHeaderContainer>
         <CardDescriptionContainer>
           <CardDescription title={title} description={description} />
