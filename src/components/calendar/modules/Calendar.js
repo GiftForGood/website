@@ -6,7 +6,7 @@ import RangeDatesDesktop from './RangeDatesDesktop';
 import RangeDatesMobile from './RangeDatesMobile';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 import { RENDER_DAYS } from '../constants/week';
-import { Stack, Tag, Text } from '@kiwicom/orbit-components/lib';
+import { Stack, Tag, Text, Heading } from '@kiwicom/orbit-components/lib';
 
 // overwrite the default days to render based on the props renderDays
 const updateRenderDays = (renderDays) => {
@@ -117,6 +117,9 @@ const Calendar = ({ timeslot, maxSlots, renderDays, updateSelectedDates }) => {
         updateLastUpdatedDate={updateLastUpdatedDate}
       />
       {isTablet ? <RenderRangeDatesDesktop /> : <RenderRangeDatesMobile />}
+      <Stack spaceAfter="small" justify="end">
+        <Heading type="title5">{`*Please select up to ${maxSlots} dates`}</Heading>
+      </Stack>
       <Stack spaceAfter="small">
         <Text weight="bold" size="large">
           My Selected Timeslots:
