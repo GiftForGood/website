@@ -43,9 +43,6 @@ const ChatDialogViewPostRow = ({ postType, postId, postTitle }) => {
             <BlackText size="small" weight="bold">
               {postTitle}
             </BlackText>
-            <BlackText size="tiny" weight="bold">
-              *Delivery cost will be covered by donor
-            </BlackText>
           </Stack>
         </TextContainer>
         <Button size="small" onClick={handleSeePost} asComponent={SeePostButton}>
