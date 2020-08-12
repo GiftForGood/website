@@ -279,7 +279,7 @@ class DonationsAPI {
 
   /**
    * Get a batch of donations that are completed by a npo. Only return results of DONATIONS_BATCH_SIZE
-   * @param {string} npoId 
+   * @param {string} npoId
    * @param {object} lastQueriedDocument The last queried firebase document to start the query after. If the field is not given, the query will start from the first document
    * @throws {FirebaseError}
    * @return {object} A list of firebase document of wishes that is completed by a npo
