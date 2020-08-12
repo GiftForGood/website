@@ -9,7 +9,7 @@ class CategoriesAPI {
    * @return {object} A firebase document of all the categories
    */
   async getAll() {
-    return categoriesCollection.where('shouldShow', '==', true).get();
+    return categoriesCollection.where('shouldShow', '==', true).orderBy('name', 'asc').get();
   }
 
   /**
