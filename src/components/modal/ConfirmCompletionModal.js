@@ -34,7 +34,10 @@ const ConfirmCompletionModal = ({
 
   return (
     <Modal size="small">
-      <ModalHeader title="Confirm completion of post?" description="This action is irreversible!" />
+      <ModalHeader
+        title="Confirm completion of post?"
+        description="Completing a post means that your post has been fulfilled. You can still continue chatting and you can find this post on your profile page."
+      />
       <ModalSection>
         <Stack direction="row">
           <Button type="secondary" fullWidth="100%" onClick={onClose}>
