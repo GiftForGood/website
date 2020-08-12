@@ -18,6 +18,7 @@ import {
 } from './common/categories';
 import { uploadImage, deleteImage } from './common/images';
 import DonationError from './error/donationsError';
+import { POSTED_TIMESTAMP } from '../constants/wishesSortType';
 
 const donationsCollection = db.collection('donations');
 
@@ -146,7 +147,6 @@ class DonationsAPI {
    * @returns {array} A list of firebase document of all ordered pending donations
    */
   async getPendingDonations(orderBy = TIMESTAMP, isReverse = false, lastQueriedDocument = null) {
-    // TODO: Sort by distance not implemented
     this._validateOrderBy(orderBy);
 
     let sortOrder = 'asc';
@@ -183,7 +183,6 @@ class DonationsAPI {
    * @return {array} A list of firebase document of ordered pending donations belonging to a category
    */
   async getPendingDonationsForCategory(categoryId, orderBy = TIMESTAMP, isReverse = false, lastQueriedDocument = null) {
-    // TODO: Sort by distance not implemented
     this._validateOrderBy(orderBy);
 
     let sortOrder = 'asc';
@@ -276,6 +275,26 @@ class DonationsAPI {
         .limit(DONATIONS_BATCH_SIZE)
         .get();
     }
+  }
+
+  /**
+   * Get a batch of donations that are completed by a npo. Only return results of DONATIONS_BATCH_SIZE
+   * @param {string} npoId 
+   * @param {object} lastQueriedDocument The last queried firebase document to start the query after. If the field is not given, the query will start from the first document
+   * @throws {FirebaseError}
+   * @return {object} A list of firebase document of wishes that is completed by a npo
+   */
+  async getNPOCompletedDonations(npoId, lastQueriedDocument = null) {
+    let query = donationsCollection
+      .where('status', '==', COMPLETED)
+      .where('completed.npoUserId', '==', npoId)
+      .orderBy(POSTED_TIMESTAMP, 'desc');
+
+    if (lastQueriedDocument != null) {
+      query = query.startAfter(lastQueriedDocument);
+    }
+
+    return query.limit(DONATIONS_BATCH_SIZE).get();
   }
 
   /**
