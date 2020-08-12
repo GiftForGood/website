@@ -17,14 +17,14 @@ import useWindowDimensions from '../../../../utils/hooks/useWindowDimensions';
 const desktopHeights = {
   chatDialogBackButton: 0, // 0 as it does not exist in desktop
   chatDialogUserRow: 88 + 1,
-  chatDialogSeePostRow: 113 + 1,
+  chatDialogSeePostRow: 90 + 1,
   chatDialogMessagesPadding: 48 + 2,
 };
 
 const mobileHeights = {
   chatDialogBackButton: 44,
   chatDialogUserRow: 108 + 1,
-  chatDialogSeePostRow: 96 + 1,
+  chatDialogSeePostRow: 74 + 1,
   chatDialogMessagesPadding: 32 + 2,
 };
 
