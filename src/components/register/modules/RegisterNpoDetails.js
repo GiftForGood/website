@@ -51,6 +51,7 @@ const RegisterNpoDetails = () => {
   const handleFormSubmission = async () => {
     handleModal();
     setIsLoading(true);
+    setShowAlert(false);
     dispatch(setNpoDetails(values.name, values.mobileNumber));
     try {
       let name = values.name;
@@ -215,6 +216,12 @@ const RegisterNpoDetails = () => {
             {...formik.getFieldProps('passwordConfirmation')}
           />
 
+          {showAlert ? (
+            <Alert icon title={alertTitle} type={alertType}>
+              {alertDescription}
+            </Alert>
+          ) : null}
+
           <Button submit fullWidth={true} asComponent={BlueButton} loading={isLoading}>
             Register
           </Button>
@@ -222,12 +229,6 @@ const RegisterNpoDetails = () => {
       </form>
 
       {openTnC ? <TermsAndConditionModal onClose={handleModal} tnc={tnc} onSubmit={handleFormSubmission} /> : null}
-
-      {showAlert ? (
-        <Alert icon title={alertTitle} type={alertType}>
-          {alertDescription}
-        </Alert>
-      ) : null}
     </div>
   );
 };
