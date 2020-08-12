@@ -21,17 +21,6 @@ class CategoriesAPI {
   async getById(id) {
     return categoriesCollection.doc(id).get();
   }
-
-  /**
-   * Get a category by its name
-   * @param {string} name The category name
-   * @throws {FirebaseError}
-   * @return {object} A firebase document of the category info
-   */
-  async getByName(name) {
-    const snapshot = await categoriesCollection.where('name', '==', name).get();
-    return snapshot.docs;
-  }
 }
 
 export default CategoriesAPI;
