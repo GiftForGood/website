@@ -1,6 +1,5 @@
 import { db, firebaseAuth, firebaseStorage } from '../firebase';
 import firebase from 'firebase/app';
-import * as moment from 'moment';
 import * as path from 'path';
 import { FIREBASE_EMAIL_ACTION_URL } from '../constants/siteUrl';
 import { DONOR, NPO } from '../constants/usersType';
