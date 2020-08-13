@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter } from 'next/router';
-import { Button, InputField, Stack, Alert, Text, ButtonLink } from '@kiwicom/orbit-components/lib';
+import { Button, InputField, Stack, Alert, Text, ButtonLink, Tooltip } from '@kiwicom/orbit-components/lib';
 import ChevronLeft from '@kiwicom/orbit-components/lib/icons/ChevronLeft';
 
 import { useDispatch, useSelector } from 'react-redux';
@@ -55,6 +55,7 @@ const RegisterNpoDetails = () => {
   const handleFormSubmission = async () => {
     handleModal();
     setIsLoading(true);
+    setShowAlert(false);
     dispatch(setNpoDetails(values.name, values.mobileNumber));
     try {
       let name = values.name;
@@ -161,6 +162,17 @@ const RegisterNpoDetails = () => {
             placeholder="Your full name"
             error={formik.touched.name && formik.errors.name ? formik.errors.name : ''}
             {...formik.getFieldProps('name')}
+            help={
+              <Tooltip
+                content="Use your own name even though there might be multiple people sharing a single account."
+                enabled
+                preferredAlign="start"
+                preferredPosition="bottom"
+                size="medium"
+              >
+                <span>Not sure whose name to put?</span>
+              </Tooltip>
+            }
           />
 
           <InputField
@@ -232,6 +244,12 @@ const RegisterNpoDetails = () => {
             {...formik.getFieldProps('passwordConfirmation')}
           />
 
+          {showAlert ? (
+            <Alert icon title={alertTitle} type={alertType}>
+              {alertDescription}
+            </Alert>
+          ) : null}
+
           <Button submit fullWidth={true} asComponent={BlueButton} loading={isLoading}>
             Register
           </Button>
@@ -239,12 +257,6 @@ const RegisterNpoDetails = () => {
       </form>
 
       {openTnC ? <TermsAndConditionModal onClose={handleModal} tnc={tnc} onSubmit={handleFormSubmission} /> : null}
-
-      {showAlert ? (
-        <Alert icon title={alertTitle} type={alertType}>
-          {alertDescription}
-        </Alert>
-      ) : null}
     </div>
   );
 };
