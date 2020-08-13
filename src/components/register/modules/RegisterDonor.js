@@ -22,10 +22,9 @@ import RedButton from '../../buttons/RedButton';
 import api from '../../../../utils/api';
 import { useRouter } from 'next/router';
 import client from '../../../../utils/axios';
-import Field from '../../inputfield';
 import { timeout } from '../utils/timeout';
 import PasswordStrength from './PasswordStrength';
-import { Close, Check } from '@kiwicom/orbit-components/lib/icons';
+import { Check } from '@kiwicom/orbit-components/lib/icons';
 
 const HeadingColor = styled.div`
   color: ${colors.donorBackground};
