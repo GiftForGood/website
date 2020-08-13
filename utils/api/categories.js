@@ -9,7 +9,7 @@ class CategoriesAPI {
    * @return {object} A firebase document of all the categories
    */
   async getAll() {
-    return categoriesCollection.where('shouldShow', '==', true).get();
+    return categoriesCollection.where('shouldShow', '==', true).orderBy('name', 'asc').get();
   }
 
   /**
@@ -20,17 +20,6 @@ class CategoriesAPI {
    */
   async getById(id) {
     return categoriesCollection.doc(id).get();
-  }
-
-  /**
-   * Get a category by its name
-   * @param {string} name The category name
-   * @throws {FirebaseError}
-   * @return {object} A firebase document of the category info
-   */
-  async getByName(name) {
-    const snapshot = await categoriesCollection.where('name', '==', name).get();
-    return snapshot.docs;
   }
 }
 
