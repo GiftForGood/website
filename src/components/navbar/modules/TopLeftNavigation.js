@@ -34,13 +34,13 @@ const TopLeftNavigation = ({ onHamburgerClick, searchDefaultIndex }) => {
           </SearchBarContainer>
 
           <Link href="/">
-            <ButtonLink transparent type="secondary" href={'/'}>
+            <ButtonLink type="secondary" href={'/'}>
               Wishes
             </ButtonLink>
           </Link>
 
           <Link href="/donations">
-            <ButtonLink transparent type="secondary" href={'/donations'}>
+            <ButtonLink type="secondary" href={'/donations'}>
               Donations
             </ButtonLink>
           </Link>
