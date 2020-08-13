@@ -50,7 +50,7 @@ const PasswordStrength = ({ password, show, onSecure, onNotSecure }) => {
         onSecure();
       } else {
         onNotSecure();
-      } 
+      }
     } else {
       onNotSecure();
     }
