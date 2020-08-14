@@ -512,7 +512,10 @@ class ChatsAPI {
       .onSnapshot((snapshot) => {
         snapshot.docChanges().forEach((change) => {
           if (change.type === 'added') {
-            callback(change.doc);
+            const data = change.doc.data();
+            if (data.dateTime && !snapshot.metadata.hasPendingWrites) {
+              callback(change.doc);
+            }
           }
         });
       });
