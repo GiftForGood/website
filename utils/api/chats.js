@@ -511,12 +511,12 @@ class ChatsAPI {
       .limit(CHAT_MESSAGES_BATCH_SIZE)
       .onSnapshot((snapshot) => {
         snapshot.docChanges().forEach((change) => {
-          if (change.type === 'added') {
-            const data = change.doc.data();
-            if (data.dateTime && !snapshot.metadata.hasPendingWrites) {
-              callback(change.doc);
-            }
+          const data = change.doc.data();
+          if (!data.dateTime && snapshot.metadata.hasPendingWrites) {
+            return;
           }
+
+          callback(change.doc);
         });
       });
   }
