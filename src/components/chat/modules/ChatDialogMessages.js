@@ -104,11 +104,11 @@ const ChatDialogMessages = ({
       const firstChatMessageDoc = prevChatMessageDocs[0];
 
       // insert chat message doc to the front if no messages or the message is an older message
-      if (!firstChatMessageDoc || firstChatMessageDoc.data().dateTime >= newChatMessage.dateTime) {
+      if (!firstChatMessageDoc || firstChatMessageDoc.data().dateTime.toMillis() >= newChatMessage.dateTime.toMillis()) {
         return [chatMessageDoc, ...prevChatMessageDocs];
       }
 
-      if (lastChatMessageDoc.data().dateTime <= newChatMessage.dateTime) {
+      if (lastChatMessageDoc.data().dateTime.toMillis() <= newChatMessage.dateTime.toMillis()) {
         // insert chat message doc to the back if it is a newly sent message
         isNewlySentMessage = true;
         return [...prevChatMessageDocs, chatMessageDoc];
@@ -117,7 +117,7 @@ const ChatDialogMessages = ({
         // note: this occurs when there are concurrency issues when sending and receiving messages
         for (let i = prevChatMessageDocs.length - 1; i >= 0; i--) {
           const currMessage = prevChatMessageDocs[i].data();
-          if (newChatMessage.dateTime > currMessage.dateTime) {
+          if (newChatMessage.dateTime.toMillis() > currMessage.dateTime.toMillis()) {
             return [...prevChatMessageDocs.slice(0, i + 1), chatMessageDoc, ...prevChatMessageDocs.slice(i + 1)];
           }
         }
