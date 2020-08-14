@@ -704,7 +704,7 @@ class ChatsAPI {
     };
 
     const data = {
-      dateTime: Date.now(),
+      dateTime: firebase.firestore.FieldValue.serverTimestamp(),
       content: content,
       contentType: contentType,
       sender: messageSenderInfo,
