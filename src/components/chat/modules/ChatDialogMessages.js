@@ -104,7 +104,10 @@ const ChatDialogMessages = ({
       const firstChatMessageDoc = prevChatMessageDocs[0];
 
       // insert chat message doc to the front if no messages or the message is an older message
-      if (!firstChatMessageDoc || firstChatMessageDoc.data().dateTime.toMillis() >= newChatMessage.dateTime.toMillis()) {
+      if (
+        !firstChatMessageDoc ||
+        firstChatMessageDoc.data().dateTime.toMillis() >= newChatMessage.dateTime.toMillis()
+      ) {
         return [chatMessageDoc, ...prevChatMessageDocs];
       }
 
