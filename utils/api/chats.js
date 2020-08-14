@@ -574,7 +574,7 @@ class ChatsAPI {
       id: donorInfo.userId,
       profileImageUrl: donorInfo.profileImageUrl,
       status: OFF, // By default, status will always be off
-      lastActiveDateTime: Date.now(),
+      lastActiveDateTime: firebase.firestore.FieldValue.serverTimestamp(),
       unreadCount: 0,
     };
 
@@ -617,7 +617,7 @@ class ChatsAPI {
       id: npoInfo.userId,
       profileImageUrl: npoInfo.profileImageUrl,
       status: OFF, // By default, status will always be off
-      lastActiveDateTime: Date.now(),
+      lastActiveDateTime: firebase.firestore.FieldValue.serverTimestamp(),
       unreadCount: 0,
       organization: npoInfo.organization,
     };
@@ -766,7 +766,7 @@ class ChatsAPI {
     const lastActiveDateTimeField = `${userType}.lastActiveDateTime`;
     let data = {
       [statusField]: status,
-      [lastActiveDateTimeField]: Date.now(),
+      [lastActiveDateTimeField]: firebase.firestore.FieldValue.serverTimestamp(),
     };
 
     // Only should read the message when the user is on the chat
@@ -789,7 +789,7 @@ class ChatsAPI {
     const lastActiveDateTimeField = `${receiverType}.lastActiveDateTime`;
     const data = {
       [unreadCountField]: 0,
-      [lastActiveDateTimeField]: Date.now(),
+      [lastActiveDateTimeField]: firebase.firestore.FieldValue.serverTimestamp(),
     };
 
     chatsCollection.doc(chatId).update(data);
