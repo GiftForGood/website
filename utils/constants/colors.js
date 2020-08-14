@@ -60,4 +60,6 @@ export const colors = {
   appreciationSelectedFocus: '#16a595',
   footerBackground: '#fafafa',
   newsBackground: '#f3f4f5',
+  passwordCorrect: '#4caf50',
+  passwordWrong: '#f44336',
 };

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter } from 'next/router';
-import { Button, InputField, Stack, Alert, Tooltip } from '@kiwicom/orbit-components/lib';
+import { Button, InputField, Stack, Alert, Text, ButtonLink, Tooltip } from '@kiwicom/orbit-components/lib';
 import ChevronLeft from '@kiwicom/orbit-components/lib/icons/ChevronLeft';
 
 import { useDispatch, useSelector } from 'react-redux';
@@ -14,8 +14,10 @@ import TermsAndConditionModal from './TermsAndConditionModal';
 import api from '../../../../utils/api';
 import client from '../../../../utils/axios';
 import { useRouter } from 'next/router';
-import Field from '../../inputfield';
 import { timeout } from '../utils/timeout';
+
+import PasswordStrength from './PasswordStrength';
+import { Check } from '@kiwicom/orbit-components/lib/icons';
 
 const RegisterNpoDetails = () => {
   const dispatch = useDispatch();
@@ -30,6 +32,8 @@ const RegisterNpoDetails = () => {
   const [alertType, setAlertType] = useState('');
   const [alertDescription, setAlertDescription] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+
+  const [isPasswordSecure, setIsPasswordSecure] = useState(false);
 
   useEffect(() => {
     api.termsandconditions.get().then((doc) => {
@@ -193,14 +197,38 @@ const RegisterNpoDetails = () => {
             {...formik.getFieldProps('email')}
           />
 
-          <Field
-            disabled={formik.isSubmitting}
-            type="password"
-            label="Create a password"
-            name="password"
-            help="Please create a password with at least 12 characters, comprising a mix of uppercase and lowercase letters, numbers and symbols"
-            error={formik.touched.password && formik.errors.password ? formik.errors.password : ''}
-            {...formik.getFieldProps('password')}
+          <Stack spacing="none">
+            <InputField
+              disabled={formik.isSubmitting}
+              type="password"
+              label="Create a password"
+              name="password"
+              error={formik.touched.password && formik.errors.password ? true : false}
+              {...formik.getFieldProps('password')}
+              suffix={isPasswordSecure ? <ButtonLink iconLeft={<Check />} transparent type="secondary" /> : null}
+            />
+
+            {formik.touched.password && formik.errors.password ? (
+              <Text size="small" type="critical" weight="bold">
+                {formik.errors.password}
+              </Text>
+            ) : (
+              <Text size="small" type="secondary">
+                Please create a password with at least 12 characters, comprising a mix of uppercase and lowercase
+                letters, numbers and symbols
+              </Text>
+            )}
+          </Stack>
+
+          <PasswordStrength
+            password={formik.values.password}
+            show={formik.errors.password && formik.values.password.length > 0 ? true : false}
+            onSecure={() => {
+              setIsPasswordSecure(true);
+            }}
+            onNotSecure={() => {
+              setIsPasswordSecure(false);
+            }}
           />
 
           <InputField
