@@ -208,7 +208,7 @@ const ChatDialogMessages = ({
                 // right side is logged in user's messages, left side is opposite user's
                 return sender.id === loggedInUser.user.userId ? (
                   <RightMessageSection
-                    key={`${selectedChatId}-${sender.id}-${dateTime}-${content}`}
+                    key={`${selectedChatId}-${sender.id}-${dateTime.toMillis()}-${content}`}
                     message={message}
                     loggedInUser={loggedInUser}
                     selectedChatId={selectedChatId}
@@ -216,7 +216,7 @@ const ChatDialogMessages = ({
                   />
                 ) : (
                   <LeftMessageSection
-                    key={`${selectedChatId}${sender.id}-${dateTime}-${content}`}
+                    key={`${selectedChatId}${sender.id}-${dateTime.toMillis()}-${content}`}
                     message={message}
                     loggedInUser={loggedInUser}
                     selectedChatId={selectedChatId}
