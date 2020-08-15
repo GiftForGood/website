@@ -90,6 +90,8 @@ const RegisterNpoDetails = () => {
         throw response.error;
       }
     } catch (error) {
+      console.error(error);
+      await api.auth.logout();
       setIsLoading(false);
       formik.setSubmitting(false);
       if (error.code === 'auth/email-already-in-use') {

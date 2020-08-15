@@ -68,6 +68,7 @@ const RegisterDonor = () => {
       }
     } catch (error) {
       console.error(error);
+      await api.auth.logout();
       setIsLoading(false);
       formik.setSubmitting(false);
       if (error.code === 'auth/email-already-in-use') {
@@ -95,6 +96,7 @@ const RegisterDonor = () => {
       }
     } catch (error) {
       console.error(error);
+      await api.auth.logout();
       setGoogleLoading(false);
       if (error.code === 'auth/unable-to-create-user') {
         displayAlert('Error', error.message, 'critical');
