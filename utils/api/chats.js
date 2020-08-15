@@ -511,12 +511,19 @@ class ChatsAPI {
       .limit(CHAT_MESSAGES_BATCH_SIZE)
       .onSnapshot((snapshot) => {
         snapshot.docChanges().forEach((change) => {
+          // note that change type `removed`, `added`, `modified` is called for newly sent messages, while change
+          // type `added` is only called for loading the first batch of messages
           const data = change.doc.data();
           if (!data.dateTime && snapshot.metadata.hasPendingWrites) {
             return;
           }
 
-          callback(change.doc);
+          // change type `added` is for loading first batch of messages
+          // change type `modified` is for newly sent messages
+          // link: https://medium.com/firebase-developers/the-secrets-of-firestore-fieldvalue-servertimestamp-revealed-29dd7a38a82b
+          if (change.type === 'modified' || change.type === 'added') {
+            callback(change.doc);
+          }
         });
       });
   }
