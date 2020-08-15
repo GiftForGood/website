@@ -25,6 +25,7 @@ import client from '../../../../utils/axios';
 import { timeout } from '../utils/timeout';
 import PasswordStrength from './PasswordStrength';
 import { Check } from '@kiwicom/orbit-components/lib/icons';
+import CheckIconWrapper from './CheckIconWrapper';
 
 const HeadingColor = styled.div`
   color: ${colors.donorBackground};
@@ -184,7 +185,13 @@ const RegisterDonor = () => {
               name="password"
               error={formik.touched.password && formik.errors.password ? true : false}
               {...formik.getFieldProps('password')}
-              suffix={isPasswordSecure ? <ButtonLink iconLeft={<Check />} transparent type="secondary" /> : null}
+              suffix={
+                isPasswordSecure ? (
+                  <CheckIconWrapper>
+                    <Check />
+                  </CheckIconWrapper>
+                ) : null
+              }
             />
 
             {formik.touched.password && formik.errors.password ? (
