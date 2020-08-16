@@ -66,14 +66,16 @@ async function handler(req, res) {
 }
 
 async function getUser(decodedClaims, uid) {
-  if (decodedClaims.donor) {
+  console.log('getUser donor', decodedClaims.donor);
+  console.log('getUser', decodedClaims);
+  if (decodedClaims && decodedClaims.donor) {
     try {
       let doc = await admin.firestore().collection('donors').doc(uid).get();
       return doc.data();
     } catch (error) {
       throw new AuthError('user-does-not-exist', 'User does not exists');
     }
-  } else if (decodedClaims.npo) {
+  } else if (decodedClaims && decodedClaims.npo) {
     try {
       let doc = await admin.firestore().collection('npos').doc(uid).get();
       return doc.data();
