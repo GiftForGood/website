@@ -9,13 +9,17 @@ async function handler(req, res) {
   const { method } = req;
   switch (method) {
     case 'GET':
+      console.log('silent Login called')
       const cookies = cookie.parse(req.headers.cookie || '');
       const sessionCookie = cookies.session || '';
       // Verify the session cookie. In this case an additional check is added to detect
       // if the user's Firebase session was revoked, user deleted/disabled, etc.
       try {
+        console.log('before decodedClaims');
         let decodedClaims = await admin.auth().verifySessionCookie(sessionCookie, true /** checkRevoked */);
+        console.log('before currentUser');
         let currentUser = await admin.auth().getUser(decodedClaims.uid);
+        console.log('before user');
         let user = await getUser(currentUser.customClaims, currentUser.uid);
 
         console.log('decodedClaims', decodedClaims);
