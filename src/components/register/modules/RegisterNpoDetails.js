@@ -64,9 +64,6 @@ const RegisterNpoDetails = () => {
       let password = values.password;
       let organizationName = organization.name;
       let registrationNumber = organization.registrationNumber;
-      let dayOfRegistration = organization.dateOfRegistrationDay;
-      let monthOfRegistration = organization.dateOfRegistrationMonth;
-      let yearOfRegistration = organization.dateOfRegistrationYear;
       let activities = organization.activities;
       const [token, user, userDoc] = await api.auth.registerNPO(
         name,
@@ -75,9 +72,6 @@ const RegisterNpoDetails = () => {
         password,
         organizationName,
         registrationNumber,
-        dayOfRegistration,
-        monthOfRegistration,
-        yearOfRegistration,
         activities
       );
       await api.auth.sendVerificationEmail();
