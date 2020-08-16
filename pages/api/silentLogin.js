@@ -18,6 +18,13 @@ async function handler(req, res) {
         let currentUser = await admin.auth().getUser(decodedClaims.uid);
         let user = await getUser(currentUser.customClaims, currentUser.uid);
 
+        console.log('decodedClaims', decodedClaims);
+        console.log('currentUser', currentUser.customClaims);
+        console.log('user', user);
+        console.log('decodedClaims Donor', decodedClaims.donor);
+        console.log('currentUser Donor', currentUser.customClaims.donor);
+        console.log('user Donor', user.donor);
+
         // Checking for user type from 3 different sources because Cloud function doesnt update the claims fast enough.
         const donor =
           decodedClaims.donor ||
