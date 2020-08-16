@@ -67,12 +67,7 @@ class AuthAPI {
    * @param {string} email The email of the NPO
    * @param {string} password The password of the NPO
    * @param {string} organization The organization name that the NPO belongs to
-   * @param {string} registeredRegistrar The registrar the the NPO is registered with. Reference to npoRegisteredRegistrar constant file
    * @param {string} registrationNumber The registration number
-   * @param {string} dayOfRegistration The date when the NPO is registered with the registrar (day)
-   * @param {string} monthOfRegistration The date when the NPO is registered with the registrar (day)
-   * @param {string} yearOfRegistration The date when the NPO is registered with the registrar (day)
-   * @param {string} proofImage The image of the proof
    * @param {string} activities The description of the type of activities that the NPO does
    * @throws {AuthError}
    * @return {array} [token, userProfile, npoDoc]
