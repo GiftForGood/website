@@ -89,7 +89,7 @@ const ListOfChats = ({
   const isLatestNewChat = (newChatDoc, existingChatDocs) => {
     return (
       existingChatDocs.length === 0 ||
-      newChatDoc.data().lastMessage.dateTime > existingChatDocs[0].data().lastMessage.dateTime
+      newChatDoc.data().lastMessage.dateTime.toMillis() > existingChatDocs[0].data().lastMessage.dateTime.toMillis()
     );
   };
 
