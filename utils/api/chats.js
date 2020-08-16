@@ -511,7 +511,17 @@ class ChatsAPI {
       .limit(CHAT_MESSAGES_BATCH_SIZE)
       .onSnapshot((snapshot) => {
         snapshot.docChanges().forEach((change) => {
-          if (change.type === 'added') {
+          // note that change type `removed`, `added`, `modified` is called for newly sent messages, while change
+          // type `added` is only called for loading the first batch of messages
+          const data = change.doc.data();
+          if (!data.dateTime && snapshot.metadata.hasPendingWrites) {
+            return;
+          }
+
+          // change type `added` is for loading first batch of messages
+          // change type `modified` is for newly sent messages
+          // link: https://medium.com/firebase-developers/the-secrets-of-firestore-fieldvalue-servertimestamp-revealed-29dd7a38a82b
+          if (change.type === 'modified' || change.type === 'added') {
             callback(change.doc);
           }
         });
@@ -571,7 +581,7 @@ class ChatsAPI {
       id: donorInfo.userId,
       profileImageUrl: donorInfo.profileImageUrl,
       status: OFF, // By default, status will always be off
-      lastActiveDateTime: Date.now(),
+      lastActiveDateTime: firebase.firestore.FieldValue.serverTimestamp(),
       unreadCount: 0,
     };
 
@@ -614,7 +624,7 @@ class ChatsAPI {
       id: npoInfo.userId,
       profileImageUrl: npoInfo.profileImageUrl,
       status: OFF, // By default, status will always be off
-      lastActiveDateTime: Date.now(),
+      lastActiveDateTime: firebase.firestore.FieldValue.serverTimestamp(),
       unreadCount: 0,
       organization: npoInfo.organization,
     };
@@ -704,7 +714,7 @@ class ChatsAPI {
     };
 
     const data = {
-      dateTime: Date.now(),
+      dateTime: firebase.firestore.FieldValue.serverTimestamp(),
       content: content,
       contentType: contentType,
       sender: messageSenderInfo,
@@ -763,7 +773,7 @@ class ChatsAPI {
     const lastActiveDateTimeField = `${userType}.lastActiveDateTime`;
     let data = {
       [statusField]: status,
-      [lastActiveDateTimeField]: Date.now(),
+      [lastActiveDateTimeField]: firebase.firestore.FieldValue.serverTimestamp(),
     };
 
     // Only should read the message when the user is on the chat
@@ -786,7 +796,7 @@ class ChatsAPI {
     const lastActiveDateTimeField = `${receiverType}.lastActiveDateTime`;
     const data = {
       [unreadCountField]: 0,
-      [lastActiveDateTimeField]: Date.now(),
+      [lastActiveDateTimeField]: firebase.firestore.FieldValue.serverTimestamp(),
     };
 
     chatsCollection.doc(chatId).update(data);
