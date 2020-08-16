@@ -18,6 +18,13 @@ async function handler(req, res) {
         let currentUser = await admin.auth().getUser(decodedClaims.uid);
         let user = await getUser(currentUser.customClaims, currentUser.uid);
 
+        console.log('decodedClaims', decodedClaims);
+        console.log('currentUser', currentUser.customClaims);
+        console.log('user', user);
+        console.log('decodedClaims Donor', decodedClaims.donor);
+        console.log('currentUser Donor', currentUser.customClaims.donor);
+        console.log('user Donor', user.donor);
+
         // Checking for user type from 3 different sources because Cloud function doesnt update the claims fast enough.
         const donor =
           decodedClaims.donor ||
@@ -59,14 +66,16 @@ async function handler(req, res) {
 }
 
 async function getUser(decodedClaims, uid) {
-  if (decodedClaims.donor) {
+  console.log('getUser donor', decodedClaims.donor);
+  console.log('getUser', decodedClaims);
+  if (decodedClaims && decodedClaims.donor) {
     try {
       let doc = await admin.firestore().collection('donors').doc(uid).get();
       return doc.data();
     } catch (error) {
       throw new AuthError('user-does-not-exist', 'User does not exists');
     }
-  } else if (decodedClaims.npo) {
+  } else if (decodedClaims && decodedClaims.npo) {
     try {
       let doc = await admin.firestore().collection('npos').doc(uid).get();
       return doc.data();
