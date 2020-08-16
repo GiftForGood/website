@@ -17,14 +17,14 @@ import useWindowDimensions from '../../../../utils/hooks/useWindowDimensions';
 const desktopHeights = {
   chatDialogBackButton: 0, // 0 as it does not exist in desktop
   chatDialogUserRow: 88 + 1,
-  chatDialogSeePostRow: 113 + 1,
+  chatDialogSeePostRow: 90 + 1,
   chatDialogMessagesPadding: 48 + 2,
 };
 
 const mobileHeights = {
   chatDialogBackButton: 44,
   chatDialogUserRow: 108 + 1,
-  chatDialogSeePostRow: 96 + 1,
+  chatDialogSeePostRow: 74 + 1,
   chatDialogMessagesPadding: 32 + 2,
 };
 
@@ -56,6 +56,7 @@ const ChatDialogMessages = ({
   // only consider loading more when it's not a new chat, since it's impossible to have a new chat
   // to have messages initially
   const [shouldSeeMore, setShouldSeeMore] = useState(!isNewChat);
+  const [isLoadingMore, setIsLoadingMore] = useState(false); // to prevent multiple loads at the same time
   const { isTablet } = useMediaQuery();
   const bottomOfScrollerRef = useRef(null);
   const { height: viewportHeight } = useWindowDimensions();
@@ -103,11 +104,14 @@ const ChatDialogMessages = ({
       const firstChatMessageDoc = prevChatMessageDocs[0];
 
       // insert chat message doc to the front if no messages or the message is an older message
-      if (!firstChatMessageDoc || firstChatMessageDoc.data().dateTime >= newChatMessage.dateTime) {
+      if (
+        !firstChatMessageDoc ||
+        firstChatMessageDoc.data().dateTime.toMillis() >= newChatMessage.dateTime.toMillis()
+      ) {
         return [chatMessageDoc, ...prevChatMessageDocs];
       }
 
-      if (lastChatMessageDoc.data().dateTime <= newChatMessage.dateTime) {
+      if (lastChatMessageDoc.data().dateTime.toMillis() <= newChatMessage.dateTime.toMillis()) {
         // insert chat message doc to the back if it is a newly sent message
         isNewlySentMessage = true;
         return [...prevChatMessageDocs, chatMessageDoc];
@@ -116,7 +120,7 @@ const ChatDialogMessages = ({
         // note: this occurs when there are concurrency issues when sending and receiving messages
         for (let i = prevChatMessageDocs.length - 1; i >= 0; i--) {
           const currMessage = prevChatMessageDocs[i].data();
-          if (newChatMessage.dateTime > currMessage.dateTime) {
+          if (newChatMessage.dateTime.toMillis() > currMessage.dateTime.toMillis()) {
             return [...prevChatMessageDocs.slice(0, i + 1), chatMessageDoc, ...prevChatMessageDocs.slice(i + 1)];
           }
         }
@@ -142,6 +146,10 @@ const ChatDialogMessages = ({
   };
 
   const handleOnSeeMore = () => {
+    if (chatMessageDocs.length === 0) {
+      return; // assuming that you can see more after loading the initial batch
+    }
+    setIsLoadingMore(true);
     api.chats.getChatMessages(selectedChatId, chatMessageDocs[0]).then((rawNewChatMessages) => {
       // need to reverse the new chat message docs since the order of the array is latest -> oldest, but in our
       // array the order is oldest -> latest
@@ -151,6 +159,7 @@ const ChatDialogMessages = ({
         // loaded all chat messages
         setShouldSeeMore(false);
       }
+      setIsLoadingMore(false);
     });
   };
 
@@ -185,7 +194,7 @@ const ChatDialogMessages = ({
       <MessageContainer offsetHeight={offsetHeight} viewportHeight={viewportHeight}>
         <InfiniteScroll
           loadMore={handleOnSeeMore}
-          hasMore={shouldSeeMore}
+          hasMore={shouldSeeMore && !isLoadingMore}
           isReverse
           initialLoad={false}
           useWindow={false}
@@ -193,12 +202,13 @@ const ChatDialogMessages = ({
         >
           <Stack direction="column">
             {chatMessageDocs &&
-              chatMessageDocs.map((messageDoc, index) => {
+              chatMessageDocs.map((messageDoc) => {
                 const message = messageDoc.data();
+                const { sender, content, dateTime } = message;
                 // right side is logged in user's messages, left side is opposite user's
-                return message.sender.id === loggedInUser.user.userId ? (
+                return sender.id === loggedInUser.user.userId ? (
                   <RightMessageSection
-                    key={index}
+                    key={`${messageDoc.id}`}
                     message={message}
                     loggedInUser={loggedInUser}
                     selectedChatId={selectedChatId}
@@ -206,7 +216,7 @@ const ChatDialogMessages = ({
                   />
                 ) : (
                   <LeftMessageSection
-                    key={index}
+                    key={`${messageDoc.id}`}
                     message={message}
                     loggedInUser={loggedInUser}
                     selectedChatId={selectedChatId}

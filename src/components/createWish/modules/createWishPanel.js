@@ -29,6 +29,7 @@ import { useRouter } from 'next/router';
 import { getExpireWishDate, getExpireWishDateFormat } from '../../../../utils/api/time';
 import GooglePlacesAutoCompleteField from '../../inputfield/GooglePlacesAutoCompleteField';
 import { logSuccessfullyCreatedWish } from '../../../../utils/analytics';
+import ExpirePostAlert from './ExpirePostAlert';
 
 const Container = styled.div`
   min-width: 300px;
@@ -284,6 +285,8 @@ const CreateWishPanel = ({ wish, mode }) => {
                   value={wish ? getExpireWishDateFormat(wish.expireDateTime) : getExpireWishDate()}
                   help={'Your wish will be automatically removed after this date.'}
                 />
+
+                <ExpirePostAlert />
 
                 <GooglePlacesAutoCompleteField
                   label={'Centre Location'}

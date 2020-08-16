@@ -21,7 +21,6 @@ const okButton = styled.button`
 
 const DATE = '5';
 const title = 'Suggest Dates to deliver';
-const description = '*Please select up to ' + DATE + ' dates';
 
 const CalendarModal = ({ onShow, onHide, sendCalendarMessage }) => {
   const [selectedDates, setSelectedDates] = useState([]);
@@ -35,9 +34,8 @@ const CalendarModal = ({ onShow, onHide, sendCalendarMessage }) => {
   return (
     <Modal size="large">
       <ModalSection>
-        <Stack spacing="none" spaceAfter="normal">
+        <Stack spaceAfter="normal">
           <Heading type="title2">{title}</Heading>
-          <Heading type="title5">{description}</Heading>
         </Stack>
         <Stack>
           <Calendar
