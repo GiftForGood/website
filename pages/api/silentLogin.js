@@ -9,7 +9,7 @@ async function handler(req, res) {
   const { method } = req;
   switch (method) {
     case 'GET':
-      console.log('silent Login called')
+      console.log('silent Login called');
       const cookies = cookie.parse(req.headers.cookie || '');
       const sessionCookie = cookies.session || '';
       // Verify the session cookie. In this case an additional check is added to detect
