@@ -17,15 +17,28 @@ async function handler(req, res) {
         let decodedClaims = await admin.auth().verifySessionCookie(sessionCookie, true /** checkRevoked */);
         let currentUser = await admin.auth().getUser(decodedClaims.uid);
         let user = await getUser(currentUser.customClaims, currentUser.uid);
+
         // Checking for user type from 3 different sources because Cloud function doesnt update the claims fast enough.
+        const donor =
+          decodedClaims.donor ||
+          user.donor ||
+          (currentUser.customClaims.donor ? currentUser.customClaims.donor : false);
+
+        const npo =
+          decodedClaims.npo || user.npo || (currentUser.customClaims.npo ? currentUser.customClaims.npo : false);
+
+        const isClaimSet =
+          (currentUser.customClaims.npo ? currentUser.customClaims.npo : false) ||
+          (currentUser.customClaims.donor ? currentUser.customClaims.donor : false);
+
         res.json({
           user: {
             ...user,
-            donor: decodedClaims.donor || currentUser.customClaims.donor || user.donor,
-            npo: decodedClaims.npo || currentUser.customClaims.npo || user.npo,
+            donor: donor,
+            npo: npo,
             emailVerified: currentUser.emailVerified,
             email: decodedClaims.email,
-            isClaimSet: currentUser.customClaims.npo || currentUser.customClaims.donor,
+            isClaimSet: isClaimSet,
           },
         });
       } catch (error) {
