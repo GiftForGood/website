@@ -51,6 +51,7 @@ const LoginNpo = () => {
       }
     } catch (error) {
       console.error(error);
+      await api.auth.logout();
       setIsLoading(false);
       formik.setSubmitting(false);
       if (error.code === 'auth/user-disabled') {
