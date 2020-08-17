@@ -1,17 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { withRouter } from 'next/router';
-import {
-  Button,
-  InputGroup,
-  InputField,
-  Select,
-  Stack,
-  Textarea,
-  Text,
-  Heading,
-  Alert,
-  TextLink,
-} from '@kiwicom/orbit-components/lib';
+import { Button, InputField, Textarea, Text, Heading, Alert, TextLink, Stack } from '@kiwicom/orbit-components/lib';
 import ChevronLeft from '@kiwicom/orbit-components/lib/icons/ChevronLeft';
 
 import { useDispatch, useSelector } from 'react-redux';
@@ -25,15 +14,12 @@ import {
   clearNpoOrganizationDetails,
 } from '../actions';
 import { getOrganization } from '../selectors';
-import { months } from '../../../../utils/constants/month';
 import styled from 'styled-components';
 import BlueButton from '../../buttons/BlueButton';
 import { colors } from '../../../../utils/constants/colors';
 import api from '../../../../utils/api';
-import moment from 'moment';
 import NpoOrganizationDropdownField from '../../inputfield/NpoOrganizationDropdownField';
 
-const currentYear = moment().year();
 const HeadingColor = styled.div`
   color: ${colors.npoBackground};
 `;
@@ -80,44 +66,16 @@ const RegisterNpoOrganization = () => {
   const validationSchema = Yup.object().shape({
     name: Yup.string().required('Required'),
     registrationNumber: Yup.string().required('Required'),
-    dateOfRegistrationDay: Yup.number()
-      .min(1, 'Day must be in the range 1-31')
-      .max(31, 'Day must be in the range 1-31')
-      .positive('Day must be in the range 1-31')
-      .integer('No decimal values allowed')
-      .required('Required'),
-    dateOfRegistrationMonth: Yup.string().required('Required'),
-    dateOfRegistrationYear: Yup.number()
-      .min(1900, `Year must be in the range 1900-${currentYear}`)
-      .max(currentYear, `Year must be in the range 1900-${currentYear}`)
-      .required('Required'),
     activities: Yup.string()
       .min(1, 'Please fill in something about your organization')
       .max(2000, 'You have reached the limit of 2000 characters')
       .required('Required'),
-    customDateValidation: Yup.boolean().test('Date Checker', 'Invalid Date', function (val) {
-      const { dateOfRegistrationDay, dateOfRegistrationMonth, dateOfRegistrationYear } = this.parent;
-      if (
-        dateOfRegistrationDay === undefined ||
-        dateOfRegistrationMonth === undefined ||
-        dateOfRegistrationYear === undefined
-      ) {
-        return true;
-      }
-      let combineDate = dateOfRegistrationDay + '-' + dateOfRegistrationMonth + '-' + dateOfRegistrationYear;
-      var date = moment(combineDate, 'D-MM-YYYY', true);
-      let valid = date.isValid();
-      return valid;
-    }),
   });
 
   const formik = useFormik({
     initialValues: submittedForm || {
       name: '',
       registrationNumber: '',
-      dateOfRegistrationDay: '',
-      dateOfRegistrationMonth: '',
-      dateOfRegistrationYear: '',
       activities: '',
     },
     enableReinitialize: true,
@@ -181,35 +139,6 @@ const RegisterNpoOrganization = () => {
             }
             {...formik.getFieldProps('registrationNumber')}
           />
-
-          <InputGroup
-            label="Entity Registration Date"
-            error={
-              formik.touched.dateOfRegistrationDay ||
-              formik.touched.dateOfRegistrationMonth ||
-              formik.touched.dateOfRegistrationYear
-                ? formik.errors.dateOfRegistrationDay ||
-                  formik.errors.dateOfRegistrationMonth ||
-                  formik.errors.dateOfRegistrationYear ||
-                  formik.errors.customDateValidation
-                : ''
-            }
-            required
-          >
-            <InputField
-              placeholder="DD"
-              type="number"
-              inputMode="numeric"
-              {...formik.getFieldProps('dateOfRegistrationDay')}
-            />
-            <Select options={months} placeholder="Month" {...formik.getFieldProps('dateOfRegistrationMonth')} />
-            <InputField
-              placeholder="YYYY"
-              type="number"
-              inputMode="numeric"
-              {...formik.getFieldProps('dateOfRegistrationYear')}
-            />
-          </InputGroup>
 
           <Textarea
             label="Organization activities"
