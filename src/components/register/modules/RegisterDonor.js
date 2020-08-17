@@ -172,6 +172,7 @@ const RegisterDonor = () => {
             value="name@example.co"
             label="Email"
             name="email"
+            autoComplete="email"
             placeholder="e.g. name@email.com"
             error={formik.touched.email && formik.errors.email ? formik.errors.email : ''}
             {...formik.getFieldProps('email')}
@@ -183,6 +184,7 @@ const RegisterDonor = () => {
               type="password"
               label="Create a password"
               name="password"
+              autoComplete="new-password"
               error={formik.touched.password && formik.errors.password ? true : false}
               {...formik.getFieldProps('password')}
               suffix={
@@ -222,6 +224,7 @@ const RegisterDonor = () => {
             type="password"
             label="Confirm password"
             name="passwordConfirm"
+            autoComplete="new-password"
             error={
               formik.touched.passwordConfirmation && formik.errors.passwordConfirmation
                 ? formik.errors.passwordConfirmation
