@@ -54,6 +54,7 @@ const LoginDonor = () => {
       }
     } catch (error) {
       console.error(error);
+      await api.auth.logout();
       setIsLoading(false);
       formik.setSubmitting(false);
       if (error.code === 'auth/user-disabled') {
@@ -88,6 +89,7 @@ const LoginDonor = () => {
     } catch (error) {
       setIsGoogleLoading(false);
       console.error(error);
+      await api.auth.logout();
       if (error.code === 'auth/unable-to-create-user') {
         displayAlert('Error', error.message, 'critical');
       } else if (error.code === 'auth/invalid-user') {
