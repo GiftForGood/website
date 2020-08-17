@@ -14,24 +14,26 @@ const SessionProvider = ({ user, children }) => {
   useEffect(() => {
     if (user) {
       dispatch(setCurrentUser(user));
-    }
-    const registeredObject = JSON.parse(registeredObjectString);
-    if (user && user.user.emailVerified && user.user.isClaimSet && registeredObject.isNewlyRegistered) {
-      firebaseAuth.onAuthStateChanged((currentUser) => {
-        if (currentUser) {
-          currentUser
-            .getIdTokenResult(true)
-            .then((idTokenResult) => {
-              const registered = {
-                isNewlyRegistered: false,
-              };
-              setRegisteredObjectString(JSON.stringify(registered));
-            })
-            .catch((error) => {
-              console.error(error);
-            });
-        }
-      });
+      const registeredObject = JSON.parse(registeredObjectString);
+      if (user && user.user.emailVerified && user.user.isClaimSet && registeredObject.isNewlyRegistered) {
+        firebaseAuth.onAuthStateChanged((currentUser) => {
+          if (currentUser) {
+            currentUser
+              .getIdTokenResult(true)
+              .then((idTokenResult) => {
+                const registered = {
+                  isNewlyRegistered: false,
+                };
+                setRegisteredObjectString(JSON.stringify(registered));
+              })
+              .catch((error) => {
+                console.error(error);
+              });
+          }
+        });
+      }
+    } else {
+      setRegisteredObjectString('{"isNewlyRegistered":true}');
     }
   }, []);
 
