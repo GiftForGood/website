@@ -60,7 +60,7 @@
 .markdown-body h6:hover .anchor .octicon-link:before {
   width: 16px;
   height: 16px;
-  content: " ";
+  content: ' ';
   display: inline-block;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' version='1.1' width='16' height='16' aria-hidden='true'%3E%3Cpath fill-rule='evenodd' d='M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z'%3E%3C/path%3E%3C/svg%3E");
 }
@@ -69,8 +69,8 @@
   -webkit-text-size-adjust: 100%;
   line-height: 1.5;
   color: #24292e;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial,
-    sans-serif, Apple Color Emoji, Segoe UI Emoji;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif, Apple Color Emoji,
+    Segoe UI Emoji;
   font-size: 16px;
   line-height: 1.5;
   word-wrap: break-word;
@@ -78,6 +78,15 @@
 
 .markdown-body details {
   display: block;
+
+  margin: 1.5rem 0px;
+  padding: 0.5rem 1rem;
+  background: rgb(250, 250, 250);
+  border-width: 1px;
+  border-style: solid;
+  border-color: rgb(234, 234, 234);
+  border-image: initial;
+  border-radius: 3px;
 }
 
 .markdown-body summary {
@@ -129,7 +138,7 @@
   overflow: visible;
 }
 
-.markdown-body [type="checkbox"] {
+.markdown-body [type='checkbox'] {
   box-sizing: border-box;
   padding: 0;
 }
@@ -169,7 +178,7 @@
 .markdown-body hr:after,
 .markdown-body hr:before {
   display: table;
-  content: "";
+  content: '';
 }
 
 .markdown-body hr:after {
@@ -188,6 +197,7 @@
 
 .markdown-body details summary {
   cursor: pointer;
+  outline: none;
 }
 
 .markdown-body kbd {
@@ -457,7 +467,7 @@
 }
 
 .markdown-body .pl-c2:before {
-  content: "^M";
+  content: '^M';
 }
 
 .markdown-body .pl-sr .pl-cce {
@@ -618,7 +628,7 @@
 .markdown-body:after,
 .markdown-body:before {
   display: table;
-  content: "";
+  content: '';
 }
 
 .markdown-body:after {
@@ -788,11 +798,11 @@
   background-color: #fff;
 }
 
-.markdown-body img[align="right"] {
+.markdown-body img[align='right'] {
   padding-left: 20px;
 }
 
-.markdown-body img[align="left"] {
+.markdown-body img[align='left'] {
   padding-right: 20px;
 }
 
@@ -921,62 +931,62 @@
   background: #ffea7f;
 }
 
-.markdown-body .tab-size[data-tab-size="1"] {
+.markdown-body .tab-size[data-tab-size='1'] {
   -moz-tab-size: 1;
   tab-size: 1;
 }
 
-.markdown-body .tab-size[data-tab-size="2"] {
+.markdown-body .tab-size[data-tab-size='2'] {
   -moz-tab-size: 2;
   tab-size: 2;
 }
 
-.markdown-body .tab-size[data-tab-size="3"] {
+.markdown-body .tab-size[data-tab-size='3'] {
   -moz-tab-size: 3;
   tab-size: 3;
 }
 
-.markdown-body .tab-size[data-tab-size="4"] {
+.markdown-body .tab-size[data-tab-size='4'] {
   -moz-tab-size: 4;
   tab-size: 4;
 }
 
-.markdown-body .tab-size[data-tab-size="5"] {
+.markdown-body .tab-size[data-tab-size='5'] {
   -moz-tab-size: 5;
   tab-size: 5;
 }
 
-.markdown-body .tab-size[data-tab-size="6"] {
+.markdown-body .tab-size[data-tab-size='6'] {
   -moz-tab-size: 6;
   tab-size: 6;
 }
 
-.markdown-body .tab-size[data-tab-size="7"] {
+.markdown-body .tab-size[data-tab-size='7'] {
   -moz-tab-size: 7;
   tab-size: 7;
 }
 
-.markdown-body .tab-size[data-tab-size="8"] {
+.markdown-body .tab-size[data-tab-size='8'] {
   -moz-tab-size: 8;
   tab-size: 8;
 }
 
-.markdown-body .tab-size[data-tab-size="9"] {
+.markdown-body .tab-size[data-tab-size='9'] {
   -moz-tab-size: 9;
   tab-size: 9;
 }
 
-.markdown-body .tab-size[data-tab-size="10"] {
+.markdown-body .tab-size[data-tab-size='10'] {
   -moz-tab-size: 10;
   tab-size: 10;
 }
 
-.markdown-body .tab-size[data-tab-size="11"] {
+.markdown-body .tab-size[data-tab-size='11'] {
   -moz-tab-size: 11;
   tab-size: 11;
 }
 
-.markdown-body .tab-size[data-tab-size="12"] {
+.markdown-body .tab-size[data-tab-size='12'] {
   -moz-tab-size: 12;
   tab-size: 12;
 }
