@@ -44,25 +44,4 @@ export async function getStaticProps(context) {
   };
 }
 
-// generate HTML paths at build time
-export async function getStaticPaths(context) {
-  const fs = require('fs');
-
-  const path = `${process.cwd()}/contents/faq`;
-  const files = fs.readdirSync(path, 'utf-8');
-
-  const markdownFileNames = files.filter((fn) => fn.endsWith('.md')).map((fn) => fn.replace('.md', ''));
-
-  return {
-    paths: markdownFileNames.map((fileName) => {
-      return {
-        params: {
-          slug: fileName,
-        },
-      };
-    }),
-    fallback: false,
-  };
-}
-
 export default FaqPage;
