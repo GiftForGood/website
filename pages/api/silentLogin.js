@@ -20,12 +20,14 @@ async function handler(req, res) {
 
         // Checking for user type from 3 different sources because Cloud function doesnt update the claims fast enough.
         const donor =
-          decodedClaims.donor ||
-          user.donor ||
+          (decodedClaims && decodedClaims.donor) ||
+          (user && user.donor) ||
           (currentUser.customClaims.donor ? currentUser.customClaims.donor : false);
 
         const npo =
-          decodedClaims.npo || user.npo || (currentUser.customClaims.npo ? currentUser.customClaims.npo : false);
+          (decodedClaims && decodedClaims.npo) ||
+          (user && user.npo) ||
+          (currentUser.customClaims.npo ? currentUser.customClaims.npo : false);
 
         const isClaimSet =
           (currentUser.customClaims.npo ? currentUser.customClaims.npo : false) ||
