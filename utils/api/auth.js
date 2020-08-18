@@ -256,6 +256,8 @@ class AuthAPI {
       joinedDateTime: timeNow,
       lastLoggedInDateTime: timeNow,
       notifications: DONOR_NOTIFICATION,
+      unreadChatNotificationsCount: 0,
+      unreadNotificationsCount: 0,
     };
     await newDonor.set(data);
 
@@ -304,6 +306,8 @@ class AuthAPI {
       isForcedRefreshRequired: false,
       joinedDateTime: timeNow,
       lastLoggedInDateTime: timeNow,
+      unreadChatNotificationsCount: 0,
+      unreadNotificationsCount: 0,
       notifications: NPO_NOTIFICATION,
     };
     await newNPO.set(data);
