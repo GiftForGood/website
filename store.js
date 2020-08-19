@@ -6,7 +6,6 @@ import registerReducer from './src/components/register';
 import loginReducer from './src/components/login';
 import sessionReducer from './src/components/session';
 import createWishReducer from './src/components/createWish';
-import createDonationReducer from './src/components/createDonation';
 import navbarReducer from './src/components/navbar';
 
 const initialState = {};
@@ -16,7 +15,6 @@ const rootReducer = combineReducers({
   login: loginReducer,
   session: sessionReducer,
   createWish: createWishReducer,
-  createDonation: createDonationReducer,
   navbar: navbarReducer,
 });
 
