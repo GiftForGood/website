@@ -18,11 +18,11 @@ const LivePreviewDonation = () => {
   const location = useSelector(getLocation);
   const validFrom = useSelector(getValidFrom);
   const validTo = useSelector(getValidTo);
-  const profileHref = `/profile/${user._id}`;
 
   if (!user) {
     return null;
   }
+  const profileHref = `/profile/${user.userId}`;
 
   return (
     <Stack align="center" direction="column" basis="50%">
