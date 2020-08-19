@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { colors } from '../../../utils/constants/colors';
 
 const ChatSuggestDatesButton = styled.button`
+  border-radius: 20px;
   background: ${colors.chatSuggestDateButtonBackground};
 
   :active {

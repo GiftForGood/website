@@ -121,9 +121,12 @@ const ChatDialogContent = ({
         )}
         <ChatDialogMessages
           postType={chatPostType}
+          postId={postId}
           loggedInUser={loggedInUser}
           selectedChatId={selectedChatId}
+          setSelectedChatId={setSelectedChatId}
           isNewChat={isNewChat}
+          setIsNewChat={setIsNewChat}
           navBarHeight={navBarHeight}
           inputRowHeight={inputRowHeight}
           isShowPostDetails={isShowPostDetails}

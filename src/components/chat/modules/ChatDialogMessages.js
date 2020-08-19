@@ -10,6 +10,7 @@ import { wishes } from '../../../../utils/constants/postType';
 import { CHAT_MESSAGES_BATCH_SIZE } from '../../../../utils/api/constants';
 import { LeftMessageSection, RightMessageSection } from './ChatMessageSection';
 import useWindowDimensions from '../../../../utils/hooks/useWindowDimensions';
+import ChatDialogFloatingButtons from './ChatDialogFloatingButtons';
 
 /**
  * To be changed if any of the heights change, the extra "+1 or +2" for the top/bottom borders
@@ -45,9 +46,12 @@ const MessageContainer = styled.div`
  */
 const ChatDialogMessages = ({
   postType,
+  postId,
   loggedInUser,
   selectedChatId,
+  setSelectedChatId,
   isNewChat,
+  setIsNewChat,
   navBarHeight,
   inputRowHeight,
   isShowPostDetails,
@@ -224,6 +228,14 @@ const ChatDialogMessages = ({
                   />
                 );
               })}
+            <ChatDialogFloatingButtons
+              postType={postType}
+              postId={postId}
+              isNewChat={isNewChat}
+              setIsNewChat={setIsNewChat}
+              selectedChatId={selectedChatId}
+              setSelectedChatId={setSelectedChatId}
+            />
           </Stack>
           <div ref={bottomOfScrollerRef} />
         </InfiniteScroll>
