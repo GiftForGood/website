@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button } from '@kiwicom/orbit-components/lib';
+import { Button, Stack } from '@kiwicom/orbit-components/lib';
 import CalendarModal from '../../calendar/modules/CalendarModal';
 import SuggestDateButton from '../../../components/buttons/ChatSuggestDatesButton';
 import api from '../../../../utils/api';
@@ -8,14 +8,9 @@ import { getFormattedDateRange } from '../../../../utils/api/time';
 import { donations } from '../../../../utils/constants/postType';
 import { useRouter } from 'next/router';
 
-const FloatingButtonsContainer = styled.div`
-  position: relative;
+const ButtonsContainer = styled.div`
+  overflow-x: scroll;
 `;
-
-const SuggestDateContainer = styled.div`
-  float: left;
-`;
-
 const ChatDialogFloatingButtons = ({
   postType,
   postId,
@@ -58,8 +53,8 @@ const ChatDialogFloatingButtons = ({
   };
 
   return (
-    <FloatingButtonsContainer>
-      <SuggestDateContainer>
+    <ButtonsContainer>
+      <Stack direction="row" spacing="tight">
         <Button size="small" onClick={handleShowSuggestDateModal} asComponent={SuggestDateButton}>
           Suggest Dates
         </Button>
@@ -68,8 +63,8 @@ const ChatDialogFloatingButtons = ({
           onHide={handleCloseSuggestDateModal}
           sendCalendarMessage={handleSendCalendarMessage}
         />
-      </SuggestDateContainer>
-    </FloatingButtonsContainer>
+      </Stack>
+    </ButtonsContainer>
   );
 };
 
