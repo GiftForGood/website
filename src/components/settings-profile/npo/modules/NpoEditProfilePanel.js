@@ -86,6 +86,18 @@ const NpoEditProfilePanel = () => {
     },
   });
 
+  const handleUploadProfileImage = (file) => {
+    if (!file) {
+      return;
+    }
+
+    if (file.size <= 25000000) {
+      formik.setFieldValue('profileImage', file);
+    } else {
+      formik.setFieldError('profileImage', 'Unable to upload images that are more than 25mb');
+    }
+  };
+
   useEffect(() => {
     if (formik.values.profileImage) {
       const file = formik.values.profileImage;
@@ -118,9 +130,7 @@ const NpoEditProfilePanel = () => {
                   {...formik.getFieldProps('profileImage')}
                   error={formik.touched.profileImage && formik.errors.profileImage ? formik.errors.profileImage : ''}
                   fileName={formik.values.profileImage ? formik.values.profileImage.name : ''}
-                  onChange={(event) => {
-                    formik.setFieldValue('profileImage', event.currentTarget.files[0]);
-                  }}
+                  onChange={(event) => handleUploadProfileImage(event.currentTarget.files[0])}
                 />
               </Stack>
 
