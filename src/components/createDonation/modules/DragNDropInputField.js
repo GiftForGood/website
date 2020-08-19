@@ -4,6 +4,7 @@ import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import { useDropzone } from 'react-dropzone';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { MAXIMUM_ALLOWED_PHOTOS } from '../../../../utils/constants/donorUploadPhoto';
+import { MAXIMUM_FILE_SIZE_LIMIT } from '../../../../utils/constants/files';
 import { Text, ButtonPrimitive, Alert } from '@kiwicom/orbit-components/lib';
 import { v4 as uuidv4 } from 'uuid';
 import Remove from '@kiwicom/orbit-components/lib/icons/Remove';
@@ -144,9 +145,9 @@ const DragNDropInputField = ({ onChange, error, initialImages = null }) => {
   };
 
   const onUpload = useCallback((acceptedFiles, selectedImages) => {
-    if (acceptedFiles.some((file) => file.size > 25000000)) {
+    if (acceptedFiles.some((file) => file.size > MAXIMUM_FILE_SIZE_LIMIT)) {
       displayUploadFileAlert('Unable to upload images that are more than 25mb');
-      acceptedFiles = acceptedFiles.filter((file) => file.size <= 25000000);
+      acceptedFiles = acceptedFiles.filter((file) => file.size <= MAXIMUM_FILE_SIZE_LIMIT);
     }
 
     const allowedRemainingImages = MAXIMUM_ALLOWED_PHOTOS - selectedImages.length;

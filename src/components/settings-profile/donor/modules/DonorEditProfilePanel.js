@@ -7,6 +7,7 @@ import * as Yup from 'yup';
 import useUser from '../../../session/modules/useUser';
 import ProfileAvatar from '../../../imageContainers/ProfileAvatar';
 import api from '../../../../../utils/api';
+import { MAXIMUM_FILE_SIZE_LIMIT } from '../../../../../utils/constants/files';
 import { useRouter } from 'next/router';
 import SaveChangesButton from '../../../buttons/SaveChangesButton';
 
@@ -77,7 +78,7 @@ const DonorEditProfilePanel = () => {
       return;
     }
 
-    if (file.size <= 25000000) {
+    if (file.size <= MAXIMUM_FILE_SIZE_LIMIT) {
       formik.setFieldValue('profileImage', file);
     } else {
       formik.setFieldError('profileImage', 'Unable to upload images that are more than 25mb');
