@@ -24,7 +24,7 @@ const desktopHeights = {
 
 const mobileHeights = {
   chatDialogBackButton: 44,
-  chatDialogUserRow: 108 + 1,
+  chatDialogUserRow: 72 + 1,
   chatDialogSeePostRow: 74 + 1,
   chatDialogMessagesPadding: 32 + 2,
 };
