@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Stack, TileGroup, Loading } from '@kiwicom/orbit-components/lib';
 import ChatWithUserCard from '../../card/ChatWithUserCard';
 import api from '../../../../utils/api';
@@ -8,6 +8,7 @@ import { colors } from '../../../../utils/constants/colors';
 import { MODIFIED, ADDED } from '../../../../utils/constants/chatSubscriptionChange';
 import InfiniteScroll from '../../scroller/InfiniteScroller';
 import { USER_CHATS_BATCH_SIZE } from '../../../../utils/api/constants';
+import ChatContext from './ChatContext';
 
 const ListOfChatsContainer = styled.div`
   min-width: 200px;
@@ -25,18 +26,18 @@ const ListOfChatsContainer = styled.div`
   }};
 `;
 
-const ListOfChats = ({
-  user,
-  selectedChatId,
-  setSelectedChatId,
-  postId,
-  isNewChat,
-  setIsNewChat,
-  isViewingChatsForMyPost,
-  isShow,
-}) => {
+const ListOfChats = ({ isShow }) => {
   const [chatDocs, setChatDocs] = useState([]);
   const [shouldSeeMore, setShouldSeeMore] = useState(true);
+  const {
+    user,
+    selectedChatId,
+    setSelectedChatId,
+    postId,
+    isNewChat,
+    setIsNewChat,
+    isViewingChatsForMyPost,
+  } = useContext(ChatContext);
 
   useEffect(() => {
     let unsubscribeFunction;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Grid } from '@kiwicom/orbit-components/lib';
 import ListOfChats from '../modules/ListOfChats';
 import ChatDialog from '../modules/ChatDialog';
@@ -9,6 +9,7 @@ import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 import Router from 'next/router';
 import useWindowDimensions from '../../../../utils/hooks/useWindowDimensions';
 import useNavbarHeight from '../../navbar/modules/useNavbarHeight';
+import ChatContext from '../modules/ChatContext';
 
 const NoChatsContainer = styled.div`
   margin: 0 auto;
@@ -16,85 +17,22 @@ const NoChatsContainer = styled.div`
   width: fit-content;
 `;
 
-const ChatPageTabletAndDesktop = ({
-  user,
-  setHasError,
-  selectedChatId,
-  setSelectedChatId,
-  postId,
-  postType,
-  isNewChat,
-  setIsNewChat,
-  isViewingChatsForMyPost,
-  navBarHeight,
-  gridContainerStyle,
-}) => {
+const ChatPageTabletAndDesktop = ({ gridContainerStyle }) => {
   return (
     <Grid style={gridContainerStyle} columns="1fr 3fr">
-      <ListOfChats
-        user={user}
-        selectedChatId={selectedChatId}
-        setSelectedChatId={setSelectedChatId}
-        postId={postId}
-        isNewChat={isNewChat}
-        setIsNewChat={setIsNewChat}
-        isViewingChatsForMyPost={isViewingChatsForMyPost}
-        isShow={true}
-      />
-      <ChatDialog
-        loggedInUser={user}
-        setHasError={setHasError}
-        selectedChatId={selectedChatId}
-        setSelectedChatId={setSelectedChatId}
-        navBarHeight={navBarHeight}
-        isNewChat={isNewChat}
-        setIsNewChat={setIsNewChat}
-        postId={postId}
-        postType={postType}
-        isShow={true}
-      />
+      <ListOfChats isShow={true} />
+      <ChatDialog isShow={true} />
     </Grid>
   );
 };
 
-const ChatPageMobile = ({
-  user,
-  setHasError,
-  selectedChatId,
-  setSelectedChatId,
-  postId,
-  postType,
-  isNewChat,
-  setIsNewChat,
-  isViewingChatsForMyPost,
-  navBarHeight,
-  gridContainerStyle,
-}) => {
+const ChatPageMobile = ({ gridContainerStyle }) => {
+  const { selectedChatId, isNewChat } = useContext(ChatContext);
   return (
     <Grid style={gridContainerStyle} columns="1fr">
       {/* Using the isShow props to conditionally display ListOfChats when has not selected a chat */}
-      <ListOfChats
-        user={user}
-        selectedChatId={selectedChatId}
-        setSelectedChatId={setSelectedChatId}
-        isNewChat={isNewChat}
-        setIsNewChat={setIsNewChat}
-        postId={postId}
-        isViewingChatsForMyPost={isViewingChatsForMyPost}
-        isShow={selectedChatId === null && !isNewChat}
-      />
-      <ChatDialog
-        loggedInUser={user}
-        setHasError={setHasError}
-        selectedChatId={selectedChatId}
-        setSelectedChatId={setSelectedChatId}
-        navBarHeight={navBarHeight}
-        isNewChat={isNewChat}
-        setIsNewChat={setIsNewChat}
-        postId={postId}
-        postType={postType}
-        isShow={selectedChatId !== null || isNewChat}
-      />
+      <ListOfChats isShow={selectedChatId === null && !isNewChat} />
+      <ChatDialog isShow={selectedChatId !== null || isNewChat} />
     </Grid>
   );
 };
@@ -189,34 +127,27 @@ const ChatPage = ({ user, chatId, postId, postType, isViewingChatsForMyPost }) =
     return <NoChatsContainer>No chats for this post yet.</NoChatsContainer>;
   }
 
-  return isTablet ? (
-    <ChatPageTabletAndDesktop
-      user={user}
-      setHasError={setHasError}
-      selectedChatId={selectedChatId}
-      setSelectedChatId={setSelectedChatId}
-      postId={postId}
-      postType={postType}
-      isNewChat={isNewChat}
-      setIsNewChat={setIsNewChat}
-      isViewingChatsForMyPost={isViewingChatsForMyPost}
-      navBarHeight={navBarOffsetHeight}
-      gridContainerStyle={gridContainerStyle}
-    />
-  ) : (
-    <ChatPageMobile
-      user={user}
-      setHasError={setHasError}
-      selectedChatId={selectedChatId}
-      setSelectedChatId={setSelectedChatId}
-      postId={postId}
-      postType={postType}
-      isNewChat={isNewChat}
-      setIsNewChat={setIsNewChat}
-      isViewingChatsForMyPost={isViewingChatsForMyPost}
-      navBarHeight={navBarOffsetHeight}
-      gridContainerStyle={gridContainerStyle}
-    />
+  return (
+    <ChatContext.Provider
+      value={{
+        user,
+        selectedChatId,
+        setSelectedChatId,
+        postId,
+        postType,
+        isNewChat,
+        setIsNewChat,
+        setHasError,
+        isViewingChatsForMyPost,
+        navBarHeight: navBarOffsetHeight,
+      }}
+    >
+      {isTablet ? (
+        <ChatPageTabletAndDesktop gridContainerStyle={gridContainerStyle} />
+      ) : (
+        <ChatPageMobile gridContainerStyle={gridContainerStyle} />
+      )}
+    </ChatContext.Provider>
   );
 };
 

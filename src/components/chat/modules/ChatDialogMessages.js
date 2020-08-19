@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import { Stack, Loading } from '@kiwicom/orbit-components/lib';
 import api from '../../../../utils/api';
 import styled from 'styled-components';
@@ -10,6 +10,7 @@ import { wishes } from '../../../../utils/constants/postType';
 import { CHAT_MESSAGES_BATCH_SIZE } from '../../../../utils/api/constants';
 import { LeftMessageSection, RightMessageSection } from './ChatMessageSection';
 import useWindowDimensions from '../../../../utils/hooks/useWindowDimensions';
+import ChatContext from './ChatContext';
 
 /**
  * To be changed if any of the heights change, the extra "+1 or +2" for the top/bottom borders
@@ -43,15 +44,8 @@ const MessageContainer = styled.div`
  *
  * @param {number} navBarHeight is the height of the navbar
  */
-const ChatDialogMessages = ({
-  postType,
-  loggedInUser,
-  selectedChatId,
-  isNewChat,
-  navBarHeight,
-  inputRowHeight,
-  isShowPostDetails,
-}) => {
+const ChatDialogMessages = ({ postType, inputRowHeight, isShowPostDetails }) => {
+  const { user: loggedInUser, selectedChatId, isNewChat, navBarHeight } = useContext(ChatContext);
   const [chatMessageDocs, setChatMessageDocs] = useState([]);
   // only consider loading more when it's not a new chat, since it's impossible to have a new chat
   // to have messages initially

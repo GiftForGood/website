@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import Measure from 'react-measure';
 import { Stack, ButtonLink, Button } from '@kiwicom/orbit-components/lib';
 import ChatDialogUserRow from './ChatDialogUserRow';
@@ -13,6 +13,7 @@ import ChevronDown from '@kiwicom/orbit-components/lib/icons/ChevronDown';
 import ChevronUp from '@kiwicom/orbit-components/lib/icons/ChevronUp';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 import { donations } from '../../../../utils/constants/postType';
+import ChatContext from './ChatContext';
 
 const ChatDialogContainer = styled.div`
   width: 100%;
@@ -32,19 +33,8 @@ const ButtonsWrapper = styled.div`
   width: 90%;
 `;
 
-const ChatDialogContent = ({
-  loggedInUser,
-  navBarHeight,
-  setHasError,
-  selectedChatId,
-  setSelectedChatId,
-  isNewChat,
-  setIsNewChat,
-  post,
-  chat,
-  postId,
-  postType,
-}) => {
+const ChatDialogContent = ({ post, chat }) => {
+  const { user: loggedInUser, setSelectedChatId, isNewChat, setIsNewChat, postId, postType } = useContext(ChatContext);
   const { isTablet } = useMediaQuery();
   // default as 68 px which is single line text area, modified when there
   // is more than one line in the text area in input row
@@ -106,58 +96,27 @@ const ChatDialogContent = ({
               postId={chatPostId}
               postType={chatPostType}
               postStatus={postStatus}
-              loggedInUser={loggedInUser}
               oppositeUser={oppositeUser}
               postOwnerId={postOwnerId}
               postEnquirerId={postEnquirerId}
-              setHasError={setHasError}
-              selectedChatId={selectedChatId}
-              setSelectedChatId={setSelectedChatId}
-              isNewChat={isNewChat}
-              setIsNewChat={setIsNewChat}
             />
             <ChatDialogViewPostRow postType={chatPostType} postId={chatPostId} postTitle={chatPostTitle} />
           </>
         )}
         <ChatDialogMessages
           postType={chatPostType}
-          loggedInUser={loggedInUser}
-          selectedChatId={selectedChatId}
-          isNewChat={isNewChat}
-          navBarHeight={navBarHeight}
           inputRowHeight={inputRowHeight}
           isShowPostDetails={isShowPostDetails}
         />
       </Stack>
       <Measure bounds onResize={(contentRect) => setInputRowHeight(contentRect.bounds.height)}>
-        {({ measureRef }) => (
-          <ChatDialogInputRow
-            selectedChatId={selectedChatId}
-            setSelectedChatId={setSelectedChatId}
-            isNewChat={isNewChat}
-            setIsNewChat={setIsNewChat}
-            postType={chatPostType}
-            postId={chatPostId}
-            ref={measureRef}
-          />
-        )}
+        {({ measureRef }) => <ChatDialogInputRow postType={chatPostType} postId={chatPostId} ref={measureRef} />}
       </Measure>
     </>
   );
 };
 
-const ChatDialog = ({
-  loggedInUser,
-  setHasError,
-  selectedChatId,
-  setSelectedChatId,
-  navBarHeight,
-  isNewChat,
-  setIsNewChat,
-  postId,
-  postType,
-  isShow,
-}) => {
+const ChatDialog = ({ isShow }) => {
   /**
    * note that the post is only needed when creating a new chat for a post, in order to get
    * details of the post, since there's no chat to reference to get the post data from.
@@ -169,6 +128,7 @@ const ChatDialog = ({
    * messages for that chat.
    */
   const [chat, setChat] = useState(null);
+  const { selectedChatId, isNewChat, postId, postType } = useContext(ChatContext);
 
   const isCreatingNewChatForAPost = postId && isNewChat;
   const hasSelectedChat = selectedChatId !== null;
@@ -210,19 +170,7 @@ const ChatDialog = ({
 
   return (
     <ChatDialogContainer isShow={isShow}>
-      <ChatDialogContent
-        loggedInUser={loggedInUser}
-        navBarHeight={navBarHeight}
-        setHasError={setHasError}
-        selectedChatId={selectedChatId}
-        setSelectedChatId={setSelectedChatId}
-        isNewChat={isNewChat}
-        setIsNewChat={setIsNewChat}
-        post={post}
-        chat={chat}
-        postId={postId}
-        postType={postType}
-      />
+      <ChatDialogContent post={post} chat={chat} />
     </ChatDialogContainer>
   );
 };

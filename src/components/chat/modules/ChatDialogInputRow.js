@@ -1,4 +1,4 @@
-import React, { useState, forwardRef, useRef } from 'react';
+import React, { useState, forwardRef, useRef, useContext } from 'react';
 import { Button, Stack, Alert } from '@kiwicom/orbit-components/lib';
 import ChatButton from '../../../components/buttons/ChatButton';
 import ChatImageUpload from './ChatImageUpload';
@@ -10,6 +10,7 @@ import TextareaAutosize from 'react-textarea-autosize';
 import { useRouter } from 'next/router';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 import { isMobile } from 'react-device-detect';
+import ChatContext from './ChatContext';
 
 const InputRowContainer = styled.div`
   width: 95%;
@@ -50,7 +51,8 @@ const StyledTextareaAutosize = styled(TextareaAutosize)`
   transform-origin: left;
 `;
 
-const ChatDialogInputRow = ({ selectedChatId, setSelectedChatId, isNewChat, setIsNewChat, postType, postId }, ref) => {
+const ChatDialogInputRow = ({ postType, postId }, ref) => {
+  const { selectedChatId, setSelectedChatId, isNewChat, setIsNewChat } = useContext(ChatContext);
   const [inputMessage, setInputMessage] = useState('');
   const [alertMessage, setAlertMessage] = useState('');
   const textAreaRef = useRef(null);
@@ -111,12 +113,8 @@ const ChatDialogInputRow = ({ selectedChatId, setSelectedChatId, isNewChat, setI
         <ChatImageUpload
           postType={postType}
           postId={postId}
-          selectedChatId={selectedChatId}
-          setSelectedChatId={setSelectedChatId}
-          setIsNewChat={setIsNewChat}
           setAlertMessage={setAlertMessage}
           onCloseAlert={closeAlert}
-          isNewChat={isNewChat}
         />
         <StyledTextareaAutosize
           ref={textAreaRef}

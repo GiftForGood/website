@@ -1,22 +1,15 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useContext } from 'react';
 import Gallery from '@kiwicom/orbit-components/lib/icons/Gallery';
 import { useDropzone } from 'react-dropzone';
 import ChatError from '../../../../utils/api/error/chatError';
 import api from '../../../../utils/api';
 import { donations } from '../../../../utils/constants/postType';
 import { useRouter } from 'next/router';
+import ChatContext from './ChatContext';
 
-const ChatImageUpload = ({
-  postType,
-  postId,
-  selectedChatId,
-  setSelectedChatId,
-  setIsNewChat,
-  setAlertMessage,
-  isNewChat,
-  onCloseAlert,
-}) => {
+const ChatImageUpload = ({ postType, postId, setAlertMessage, onCloseAlert }) => {
   const router = useRouter();
+  const { selectedChatId, setSelectedChatId, setIsNewChat, isNewChat } = useContext(ChatContext);
   const sendFirstImageMessages = async (images) => {
     const method = postType === donations ? 'sendInitialImageMessagesForDonation' : 'sendInitialImageMessagesForWish';
     const [rawChat, rawFirstMessage] = await api.chats[method](postId, images);

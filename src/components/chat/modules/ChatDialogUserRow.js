@@ -16,6 +16,8 @@ import { donations } from '../../../../utils/constants/postType';
 import { useRouter } from 'next/router';
 import api from '../../../../utils/api';
 import { getFormattedDateRange } from '../../../../utils/api/time';
+import ChatContext from './ChatContext';
+import { useContext } from 'react';
 
 const AvatarContainer = styled.div`
   float: left;
@@ -41,25 +43,15 @@ const ButtonsContainer = styled.div`
  * @param {string} name is the name of the opposite user
  * @param {string} profileImageUrl is the url of the opposite user's profile image
  */
-const ChatDialogUserRow = ({
-  postId,
-  postType,
-  postStatus,
-  loggedInUser,
-  selectedChatId,
-  setSelectedChatId,
-  setHasError,
-  isNewChat,
-  setIsNewChat,
-  oppositeUser,
-  postOwnerId,
-  postEnquirerId,
-}) => {
+const ChatDialogUserRow = ({ postId, postType, postStatus, oppositeUser, postOwnerId, postEnquirerId }) => {
   const [showSuggestDateModal, setShowSuggestDateModal] = useState(false);
   const [showAppreciationMessageModal, setShowAppreciationMessageModal] = useState(false);
   const [showConfirmCompletionModal, setShowConfirmCompletionModal] = useState(false);
   const [status, setStatus] = useState(postStatus);
   const router = useRouter();
+  const { user: loggedInUser, selectedChatId, setSelectedChatId, setHasError, isNewChat, setIsNewChat } = useContext(
+    ChatContext
+  );
 
   const handleCloseAppreciationMessageModal = () => setShowAppreciationMessageModal(false);
   const handleShowAppreciationMessageModal = () => setShowAppreciationMessageModal(true);
