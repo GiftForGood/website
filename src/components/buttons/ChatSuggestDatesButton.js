@@ -3,6 +3,7 @@ import { colors } from '../../../utils/constants/colors';
 
 const ChatSuggestDatesButton = styled.button`
   border-radius: 20px;
+  border: 2px solid ${colors.chatSuggestDateButtonHoverActive};
   background: ${colors.chatSuggestDateButtonBackground};
 
   :active {
