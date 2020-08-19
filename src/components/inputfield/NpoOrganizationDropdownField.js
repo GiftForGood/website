@@ -79,6 +79,7 @@ const NpoOrganizationDropdownField = ({ onSelected, error, label, disabled, valu
                 currentList.map((data) => {
                   return (
                     <ListChoice
+                      key={data.label}
                       title={data.label}
                       onClick={() => {
                         setValue(data.value);
