@@ -8,7 +8,10 @@ import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import algoliasearch from 'algoliasearch/lite';
 import { InstantSearch, Configure, connectInfiniteHits } from 'react-instantsearch-dom';
 import WishesHitWrapper from '../modules/WishesHitWrapper';
-import { getByCategoryIdAndStatus } from '../../../../utils/algolia/filteringRules';
+import {
+  getByCategoryIdAndStatus,
+  getByCategoryIdAndStatusAndNotExpired,
+} from '../../../../utils/algolia/filteringRules';
 import { wishesSortByRule } from '../../../../utils/algolia/sortByRules';
 import dynamic from 'next/dynamic';
 const WishesSortFilterPanel = dynamic(() => import('../modules/WishesSortFilterPanel'), {
@@ -81,7 +84,7 @@ const ViewCategoryPage = ({ categoryDetails, sortByQuery }) => {
 
             {/* Algolia */}
             <Configure
-              filters={getByCategoryIdAndStatus(category.id, 'pending')}
+              filters={getByCategoryIdAndStatusAndNotExpired(category.id, 'pending', Date.now())}
               hitsPerPage={WISHES_BATCH_SIZE}
               aroundLatLng={latLngFilter}
               aroundRadius={10000}
