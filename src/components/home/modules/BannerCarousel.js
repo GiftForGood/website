@@ -7,13 +7,17 @@ import CarouselScrollButton from '../../buttons/CarouselScrollButton';
 import { Carousel } from 'react-responsive-carousel';
 
 const BannerImage = styled.img`
-  height: fit-content;
-  max-height: 250px;
+  height: 100%;
+  max-height: 325px;
+  object-fit: cover;
+  padding: 10px;
+  border-radius: 15px;
+
   ${media.desktop(css`
+    padding: 0px;
     border-radius: 15px;
     max-height: 325px;
   `)};
-  object-fit: cover;
 `;
 
 const ClickableDiv = styled.a`
@@ -51,7 +55,7 @@ const BannerCarousel = () => {
       showStatus={false}
       autoPlay
       infiniteLoop
-      interval={3000}
+      interval={10000}
       renderArrowNext={(onClickHandler, hasNext, label) =>
         hasNext && <CarouselScrollButton direction="right" onClickHandler={onClickHandler} size="normal" />
       }
