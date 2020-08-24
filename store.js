@@ -5,7 +5,6 @@ import logger from 'redux-logger';
 import registerReducer from './src/components/register';
 import loginReducer from './src/components/login';
 import sessionReducer from './src/components/session';
-import createWishReducer from './src/components/createWish';
 import navbarReducer from './src/components/navbar';
 
 const initialState = {};
@@ -14,7 +13,6 @@ const rootReducer = combineReducers({
   register: registerReducer,
   login: loginReducer,
   session: sessionReducer,
-  createWish: createWishReducer,
   navbar: navbarReducer,
 });
 

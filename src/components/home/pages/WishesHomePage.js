@@ -55,7 +55,7 @@ const WishesHomePage = () => {
     <WishesHomePageContainer>
       <Grid
         style={styles.gridContainer}
-        rows="2fr 1fr auto"
+        rows="1fr 0.5fr auto"
         rowGap="25px"
         columns="1fr"
         desktop={{

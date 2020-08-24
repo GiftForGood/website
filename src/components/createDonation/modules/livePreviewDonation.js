@@ -23,6 +23,7 @@ const LivePreviewDonation = () => {
   if (!user) {
     return null;
   }
+  const profileHref = `/profile/${user.userId}`;
 
   const profileHref = `/profile/${user.userId}`;
 

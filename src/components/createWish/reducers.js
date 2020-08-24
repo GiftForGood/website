@@ -1,9 +1,4 @@
-const initialState = {
-  title: '',
-  description: '',
-  categories: [],
-  postedDateTime: '',
-};
+import initialState from './initialState';
 
 const createWishReducer = (state = initialState, action) => {
   switch (action.type) {
