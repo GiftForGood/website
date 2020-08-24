@@ -8,7 +8,9 @@ import { colors } from '../../../../utils/constants/colors';
 import { MODIFIED, ADDED } from '../../../../utils/constants/chatSubscriptionChange';
 import InfiniteScroll from '../../scroller/InfiniteScroller';
 import { USER_CHATS_BATCH_SIZE } from '../../../../utils/api/constants';
-import ChatContext from './ChatContext';
+import ChatContext from '../context';
+import { setSelectedChatId, setIsNewChat } from '../actions';
+import { getSelectedChatId, getIsNewChat, getUser, getIsViewingChatsForMyPost, getPostId } from '../selectors';
 
 const ListOfChatsContainer = styled.div`
   min-width: 200px;
@@ -29,15 +31,13 @@ const ListOfChatsContainer = styled.div`
 const ListOfChats = ({ isShow }) => {
   const [chatDocs, setChatDocs] = useState([]);
   const [shouldSeeMore, setShouldSeeMore] = useState(true);
-  const {
-    user,
-    selectedChatId,
-    setSelectedChatId,
-    postId,
-    isNewChat,
-    setIsNewChat,
-    isViewingChatsForMyPost,
-  } = useContext(ChatContext);
+
+  const { state, dispatch } = useContext(ChatContext);
+  const isViewingChatsForMyPost = getIsViewingChatsForMyPost(state);
+  const isNewChat = getIsNewChat(state);
+  const selectedChatId = getSelectedChatId(state);
+  const user = getUser(state);
+  const postId = getPostId(state);
 
   useEffect(() => {
     let unsubscribeFunction;
@@ -167,9 +167,9 @@ const ListOfChats = ({ isShow }) => {
                     post={post}
                     isSelected={isSelected}
                     isNewChat={isNewChat}
-                    setIsNewChat={setIsNewChat}
+                    setIsNewChat={(isNewChat) => dispatch(setIsNewChat(isNewChat))}
                     isViewingChatsForMyPost={isViewingChatsForMyPost}
-                    setSelectedChatId={setSelectedChatId}
+                    setSelectedChatId={(selectedChatId) => dispatch(setSelectedChatId(selectedChatId))}
                     unreadCount={unreadCount}
                   />
                 );

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Button, Stack } from '@kiwicom/orbit-components/lib';
 import CalendarModal from '../../calendar/modules/CalendarModal';
 import AppreciationMessageModal from '../../modal/AppreciationMessageModal';
@@ -16,8 +16,9 @@ import { donations } from '../../../../utils/constants/postType';
 import { useRouter } from 'next/router';
 import api from '../../../../utils/api';
 import { getFormattedDateRange } from '../../../../utils/api/time';
-import ChatContext from './ChatContext';
-import { useContext } from 'react';
+import ChatContext from '../context';
+import { setSelectedChatId, setIsNewChat, setHasError } from '../actions';
+import { getSelectedChatId, getIsNewChat, getUser } from '../selectors';
 
 const AvatarContainer = styled.div`
   float: left;
@@ -49,9 +50,11 @@ const ChatDialogUserRow = ({ postId, postType, postStatus, oppositeUser, postOwn
   const [showConfirmCompletionModal, setShowConfirmCompletionModal] = useState(false);
   const [status, setStatus] = useState(postStatus);
   const router = useRouter();
-  const { user: loggedInUser, selectedChatId, setSelectedChatId, setHasError, isNewChat, setIsNewChat } = useContext(
-    ChatContext
-  );
+
+  const { state, dispatch } = useContext(ChatContext);
+  const loggedInUser = getUser(state);
+  const isNewChat = getIsNewChat(state);
+  const selectedChatId = getSelectedChatId(state);
 
   const handleCloseAppreciationMessageModal = () => setShowAppreciationMessageModal(false);
   const handleShowAppreciationMessageModal = () => setShowAppreciationMessageModal(true);
@@ -90,8 +93,8 @@ const ChatDialogUserRow = ({ postId, postType, postStatus, oppositeUser, postOwn
       postType === donations ? 'sendInitialCalendarMessageForDonation' : 'sendInitialCalendarMessageForWish';
     const [rawChat, rawFirstMessage] = await api.chats[method](postId, calendarRawString);
     const chatId = rawChat.data().chatId;
-    setIsNewChat(false);
-    setSelectedChatId(chatId);
+    dispatch(setIsNewChat(false));
+    dispatch(setSelectedChatId(chatId));
     router.push(`/chat`, `/chat?chatId=${chatId}`, { shallow: true });
   };
 
@@ -134,9 +137,9 @@ const ChatDialogUserRow = ({ postId, postType, postStatus, oppositeUser, postOwn
               postId={postId}
               oppositeUserName={oppositeUser.name || oppositeUser.userName}
               selectedChatId={selectedChatId}
-              setSelectedChatId={setSelectedChatId}
+              setSelectedChatId={(chatId) => dispatch(setSelectedChatId(chatId))}
               isNewChat={isNewChat}
-              setIsNewChat={setIsNewChat}
+              setIsNewChat={(isNewChat) => dispatch(setIsNewChat(isNewChat))}
               onShow={showAppreciationMessageModal}
               onHide={handleCloseAppreciationMessageModal}
             />
@@ -146,7 +149,7 @@ const ChatDialogUserRow = ({ postId, postType, postStatus, oppositeUser, postOwn
               postEnquirerId={postEnquirerId}
               onShow={showConfirmCompletionModal}
               onClose={handleCloseConfirmCompletionModal}
-              setHasError={setHasError}
+              setHasError={(hasError) => dispatch(setHasError(hasError))}
               setCompletedStatus={handleSetStatusToComplete}
               setShowAppreciationMessageModal={handleShowAppreciationMessageModal}
             />

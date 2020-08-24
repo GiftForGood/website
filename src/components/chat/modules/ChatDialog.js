@@ -13,7 +13,9 @@ import ChevronDown from '@kiwicom/orbit-components/lib/icons/ChevronDown';
 import ChevronUp from '@kiwicom/orbit-components/lib/icons/ChevronUp';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 import { donations } from '../../../../utils/constants/postType';
-import ChatContext from './ChatContext';
+import ChatContext from '../context';
+import { setSelectedChatId, setIsNewChat } from '../actions';
+import { getSelectedChatId, getIsNewChat, getPostId, getPostType, getUser } from '../selectors';
 
 const ChatDialogContainer = styled.div`
   width: 100%;
@@ -34,7 +36,12 @@ const ButtonsWrapper = styled.div`
 `;
 
 const ChatDialogContent = ({ post, chat }) => {
-  const { user: loggedInUser, setSelectedChatId, isNewChat, setIsNewChat, postId, postType } = useContext(ChatContext);
+  const { state, dispatch } = useContext(ChatContext);
+  const loggedInUser = getUser(state);
+  const isNewChat = getIsNewChat(state);
+  const postId = getPostId(state);
+  const postType = getPostType(state);
+
   const { isTablet } = useMediaQuery();
   // default as 68 px which is single line text area, modified when there
   // is more than one line in the text area in input row
@@ -72,8 +79,8 @@ const ChatDialogContent = ({ post, chat }) => {
             <Stack direction="row" justify="between" align="center">
               <ButtonLink
                 onClick={function () {
-                  setSelectedChatId(null);
-                  setIsNewChat(false);
+                  dispatch(setSelectedChatId(null));
+                  dispatch(setIsNewChat(false));
                 }}
                 iconLeft={<ChevronLeft />}
                 transparent
@@ -128,7 +135,11 @@ const ChatDialog = ({ isShow }) => {
    * messages for that chat.
    */
   const [chat, setChat] = useState(null);
-  const { selectedChatId, isNewChat, postId, postType } = useContext(ChatContext);
+  const { state } = useContext(ChatContext);
+  const selectedChatId = getSelectedChatId(state);
+  const isNewChat = getIsNewChat(state);
+  const postId = getPostId(state);
+  const postType = getPostType(state);
 
   const isCreatingNewChatForAPost = postId && isNewChat;
   const hasSelectedChat = selectedChatId !== null;

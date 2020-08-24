@@ -5,17 +5,23 @@ import ChatError from '../../../../utils/api/error/chatError';
 import api from '../../../../utils/api';
 import { donations } from '../../../../utils/constants/postType';
 import { useRouter } from 'next/router';
-import ChatContext from './ChatContext';
+import ChatContext from '../context';
+import { setSelectedChatId, setIsNewChat } from '../actions';
+import { getSelectedChatId, getIsNewChat } from '../selectors';
 
 const ChatImageUpload = ({ postType, postId, setAlertMessage, onCloseAlert }) => {
   const router = useRouter();
-  const { selectedChatId, setSelectedChatId, setIsNewChat, isNewChat } = useContext(ChatContext);
+
+  const { state, dispatch } = useContext(ChatContext);
+  const isNewChat = getIsNewChat(state);
+  const selectedChatId = getSelectedChatId(state);
+
   const sendFirstImageMessages = async (images) => {
     const method = postType === donations ? 'sendInitialImageMessagesForDonation' : 'sendInitialImageMessagesForWish';
     const [rawChat, rawFirstMessage] = await api.chats[method](postId, images);
     const chatId = rawChat.data().chatId;
-    setIsNewChat(false);
-    setSelectedChatId(chatId);
+    dispatch(setIsNewChat(false));
+    dispatch(setSelectedChatId(chatId));
     router.push(`/chat`, `/chat?chatId=${chatId}`, { shallow: true });
   };
 

@@ -10,7 +10,9 @@ import TextareaAutosize from 'react-textarea-autosize';
 import { useRouter } from 'next/router';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 import { isMobile } from 'react-device-detect';
-import ChatContext from './ChatContext';
+import ChatContext from '../context';
+import { setSelectedChatId, setIsNewChat } from '../actions';
+import { getSelectedChatId, getIsNewChat } from '../selectors';
 
 const InputRowContainer = styled.div`
   width: 95%;
@@ -52,7 +54,10 @@ const StyledTextareaAutosize = styled(TextareaAutosize)`
 `;
 
 const ChatDialogInputRow = ({ postType, postId }, ref) => {
-  const { selectedChatId, setSelectedChatId, isNewChat, setIsNewChat } = useContext(ChatContext);
+  const { state, dispatch } = useContext(ChatContext);
+  const isNewChat = getIsNewChat(state);
+  const selectedChatId = getSelectedChatId(state);
+
   const [inputMessage, setInputMessage] = useState('');
   const [alertMessage, setAlertMessage] = useState('');
   const textAreaRef = useRef(null);
@@ -84,8 +89,8 @@ const ChatDialogInputRow = ({ postType, postId }, ref) => {
     const method = postType === donations ? 'sendInitialTextMessageForDonation' : 'sendInitialTextMessageForWish';
     const [rawChat, rawFirstMessage] = await api.chats[method](postId, message);
     const chatId = rawChat.data().chatId;
-    setIsNewChat(false);
-    setSelectedChatId(chatId);
+    dispatch(setIsNewChat(false));
+    dispatch(setSelectedChatId(chatId));
     router.push(`/chat`, `/chat?chatId=${chatId}`, { shallow: true });
   };
 
