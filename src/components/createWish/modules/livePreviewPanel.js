@@ -21,6 +21,7 @@ const LivePreviewPanel = () => {
   if (!user) {
     return null;
   }
+  const profileHref = `/profile/${user.userId}`;
 
   return (
     <Stack align="center" direction="column" basis="50%">
@@ -39,6 +40,7 @@ const LivePreviewPanel = () => {
               description={description}
               postedDateTime={postedDateTime}
               postHref={''}
+              profileHref={profileHref}
               categoryTags={categories.map((category) => category.name)}
               isBumped={false}
             />
