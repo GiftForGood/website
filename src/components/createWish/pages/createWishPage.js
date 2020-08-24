@@ -1,10 +1,14 @@
-import React from 'react';
+import React, { useReducer, useMemo } from 'react';
 import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 
 import CreateWishPanel from '../modules/createWishPanel';
 import LivePreviewPanel from '../modules/livePreviewPanel';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
+
+import initialState from '../initialState';
+import reducer from '../reducers';
+import WishContext from '../context';
 
 const Container = styled.div`
   display: flex;
@@ -38,15 +42,23 @@ const Wrapper = styled.div`
 `;
 
 const CreateWishPage = ({ wish, mode }) => {
+  const [state, dispatch] = useReducer(reducer, initialState);
   const { isDesktop } = useMediaQuery();
 
+  // prevent re-rendering
+  const contextValue = useMemo(() => {
+    return { state, dispatch };
+  }, [state, dispatch]);
+
   return (
-    <Container>
-      <Wrapper>
-        <CreateWishPanel wish={wish} mode={mode} />
-        {isDesktop ? <LivePreviewPanel /> : null}
-      </Wrapper>
-    </Container>
+    <WishContext.Provider value={contextValue}>
+      <Container>
+        <Wrapper>
+          <CreateWishPanel wish={wish} mode={mode} />
+          {isDesktop ? <LivePreviewPanel /> : null}
+        </Wrapper>
+      </Container>
+    </WishContext.Provider>
   );
 };
 
