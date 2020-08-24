@@ -1,6 +1,5 @@
 import React from 'react';
-import { Stack, Button, ButtonLink, Popover } from '@kiwicom/orbit-components/';
-import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
+import { Stack, Button, ButtonLink, Popover, NotificationBadge } from '@kiwicom/orbit-components/';
 import BlackButton from '../../buttons/BlackButton';
 import useUser from '../../session/modules/useUser';
 import { AccountCircle, Notification, Messages, Search } from '@kiwicom/orbit-components/lib/icons';
@@ -28,6 +27,23 @@ const AccountImageRounded = styled.img`
   object-fit: cover;
 `;
 
+const NotificationButtonContainer = styled.div`
+  position: relative;
+`;
+
+const NotificationBadgeWrapper = styled.div`
+  position: absolute;
+  top: 0;
+  right: 0;
+`;
+
+const NotificationBadgeWrapperInPopover = styled.div`
+  position: absolute;
+  top: 50%;
+  right: -10px;
+  transform: translate(0, -50%);
+`;
+
 const AccountImage = ({ src }) => {
   return (
     <AccountImageContainer>
@@ -47,9 +63,16 @@ const AccountButton = ({ onNotificationClick, onLogoutClick, user }) => {
           <ButtonLink transparent type="secondary" href="/settings/profile">
             Settings
           </ButtonLink>
-          <ButtonLink transparent type="secondary" onClick={onNotificationClick}>
-            Notifications
-          </ButtonLink>
+          <NotificationButtonContainer>
+            <ButtonLink transparent type="secondary" onClick={onNotificationClick}>
+              Notifications
+            </ButtonLink>
+            {user.unreadNotificationsCount > 0 && (
+              <NotificationBadgeWrapperInPopover>
+                <NotificationBadge type="criticalInverted">{user.unreadNotificationsCount}</NotificationBadge>
+              </NotificationBadgeWrapperInPopover>
+            )}
+          </NotificationButtonContainer>
           <ButtonLink transparent type="secondary" onClick={onLogoutClick}>
             Logout
           </ButtonLink>
@@ -110,8 +133,22 @@ const LoggedInButtons = () => {
     <>
       <Desktop>
         <Stack direction="row" justify="end" align="center" shrink spacing="extraTight">
-          <ButtonLink iconLeft={<Notification />} transparent type="secondary" onClick={onNotificationClick} />
-          <ButtonLink iconLeft={<Messages />} transparent type="secondary" href="/chat" />
+          <NotificationButtonContainer>
+            <ButtonLink iconLeft={<Notification />} transparent type="secondary" onClick={onNotificationClick} />
+            {user.unreadNotificationsCount > 0 && (
+              <NotificationBadgeWrapper>
+                <NotificationBadge type="criticalInverted">{user.unreadNotificationsCount}</NotificationBadge>
+              </NotificationBadgeWrapper>
+            )}
+          </NotificationButtonContainer>
+          <NotificationButtonContainer>
+            <ButtonLink iconLeft={<Messages />} transparent type="secondary" href="/chat" />
+            {user.unreadChatNotificationsCount > 0 && (
+              <NotificationBadgeWrapper>
+                <NotificationBadge type="criticalInverted">{user.unreadChatNotificationsCount}</NotificationBadge>
+              </NotificationBadgeWrapper>
+            )}
+          </NotificationButtonContainer>
           <AccountButton onNotificationClick={onNotificationClick} onLogoutClick={onLogoutClick} user={user} />
           <CallToActionButton />
         </Stack>
@@ -120,7 +157,14 @@ const LoggedInButtons = () => {
       <Mobile>
         <Stack direction="row" justify="end" align="center" shrink spacing="extraTight">
           <ButtonLink iconLeft={<Search />} transparent type="secondary" href="/search" />
-          <ButtonLink iconLeft={<Messages />} transparent type="secondary" href="/chat" />
+          <NotificationButtonContainer>
+            <ButtonLink iconLeft={<Messages />} transparent type="secondary" href="/chat" />
+            {user.unreadChatNotificationsCount > 0 && (
+              <NotificationBadgeWrapper>
+                <NotificationBadge type="criticalInverted">{user.unreadChatNotificationsCount}</NotificationBadge>
+              </NotificationBadgeWrapper>
+            )}
+          </NotificationButtonContainer>
           <AccountButton onNotificationClick={onNotificationClick} onLogoutClick={onLogoutClick} user={user} />
         </Stack>
       </Mobile>
