@@ -1,31 +1,27 @@
-function getLocalState(state) {
-  return state.createDonation;
-}
-
 export function getTitle(state) {
-  return getLocalState(state).title;
+  return state.title;
 }
 
 export function getDescription(state) {
-  return getLocalState(state).description;
+  return state.description;
 }
 
 export function getCategories(state) {
-  return getLocalState(state).categories;
+  return state.categories;
 }
 
 export function getValidFrom(state) {
-  return getLocalState(state).validFrom;
+  return state.validFrom;
 }
 
 export function getValidTo(state) {
-  return getLocalState(state).validTo;
+  return state.validTo;
 }
 
 export function getLocation(state) {
-  return getLocalState(state).location;
+  return state.location;
 }
 
 export function getCoverImage(state) {
-  return getLocalState(state).coverImage;
+  return state.coverImage;
 }

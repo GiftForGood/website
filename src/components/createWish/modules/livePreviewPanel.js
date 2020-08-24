@@ -1,25 +1,27 @@
-import React from 'react';
-import { Stack, Heading, Text, Alert, Tooltip, TextLink } from '@kiwicom/orbit-components/lib';
-import { useSelector } from 'react-redux';
+import React, { useContext } from 'react';
+import { Stack, Heading, Text } from '@kiwicom/orbit-components/lib';
 import styled from 'styled-components';
 import WishCard from '../../card/WishCard';
 import { getTitle, getDescription, getCategories, getPostedDateTime } from '../selectors';
 import useUser from '../../session/modules/useUser';
+import WishContext from '../context';
 
 const Container = styled.div`
   padding: 20px;
 `;
 
 const LivePreviewPanel = () => {
-  const title = useSelector(getTitle);
-  const description = useSelector(getDescription);
-  const categories = useSelector(getCategories);
-  const postedDateTime = useSelector(getPostedDateTime);
+  const { state } = useContext(WishContext);
+  const title = getTitle(state);
+  const description = getDescription(state);
+  const categories = getCategories(state);
+  const postedDateTime = getPostedDateTime(state);
   const user = useUser();
 
   if (!user) {
     return null;
   }
+  const profileHref = `/profile/${user.userId}`;
 
   return (
     <Stack align="center" direction="column" basis="50%">
@@ -38,6 +40,7 @@ const LivePreviewPanel = () => {
               description={description}
               postedDateTime={postedDateTime}
               postHref={''}
+              profileHref={profileHref}
               categoryTags={categories.map((category) => category.name)}
               isBumped={false}
             />

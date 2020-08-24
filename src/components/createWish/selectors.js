@@ -1,19 +1,15 @@
-function getLocalState(state) {
-  return state.createWish;
-}
-
 export function getTitle(state) {
-  return getLocalState(state).title;
+  return state.title;
 }
 
 export function getDescription(state) {
-  return getLocalState(state).description;
+  return state.description;
 }
 
 export function getCategories(state) {
-  return getLocalState(state).categories;
+  return state.categories;
 }
 
 export function getPostedDateTime(state) {
-  return getLocalState(state).postedDateTime;
+  return state.postedDateTime;
 }
