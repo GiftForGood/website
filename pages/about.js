@@ -1,6 +1,5 @@
 import React from 'react';
 import SessionProvider from '../src/components/session/modules/SessionProvider';
-import useUser from '../src/components/session/modules/useUser';
 import { isAuthenticated } from '../utils/authentication/authentication';
 import AboutUsPage from '../src/components/aboutUs/pages/AboutUsPage';
 import dynamic from 'next/dynamic';
@@ -21,7 +20,6 @@ export async function getServerSideProps({ params, req, res, query }) {
 }
 
 const AboutUs = ({ user }) => {
-  const userData = useUser();
   return (
     <SessionProvider user={user}>
       <Header title="About Us | GiftForGood" />

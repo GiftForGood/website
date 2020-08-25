@@ -4,6 +4,7 @@ import { Heading, Text, Stack } from '@kiwicom/orbit-components/lib';
 import BlackText from '../../text/BlackText';
 import GreyText from '../../text/GreyText';
 import Avatar from '../../imageContainers/Avatar';
+import { businessTeamMembers, techTeamMembers } from '../../../../utils/constants/members';
 
 const DescriptionContainer = styled.div`
   position: relative;
@@ -30,67 +31,8 @@ const TechTeamContainer = styled.div`
 const DescriptionDetailsContainer = styled.div``;
 
 const MemberDescriptionContainer = styled.div``;
-const businessTeamMembers = [
-  {
-    imageUrl: 'https://res.cloudinary.com/giftforgood/image/upload/v1598075642/banners/DUMMY_baaocm.png',
-    name: 'Wong Jingwen',
-    position: 'Business Head',
-    description:
-      "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.",
-  },
-  {
-    imageUrl: 'https://res.cloudinary.com/giftforgood/image/upload/v1598075642/banners/DUMMY_baaocm.png',
-    name: 'Wong Jingwen',
-    position: 'Business Head',
-    description:
-      "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.",
-  },
-  {
-    imageUrl: 'https://res.cloudinary.com/giftforgood/image/upload/v1598075642/banners/DUMMY_baaocm.png',
-    name: 'Wong Jingwen',
-    position: 'Business Head',
-    description:
-      "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.",
-  },
-  {
-    imageUrl: 'https://res.cloudinary.com/giftforgood/image/upload/v1598075642/banners/DUMMY_baaocm.png',
-    name: 'Wong Jingwen',
-    position: 'Business Head',
-    description:
-      "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.",
-  },
-];
 
-const techTeamMembers = [
-  {
-    imageUrl: 'https://res.cloudinary.com/giftforgood/image/upload/v1598075642/banners/DUMMY_baaocm.png',
-    name: 'Wong Jingwen',
-    position: 'Business Head',
-    description:
-      "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.",
-  },
-  {
-    imageUrl: 'https://res.cloudinary.com/giftforgood/image/upload/v1598075642/banners/DUMMY_baaocm.png',
-    name: 'Wong Jingwen',
-    position: 'Business Head',
-    description:
-      "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.",
-  },
-  {
-    imageUrl: 'https://res.cloudinary.com/giftforgood/image/upload/v1598075642/banners/DUMMY_baaocm.png',
-    name: 'Wong Jingwen',
-    position: 'Business Head',
-    description:
-      "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.",
-  },
-  {
-    imageUrl: 'https://res.cloudinary.com/giftforgood/image/upload/v1598075642/banners/DUMMY_baaocm.png',
-    name: 'Wong Jingwen',
-    position: 'Business Head',
-    description:
-      "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.",
-  },
-];
+const MemberDescriptionTitleContainer = styled.div``;
 
 const TeamDescription = () => {
   return (
@@ -110,12 +52,12 @@ const TeamDescription = () => {
                   <Avatar size="125px" imageUrl={member.imageUrl} />
                   <MemberDescriptionContainer>
                     <Stack direction="column">
-                      <div>
+                      <MemberDescriptionTitleContainer>
                         <BlackText weight="bold" size="large">
                           {member.name}
                         </BlackText>
                         <GreyText style={{ fontStyle: 'italic' }}>{member.position}</GreyText>
-                      </div>
+                      </MemberDescriptionTitleContainer>
                       <BlackText>{member.description}</BlackText>
                     </Stack>
                   </MemberDescriptionContainer>
@@ -135,12 +77,12 @@ const TeamDescription = () => {
                   <Avatar size="125px" imageUrl={member.imageUrl} />
                   <MemberDescriptionContainer>
                     <Stack direction="column">
-                      <div>
+                      <MemberDescriptionTitleContainer>
                         <BlackText weight="bold" size="large">
                           {member.name}
                         </BlackText>
                         <GreyText style={{ fontStyle: 'italic' }}>{member.position}</GreyText>
-                      </div>
+                      </MemberDescriptionTitleContainer>
                       <BlackText>{member.description}</BlackText>
                     </Stack>
                   </MemberDescriptionContainer>
