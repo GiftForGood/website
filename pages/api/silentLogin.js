@@ -22,16 +22,19 @@ async function handler(req, res) {
         const donor =
           (decodedClaims && decodedClaims.donor) ||
           (user && user.donor) ||
-          (currentUser.customClaims.donor ? currentUser.customClaims.donor : false);
+          (currentUser.customClaims && currentUser.customClaims.donor) ||
+          false;
 
         const npo =
           (decodedClaims && decodedClaims.npo) ||
           (user && user.npo) ||
-          (currentUser.customClaims.npo ? currentUser.customClaims.npo : false);
+          (currentUser.customClaims && currentUser.customClaims.npo) ||
+          false;
 
         const isClaimSet =
-          (currentUser.customClaims.npo ? currentUser.customClaims.npo : false) ||
-          (currentUser.customClaims.donor ? currentUser.customClaims.donor : false);
+          (currentUser.customClaims && currentUser.customClaims.donor) ||
+          (currentUser.customClaims && currentUser.customClaims.npo) ||
+          false;
 
         res.json({
           user: {
