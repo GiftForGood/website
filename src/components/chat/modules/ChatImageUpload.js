@@ -4,6 +4,7 @@ import { useDropzone } from 'react-dropzone';
 import ChatError from '../../../../utils/api/error/chatError';
 import api from '../../../../utils/api';
 import { donations } from '../../../../utils/constants/postType';
+import { MAXIMUM_FILE_SIZE_LIMIT } from '../../../../utils/constants/files';
 import { useRouter } from 'next/router';
 import ChatContext from '../context';
 import { setSelectedChatId, setIsNewChat } from '../actions';
@@ -43,9 +44,9 @@ const ChatImageUpload = ({ postType, postId, setAlertMessage, onCloseAlert }) =>
 
   const onUpload = useCallback((uploadedFiles, isNewChat, selectedChatId) => {
     // check if file is more than 25 mb
-    if (uploadedFiles.some((file) => file.size > 25000000)) {
+    if (uploadedFiles.some((file) => file.size > MAXIMUM_FILE_SIZE_LIMIT)) {
       handleImageExceedSizeLimitError('Unable to upload files that are more than 25mb');
-      uploadedFiles = uploadedFiles.filter((file) => file.size <= 25000000);
+      uploadedFiles = uploadedFiles.filter((file) => file.size <= MAXIMUM_FILE_SIZE_LIMIT);
     }
 
     if (uploadedFiles.length === 0) {

@@ -67,13 +67,6 @@ class WishesAPI {
   }
 
   /**
-   * Search wishes containing the text both in the title and description
-   * @param {string} text
-   * @return {object} A firebase document of wishes that contain the text
-   */
-  async search(text) {}
-
-  /**
    * Get the top X pending wishes belonging to a category, sorted by timestamp
    * @param {string} categoryId The category id
    * @param {number} n The number of wishes to query
@@ -102,7 +95,6 @@ class WishesAPI {
    */
 
   async getPendingWishes(orderBy = TIMESTAMP, isReverse = false, lastQueriedDocument = null) {
-    // TODO: Sort by distance not implemented
     this._validateOrderBy(orderBy);
 
     let sortOrder = 'asc';
@@ -135,7 +127,6 @@ class WishesAPI {
    * @return {array} A list of firebase document of ordered pending wishes belonging to a category
    */
   async getPendingWishesForCategory(categoryId, orderBy = TIMESTAMP, isReverse = false, lastQueriedDocument = null) {
-    // TODO: Sort by distance not implemented
     this._validateOrderBy(orderBy);
 
     let sortOrder = 'asc';
