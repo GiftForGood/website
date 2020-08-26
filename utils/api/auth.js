@@ -4,7 +4,6 @@ import * as path from 'path';
 import { FIREBASE_EMAIL_ACTION_URL } from '../constants/siteUrl';
 import { DONOR, NPO } from '../constants/usersType';
 import { ALL_TEXT } from '../constants/imageVariation';
-import { NPO_NOTIFICATION, DONOR_NOTIFICATION } from '../constants/notification';
 import AuthError from './error/authError';
 
 const donorsCollection = db.collection('donors');
@@ -255,7 +254,10 @@ class AuthAPI {
       isForcedRefreshRequired: false,
       joinedDateTime: timeNow,
       lastLoggedInDateTime: timeNow,
-      notifications: DONOR_NOTIFICATION,
+      email: userInfo.email,
+      notifications: {
+        allowSendChatEmail: true,
+      },
     };
     await newDonor.set(data);
 
@@ -304,7 +306,10 @@ class AuthAPI {
       isForcedRefreshRequired: false,
       joinedDateTime: timeNow,
       lastLoggedInDateTime: timeNow,
-      notifications: NPO_NOTIFICATION,
+      email: userProfile.email,
+      notifications: {
+        allowSendChatEmail: true,
+      },
     };
     await newNPO.set(data);
 
