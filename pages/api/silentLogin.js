@@ -18,25 +18,23 @@ async function handler(req, res) {
         let currentUser = await admin.auth().getUser(decodedClaims.uid);
         let user = await getUser(currentUser.customClaims, currentUser.uid);
 
-        console.log('decodedClaims', decodedClaims);
-        console.log('currentUser', currentUser.customClaims);
-        console.log('user', user);
-        console.log('decodedClaims Donor', decodedClaims.donor);
-        console.log('currentUser Donor', currentUser.customClaims.donor);
-        console.log('user Donor', user.donor);
-
         // Checking for user type from 3 different sources because Cloud function doesnt update the claims fast enough.
         const donor =
-          decodedClaims.donor ||
-          user.donor ||
-          (currentUser.customClaims.donor ? currentUser.customClaims.donor : false);
+          (decodedClaims && decodedClaims.donor) ||
+          (user && user.donor) ||
+          (currentUser.customClaims && currentUser.customClaims.donor) ||
+          false;
 
         const npo =
-          decodedClaims.npo || user.npo || (currentUser.customClaims.npo ? currentUser.customClaims.npo : false);
+          (decodedClaims && decodedClaims.npo) ||
+          (user && user.npo) ||
+          (currentUser.customClaims && currentUser.customClaims.npo) ||
+          false;
 
         const isClaimSet =
-          (currentUser.customClaims.npo ? currentUser.customClaims.npo : false) ||
-          (currentUser.customClaims.donor ? currentUser.customClaims.donor : false);
+          (currentUser.customClaims && currentUser.customClaims.donor) ||
+          (currentUser.customClaims && currentUser.customClaims.npo) ||
+          false;
 
         res.json({
           user: {
@@ -50,7 +48,7 @@ async function handler(req, res) {
         });
       } catch (error) {
         // Session cookie is unavailable or invalid. Force user to login.
-        console.error('silentLogin', error.message);
+        console.error('silentLogin', error);
         res.status(401).json({
           error: {
             message: 'Unauthorized request',
@@ -66,8 +64,6 @@ async function handler(req, res) {
 }
 
 async function getUser(decodedClaims, uid) {
-  console.log('getUser donor', decodedClaims.donor);
-  console.log('getUser', decodedClaims);
   if (decodedClaims && decodedClaims.donor) {
     try {
       let doc = await admin.firestore().collection('donors').doc(uid).get();

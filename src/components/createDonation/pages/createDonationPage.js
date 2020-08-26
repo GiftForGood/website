@@ -1,8 +1,12 @@
-import React from 'react';
+import React, { useReducer, useMemo } from 'react';
 import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import CreateDonationPanel from '../modules/createDonationPanel';
 import { Heading, Alert, Stack } from '@kiwicom/orbit-components/lib';
+
+import initialState from '../initialState';
+import reducer from '../reducers';
+import DonationContext from '../context';
 
 const Container = styled.div`
   display: flex;
@@ -46,22 +50,31 @@ const HeadingWrapper = styled.div`
 `;
 
 const CreateDonationPage = ({ mode, donation }) => {
-  return (
-    <Container>
-      <HeadingWrapper>
-        <Stack spacing="loose">
-          <Heading>What are you donating today?</Heading>
-          <Alert icon title="Some additional information" type="info">
-            As a donor, you are <b>encouraged</b> to cover the delivery cost (if there is) to the specified location.
-            This is to encourage donations of good and usable items to the beneficiaries or organizations.
-          </Alert>
-        </Stack>
-      </HeadingWrapper>
+  const [state, dispatch] = useReducer(reducer, initialState);
 
-      <Wrapper>
-        <CreateDonationPanel mode={mode} donation={donation} />
-      </Wrapper>
-    </Container>
+  // prevent re-rendering
+  const contextValue = useMemo(() => {
+    return { state, dispatch };
+  }, [state, dispatch]);
+
+  return (
+    <DonationContext.Provider value={contextValue}>
+      <Container>
+        <HeadingWrapper>
+          <Stack spacing="loose">
+            <Heading>What are you donating today?</Heading>
+            <Alert icon title="Some additional information" type="info">
+              As a donor, you are <b>encouraged</b> to cover the delivery cost (if there is) to the specified location.
+              This is to encourage donations of good and usable items to the beneficiaries or organizations.
+            </Alert>
+          </Stack>
+        </HeadingWrapper>
+
+        <Wrapper>
+          <CreateDonationPanel mode={mode} donation={donation} />
+        </Wrapper>
+      </Container>
+    </DonationContext.Provider>
   );
 };
 

@@ -25,6 +25,7 @@ import client from '../../../../utils/axios';
 import { timeout } from '../utils/timeout';
 import PasswordStrength from './PasswordStrength';
 import { Check } from '@kiwicom/orbit-components/lib/icons';
+import CheckIconWrapper from './CheckIconWrapper';
 
 const HeadingColor = styled.div`
   color: ${colors.donorBackground};
@@ -68,6 +69,7 @@ const RegisterDonor = () => {
       }
     } catch (error) {
       console.error(error);
+      await api.auth.logout();
       setIsLoading(false);
       formik.setSubmitting(false);
       if (error.code === 'auth/email-already-in-use') {
@@ -95,6 +97,7 @@ const RegisterDonor = () => {
       }
     } catch (error) {
       console.error(error);
+      await api.auth.logout();
       setGoogleLoading(false);
       if (error.code === 'auth/unable-to-create-user') {
         displayAlert('Error', error.message, 'critical');
@@ -169,6 +172,7 @@ const RegisterDonor = () => {
             value="name@example.co"
             label="Email"
             name="email"
+            autoComplete="email"
             placeholder="e.g. name@email.com"
             error={formik.touched.email && formik.errors.email ? formik.errors.email : ''}
             {...formik.getFieldProps('email')}
@@ -180,9 +184,16 @@ const RegisterDonor = () => {
               type="password"
               label="Create a password"
               name="password"
+              autoComplete="new-password"
               error={formik.touched.password && formik.errors.password ? true : false}
               {...formik.getFieldProps('password')}
-              suffix={isPasswordSecure ? <ButtonLink iconLeft={<Check />} transparent type="secondary" /> : null}
+              suffix={
+                isPasswordSecure ? (
+                  <CheckIconWrapper>
+                    <Check />
+                  </CheckIconWrapper>
+                ) : null
+              }
             />
 
             {formik.touched.password && formik.errors.password ? (
@@ -213,6 +224,7 @@ const RegisterDonor = () => {
             type="password"
             label="Confirm password"
             name="passwordConfirm"
+            autoComplete="new-password"
             error={
               formik.touched.passwordConfirmation && formik.errors.passwordConfirmation
                 ? formik.errors.passwordConfirmation

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import RedButton from '../../buttons/RedButton';
 import {
   Button,
@@ -43,6 +43,7 @@ import { getDay, getMonth, getYear } from '../../../../utils/api/time';
 import { v4 as uuidv4 } from 'uuid';
 import MrtDropdownField from '../../inputfield/MrtDropdownField';
 import { logSuccessfullyCreatedDonation } from '../../../../utils/analytics';
+import DonationContext from '../context';
 
 const Container = styled.div`
   min-width: 300px;
@@ -81,7 +82,7 @@ const validateDateRange = (fromDay, fromMonth, fromYear, toDay, toMonth, toYear)
 };
 
 const CreateDonationPanel = ({ mode, donation }) => {
-  const dispatch = useDispatch();
+  const { state, dispatch } = useContext(DonationContext);
   const router = useRouter();
   const [categories, setCategories] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
@@ -385,7 +386,7 @@ const CreateDonationPanel = ({ mode, donation }) => {
         setValidTo(formik.values.validToDay + '/' + formik.values.validToMonth + '/' + formik.values.validToYear)
       );
     }
-  }, [formik, dispatch]);
+  }, [formik.values]);
 
   // Used to edit donation
   useEffect(() => {

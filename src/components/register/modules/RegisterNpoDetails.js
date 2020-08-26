@@ -18,6 +18,7 @@ import { timeout } from '../utils/timeout';
 
 import PasswordStrength from './PasswordStrength';
 import { Check } from '@kiwicom/orbit-components/lib/icons';
+import CheckIconWrapper from './CheckIconWrapper';
 
 const RegisterNpoDetails = () => {
   const dispatch = useDispatch();
@@ -64,9 +65,6 @@ const RegisterNpoDetails = () => {
       let password = values.password;
       let organizationName = organization.name;
       let registrationNumber = organization.registrationNumber;
-      let dayOfRegistration = organization.dateOfRegistrationDay;
-      let monthOfRegistration = organization.dateOfRegistrationMonth;
-      let yearOfRegistration = organization.dateOfRegistrationYear;
       let activities = organization.activities;
       const [token, user, userDoc] = await api.auth.registerNPO(
         name,
@@ -75,9 +73,6 @@ const RegisterNpoDetails = () => {
         password,
         organizationName,
         registrationNumber,
-        dayOfRegistration,
-        monthOfRegistration,
-        yearOfRegistration,
         activities
       );
       await api.auth.sendVerificationEmail();
@@ -90,6 +85,8 @@ const RegisterNpoDetails = () => {
         throw response.error;
       }
     } catch (error) {
+      console.error(error);
+      await api.auth.logout();
       setIsLoading(false);
       formik.setSubmitting(false);
       if (error.code === 'auth/email-already-in-use') {
@@ -191,6 +188,7 @@ const RegisterNpoDetails = () => {
             value="name@example.co"
             label="Email"
             name="email"
+            autoComplete="email"
             placeholder="e.g. name@email.com"
             help="Please use your work email"
             error={formik.touched.email && formik.errors.email ? formik.errors.email : ''}
@@ -203,9 +201,16 @@ const RegisterNpoDetails = () => {
               type="password"
               label="Create a password"
               name="password"
+              autoComplete="new-password"
               error={formik.touched.password && formik.errors.password ? true : false}
               {...formik.getFieldProps('password')}
-              suffix={isPasswordSecure ? <ButtonLink iconLeft={<Check />} transparent type="secondary" /> : null}
+              suffix={
+                isPasswordSecure ? (
+                  <CheckIconWrapper>
+                    <Check />
+                  </CheckIconWrapper>
+                ) : null
+              }
             />
 
             {formik.touched.password && formik.errors.password ? (
@@ -236,6 +241,7 @@ const RegisterNpoDetails = () => {
             type="password"
             label="Confirm password"
             name="passwordConfirm"
+            autoComplete="new-password"
             error={
               formik.touched.passwordConfirmation && formik.errors.passwordConfirmation
                 ? formik.errors.passwordConfirmation
