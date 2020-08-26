@@ -540,8 +540,18 @@ class ChatsAPI {
       throw new ChatError('invalid-unsubscribe-function', 'only can unsubscribe using a function');
     }
 
-    await this._updateChatStatus(id, userId, OFF);
+    await this.leaveChat(id, userId);
     unsubscribeFunction();
+  }
+
+  /**
+   * Change the status of a user of a chat to off
+   * @param {string} id The id of the chat
+   * @param {string} userId The id of the user
+   * @throws {ChatError}
+   */
+  async leaveChat(id, userId) {
+    await this._updateChatStatus(id, userId, OFF);
   }
 
   async _fetchInfoAndCreateChatForWish(wishId) {
