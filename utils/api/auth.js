@@ -258,6 +258,8 @@ class AuthAPI {
       notifications: {
         allowSendChatEmail: true,
       },
+      unreadChatNotificationsCount: 0,
+      unreadNotificationsCount: 0,
     };
     await newDonor.set(data);
 
@@ -310,6 +312,8 @@ class AuthAPI {
       notifications: {
         allowSendChatEmail: true,
       },
+      unreadChatNotificationsCount: 0,
+      unreadNotificationsCount: 0,
     };
     await newNPO.set(data);
 

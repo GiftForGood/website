@@ -1,12 +1,4 @@
-const initialState = {
-  title: '',
-  description: '',
-  categories: [],
-  validFrom: '',
-  validTo: '',
-  coverImage: null,
-  location: '',
-};
+import initialState from './initialState';
 
 const createDonationReducer = (state = initialState, action) => {
   switch (action.type) {

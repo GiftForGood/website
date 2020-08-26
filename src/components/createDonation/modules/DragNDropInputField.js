@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import { useDropzone } from 'react-dropzone';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { MAXIMUM_ALLOWED_PHOTOS } from '../../../../utils/constants/donorUploadPhoto';
-import { Text, ButtonPrimitive } from '@kiwicom/orbit-components/lib';
+import { MAXIMUM_FILE_SIZE_LIMIT } from '../../../../utils/constants/files';
+import { Text, ButtonPrimitive, Alert } from '@kiwicom/orbit-components/lib';
 import { v4 as uuidv4 } from 'uuid';
 import Remove from '@kiwicom/orbit-components/lib/icons/Remove';
 import { colors } from '../../../../utils/constants/colors';
@@ -102,6 +103,11 @@ const CoverTextWrapper = styled.div`
 const ImageContainer = styled.div`
   position: relative;
 `;
+
+const AlertContainer = styled.div`
+  margin-top: 10px;
+`;
+
 const Image = ({ src, onDeleteClick }) => {
   return (
     <ImageContainer>
@@ -122,31 +128,48 @@ const Image = ({ src, onDeleteClick }) => {
 };
 
 const DragNDropInputField = ({ onChange, error, initialImages = null }) => {
-  const { acceptedFiles, getRootProps, getInputProps, isDragActive, isDragAccept, isDragReject } = useDropzone({
+  const [selectedImages, setSelectedImages] = useState([]);
+  const [alertMessage, setAlertMessage] = useState('');
+  const { getRootProps, getInputProps, isDragActive, isDragAccept, isDragReject } = useDropzone({
+    onDrop: (files) => onUpload(files, selectedImages),
     accept: '.jpeg, .png, .jpg',
   });
-  const [selectedImages, setSelectedImages] = useState([]);
 
-  // Only take maximum 4 images.
-  const populateSelectedImages = () => {
-    if (acceptedFiles.length > 0 && selectedImages.length <= MAXIMUM_ALLOWED_PHOTOS - 1) {
-      const allowedRemainingImages = MAXIMUM_ALLOWED_PHOTOS - selectedImages.length;
-      const acceptedImages = acceptedFiles.map((file) =>
-        Object.assign(file, {
-          preview: URL.createObjectURL(file),
-          id: uuidv4(),
-        })
-      );
-      if (allowedRemainingImages > 0) {
-        const allowedImages = acceptedImages.splice(0, allowedRemainingImages);
-        setSelectedImages([...selectedImages, ...allowedImages]);
-      }
-    }
+  const onCloseAlert = () => setAlertMessage('');
+
+  const displayUploadFileAlert = (message) => {
+    setAlertMessage(message);
+    setTimeout(() => {
+      onCloseAlert(); // hide alert message after 5 seconds
+    }, 5000);
   };
 
-  useEffect(() => {
-    populateSelectedImages();
-  }, [acceptedFiles]);
+  const onUpload = useCallback((acceptedFiles, selectedImages) => {
+    if (acceptedFiles.some((file) => file.size > MAXIMUM_FILE_SIZE_LIMIT)) {
+      displayUploadFileAlert('Unable to upload images that are more than 25mb');
+      acceptedFiles = acceptedFiles.filter((file) => file.size <= MAXIMUM_FILE_SIZE_LIMIT);
+    }
+
+    const allowedRemainingImages = MAXIMUM_ALLOWED_PHOTOS - selectedImages.length;
+    if (allowedRemainingImages < acceptedFiles.length) {
+      displayUploadFileAlert('Unable to upload more than 4 images');
+    }
+
+    // Only take maximum 4 images.
+    if (acceptedFiles.length > 0 && selectedImages.length <= MAXIMUM_ALLOWED_PHOTOS - 1) {
+      const acceptedImages = acceptedFiles.map((file) => {
+        return Object.assign(file, {
+          preview: URL.createObjectURL(file),
+          id: uuidv4(),
+        });
+      });
+
+      if (allowedRemainingImages > 0) {
+        const allowedImages = acceptedImages.splice(0, allowedRemainingImages);
+        setSelectedImages((prevSelectedImages) => [...prevSelectedImages, ...allowedImages]);
+      }
+    }
+  }, []);
 
   useEffect(() => {
     onChange(selectedImages);
@@ -225,6 +248,13 @@ const DragNDropInputField = ({ onChange, error, initialImages = null }) => {
           </Text>
         </CoverTextWrapper>
       ) : null}
+      {alertMessage.length > 0 && (
+        <AlertContainer>
+          <Alert icon type="critical" title="Something has gone wrong" closable onClose={onCloseAlert}>
+            {alertMessage}
+          </Alert>
+        </AlertContainer>
+      )}
     </Container>
   );
 };

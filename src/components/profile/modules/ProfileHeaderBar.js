@@ -30,7 +30,14 @@ const selectedLink = styled.a`
   }
 `;
 
-const ProfileHeaderBar = ({ profileType, isShowPastPosts, setIsShowPastPosts, isMine }) => {
+const ProfileHeaderBar = ({
+  profileType,
+  isShowPastPosts,
+  setIsShowPastPosts,
+  isShowCompletedPosts,
+  setIsShowCompletedPosts,
+  isMine,
+}) => {
   const router = useRouter();
 
   const handleOnClickEditProfileBtn = (event) => {
@@ -49,9 +56,20 @@ const ProfileHeaderBar = ({ profileType, isShowPastPosts, setIsShowPastPosts, is
               asComponent={isShowPastPosts ? selectedLink : unselectedLink}
               onClick={() => {
                 setIsShowPastPosts(true);
+                setIsShowCompletedPosts(false);
               }}
             >
               {profileType === npo ? 'Wishes' : 'Donations'}
+            </TextLink>
+            <TextLink
+              type="secondary"
+              asComponent={isShowCompletedPosts ? selectedLink : unselectedLink}
+              onClick={() => {
+                setIsShowPastPosts(false);
+                setIsShowCompletedPosts(true);
+              }}
+            >
+              {profileType === npo ? 'Completed Donations' : 'Completed Wishes'}
             </TextLink>
           </Stack>
 
