@@ -81,11 +81,11 @@ class AuthAPI {
     const userProfile = firebaseAuth.currentUser;
 
     await this._validateNPO(userProfile);
-    const [npoDoc, userVerificationData, userDoc] = await Promise.all([
+    const [npoDoc, userDoc] = await Promise.all([
       this._createNPO(userProfile, name, contact, organization),
-      this._createNPOVerificationData(userProfile, name, contact, organization, registrationNumber, activities),
       this._createUser(userProfile.uid, NPO),
     ]);
+    await this._createNPOVerificationData(userProfile, name, contact, organization, registrationNumber, activities);
 
     return [token, userProfile, npoDoc];
   }
