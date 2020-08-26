@@ -294,7 +294,7 @@ const ChatDialogMessages = ({
               transparent
               iconLeft={<ChevronDown />}
               asComponent={ScrollToBottomButton}
-              onClick={() => bottomOfScrollerRef.current.scrollIntoView()}
+              onClick={() => bottomOfScrollerRef.current.scrollIntoView({ behavior: 'smooth' })}
             ></Button>
           </ScrollerButtonContainer>
           {unreadCount > 0 && (
