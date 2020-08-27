@@ -47,9 +47,9 @@ const AccountButton = ({ onNotificationClick, onLogoutClick, user }) => {
           <ButtonLink transparent type="secondary" href="/settings/profile">
             Settings
           </ButtonLink>
-          <ButtonLink transparent type="secondary" onClick={onNotificationClick}>
+          {/* <ButtonLink transparent type="secondary" onClick={onNotificationClick}>
             Notifications
-          </ButtonLink>
+          </ButtonLink> */}
           <ButtonLink transparent type="secondary" onClick={onLogoutClick}>
             Logout
           </ButtonLink>
@@ -110,7 +110,7 @@ const LoggedInButtons = () => {
     <>
       <Desktop>
         <Stack direction="row" justify="end" align="center" shrink spacing="extraTight">
-          <ButtonLink iconLeft={<Notification />} transparent type="secondary" onClick={onNotificationClick} />
+          {/* <ButtonLink iconLeft={<Notification />} transparent type="secondary" onClick={onNotificationClick} /> */}
           <ButtonLink iconLeft={<Messages />} transparent type="secondary" href="/chat" />
           <AccountButton onNotificationClick={onNotificationClick} onLogoutClick={onLogoutClick} user={user} />
           <CallToActionButton />
