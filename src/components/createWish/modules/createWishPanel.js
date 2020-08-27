@@ -258,7 +258,9 @@ const CreateWishPanel = ({ wish, mode }) => {
                   {...formik.getFieldProps('description')}
                   help={
                     <div>
-                      <TextLink type="secondary">Click here to find out how you can write better</TextLink>
+                      <TextLink type="secondary" href="/blog/how-to-write-better-wishes">
+                        Click here to find out how you can write better
+                      </TextLink>
                     </div>
                   }
                 />
