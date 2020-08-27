@@ -53,11 +53,11 @@ const Footer = () => {
               <img src={sgFundLogoPath} width="131" height="auto" />
             </a>
           </Stack>
-          {/* <Stack>
+          <Stack>
             <a href="https://cypresspac.com.sg/" target="_blank">
               <img src={cypressLogoPath} width="131" height="auto" />
             </a>
-          </Stack> */}
+          </Stack>
         </Stack>
       </div>
     );
