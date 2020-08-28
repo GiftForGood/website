@@ -80,7 +80,7 @@ const Footer = () => {
             </a>
           </Stack>
           <Stack>
-            <Text>BROUGHT TO YOU BY</Text>
+            <Text>ENDORSED BY</Text>
             <a href="https://www.cityofgood.sg/nvpc.html" target="_blank">
               <img src={nvpcLogoPath} width="100" height="auto" />
             </a>
