@@ -31,7 +31,7 @@ const ClickableDiv = styled.a`
 `;
 
 const getAllBannerImages = async () => {
-  const bannerSnapshot = await api.banners.getAll().catch((err) => console.error(err));
+  const bannerSnapshot = await api.banners.getAllMain().catch((err) => console.error(err));
   return bannerSnapshot.docs.map((bannerDoc) => bannerDoc.data());
 };
 
