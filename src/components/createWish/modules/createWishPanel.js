@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import {
   Button,
   InputField,
@@ -13,7 +13,6 @@ import {
   TextLink,
   Alert,
 } from '@kiwicom/orbit-components/lib';
-import { useDispatch } from 'react-redux';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import api from '../../../../utils/api';
@@ -30,6 +29,7 @@ import { getExpireWishDate, getExpireWishDateFormat } from '../../../../utils/ap
 import GooglePlacesAutoCompleteField from '../../inputfield/GooglePlacesAutoCompleteField';
 import { logSuccessfullyCreatedWish } from '../../../../utils/analytics';
 import ExpirePostAlert from './ExpirePostAlert';
+import WishContext from '../context';
 
 const Container = styled.div`
   min-width: 300px;
@@ -37,7 +37,6 @@ const Container = styled.div`
 `;
 
 const CreateWishPanel = ({ wish, mode }) => {
-  const dispatch = useDispatch();
   const router = useRouter();
   const { isDesktop } = useMediaQuery();
   const [categories, setCategories] = useState([]);
@@ -49,6 +48,8 @@ const CreateWishPanel = ({ wish, mode }) => {
   const [alertType, setAlertType] = useState('');
   const [alertDescription, setAlertDescription] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+
+  const { state, dispatch } = useContext(WishContext);
 
   const displayAlert = (title, description, type) => {
     setShowAlert(true);
@@ -158,7 +159,7 @@ const CreateWishPanel = ({ wish, mode }) => {
       dispatch(setAllCategories(formik.values.categories));
       dispatch(setPostedDateTime(wish ? wish.postedDateTime : Date.now()));
     }
-  }, [formik, dispatch]);
+  }, [formik.values]);
 
   // Used to fetch all categories
   useEffect(() => {
@@ -257,7 +258,9 @@ const CreateWishPanel = ({ wish, mode }) => {
                   {...formik.getFieldProps('description')}
                   help={
                     <div>
-                      <TextLink type="secondary">Click here to find out how you can write better</TextLink>
+                      <TextLink type="secondary" href="/blog/how-to-write-better-wishes">
+                        Click here to find out how you can write better
+                      </TextLink>
                     </div>
                   }
                 />

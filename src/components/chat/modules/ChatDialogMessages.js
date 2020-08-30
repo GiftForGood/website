@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import { Stack, Loading } from '@kiwicom/orbit-components/lib';
 import api from '../../../../utils/api';
 import styled from 'styled-components';
@@ -11,6 +11,9 @@ import { CHAT_MESSAGES_BATCH_SIZE } from '../../../../utils/api/constants';
 import { LeftMessageSection, RightMessageSection } from './ChatMessageSection';
 import useWindowDimensions from '../../../../utils/hooks/useWindowDimensions';
 import ChatDialogFloatingButtons from './ChatDialogFloatingButtons';
+import ChatContext from '../context';
+import { getSelectedChatId, getIsNewChat, getUser } from '../selectors';
+import useNavbarHeight from '../../navbar/modules/useNavbarHeight';
 
 /**
  * To be changed if any of the heights change, the extra "+1 or +2" for the top/bottom borders
@@ -44,18 +47,13 @@ const MessageContainer = styled.div`
  *
  * @param {number} navBarHeight is the height of the navbar
  */
-const ChatDialogMessages = ({
-  postType,
-  postId,
-  loggedInUser,
-  selectedChatId,
-  setSelectedChatId,
-  isNewChat,
-  setIsNewChat,
-  navBarHeight,
-  inputRowHeight,
-  isShowPostDetails,
-}) => {
+const ChatDialogMessages = ({ postType, postId, inputRowHeight, isShowPostDetails }) => {
+  const { state } = useContext(ChatContext);
+  const loggedInUser = getUser(state);
+  const isNewChat = getIsNewChat(state);
+  const selectedChatId = getSelectedChatId(state);
+  const navBarHeight = useNavbarHeight();
+
   const [chatMessageDocs, setChatMessageDocs] = useState([]);
   // only consider loading more when it's not a new chat, since it's impossible to have a new chat
   // to have messages initially
@@ -232,9 +230,9 @@ const ChatDialogMessages = ({
               postType={postType}
               postId={postId}
               isNewChat={isNewChat}
-              setIsNewChat={setIsNewChat}
+              setIsNewChat={(isNewChat) => dispatch(setIsNewChat(isNewChat))}
               selectedChatId={selectedChatId}
-              setSelectedChatId={setSelectedChatId}
+              setSelectedChatId={(selectedChatId) => dispatch(setSelectedChatId(selectedChatId))}
             />
           </Stack>
           <div ref={bottomOfScrollerRef} />

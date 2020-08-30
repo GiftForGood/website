@@ -47,17 +47,15 @@ const Footer = () => {
     return (
       <div>
         <Stack direction="column" inline>
-          <Stack>
-            <Text>SUPPORTED BY</Text>
+          <Text>SUPPORTED BY</Text>
+          <Stack direction="column" spacing="natural">
             <a href="https://www.sg/oursingaporefund" target="_blank">
               <img src={sgFundLogoPath} width="131" height="auto" />
             </a>
-          </Stack>
-          {/* <Stack>
             <a href="https://cypresspac.com.sg/" target="_blank">
               <img src={cypressLogoPath} width="131" height="auto" />
             </a>
-          </Stack> */}
+          </Stack>
         </Stack>
       </div>
     );
@@ -80,7 +78,7 @@ const Footer = () => {
             </a>
           </Stack>
           <Stack>
-            <Text>BROUGHT TO YOU BY</Text>
+            <Text>ENDORSED BY</Text>
             <a href="https://www.cityofgood.sg/nvpc.html" target="_blank">
               <img src={nvpcLogoPath} width="100" height="auto" />
             </a>
