@@ -226,10 +226,7 @@ const ChatDialogMessages = ({ postType, postId, inputRowHeight, isShowPostDetail
                   />
                 );
               })}
-            <ChatDialogFloatingButtons
-              postType={postType}
-              postId={postId}
-            />
+            <ChatDialogFloatingButtons postType={postType} postId={postId} />
           </Stack>
           <div ref={bottomOfScrollerRef} />
         </InfiniteScroll>
