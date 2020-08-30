@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Stack, TileGroup, Loading } from '@kiwicom/orbit-components/lib';
 import ChatWithUserCard from '../../card/ChatWithUserCard';
 import api from '../../../../utils/api';
@@ -8,6 +8,9 @@ import { colors } from '../../../../utils/constants/colors';
 import { MODIFIED, ADDED } from '../../../../utils/constants/chatSubscriptionChange';
 import InfiniteScroll from '../../scroller/InfiniteScroller';
 import { USER_CHATS_BATCH_SIZE } from '../../../../utils/api/constants';
+import ChatContext from '../context';
+import { setSelectedChatId, setIsNewChat } from '../actions';
+import { getSelectedChatId, getIsNewChat, getUser, getIsViewingChatsForMyPost, getPostId } from '../selectors';
 
 const ListOfChatsContainer = styled.div`
   min-width: 200px;
@@ -37,19 +40,17 @@ const EmptyChatTextContainer = styled.div`
   margin-top: 40vh;
 `;
 
-const ListOfChats = ({
-  user,
-  selectedChatId,
-  setSelectedChatId,
-  postId,
-  isNewChat,
-  setIsNewChat,
-  isViewingChatsForMyPost,
-  isShow,
-}) => {
+const ListOfChats = ({ isShow }) => {
   const [chatDocs, setChatDocs] = useState([]);
   const [shouldSeeMore, setShouldSeeMore] = useState(true);
   const [isMounted, setIsMounted] = useState(false);
+
+  const { state, dispatch } = useContext(ChatContext);
+  const isViewingChatsForMyPost = getIsViewingChatsForMyPost(state);
+  const isNewChat = getIsNewChat(state);
+  const selectedChatId = getSelectedChatId(state);
+  const user = getUser(state);
+  const postId = getPostId(state);
 
   useEffect(() => {
     let unsubscribeFunction;
@@ -183,9 +184,9 @@ const ListOfChats = ({
                     post={post}
                     isSelected={isSelected}
                     isNewChat={isNewChat}
-                    setIsNewChat={setIsNewChat}
+                    setIsNewChat={(isNewChat) => dispatch(setIsNewChat(isNewChat))}
                     isViewingChatsForMyPost={isViewingChatsForMyPost}
-                    setSelectedChatId={setSelectedChatId}
+                    setSelectedChatId={(selectedChatId) => dispatch(setSelectedChatId(selectedChatId))}
                     unreadCount={unreadCount}
                   />
                 );

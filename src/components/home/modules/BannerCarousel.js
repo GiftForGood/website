@@ -7,7 +7,7 @@ import CarouselScrollButton from '../../buttons/CarouselScrollButton';
 import { Carousel } from 'react-responsive-carousel';
 
 const BannerImage = styled.img`
-  height: 100%;
+  width: 100%;
   max-height: 325px;
   object-fit: cover;
   padding: 10px;
@@ -31,7 +31,7 @@ const ClickableDiv = styled.a`
 `;
 
 const getAllBannerImages = async () => {
-  const bannerSnapshot = await api.banners.getAll().catch((err) => console.error(err));
+  const bannerSnapshot = await api.banners.getAllMain().catch((err) => console.error(err));
   return bannerSnapshot.docs.map((bannerDoc) => bannerDoc.data());
 };
 
@@ -70,7 +70,7 @@ const BannerCarousel = () => {
         return (
           <div key={index}>
             <BannerImage src={imageUrl} />
-            <ClickableDiv onClick={() => window.open(link, '_blank')} />
+            <ClickableDiv href={link} target="_blank" />
           </div>
         );
       })}
