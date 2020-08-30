@@ -70,7 +70,7 @@ const BannerCarousel = () => {
         return (
           <div key={index}>
             <BannerImage src={imageUrl} />
-            <ClickableDiv onClick={() => window.open(link, '_blank')} />
+            <ClickableDiv href={link} target="_blank" />
           </div>
         );
       })}
