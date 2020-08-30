@@ -4,7 +4,6 @@ import * as path from 'path';
 import { FIREBASE_EMAIL_ACTION_URL } from '../constants/siteUrl';
 import { DONOR, NPO } from '../constants/usersType';
 import { ALL_TEXT } from '../constants/imageVariation';
-import { NPO_NOTIFICATION, DONOR_NOTIFICATION } from '../constants/notification';
 import AuthError from './error/authError';
 
 const donorsCollection = db.collection('donors');
@@ -81,11 +80,11 @@ class AuthAPI {
     const userProfile = firebaseAuth.currentUser;
 
     await this._validateNPO(userProfile);
-    const [npoDoc, userVerificationData, userDoc] = await Promise.all([
+    const [npoDoc, userDoc] = await Promise.all([
       this._createNPO(userProfile, name, contact, organization),
-      this._createNPOVerificationData(userProfile, name, contact, organization, registrationNumber, activities),
       this._createUser(userProfile.uid, NPO),
     ]);
+    await this._createNPOVerificationData(userProfile, name, contact, organization, registrationNumber, activities);
 
     return [token, userProfile, npoDoc];
   }
@@ -255,7 +254,12 @@ class AuthAPI {
       isForcedRefreshRequired: false,
       joinedDateTime: timeNow,
       lastLoggedInDateTime: timeNow,
-      notifications: DONOR_NOTIFICATION,
+      email: userInfo.email,
+      notifications: {
+        allowSendChatEmail: true,
+      },
+      unreadChatNotificationsCount: 0,
+      unreadNotificationsCount: 0,
     };
     await newDonor.set(data);
 
@@ -304,7 +308,12 @@ class AuthAPI {
       isForcedRefreshRequired: false,
       joinedDateTime: timeNow,
       lastLoggedInDateTime: timeNow,
-      notifications: NPO_NOTIFICATION,
+      email: userProfile.email,
+      notifications: {
+        allowSendChatEmail: true,
+      },
+      unreadChatNotificationsCount: 0,
+      unreadNotificationsCount: 0,
     };
     await newNPO.set(data);
 

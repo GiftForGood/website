@@ -63,7 +63,7 @@ const AccountButton = ({ onNotificationClick, onLogoutClick, user }) => {
           <ButtonLink transparent type="secondary" href="/settings/profile">
             Settings
           </ButtonLink>
-          <NotificationButtonContainer>
+          {/* <NotificationButtonContainer>
             <ButtonLink transparent type="secondary" onClick={onNotificationClick}>
               Notifications
             </ButtonLink>
@@ -72,7 +72,7 @@ const AccountButton = ({ onNotificationClick, onLogoutClick, user }) => {
                 <NotificationBadge type="criticalInverted">{user.unreadNotificationsCount}</NotificationBadge>
               </NotificationBadgeWrapperInPopover>
             )}
-          </NotificationButtonContainer>
+          </NotificationButtonContainer> */}
           <ButtonLink transparent type="secondary" onClick={onLogoutClick}>
             Logout
           </ButtonLink>
@@ -133,14 +133,14 @@ const LoggedInButtons = () => {
     <>
       <Desktop>
         <Stack direction="row" justify="end" align="center" shrink spacing="extraTight">
-          <NotificationButtonContainer>
+          {/* <NotificationButtonContainer>
             <ButtonLink iconLeft={<Notification />} transparent type="secondary" onClick={onNotificationClick} />
             {user.unreadNotificationsCount > 0 && (
               <NotificationBadgeWrapper>
                 <NotificationBadge type="criticalInverted">{user.unreadNotificationsCount}</NotificationBadge>
               </NotificationBadgeWrapper>
             )}
-          </NotificationButtonContainer>
+          </NotificationButtonContainer> */}
           <NotificationButtonContainer>
             <ButtonLink iconLeft={<Messages />} transparent type="secondary" href="/chat" />
             {user.unreadChatNotificationsCount > 0 && (

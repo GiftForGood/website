@@ -9,6 +9,7 @@ import useUser from '../../session/modules/useUser';
 import ProfileHeaderBar from '../modules/ProfileHeaderBar';
 import ProfilePanel from '../modules/ProfilePanel';
 import PastWishesPanel from '../modules/PastWishesPanel';
+import CompletedDonationsPanel from '../modules/CompletedDonationsPanel';
 import Header from '../../header';
 
 const Wrapper = styled.div`
@@ -21,6 +22,7 @@ const Wrapper = styled.div`
 
 const NpoProfilePage = ({ userId }) => {
   const [isShowPastWishes, setIsShowPastWishes] = useState(true);
+  const [isShowCompletedDonations, setIsShowCompletedDonations] = useState(false);
   const [isMine, setIsMine] = useState(false);
   const [npo, setNpo] = useState(null);
   const user = useUser();
@@ -57,8 +59,11 @@ const NpoProfilePage = ({ userId }) => {
             profileType={npoProfileType}
             isShowPastPosts={isShowPastWishes}
             setIsShowPastPosts={setIsShowPastWishes}
+            isShowCompletedPosts={isShowCompletedDonations}
+            setIsShowCompletedPosts={setIsShowCompletedDonations}
             isMine={isMine}
           />
+          {isShowCompletedDonations && <CompletedDonationsPanel isMine={isMine} userId={userId} />}
           {isShowPastWishes && <PastWishesPanel isMine={isMine} userId={userId} />}
         </Stack>
       </Grid>
