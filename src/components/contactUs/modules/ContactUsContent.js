@@ -2,6 +2,7 @@ import React from 'react';
 import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import { Heading, Text, TextLink } from '@kiwicom/orbit-components/lib';
+import { contactUsGoogleFormPath } from '../../../../utils/constants/googleFormPaths';
 
 const TitleContainer = styled.div`
   margin-bottom: 50px;
@@ -47,7 +48,9 @@ const ContactUsContent = () => {
         </Text>
         <Text size="large">
           If you have a query, feedback or wish to report a problem related to GiftforGood, please fill in the{' '}
-          <TextLink href="mailto: support@giftforgood.io">online form</TextLink>
+          <TextLink external href={contactUsGoogleFormPath}>
+            online form
+          </TextLink>
         </Text>
       </FeedbackContainer>
     </MainContainer>
