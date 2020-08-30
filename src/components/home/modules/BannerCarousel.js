@@ -7,7 +7,7 @@ import CarouselScrollButton from '../../buttons/CarouselScrollButton';
 import { Carousel } from 'react-responsive-carousel';
 
 const BannerImage = styled.img`
-  height: 100%;
+  width: 100%;
   max-height: 325px;
   object-fit: cover;
   padding: 10px;
