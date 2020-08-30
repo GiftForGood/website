@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import { Stack, Loading, Button, NotificationBadge } from '@kiwicom/orbit-components/lib';
 import { ChevronDown } from '@kiwicom/orbit-components/lib/icons';
 import api from '../../../../utils/api';
@@ -13,6 +13,9 @@ import { LeftMessageSection, RightMessageSection } from './ChatMessageSection';
 import ScrollToBottomButton from '../../buttons/ScrollToBottomButton';
 import useWindowDimensions from '../../../../utils/hooks/useWindowDimensions';
 import { isSafari } from 'react-device-detect';
+import ChatContext from '../context';
+import { getSelectedChatId, getIsNewChat, getUser } from '../selectors';
+import useNavbarHeight from '../../navbar/modules/useNavbarHeight';
 
 /**
  * To be changed if any of the heights change, the extra "+1 or +2" for the top/bottom borders
@@ -66,15 +69,13 @@ const NotificationBadgeWrapper = styled.div`
  *
  * @param {number} navBarHeight is the height of the navbar
  */
-const ChatDialogMessages = ({
-  postType,
-  loggedInUser,
-  selectedChatId,
-  isNewChat,
-  navBarHeight,
-  inputRowHeight,
-  isShowPostDetails,
-}) => {
+const ChatDialogMessages = ({ postType, inputRowHeight, isShowPostDetails }) => {
+  const { state } = useContext(ChatContext);
+  const loggedInUser = getUser(state);
+  const isNewChat = getIsNewChat(state);
+  const selectedChatId = getSelectedChatId(state);
+  const navBarHeight = useNavbarHeight();
+
   const [chatMessageDocs, setChatMessageDocs] = useState([]);
   // only consider loading more when it's not a new chat, since it's impossible to have a new chat
   // to have messages initially
