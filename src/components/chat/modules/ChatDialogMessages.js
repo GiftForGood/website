@@ -229,10 +229,6 @@ const ChatDialogMessages = ({ postType, postId, inputRowHeight, isShowPostDetail
             <ChatDialogFloatingButtons
               postType={postType}
               postId={postId}
-              isNewChat={isNewChat}
-              setIsNewChat={(isNewChat) => dispatch(setIsNewChat(isNewChat))}
-              selectedChatId={selectedChatId}
-              setSelectedChatId={(selectedChatId) => dispatch(setSelectedChatId(selectedChatId))}
             />
           </Stack>
           <div ref={bottomOfScrollerRef} />
