@@ -22,3 +22,10 @@ jobs:
         env:
           FIREBASE_API_KEY: ${{secrets.FIREBASE_API_KEY}}
           FIREBASE_PROJECT_ID: ${{secrets.FIREBASE_PROJECT_ID}}
+      - name: Send Notification to Telegram
+        uses: athul/telewire@master
+        if: always()
+        with:
+          chat: ${{ secrets.TELEGRAM_CHAT_ID }}
+          token: ${{ secrets.TELEGRAM_BOT_API }}
+          status: ${{ job.status }}
