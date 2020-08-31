@@ -23,7 +23,7 @@ jobs:
           FIREBASE_API_KEY: ${{secrets.FIREBASE_API_KEY}}
           FIREBASE_PROJECT_ID: ${{secrets.FIREBASE_PROJECT_ID}}
       - name: Send Notification to Telegram
-        uses: kohchihao/Telegram-ghaction@master
+        uses: kohchihao/tele-status@master
         if: always()
         with:
           chat: ${{ secrets.TELEGRAM_CHAT_ID }}
