@@ -24,7 +24,7 @@ jobs:
           FIREBASE_PROJECT_ID: ${{secrets.FIREBASE_PROJECT_ID}}
       - name: Send Notification to Telegram
         uses: kohchihao/tele-status@master
-        if: always()
+        if: success()
         with:
           chat: ${{ secrets.TELEGRAM_CHAT_ID }}
           token: ${{ secrets.TELEGRAM_BOT_API }}
