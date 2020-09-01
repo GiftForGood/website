@@ -631,7 +631,7 @@ class ChatsAPI {
       id: wishInfo.user.userId,
       profileImageUrl: wishInfo.user.profileImageUrl,
       status: OFF, // By default, status will always be off
-      lastActiveDateTime: npoInfo.lastLoggedInDateTime, // However, does not reflect in the current NPO is online
+      lastActiveDateTime: firebase.firestore.FieldValue.serverTimestamp(), // However, does not reflect in the current NPO is online
       unreadCount: 0,
       organization: wishInfo.organization,
     };
@@ -696,7 +696,7 @@ class ChatsAPI {
       id: donationInfo.user.userId,
       profileImageUrl: donationInfo.user.profileImageUrl,
       status: OFF, // By default, status will always be off
-      lastActiveDateTime: donorInfo.lastLoggedInDateTime, // However, does not reflect in the current donor is online
+      lastActiveDateTime: firebase.firestore.FieldValue.serverTimestamp(), // However, does not reflect in the current donor is online
       unreadCount: 0,
     };
 
