@@ -550,11 +550,13 @@ class ChatsAPI {
     await this._validateChat(wishInfo.wishId, npoInfo.userId, donorInfo.userId);
 
     const chatDoc = await this._createChatForWish(wishInfo, npoInfo, donorInfo);
+    this._RTDBCreateChatPresence(chatDoc.id, npoInfo, donorInfo);
 
     return [chatDoc, donorInfo];
   }
 
   async _createChatForWish(wishInfo, npoInfo, donorInfo) {
+    // TODO: Refractor
     if (wishInfo.status !== PENDING) {
       throw new ChatError('invalid-post-status', 'only can start a chat on a pending wish');
     }
@@ -603,11 +605,13 @@ class ChatsAPI {
     await this._validateChat(donationInfo.donationId, npoInfo.userId, donorInfo.userId);
 
     const chatDoc = await this._createChatForDonation(donationInfo, npoInfo, donorInfo);
+    this._RTDBCreateChatPresence(chatDoc.id, npoInfo, donorInfo);
 
     return [chatDoc, npoInfo];
   }
 
   async _createChatForDonation(donationInfo, npoInfo, donorInfo) {
+    // TODO: Refractor
     if (donationInfo.status !== PENDING) {
       throw new ChatError('invalid-post-status', 'only can start a chat on a pending donation');
     }
@@ -648,6 +652,26 @@ class ChatsAPI {
     await newChat.set(data);
 
     return newChat.get();
+  }
+
+  async _RTDBCreateChatPresence(chatId, npoInfo, donorInfo) {
+    const userInfos = {
+      [npoInfo.userId]: {
+        status: OFF,
+        lastSeenDateTime: firebase.database.ServerValue.TIMESTAMP,
+      },
+      [donorInfo.userId]: {
+        status: OFF,
+        lastSeenDateTime: firebase.database.ServerValue.TIMESTAMP,
+      },
+    };
+
+    firebase
+      .database()
+      .ref('chatStatuses/' + chatId)
+      .set({
+        users: userInfos,
+      });
   }
 
   async _sendTextMessages(chatId, texts, chatInfo = null, senderType = null, senderInfo = null) {
