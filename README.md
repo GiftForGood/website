@@ -1,7 +1,5 @@
-This project is built with [Next.js](https://nextjs.org/) on top of [React](https://reactjs.org/).
-
-## Prerequisites
-- [Node.js 10.13](https://nodejs.org/en/) or later
+# GiftforGood
+Giftforgood is your friendly neighborhood in-kind donations platform. 
 
 ## Setting up
 
@@ -11,25 +9,13 @@ Run `npm install` in the root directory to install all the relevant dependencies
 
 In the project directory, you can run:
 
-### `npm run dev` or `next`
+### `npm run dev`
 
 Runs the app in the development mode.<br />
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 Hot reloading is available in this mode, i.e. the page will reload if you make edits.<br />
 You will also see any lint errors in the console.
-
-### `npm run start` or `next start`
-
-Starts a Next.js production server at [http://localhost:3000](http://localhost:3000). Take note to build the app using `npm run dev` or `next` before starting the server.<br />
-
-### `npm run build` or `next build`
-
-Builds the app for production to the `.next` folder.<br />
-
-### `npm run export` or `next build && next export`
-
-Exports your app into static HTML, which can be run standalone without the need of a Node.js server. The static version of the app will be available in the `out` directory.
 
 ### `npm run lint`
 
@@ -39,12 +25,29 @@ Runs a series of checks on the code formatting according to the `.prettierrc.jso
 
 Automatically formats the code according to the `.prettierrc.json` configuration file.
 
-## Learn More
+### `npm run dev-local`
 
-You can learn more in the [Getting Started With Next.js](https://nextjs.org/docs/getting-started).
+Runs the app in the development mode.<br />
+Open `http://[ip-address]:3000` to view it in the browser.
 
 ## Environment Variables 
 To use environment variables within the project:
 1. `mv .env.sample .env`
 2. Add environment variables inside `.env` 
 3. Add environment variables inside `next.config.js`
+
+## Services used 
+- [Firebase](https://firebase.google.com/)
+  - Auth, Storage, Realtime DB, Firestore
+- [Algolia](https://www.algolia.com/)
+  - Search
+- [Cloudflare](https://www.cloudflare.com/)
+  - DDOS protection
+- [Cloudinary](https://cloudinary.com/)
+  - Assets
+- [SendGrid](https://sendgrid.com/)
+  - Emailing
+- [1Password](https://1password.com/)
+  - Password Manager
+- [Heroku](https://heroku.com)
+  - Web Server
