@@ -110,6 +110,7 @@ const ChatDialogMessages = ({ postType, inputRowHeight, isShowPostDetails }) => 
     return () => {
       if (unsubscribeFunction) {
         api.chats.unsubscribeFromChatMessages(selectedChatId, userId, unsubscribeFunction).then(() => {
+          api.chats.deactivateUserChatPresence(selectedChatId, userId);
           setChatMessageDocs([]);
         });
       }
