@@ -491,6 +491,64 @@ class ChatsAPI {
   }
 
   /**
+   * Start a user presence on a chat
+   * @param {string} id The id of the chat
+   * @param {string} userId The id of the user
+   * @throws {ChatError}
+   * @throws {FirebaseError}
+   */
+  async activateUserChatPresence(id, userId) {
+    const userChatStatusDatabaseRef = firebase.database().ref('chatStatuses/' + id + '/users/' + userId);
+    const userChatStatusFirestoreRef = chatsCollection.doc(id);
+
+    const chatFirebaseSnapshot = await userChatStatusFirestoreRef.get();
+    const chat = chatFirebaseSnapshot.data();
+    let userType;
+    if (chat.donor.id === userId) {
+      userType = donor;
+    } else if (chat.npo.id === userId) {
+      userType = npo;
+    } else {
+      throw new ChatError('invalid-user-type');
+    }
+
+    const isOfflineForDatabase = {
+      status: OFF,
+      lastActiveDateTime: firebase.database.ServerValue.TIMESTAMP,
+    };
+    const isOnlineForDatabase = {
+      status: ON,
+      lastActiveDateTime: firebase.database.ServerValue.TIMESTAMP,
+    };
+    const isOfflineForFirestore = {
+      [`${userType}.status`]: OFF,
+      [`${userType}.lastActiveDateTime`]: firebase.firestore.FieldValue.serverTimestamp(),
+    };
+    const isOnlineForFirestore = {
+      [`${userType}.status`]: ON,
+      [`${userType}.lastActiveDateTime`]: firebase.firestore.FieldValue.serverTimestamp(),
+    };
+
+    firebase
+      .database()
+      .ref('.info/connected')
+      .on('value', (snapshot) => {
+        if (snapshot.val() == false) {
+          userChatStatusFirestoreRef.update(isOfflineForFirestore);
+          return;
+        }
+
+        userChatStatusDatabaseRef
+          .onDisconnect()
+          .set(isOfflineForDatabase)
+          .then(() => {
+            userChatStatusDatabaseRef.set(isOnlineForDatabase);
+            userChatStatusFirestoreRef.update(isOnlineForFirestore);
+          });
+      });
+  }
+
+  /**
    * Subscribe to messages belonging a chat
    * @param {string} id The id of the chat
    * @param {string} userId The id of the user
@@ -658,11 +716,11 @@ class ChatsAPI {
     const userInfos = {
       [npoInfo.userId]: {
         status: OFF,
-        lastSeenDateTime: firebase.database.ServerValue.TIMESTAMP,
+        lastActiveDateTime: firebase.database.ServerValue.TIMESTAMP,
       },
       [donorInfo.userId]: {
         status: OFF,
-        lastSeenDateTime: firebase.database.ServerValue.TIMESTAMP,
+        lastActiveDateTime: firebase.database.ServerValue.TIMESTAMP,
       },
     };
 
