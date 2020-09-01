@@ -159,7 +159,7 @@ const RegisterDonor = () => {
         loading={googleLoading}
         disabled={isLoading}
       >
-        Sign in with Google
+        Register with Google
       </SocialButton>
       <Text align="center" spaceAfter="normal">
         OR

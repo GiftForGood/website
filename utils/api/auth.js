@@ -219,6 +219,10 @@ class AuthAPI {
 
   async _googleAuth() {
     const provider = new firebase.auth.GoogleAuthProvider();
+    // allow user to select own account
+    provider.setCustomParameters({
+      prompt: 'select_account',
+    });
     return await firebaseAuth.signInWithPopup(provider);
   }
 
