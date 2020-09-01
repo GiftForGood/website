@@ -548,7 +548,7 @@ class ChatsAPI {
       });
   }
 
-  deactivateUserChatPresence() {
+  deactivateUserChatPresence(id, userId) {
     firebase.database().ref('.info/connected').off();
     firebase.database().ref('chatStatuses/' + id + '/users/' + userId).set({
       status: OFF,
