@@ -548,6 +548,10 @@ class ChatsAPI {
       });
   }
 
+  deactivateUserChatPresence() {
+    firebase.database().ref('.info/connected').off();
+  }
+
   /**
    * Subscribe to messages belonging a chat
    * @param {string} id The id of the chat
