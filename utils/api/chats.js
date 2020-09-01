@@ -491,7 +491,7 @@ class ChatsAPI {
   }
 
   /**
-   * Start a user presence on a chat
+   * Activate a user presence on a chat
    * @param {string} id The id of the chat
    * @param {string} userId The id of the user
    * @throws {ChatError}
@@ -548,6 +548,11 @@ class ChatsAPI {
       });
   }
 
+  /**
+   * Deactivate a user presence on a chat
+   * @param {string} id The id of the chat
+   * @param {string} userId The id of the user
+   */
   deactivateUserChatPresence(id, userId) {
     firebase.database().ref('.info/connected').off();
     firebase.database().ref('chatStatuses/' + id + '/users/' + userId).set({
