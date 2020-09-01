@@ -498,7 +498,7 @@ class ChatsAPI {
    * @throws {FirebaseError}
    */
   async activateUserChatPresence(id, userId) {
-    const userChatStatusDatabaseRef = firebase.database().ref('chatStatuses/' + id + '/users/' + userId);
+    const userChatStatusDatabaseRef = firebase.database().ref(`chatStatuses/${id}/users/${userId}`);
     const userChatStatusFirestoreRef = chatsCollection.doc(id);
 
     const chatFirebaseSnapshot = await userChatStatusFirestoreRef.get();
@@ -555,7 +555,7 @@ class ChatsAPI {
    */
   deactivateUserChatPresence(id, userId) {
     firebase.database().ref('.info/connected').off();
-    firebase.database().ref('chatStatuses/' + id + '/users/' + userId).set({
+    firebase.database().ref(`chatStatuses/${id}/users/${userId}`).set({
       status: OFF,
       lastActiveDateTime: firebase.database.ServerValue.TIMESTAMP,
     });
