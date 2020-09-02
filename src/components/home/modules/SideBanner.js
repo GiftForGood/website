@@ -43,11 +43,11 @@ const SideBanner = () => {
 
   return (
     <div>
-      {sideBanners.map((banner) => (
-        <>
+      {sideBanners.map((banner, index) => (
+        <div key={index}>
           <BannerImage src={banner.imageUrl} />
           <ClickableDiv href={banner.link} target="_blank" />
-        </>
+        </div>
       ))}
     </div>
   );
