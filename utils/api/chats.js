@@ -527,6 +527,7 @@ class ChatsAPI {
     const isOnlineForFirestore = {
       [`${userType}.status`]: ON,
       [`${userType}.lastActiveDateTime`]: firebase.firestore.FieldValue.serverTimestamp(),
+      [`${userType}.unreadCount`]: 0,
     };
 
     firebase
@@ -573,8 +574,6 @@ class ChatsAPI {
    * @return {function} The subscriber function. Needed to unsubscribe from the listener
    */
   async subscribeToChatMessages(id, userId, callback) {
-    await this._updateChatStatus(id, userId, ON);
-
     return chatsCollection
       .doc(id)
       .collection('messages')
@@ -611,7 +610,6 @@ class ChatsAPI {
       throw new ChatError('invalid-unsubscribe-function', 'only can unsubscribe using a function');
     }
 
-    await this._updateChatStatus(id, userId, OFF);
     unsubscribeFunction();
   }
 
@@ -844,39 +842,6 @@ class ChatsAPI {
     }
 
     chatsCollection.doc(chatInfo.chatId).update(data);
-  }
-
-  async _updateChatStatus(id, userId, status) {
-    const doc = chatsCollection.doc(id);
-    const snapshot = await doc.get();
-    if (!snapshot.exists) {
-      throw new ChatError('invalid-chat-id', 'chat does not exist');
-    }
-    const chat = snapshot.data();
-
-    let userType;
-    if (chat.donor.id === userId) {
-      userType = donor;
-    } else if (chat.npo.id === userId) {
-      userType = npo;
-    } else {
-      throw new ChatError('invalid-user-type');
-    }
-
-    const statusField = `${userType}.status`;
-    const unreadCountField = `${userType}.unreadCount`;
-    const lastActiveDateTimeField = `${userType}.lastActiveDateTime`;
-    let data = {
-      [statusField]: status,
-      [lastActiveDateTimeField]: firebase.firestore.FieldValue.serverTimestamp(),
-    };
-
-    // Only should read the message when the user is on the chat
-    if (status === ON) {
-      data[unreadCountField] = 0;
-    }
-
-    doc.update(data);
   }
 
   // Not used at the moment. Might need to use it if we decided to actively managed uses lastActiveDateTimeField
