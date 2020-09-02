@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import CarouselScrollButton from '../../buttons/CarouselScrollButton';
 import Desktop from '@kiwicom/orbit-components/lib/Desktop';
 import { allCategoriesImagePath } from '../../../../utils/constants/imagePaths';
+import CategoryImageBox from '../../imageContainers/CategoryImageBox';
 
 // The home page is structured using a grid and the row of categories has
 // 1fr of height space, so during initial load when the categories are not
@@ -26,6 +27,10 @@ const ScrollableRow = styled.div`
   max-width: 1280px;
   overflow-x: scroll;
   scroll-behavior: smooth;
+`;
+
+const Clickable = styled.a`
+  text-decoration: none;
 `;
 
 // To represent the category for all wishes, note that it does not have id property
@@ -62,9 +67,9 @@ const Categories = ({ type }) => {
             router.push(href);
           };
           return (
-            <a href={href} onClick={handleOnClickCategory} key={category.name}>
-              <SquareImageBox imageUrl={category.imageUrl} caption={category.name} />
-            </a>
+            <Clickable href={href} onClick={handleOnClickCategory} key={category.name}>
+              <CategoryImageBox imageUrl={category.imageUrl} caption={category.name} />
+            </Clickable>
           );
         })}
       </Stack>
