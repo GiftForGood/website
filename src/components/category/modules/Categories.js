@@ -18,7 +18,7 @@ import CategoryImageBox from '../../imageContainers/CategoryImageBox';
 const RowOfCategoriesContainer = styled.div`
   position: relative;
   display: flex;
-  min-height: calc(75px + 2vw);
+  min-height: calc(60px + 2vw);
 `;
 
 const ScrollableRow = styled.div`
