@@ -19,6 +19,7 @@ import BlueButton from '../../buttons/BlueButton';
 import { colors } from '../../../../utils/constants/colors';
 import api from '../../../../utils/api';
 import NpoOrganizationDropdownField from '../../inputfield/NpoOrganizationDropdownField';
+import { newOrganizationGoogleFormPath } from '../../../../utils/constants/googleFormPaths';
 
 const HeadingColor = styled.div`
   color: ${colors.npoBackground};
@@ -122,8 +123,8 @@ const RegisterNpoOrganization = () => {
               value={formik.values.name}
             />
             {formik.touched.name && formik.errors.name ? null : (
-              <TextLink size="small" type="secondary">
-                Email us at support.giftforgood@gmail.com if your organization is not on the list.
+              <TextLink size="small" type="secondary" external href={newOrganizationGoogleFormPath}>
+                Click here if your organization is not on the list.
               </TextLink>
             )}
           </Stack>
