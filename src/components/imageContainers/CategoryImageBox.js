@@ -8,8 +8,8 @@ import { colors } from '../../../utils/constants/colors';
 const SquareBox = styled.div`
   width: calc(60px + 2vw);
   height: calc(60px + 2vw);
-  min-width: 75px;
-  min-height: 75px;
+  min-width: 60px;
+  min-height: 60px;
   position: relative;
   background: url(${(props) => props.src});
   background-size: cover;
