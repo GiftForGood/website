@@ -556,10 +556,13 @@ class ChatsAPI {
    */
   deactivateUserChatPresence(id, userId) {
     firebase.database().ref('.info/connected').off();
-    firebase.database().ref(`chatStatuses/${id}/users/${userId}`).set({
-      status: OFF,
-      lastActiveDateTime: firebase.database.ServerValue.TIMESTAMP,
-    });
+    firebase
+      .database()
+      .ref('chatStatuses/' + id + '/users/' + userId)
+      .set({
+        status: OFF,
+        lastActiveDateTime: firebase.database.ServerValue.TIMESTAMP,
+      });
   }
 
   /**
