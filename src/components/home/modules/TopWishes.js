@@ -10,6 +10,11 @@ import Desktop from '@kiwicom/orbit-components/lib/Desktop';
 import Mobile from '@kiwicom/orbit-components/lib/Mobile';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 
+import { InstantSearch, connectHits, Configure } from 'react-instantsearch-dom';
+import { getByCategoryIdAndStatusAndNotExpired } from '../../../../utils/algolia/filteringRules';
+import algoliasearch from 'algoliasearch/lite';
+const searchClient = algoliasearch(process.env.ALGOLIA_APP_ID, process.env.ALGOLIA_SEARCH_KEY);
+
 // note that the width of each wish column in desktop is calculated using
 // (full width which is 100% - (2 * spacing in between each column which is 40px)) / 3
 const WishesColumn = styled.div`
@@ -56,45 +61,61 @@ const CategoryHeader = ({ title }) => {
 };
 
 const TopWishes = ({ numberOfPosts, numberOfCategories }) => {
-  // assumes that there are only 3 top categories
-  const [firstTopCategoryAndWishes, setFirstTopCategoryAndWishes] = useState({});
-  const [secondTopCategoryAndWishes, setSecondTopCategoryAndWishes] = useState({});
-  const [thirdTopCategoryAndWishes, setThirdTopCategoryAndWishes] = useState({});
   const router = useRouter();
 
+  const [topCategories, setTopCategories] = useState([]);
+
+  const [firstTopCategory, setFirstTopCategory] = useState({});
+  const [secondTopCategory, setSecondTopCategory] = useState({});
+  const [thirdTopCategory, setThirdTopCategory] = useState({});
+  
+
+  const getTopNCategoriesFromAlgolia = async () => {
+    const index = searchClient.initIndex('wishes');
+    return index.search('', {
+      facets: ['categories.id'],
+      facetFilters: [['status:pending']],
+    });
+  };
+
+  const sortObjectEntries = (obj) => {
+    return Object.entries(obj)
+      .sort((a, b) => b[1] - a[1])
+      .map((element) => element[0]);
+  };
+
   useEffect(() => {
-    getTopCategories(numberOfCategories).then((categories) => {
-      // set all three top categories and their wishes in parallel
-      getTopWishesForCategory(categories[0], numberOfPosts).then((result) => {
-        setFirstTopCategoryAndWishes(result);
-      });
-      getTopWishesForCategory(categories[1], numberOfPosts).then((result) => {
-        setSecondTopCategoryAndWishes(result);
-      });
-      getTopWishesForCategory(categories[2], numberOfPosts).then((result) => {
-        setThirdTopCategoryAndWishes(result);
+    getAllCategories().then((categories) => {
+      getTopNCategoriesFromAlgolia().then(({ hits, facets }) => {
+        const sorted = sortObjectEntries(facets['categories.id']);
+        if (sorted.length >= 3) {
+          const top3CategoriesIds = sorted.slice(0, 3);
+          const top3Categories = categories.filter((category) => {
+            if (top3CategoriesIds.includes(category.id)) {
+              return true;
+            }
+            return false;
+          });
+          setTopCategories(top3Categories);
+        } else if (sorted.length > 0 && sorted.length < 3) {
+          const topCategories = categories.filter((category) => {
+            if (sorted.includes(category.id)) {
+              return true;
+            }
+            return false;
+          });
+          setTopCategories(topCategories);
+        }
       });
     });
   }, []);
 
-  const getTopCategories = async (numberOfCategories) => {
+  const getAllCategories = async () => {
     const rawCategories = await api.categories.getAll().catch((err) => console.error(err));
-    return rawCategories.docs.slice(0, numberOfCategories).map((doc) => doc.data());
+    return rawCategories.docs.map((doc) => doc.data());
   };
 
-  const getTopWishesForCategory = async (category, numberOfPosts) => {
-    const rawWishes = await api.wishes
-      .getTopNPendingWishesForCategory(category.id, numberOfPosts)
-      .catch((err) => console.error(err));
-    return { category: category, wishes: rawWishes.docs.map((doc) => doc.data()) };
-  };
-
-  const TopWishesColumn = (topCategoryAndWishes) => {
-    // haven't loaded the data yet
-    if (Object.keys(topCategoryAndWishes).length === 0) {
-      return;
-    }
-    const { category, wishes } = topCategoryAndWishes;
+  const TopWishesColumn = ({ wishes, category }) => {
     const categoryHref = `/wishes/category/${category.id}`;
     const handleViewAllButton = (event) => {
       event.preventDefault();
@@ -130,11 +151,24 @@ const TopWishes = ({ numberOfPosts, numberOfCategories }) => {
     );
   };
 
+  const Hits = ({ hits, category }) => (
+    <>
+      <TopWishesColumn wishes={hits} category={category}/>
+    </>
+  );
+  const TopCategories = connectHits(Hits);
+
   return (
     <Stack desktop={{ direction: 'row' }} direction="column" align="start" spacing="extraLoose">
-      {TopWishesColumn(firstTopCategoryAndWishes)}
-      {TopWishesColumn(secondTopCategoryAndWishes)}
-      {TopWishesColumn(thirdTopCategoryAndWishes)}
+      {topCategories.map((category) => (
+        <InstantSearch searchClient={searchClient} indexName="wishes">
+          <TopCategories category={category}/>
+          <Configure
+            filters={getByCategoryIdAndStatusAndNotExpired(category.id, 'pending', Date.now())}
+            hitsPerPage={'5'}
+          />
+        </InstantSearch>
+      ))}
     </Stack>
   );
 };
