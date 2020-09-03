@@ -65,4 +65,5 @@ export const colors = {
   chatScrollToBottomButtonBackground: '#3B80ED',
   chatScrollToBottomButtonHoverActive: '#3975D5',
   chatScrollToBottomButtonFocus: '#3167BC',
+  categoryHover: '#eeeeee',
 };
