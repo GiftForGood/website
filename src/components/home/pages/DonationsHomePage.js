@@ -60,7 +60,7 @@ const DonationsHomePage = () => {
         rowGap="25px"
         columns="1fr"
         desktop={{
-          rows: '2fr 1fr auto',
+          rows: '1.5fr 1fr auto',
           rowGap: '30px',
         }}
       >
