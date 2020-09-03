@@ -13,6 +13,7 @@ import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import { InstantSearch, connectHits, Configure } from 'react-instantsearch-dom';
 import { getByCategoryIdAndStatusAndNotExpired } from '../../../../utils/algolia/filteringRules';
 import algoliasearch from 'algoliasearch/lite';
+import { getTopNCategoriesFromAlgoliaWithExpireDateTime, sortObjectEntries } from './algoliaHelpers';
 const searchClient = algoliasearch(process.env.ALGOLIA_APP_ID, process.env.ALGOLIA_SEARCH_KEY);
 
 // note that the width of each wish column in desktop is calculated using
@@ -60,33 +61,13 @@ const CategoryHeader = ({ title }) => {
   );
 };
 
-const TopWishes = ({ numberOfPosts, numberOfCategories }) => {
+const TopWishes = ({ numberOfPosts }) => {
   const router = useRouter();
-
   const [topCategories, setTopCategories] = useState([]);
-
-  const [firstTopCategory, setFirstTopCategory] = useState({});
-  const [secondTopCategory, setSecondTopCategory] = useState({});
-  const [thirdTopCategory, setThirdTopCategory] = useState({});
-  
-
-  const getTopNCategoriesFromAlgolia = async () => {
-    const index = searchClient.initIndex('wishes');
-    return index.search('', {
-      facets: ['categories.id'],
-      facetFilters: [['status:pending']],
-    });
-  };
-
-  const sortObjectEntries = (obj) => {
-    return Object.entries(obj)
-      .sort((a, b) => b[1] - a[1])
-      .map((element) => element[0]);
-  };
 
   useEffect(() => {
     getAllCategories().then((categories) => {
-      getTopNCategoriesFromAlgolia().then(({ hits, facets }) => {
+      getTopNCategoriesFromAlgoliaWithExpireDateTime('wishes').then(({ hits, facets }) => {
         const sorted = sortObjectEntries(facets['categories.id']);
         if (sorted.length >= 3) {
           const top3CategoriesIds = sorted.slice(0, 3);
@@ -115,7 +96,7 @@ const TopWishes = ({ numberOfPosts, numberOfCategories }) => {
     return rawCategories.docs.map((doc) => doc.data());
   };
 
-  const TopWishesColumn = ({ wishes, category }) => {
+  const TopWishesColumn = ({ hits, category }) => {
     const categoryHref = `/wishes/category/${category.id}`;
     const handleViewAllButton = (event) => {
       event.preventDefault();
@@ -124,8 +105,8 @@ const TopWishes = ({ numberOfPosts, numberOfCategories }) => {
     return (
       <WishesColumn key={category.id}>
         <CategoryHeader title={category.name}></CategoryHeader>
-        {wishes.map((wish) => {
-          const wishPostHref = `/wishes/${wish.wishId}`;
+        {hits.map((wish) => {
+          const wishPostHref = `/wishes/${wish.objectID}`;
           const profileHref = `/profile/${wish.user.userId}`;
           return (
             <GroupWishCard
@@ -151,21 +132,16 @@ const TopWishes = ({ numberOfPosts, numberOfCategories }) => {
     );
   };
 
-  const Hits = ({ hits, category }) => (
-    <>
-      <TopWishesColumn wishes={hits} category={category}/>
-    </>
-  );
-  const TopCategories = connectHits(Hits);
+  const TopCategories = connectHits(TopWishesColumn);
 
   return (
     <Stack desktop={{ direction: 'row' }} direction="column" align="start" spacing="extraLoose">
       {topCategories.map((category) => (
         <InstantSearch searchClient={searchClient} indexName="wishes">
-          <TopCategories category={category}/>
+          <TopCategories category={category} />
           <Configure
             filters={getByCategoryIdAndStatusAndNotExpired(category.id, 'pending', Date.now())}
-            hitsPerPage={'5'}
+            hitsPerPage={numberOfPosts}
           />
         </InstantSearch>
       ))}
