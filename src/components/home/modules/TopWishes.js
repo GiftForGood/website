@@ -69,7 +69,7 @@ const TopWishes = ({ numberOfPosts, numberOfCategories }) => {
     getAllCategories().then((categories) => {
       getTopNCategoriesFromAlgoliaWithExpireDateTime('wishes').then(({ hits, facets }) => {
         const sorted = sortObjectEntries(facets['categories.id']);
-        if (sorted.length >= 3) {
+        if (sorted.length >= numberOfCategories) {
           const topNCategoriesIds = sorted.slice(0, numberOfCategories);
           const topNCategories = categories.filter((category) => {
             if (topNCategoriesIds.includes(category.id)) {
@@ -78,7 +78,7 @@ const TopWishes = ({ numberOfPosts, numberOfCategories }) => {
             return false;
           });
           setTopCategories(topNCategories);
-        } else if (sorted.length > 0 && sorted.length < 3) {
+        } else if (sorted.length > 0 && sorted.length < numberOfCategories) {
           const topCategories = categories.filter((category) => {
             if (sorted.includes(category.id)) {
               return true;
