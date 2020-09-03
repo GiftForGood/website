@@ -70,7 +70,7 @@ const WishesHomePage = () => {
         </CategoriesContainer>
         <TopWishesContainer>
           <ResponsiveTitle>{topCategoriesTitle}</ResponsiveTitle>
-          <TopWishes numberOfPosts={numberOfPostsPerCategory} />
+          <TopWishes numberOfPosts={numberOfPostsPerCategory} numberOfCategories={numberOfCategories} />
         </TopWishesContainer>
       </Grid>
     </WishesHomePageContainer>

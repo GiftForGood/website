@@ -61,7 +61,7 @@ const CategoryHeader = ({ title }) => {
   );
 };
 
-const TopWishes = ({ numberOfPosts }) => {
+const TopWishes = ({ numberOfPosts, numberOfCategories }) => {
   const router = useRouter();
   const [topCategories, setTopCategories] = useState([]);
 
@@ -70,14 +70,14 @@ const TopWishes = ({ numberOfPosts }) => {
       getTopNCategoriesFromAlgoliaWithExpireDateTime('wishes').then(({ hits, facets }) => {
         const sorted = sortObjectEntries(facets['categories.id']);
         if (sorted.length >= 3) {
-          const top3CategoriesIds = sorted.slice(0, 3);
-          const top3Categories = categories.filter((category) => {
-            if (top3CategoriesIds.includes(category.id)) {
+          const topNCategoriesIds = sorted.slice(0, numberOfCategories);
+          const topNCategories = categories.filter((category) => {
+            if (topNCategoriesIds.includes(category.id)) {
               return true;
             }
             return false;
           });
-          setTopCategories(top3Categories);
+          setTopCategories(topNCategories);
         } else if (sorted.length > 0 && sorted.length < 3) {
           const topCategories = categories.filter((category) => {
             if (sorted.includes(category.id)) {
