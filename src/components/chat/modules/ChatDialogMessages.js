@@ -100,13 +100,17 @@ const ChatDialogMessages = ({ postType, inputRowHeight, isShowPostDetails }) => 
     if (selectedChatId !== null || !isNewChat) {
       api.chats
         .subscribeToChatMessages(selectedChatId, userId, updateChatMessages)
-        .then((fn) => (unsubscribeFunction = fn));
+        .then((fn) => (unsubscribeFunction = fn))
+        .then(() => {
+          api.chats.activateUserChatPresence(selectedChatId, userId);
+        });
       disableFurtherLoadsIfMessagesLessThanOneBatch();
     }
 
     return () => {
       if (unsubscribeFunction) {
         api.chats.unsubscribeFromChatMessages(selectedChatId, userId, unsubscribeFunction).then(() => {
+          api.chats.deactivateUserChatPresence(selectedChatId, userId);
           setChatMessageDocs([]);
         });
       }
