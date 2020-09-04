@@ -11,7 +11,7 @@ const CircularImage = styled.img`
   object-fit: cover;
 `;
 
-const ProfileAvatar = ({ imageUrl, height, width }) => {
+const ProfileAvatar = ({ imageUrl = "", height, width }) => {
   return (
     <>
       {imageUrl ? (
