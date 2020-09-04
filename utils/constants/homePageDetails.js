@@ -9,7 +9,7 @@ export const wishesHomePageDetails = {
 };
 
 export const donationsHomePageDetails = {
-  numberOfPostsPerCategory: 3,
+  numberOfPostsPerCategory: 5,
   numberOfCategories: 3,
   categoriesTitle: 'Explore GiftForGood',
   topCategoriesTitle: 'Top Categories',

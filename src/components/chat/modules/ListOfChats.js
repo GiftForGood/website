@@ -28,9 +28,22 @@ const ListOfChatsContainer = styled.div`
   }};
 `;
 
+const EmptyChatContainer = styled.div`
+  height: 100%;
+  width: 100%;
+  border-right: 1px solid ${colors.chatBorders};
+`;
+
+const EmptyChatTextContainer = styled.div`
+  width: fit-content;
+  margin: 0 auto;
+  margin-top: 40vh;
+`;
+
 const ListOfChats = ({ isShow }) => {
   const [chatDocs, setChatDocs] = useState([]);
   const [shouldSeeMore, setShouldSeeMore] = useState(true);
+  const [isMounted, setIsMounted] = useState(false);
 
   const { state, dispatch } = useContext(ChatContext);
   const isViewingChatsForMyPost = getIsViewingChatsForMyPost(state);
@@ -100,21 +113,17 @@ const ListOfChats = ({ isShow }) => {
    * are less than one USER_CHATS_BATCH_SIZE
    */
   const disableFurtherLoadsIfChatsLessThanOneBatch = () => {
-    if (isViewingChatsForMyPost) {
-      api.chats.getChatsForPost(postId).then((rawChats) => {
-        const newChatDocs = rawChats.docs;
-        if (newChatDocs.length < USER_CHATS_BATCH_SIZE) {
-          setShouldSeeMore(false);
-        }
-      });
-    } else {
-      api.chats.getChats().then((rawChats) => {
-        const newChatDocs = rawChats.docs;
-        if (newChatDocs.length < USER_CHATS_BATCH_SIZE) {
-          setShouldSeeMore(false);
-        }
-      });
-    }
+    const getChats = async () => {
+      return isViewingChatsForMyPost ? api.chats.getChatsForPost(postId) : api.chats.getChats();
+    };
+
+    getChats().then((rawChats) => {
+      const newChatDocs = rawChats.docs;
+      if (newChatDocs.length < USER_CHATS_BATCH_SIZE) {
+        setShouldSeeMore(false);
+      }
+      setIsMounted(true);
+    });
   };
 
   const handleOnSeeMore = () => {
@@ -136,6 +145,14 @@ const ListOfChats = ({ isShow }) => {
       });
     }
   };
+
+  if (isMounted && chatDocs.length === 0) {
+    return (
+      <EmptyChatContainer>
+        <EmptyChatTextContainer>No chats available.</EmptyChatTextContainer>
+      </EmptyChatContainer>
+    );
+  }
 
   return (
     <ListOfChatsContainer isShow={isShow}>

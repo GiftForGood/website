@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
-import { Stack, Loading } from '@kiwicom/orbit-components/lib';
+import { Stack, Loading, Button, NotificationBadge } from '@kiwicom/orbit-components/lib';
+import { ChevronDown } from '@kiwicom/orbit-components/lib/icons';
 import api from '../../../../utils/api';
 import styled from 'styled-components';
 import { CardSection } from '@kiwicom/orbit-components/lib/Card';
@@ -9,7 +10,9 @@ import InfiniteScroll from '../../scroller/InfiniteScroller';
 import { wishes } from '../../../../utils/constants/postType';
 import { CHAT_MESSAGES_BATCH_SIZE } from '../../../../utils/api/constants';
 import { LeftMessageSection, RightMessageSection } from './ChatMessageSection';
+import ScrollToBottomButton from '../../buttons/ScrollToBottomButton';
 import useWindowDimensions from '../../../../utils/hooks/useWindowDimensions';
+import { isSafari } from 'react-device-detect';
 import ChatContext from '../context';
 import { getSelectedChatId, getIsNewChat, getUser } from '../selectors';
 import useNavbarHeight from '../../navbar/modules/useNavbarHeight';
@@ -42,6 +45,26 @@ const MessageContainer = styled.div`
   flex-direction: column-reverse;
 `;
 
+const ScrollToBottomContainer = styled.div`
+  position: relative;
+`;
+
+const ScrollerButtonContainer = styled.div`
+  position: absolute;
+  transition: all 1s ease-in-out;
+  float: left;
+  bottom: 10px;
+  left: 50%;
+  transform: translate(-50%, 0);
+  cursor: pointer;
+`;
+
+const NotificationBadgeWrapper = styled.div`
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+`;
+
 /**
  *
  * @param {number} navBarHeight is the height of the navbar
@@ -58,14 +81,18 @@ const ChatDialogMessages = ({ postType, inputRowHeight, isShowPostDetails }) => 
   // to have messages initially
   const [shouldSeeMore, setShouldSeeMore] = useState(!isNewChat);
   const [isLoadingMore, setIsLoadingMore] = useState(false); // to prevent multiple loads at the same time
+  const [isShowScrollerButton, setIsShowScrollerButton] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
   const { isTablet } = useMediaQuery();
   const bottomOfScrollerRef = useRef(null);
+  const scrollerRef = useRef(null);
   const { height: viewportHeight } = useWindowDimensions();
 
   useEffect(() => {
     // reset values every time selectedChatId changes
     setChatMessageDocs([]);
     setShouldSeeMore(!isNewChat);
+    setIsShowScrollerButton(false);
 
     let unsubscribeFunction;
     const { userId } = loggedInUser.user;
@@ -73,13 +100,17 @@ const ChatDialogMessages = ({ postType, inputRowHeight, isShowPostDetails }) => 
     if (selectedChatId !== null || !isNewChat) {
       api.chats
         .subscribeToChatMessages(selectedChatId, userId, updateChatMessages)
-        .then((fn) => (unsubscribeFunction = fn));
+        .then((fn) => (unsubscribeFunction = fn))
+        .then(() => {
+          api.chats.activateUserChatPresence(selectedChatId, userId);
+        });
       disableFurtherLoadsIfMessagesLessThanOneBatch();
     }
 
     return () => {
       if (unsubscribeFunction) {
         api.chats.unsubscribeFromChatMessages(selectedChatId, userId, unsubscribeFunction).then(() => {
+          api.chats.deactivateUserChatPresence(selectedChatId, userId);
           setChatMessageDocs([]);
         });
       }
@@ -89,6 +120,15 @@ const ChatDialogMessages = ({ postType, inputRowHeight, isShowPostDetails }) => 
   const scrollToBottomIfSentByLoggedInUser = (chatMessage) => {
     if (chatMessage.sender.id === loggedInUser.user.userId) {
       bottomOfScrollerRef.current.scrollIntoView();
+    }
+  };
+
+  const incrementUnreadCountIfSentByOppositeUser = (chatMessage) => {
+    if (chatMessage.sender.id !== loggedInUser.user.userId) {
+      const bottomScrollTop = isSafari ? 0 : scrollerRef.current.scrollHeight - scrollerRef.current.clientHeight;
+      if (scrollerRef.current.scrollTop < bottomScrollTop) {
+        setUnreadCount((unreadCount) => unreadCount + 1);
+      }
     }
   };
 
@@ -129,6 +169,7 @@ const ChatDialogMessages = ({ postType, inputRowHeight, isShowPostDetails }) => 
     });
     if (isNewlySentMessage) {
       scrollToBottomIfSentByLoggedInUser(chatMessageDoc.data());
+      incrementUnreadCountIfSentByOppositeUser(chatMessageDoc.data());
     }
   };
 
@@ -164,6 +205,22 @@ const ChatDialogMessages = ({ postType, inputRowHeight, isShowPostDetails }) => 
     });
   };
 
+  /**
+   * Handler to show the scroller button if scroll position is not at the bottom
+   */
+  const scrollHandler = () => {
+    // note:
+    // safari browsers' bottom has scrollTop of 0, negative values when scroll up
+    // other browsers' bottom has scrollTop of scrollHeight - clientHeight
+    const bottomScrollTop = isSafari ? 0 : scrollerRef.current.scrollHeight - scrollerRef.current.clientHeight;
+    if (scrollerRef.current.scrollTop < bottomScrollTop) {
+      setIsShowScrollerButton(true);
+    } else {
+      setIsShowScrollerButton(false);
+      setUnreadCount(0);
+    }
+  };
+
   // get all heights of components within the chatDialog, only inputRowHeight is passed in as
   // the height is not constant
   const { chatDialogBackButton, chatDialogSeePostRow, chatDialogUserRow, chatDialogMessagesPadding } = isTablet
@@ -192,7 +249,12 @@ const ChatDialogMessages = ({ postType, inputRowHeight, isShowPostDetails }) => 
 
   return (
     <CardSection>
-      <MessageContainer offsetHeight={offsetHeight} viewportHeight={viewportHeight}>
+      <MessageContainer
+        offsetHeight={offsetHeight}
+        viewportHeight={viewportHeight}
+        onScroll={scrollHandler}
+        ref={scrollerRef}
+      >
         <InfiniteScroll
           loadMore={handleOnSeeMore}
           hasMore={shouldSeeMore && !isLoadingMore}
@@ -229,6 +291,24 @@ const ChatDialogMessages = ({ postType, inputRowHeight, isShowPostDetails }) => 
           <div ref={bottomOfScrollerRef} />
         </InfiniteScroll>
       </MessageContainer>
+      {isShowScrollerButton && (
+        <ScrollToBottomContainer>
+          <ScrollerButtonContainer>
+            <Button
+              circled
+              transparent
+              iconLeft={<ChevronDown />}
+              asComponent={ScrollToBottomButton}
+              onClick={() => bottomOfScrollerRef.current.scrollIntoView({ behavior: 'smooth' })}
+            ></Button>
+          </ScrollerButtonContainer>
+          {unreadCount > 0 && (
+            <NotificationBadgeWrapper>
+              <NotificationBadge type="info">{unreadCount}</NotificationBadge>
+            </NotificationBadgeWrapper>
+          )}
+        </ScrollToBottomContainer>
+      )}
     </CardSection>
   );
 };
