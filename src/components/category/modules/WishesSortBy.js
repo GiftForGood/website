@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { ChoiceGroup, Radio, Separator } from '@kiwicom/orbit-components/lib';
+import { ChoiceGroup, Radio, Separator, Stack } from '@kiwicom/orbit-components/lib';
 import BlackText from '../../text/BlackText';
 import { useRouter } from 'next/router';
 
@@ -28,17 +28,19 @@ const WishesSortBy = ({ items, currentRefinement, refine, sortByIndex, category 
   };
 
   return (
-    <>
+    <div>
       <BlackText style={{ marginBottom: '10px' }} size="large">
         Sort By
       </BlackText>
       <Separator />
       <ChoiceGroup style={{ flexDirection: 'row' }} onChange={(event) => handleSelect(event)}>
-        {items.map((item) => {
-          return <Radio label={item.label} checked={currentRefinement === item.value} value={item.value} />;
+        {items.map((item, index) => {
+          return (
+            <Radio label={item.label} checked={currentRefinement === item.value} value={item.value} key={item.value} />
+          );
         })}
       </ChoiceGroup>
-    </>
+    </div>
   );
 };
 

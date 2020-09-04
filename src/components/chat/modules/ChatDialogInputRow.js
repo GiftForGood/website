@@ -1,4 +1,4 @@
-import React, { useState, forwardRef, useRef } from 'react';
+import React, { useState, forwardRef, useRef, useContext } from 'react';
 import { Button, Stack, Alert } from '@kiwicom/orbit-components/lib';
 import ChatButton from '../../../components/buttons/ChatButton';
 import ChatImageUpload from './ChatImageUpload';
@@ -10,6 +10,9 @@ import TextareaAutosize from 'react-textarea-autosize';
 import { useRouter } from 'next/router';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 import { isMobile } from 'react-device-detect';
+import ChatContext from '../context';
+import { setSelectedChatId, setIsNewChat } from '../actions';
+import { getSelectedChatId, getIsNewChat } from '../selectors';
 
 const InputRowContainer = styled.div`
   width: 95%;
@@ -50,7 +53,11 @@ const StyledTextareaAutosize = styled(TextareaAutosize)`
   transform-origin: left;
 `;
 
-const ChatDialogInputRow = ({ selectedChatId, setSelectedChatId, isNewChat, setIsNewChat, postType, postId }, ref) => {
+const ChatDialogInputRow = ({ postType, postId }, ref) => {
+  const { state, dispatch } = useContext(ChatContext);
+  const isNewChat = getIsNewChat(state);
+  const selectedChatId = getSelectedChatId(state);
+
   const [inputMessage, setInputMessage] = useState('');
   const [alertMessage, setAlertMessage] = useState('');
   const textAreaRef = useRef(null);
@@ -82,7 +89,8 @@ const ChatDialogInputRow = ({ selectedChatId, setSelectedChatId, isNewChat, setI
     const method = postType === donations ? 'sendInitialTextMessageForDonation' : 'sendInitialTextMessageForWish';
     const [rawChat, rawFirstMessage] = await api.chats[method](postId, message);
     const chatId = rawChat.data().chatId;
-    setSelectedChatId(chatId);
+    dispatch(setIsNewChat(false));
+    dispatch(setSelectedChatId(chatId));
     router.push(`/chat`, `/chat?chatId=${chatId}`, { shallow: true });
   };
 
@@ -110,12 +118,8 @@ const ChatDialogInputRow = ({ selectedChatId, setSelectedChatId, isNewChat, setI
         <ChatImageUpload
           postType={postType}
           postId={postId}
-          selectedChatId={selectedChatId}
-          setSelectedChatId={setSelectedChatId}
-          setIsNewChat={setIsNewChat}
           setAlertMessage={setAlertMessage}
           onCloseAlert={closeAlert}
-          isNewChat={isNewChat}
         />
         <StyledTextareaAutosize
           ref={textAreaRef}

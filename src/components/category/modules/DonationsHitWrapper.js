@@ -44,6 +44,7 @@ const DonationsHitWrapper = ({ hits, category, hasPrevious, hasMore, refinePrevi
             validPeriodTo,
           } = hit;
           const postHref = `/donations/${objectID}`;
+          const profileHref = `/profile/${user.userId}`;
           const validPeriod = `${getFormattedDate(validPeriodFrom)} - ${getFormattedDate(validPeriodTo)}`;
           return (
             <DonationCard
@@ -55,6 +56,7 @@ const DonationsHitWrapper = ({ hits, category, hasPrevious, hasMore, refinePrevi
               coverImageUrl={coverImageUrl}
               postedDateTime={postedDateTime}
               postHref={postHref}
+              profileHref={profileHref}
               locations={locations.map((location) => location.name).join(', ')}
               validPeriod={validPeriod}
               categoryId={category.id}

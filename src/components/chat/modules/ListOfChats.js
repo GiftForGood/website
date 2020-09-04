@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Stack, TileGroup, Loading } from '@kiwicom/orbit-components/lib';
 import ChatWithUserCard from '../../card/ChatWithUserCard';
 import api from '../../../../utils/api';
@@ -8,6 +8,9 @@ import { colors } from '../../../../utils/constants/colors';
 import { MODIFIED, ADDED } from '../../../../utils/constants/chatSubscriptionChange';
 import InfiniteScroll from '../../scroller/InfiniteScroller';
 import { USER_CHATS_BATCH_SIZE } from '../../../../utils/api/constants';
+import ChatContext from '../context';
+import { setSelectedChatId, setIsNewChat } from '../actions';
+import { getSelectedChatId, getIsNewChat, getUser, getIsViewingChatsForMyPost, getPostId } from '../selectors';
 
 const ListOfChatsContainer = styled.div`
   min-width: 200px;
@@ -25,18 +28,29 @@ const ListOfChatsContainer = styled.div`
   }};
 `;
 
-const ListOfChats = ({
-  user,
-  selectedChatId,
-  setSelectedChatId,
-  postId,
-  isNewChat,
-  setIsNewChat,
-  isViewingChatsForMyPost,
-  isShow,
-}) => {
+const EmptyChatContainer = styled.div`
+  height: 100%;
+  width: 100%;
+  border-right: 1px solid ${colors.chatBorders};
+`;
+
+const EmptyChatTextContainer = styled.div`
+  width: fit-content;
+  margin: 0 auto;
+  margin-top: 40vh;
+`;
+
+const ListOfChats = ({ isShow }) => {
   const [chatDocs, setChatDocs] = useState([]);
   const [shouldSeeMore, setShouldSeeMore] = useState(true);
+  const [isMounted, setIsMounted] = useState(false);
+
+  const { state, dispatch } = useContext(ChatContext);
+  const isViewingChatsForMyPost = getIsViewingChatsForMyPost(state);
+  const isNewChat = getIsNewChat(state);
+  const selectedChatId = getSelectedChatId(state);
+  const user = getUser(state);
+  const postId = getPostId(state);
 
   useEffect(() => {
     let unsubscribeFunction;
@@ -89,7 +103,7 @@ const ListOfChats = ({
   const isLatestNewChat = (newChatDoc, existingChatDocs) => {
     return (
       existingChatDocs.length === 0 ||
-      newChatDoc.data().lastMessage.dateTime > existingChatDocs[0].data().lastMessage.dateTime
+      newChatDoc.data().lastMessage.dateTime.toMillis() > existingChatDocs[0].data().lastMessage.dateTime.toMillis()
     );
   };
 
@@ -99,21 +113,17 @@ const ListOfChats = ({
    * are less than one USER_CHATS_BATCH_SIZE
    */
   const disableFurtherLoadsIfChatsLessThanOneBatch = () => {
-    if (isViewingChatsForMyPost) {
-      api.chats.getChatsForPost(postId).then((rawChats) => {
-        const newChatDocs = rawChats.docs;
-        if (newChatDocs.length < USER_CHATS_BATCH_SIZE) {
-          setShouldSeeMore(false);
-        }
-      });
-    } else {
-      api.chats.getChats().then((rawChats) => {
-        const newChatDocs = rawChats.docs;
-        if (newChatDocs.length < USER_CHATS_BATCH_SIZE) {
-          setShouldSeeMore(false);
-        }
-      });
-    }
+    const getChats = async () => {
+      return isViewingChatsForMyPost ? api.chats.getChatsForPost(postId) : api.chats.getChats();
+    };
+
+    getChats().then((rawChats) => {
+      const newChatDocs = rawChats.docs;
+      if (newChatDocs.length < USER_CHATS_BATCH_SIZE) {
+        setShouldSeeMore(false);
+      }
+      setIsMounted(true);
+    });
   };
 
   const handleOnSeeMore = () => {
@@ -135,6 +145,14 @@ const ListOfChats = ({
       });
     }
   };
+
+  if (isMounted && chatDocs.length === 0) {
+    return (
+      <EmptyChatContainer>
+        <EmptyChatTextContainer>No chats available.</EmptyChatTextContainer>
+      </EmptyChatContainer>
+    );
+  }
 
   return (
     <ListOfChatsContainer isShow={isShow}>
@@ -166,9 +184,9 @@ const ListOfChats = ({
                     post={post}
                     isSelected={isSelected}
                     isNewChat={isNewChat}
-                    setIsNewChat={setIsNewChat}
+                    setIsNewChat={(isNewChat) => dispatch(setIsNewChat(isNewChat))}
                     isViewingChatsForMyPost={isViewingChatsForMyPost}
-                    setSelectedChatId={setSelectedChatId}
+                    setSelectedChatId={(selectedChatId) => dispatch(setSelectedChatId(selectedChatId))}
                     unreadCount={unreadCount}
                   />
                 );

@@ -1,16 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Stack, Text } from '@kiwicom/orbit-components/lib';
+import { Stack } from '@kiwicom/orbit-components/lib';
 import Grid from '@kiwicom/orbit-components/lib/utils/Grid';
-import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import api from '../../../../utils/api';
 import { donor as donorProfileType } from '../../../../utils/constants/userType';
 import useUser from '../../session/modules/useUser';
 
 import ProfileHeaderBar from '../modules/ProfileHeaderBar';
-import ReviewPanel from '../modules/ReviewPanel';
 import ProfilePanel from '../modules/ProfilePanel';
 import PastDonationsPanel from '../modules/PastDonationsPanel';
+import CompletedWishesPanel from '../modules/CompletedWishesPanel';
 import Header from '../../header';
 
 const Wrapper = styled.div`
@@ -23,7 +22,7 @@ const Wrapper = styled.div`
 
 const DonorProfilePage = ({ userId }) => {
   const [isShowPastDonations, setIsShowPastDonations] = useState(true);
-  const [isShowReviews, setIsShowReviews] = useState(false);
+  const [isShowCompletedWishes, setIsShowCompletedWishes] = useState(false);
   const [isMine, setIsMine] = useState(false);
   const [donor, setDonor] = useState(null);
   const user = useUser();
@@ -59,12 +58,12 @@ const DonorProfilePage = ({ userId }) => {
           <ProfileHeaderBar
             profileType={donorProfileType}
             isShowPastPosts={isShowPastDonations}
-            isShowReviews={isShowReviews}
             setIsShowPastPosts={setIsShowPastDonations}
-            setIsShowReviews={setIsShowReviews}
+            isShowCompletedPosts={isShowCompletedWishes}
+            setIsShowCompletedPosts={setIsShowCompletedWishes}
             isMine={isMine}
           />
-          {isShowReviews && <ReviewPanel />}
+          {isShowCompletedWishes && <CompletedWishesPanel isMine={isMine} userId={userId} />}
           {isShowPastDonations && <PastDonationsPanel isMine={isMine} userId={userId} />}
         </Stack>
       </Grid>

@@ -16,6 +16,14 @@ const BadgeWrapper = styled.div`
   margin-bottom: 8px !important;
 `;
 
+const TitleTextContainer = styled.div`
+  word-break: break-word;
+`;
+
+const DescriptionTextContainer = styled.div`
+  word-break: break-word;
+`;
+
 const WishInformation = ({
   loginUserId,
   loginUserType,
@@ -44,8 +52,14 @@ const WishInformation = ({
       <WishInformationBodyContainer>
         <Stack direction="column" spacing="loose">
           <Stack>
-            <Heading type="title2">{title}</Heading>
-            <Text>{description}</Text>
+            <TitleTextContainer>
+              <Heading type="title2">{title}</Heading>
+            </TitleTextContainer>
+            <DescriptionTextContainer>
+              <pre>
+                <Text>{description}</Text>
+              </pre>
+            </DescriptionTextContainer>
           </Stack>
           <Stack direction="row" wrap="true">
             <CategoryTags />

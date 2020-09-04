@@ -7,13 +7,17 @@ import CarouselScrollButton from '../../buttons/CarouselScrollButton';
 import { Carousel } from 'react-responsive-carousel';
 
 const BannerImage = styled.img`
-  height: fit-content;
-  max-height: 250px;
+  width: 100%;
+  max-height: 325px;
+  object-fit: cover;
+  padding: 10px;
+  border-radius: 15px;
+
   ${media.desktop(css`
+    padding: 0px;
     border-radius: 15px;
     max-height: 325px;
   `)};
-  object-fit: cover;
 `;
 
 const ClickableDiv = styled.a`
@@ -27,7 +31,7 @@ const ClickableDiv = styled.a`
 `;
 
 const getAllBannerImages = async () => {
-  const bannerSnapshot = await api.banners.getAll().catch((err) => console.error(err));
+  const bannerSnapshot = await api.banners.getAllMain().catch((err) => console.error(err));
   return bannerSnapshot.docs.map((bannerDoc) => bannerDoc.data());
 };
 
@@ -51,7 +55,7 @@ const BannerCarousel = () => {
       showStatus={false}
       autoPlay
       infiniteLoop
-      interval={3000}
+      interval={5000}
       renderArrowNext={(onClickHandler, hasNext, label) =>
         hasNext && <CarouselScrollButton direction="right" onClickHandler={onClickHandler} size="normal" />
       }
@@ -66,7 +70,7 @@ const BannerCarousel = () => {
         return (
           <div key={index}>
             <BannerImage src={imageUrl} />
-            <ClickableDiv onClick={() => window.open(link, '_blank')} />
+            <ClickableDiv href={link} target="_blank" />
           </div>
         );
       })}

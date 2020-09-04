@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Stack, Loading } from '@kiwicom/orbit-components/lib';
+import React, { useState, useEffect, useRef, useContext } from 'react';
+import { Stack, Loading, Button, NotificationBadge } from '@kiwicom/orbit-components/lib';
+import { ChevronDown } from '@kiwicom/orbit-components/lib/icons';
 import api from '../../../../utils/api';
 import styled from 'styled-components';
 import { CardSection } from '@kiwicom/orbit-components/lib/Card';
@@ -9,7 +10,12 @@ import InfiniteScroll from '../../scroller/InfiniteScroller';
 import { wishes } from '../../../../utils/constants/postType';
 import { CHAT_MESSAGES_BATCH_SIZE } from '../../../../utils/api/constants';
 import { LeftMessageSection, RightMessageSection } from './ChatMessageSection';
+import ScrollToBottomButton from '../../buttons/ScrollToBottomButton';
 import useWindowDimensions from '../../../../utils/hooks/useWindowDimensions';
+import { isSafari } from 'react-device-detect';
+import ChatContext from '../context';
+import { getSelectedChatId, getIsNewChat, getUser } from '../selectors';
+import useNavbarHeight from '../../navbar/modules/useNavbarHeight';
 
 /**
  * To be changed if any of the heights change, the extra "+1 or +2" for the top/bottom borders
@@ -17,14 +23,14 @@ import useWindowDimensions from '../../../../utils/hooks/useWindowDimensions';
 const desktopHeights = {
   chatDialogBackButton: 0, // 0 as it does not exist in desktop
   chatDialogUserRow: 88 + 1,
-  chatDialogSeePostRow: 113 + 1,
+  chatDialogSeePostRow: 90 + 1,
   chatDialogMessagesPadding: 48 + 2,
 };
 
 const mobileHeights = {
   chatDialogBackButton: 44,
   chatDialogUserRow: 108 + 1,
-  chatDialogSeePostRow: 96 + 1,
+  chatDialogSeePostRow: 74 + 1,
   chatDialogMessagesPadding: 32 + 2,
 };
 
@@ -39,42 +45,72 @@ const MessageContainer = styled.div`
   flex-direction: column-reverse;
 `;
 
+const ScrollToBottomContainer = styled.div`
+  position: relative;
+`;
+
+const ScrollerButtonContainer = styled.div`
+  position: absolute;
+  transition: all 1s ease-in-out;
+  float: left;
+  bottom: 10px;
+  left: 50%;
+  transform: translate(-50%, 0);
+  cursor: pointer;
+`;
+
+const NotificationBadgeWrapper = styled.div`
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+`;
+
 /**
  *
  * @param {number} navBarHeight is the height of the navbar
  */
-const ChatDialogMessages = ({
-  postType,
-  loggedInUser,
-  selectedChatId,
-  isNewChat,
-  navBarHeight,
-  inputRowHeight,
-  isShowPostDetails,
-}) => {
+const ChatDialogMessages = ({ postType, inputRowHeight, isShowPostDetails }) => {
+  const { state } = useContext(ChatContext);
+  const loggedInUser = getUser(state);
+  const isNewChat = getIsNewChat(state);
+  const selectedChatId = getSelectedChatId(state);
+  const navBarHeight = useNavbarHeight();
+
   const [chatMessageDocs, setChatMessageDocs] = useState([]);
   // only consider loading more when it's not a new chat, since it's impossible to have a new chat
   // to have messages initially
   const [shouldSeeMore, setShouldSeeMore] = useState(!isNewChat);
+  const [isLoadingMore, setIsLoadingMore] = useState(false); // to prevent multiple loads at the same time
+  const [isShowScrollerButton, setIsShowScrollerButton] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
   const { isTablet } = useMediaQuery();
   const bottomOfScrollerRef = useRef(null);
+  const scrollerRef = useRef(null);
   const { height: viewportHeight } = useWindowDimensions();
 
   useEffect(() => {
     // reset values every time selectedChatId changes
     setChatMessageDocs([]);
     setShouldSeeMore(!isNewChat);
+    setIsShowScrollerButton(false);
 
     let unsubscribeFunction;
+    const { userId } = loggedInUser.user;
     // when selected a chat, subscribe to the corresponding chat messages
     if (selectedChatId !== null || !isNewChat) {
-      api.chats.subscribeToChatMessages(selectedChatId, updateChatMessages).then((fn) => (unsubscribeFunction = fn));
+      api.chats
+        .subscribeToChatMessages(selectedChatId, userId, updateChatMessages)
+        .then((fn) => (unsubscribeFunction = fn))
+        .then(() => {
+          api.chats.activateUserChatPresence(selectedChatId, userId);
+        });
       disableFurtherLoadsIfMessagesLessThanOneBatch();
     }
 
     return () => {
       if (unsubscribeFunction) {
-        api.chats.unsubscribeFromChatMessages(selectedChatId, unsubscribeFunction).then(() => {
+        api.chats.unsubscribeFromChatMessages(selectedChatId, userId, unsubscribeFunction).then(() => {
+          api.chats.deactivateUserChatPresence(selectedChatId, userId);
           setChatMessageDocs([]);
         });
       }
@@ -87,20 +123,53 @@ const ChatDialogMessages = ({
     }
   };
 
+  const incrementUnreadCountIfSentByOppositeUser = (chatMessage) => {
+    if (chatMessage.sender.id !== loggedInUser.user.userId) {
+      const bottomScrollTop = isSafari ? 0 : scrollerRef.current.scrollHeight - scrollerRef.current.clientHeight;
+      if (scrollerRef.current.scrollTop < bottomScrollTop) {
+        setUnreadCount((unreadCount) => unreadCount + 1);
+      }
+    }
+  };
+
+  /**
+   * Callback function that is called when:
+   * i) fetching the initial batch of chat messages
+   * ii) when new chat messages are received
+   */
   const updateChatMessages = (chatMessageDoc) => {
     let isNewlySentMessage = false;
     setChatMessageDocs((prevChatMessageDocs) => {
       const newChatMessage = chatMessageDoc.data();
       const lastChatMessageDoc = prevChatMessageDocs[prevChatMessageDocs.length - 1];
-      // insert chat message doc to the back if it is a newly sent message
-      if (lastChatMessageDoc && lastChatMessageDoc.data().dateTime <= newChatMessage.dateTime) {
+      const firstChatMessageDoc = prevChatMessageDocs[0];
+
+      // insert chat message doc to the front if no messages or the message is an older message
+      if (
+        !firstChatMessageDoc ||
+        firstChatMessageDoc.data().dateTime.toMillis() >= newChatMessage.dateTime.toMillis()
+      ) {
+        return [chatMessageDoc, ...prevChatMessageDocs];
+      }
+
+      if (lastChatMessageDoc.data().dateTime.toMillis() <= newChatMessage.dateTime.toMillis()) {
+        // insert chat message doc to the back if it is a newly sent message
         isNewlySentMessage = true;
         return [...prevChatMessageDocs, chatMessageDoc];
+      } else {
+        // insert chat message doc to the correct position if not newly sent message
+        // note: this occurs when there are concurrency issues when sending and receiving messages
+        for (let i = prevChatMessageDocs.length - 1; i >= 0; i--) {
+          const currMessage = prevChatMessageDocs[i].data();
+          if (newChatMessage.dateTime.toMillis() > currMessage.dateTime.toMillis()) {
+            return [...prevChatMessageDocs.slice(0, i + 1), chatMessageDoc, ...prevChatMessageDocs.slice(i + 1)];
+          }
+        }
       }
-      return [chatMessageDoc, ...prevChatMessageDocs];
     });
     if (isNewlySentMessage) {
       scrollToBottomIfSentByLoggedInUser(chatMessageDoc.data());
+      incrementUnreadCountIfSentByOppositeUser(chatMessageDoc.data());
     }
   };
 
@@ -119,6 +188,10 @@ const ChatDialogMessages = ({
   };
 
   const handleOnSeeMore = () => {
+    if (chatMessageDocs.length === 0) {
+      return; // assuming that you can see more after loading the initial batch
+    }
+    setIsLoadingMore(true);
     api.chats.getChatMessages(selectedChatId, chatMessageDocs[0]).then((rawNewChatMessages) => {
       // need to reverse the new chat message docs since the order of the array is latest -> oldest, but in our
       // array the order is oldest -> latest
@@ -128,7 +201,24 @@ const ChatDialogMessages = ({
         // loaded all chat messages
         setShouldSeeMore(false);
       }
+      setIsLoadingMore(false);
     });
+  };
+
+  /**
+   * Handler to show the scroller button if scroll position is not at the bottom
+   */
+  const scrollHandler = () => {
+    // note:
+    // safari browsers' bottom has scrollTop of 0, negative values when scroll up
+    // other browsers' bottom has scrollTop of scrollHeight - clientHeight
+    const bottomScrollTop = isSafari ? 0 : scrollerRef.current.scrollHeight - scrollerRef.current.clientHeight;
+    if (scrollerRef.current.scrollTop < bottomScrollTop) {
+      setIsShowScrollerButton(true);
+    } else {
+      setIsShowScrollerButton(false);
+      setUnreadCount(0);
+    }
   };
 
   // get all heights of components within the chatDialog, only inputRowHeight is passed in as
@@ -159,10 +249,15 @@ const ChatDialogMessages = ({
 
   return (
     <CardSection>
-      <MessageContainer offsetHeight={offsetHeight} viewportHeight={viewportHeight}>
+      <MessageContainer
+        offsetHeight={offsetHeight}
+        viewportHeight={viewportHeight}
+        onScroll={scrollHandler}
+        ref={scrollerRef}
+      >
         <InfiniteScroll
           loadMore={handleOnSeeMore}
-          hasMore={shouldSeeMore}
+          hasMore={shouldSeeMore && !isLoadingMore}
           isReverse
           initialLoad={false}
           useWindow={false}
@@ -170,12 +265,13 @@ const ChatDialogMessages = ({
         >
           <Stack direction="column">
             {chatMessageDocs &&
-              chatMessageDocs.map((messageDoc, index) => {
+              chatMessageDocs.map((messageDoc) => {
                 const message = messageDoc.data();
+                const { sender, content, dateTime } = message;
                 // right side is logged in user's messages, left side is opposite user's
-                return message.sender.id === loggedInUser.user.userId ? (
+                return sender.id === loggedInUser.user.userId ? (
                   <RightMessageSection
-                    key={index}
+                    key={`${messageDoc.id}`}
                     message={message}
                     loggedInUser={loggedInUser}
                     selectedChatId={selectedChatId}
@@ -183,7 +279,7 @@ const ChatDialogMessages = ({
                   />
                 ) : (
                   <LeftMessageSection
-                    key={index}
+                    key={`${messageDoc.id}`}
                     message={message}
                     loggedInUser={loggedInUser}
                     selectedChatId={selectedChatId}
@@ -195,6 +291,24 @@ const ChatDialogMessages = ({
           <div ref={bottomOfScrollerRef} />
         </InfiniteScroll>
       </MessageContainer>
+      {isShowScrollerButton && (
+        <ScrollToBottomContainer>
+          <ScrollerButtonContainer>
+            <Button
+              circled
+              transparent
+              iconLeft={<ChevronDown />}
+              asComponent={ScrollToBottomButton}
+              onClick={() => bottomOfScrollerRef.current.scrollIntoView({ behavior: 'smooth' })}
+            ></Button>
+          </ScrollerButtonContainer>
+          {unreadCount > 0 && (
+            <NotificationBadgeWrapper>
+              <NotificationBadge type="info">{unreadCount}</NotificationBadge>
+            </NotificationBadgeWrapper>
+          )}
+        </ScrollToBottomContainer>
+      )}
     </CardSection>
   );
 };

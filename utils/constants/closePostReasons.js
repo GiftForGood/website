@@ -1,8 +1,8 @@
 export const wishClosePostReasons = [
-  'My client does not need it anymore',
-  'Reason 2',
-  'Reason 3',
-  'Reason 4',
+  'My beneficiary does not need it anymore',
+  'My organization does not need it anymore',
+  'Someone has already donated to my beneficiary externally',
+  'I am no longer taking responsibility for my beneficiary',
   'Others:',
 ];
 

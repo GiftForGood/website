@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import RedButton from '../../buttons/RedButton';
 import {
   Button,
@@ -42,6 +42,8 @@ import { useRouter } from 'next/router';
 import { getDay, getMonth, getYear } from '../../../../utils/api/time';
 import { v4 as uuidv4 } from 'uuid';
 import MrtDropdownField from '../../inputfield/MrtDropdownField';
+import { logSuccessfullyCreatedDonation } from '../../../../utils/analytics';
+import DonationContext from '../context';
 
 const Container = styled.div`
   min-width: 300px;
@@ -80,7 +82,7 @@ const validateDateRange = (fromDay, fromMonth, fromYear, toDay, toMonth, toYear)
 };
 
 const CreateDonationPanel = ({ mode, donation }) => {
-  const dispatch = useDispatch();
+  const { state, dispatch } = useContext(DonationContext);
   const router = useRouter();
   const [categories, setCategories] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
@@ -155,6 +157,7 @@ const CreateDonationPanel = ({ mode, donation }) => {
         selectedImages
       );
       const donationId = donationDoc.data().donationId;
+      logSuccessfullyCreatedDonation();
       router.push(`/donations/${donationId}`);
     } catch (error) {
       console.error(error);
@@ -258,7 +261,7 @@ const CreateDonationPanel = ({ mode, donation }) => {
       .min(currentYear, `Year must start from ${currentYear}`)
 
       .required('Required'),
-    dimensions: Yup.string(),
+    dimensions: Yup.string().max(140, 'Dimensions too long and exceeds 140 character limit'),
     itemCondition: Yup.string().required('Required'),
     customValidFromValidation: Yup.boolean().test('Date Checker', 'Invalid Date', function (val) {
       const { validFromDay, validFromMonth, validFromYear } = this.parent;
@@ -383,7 +386,7 @@ const CreateDonationPanel = ({ mode, donation }) => {
         setValidTo(formik.values.validToDay + '/' + formik.values.validToMonth + '/' + formik.values.validToYear)
       );
     }
-  }, [formik, dispatch]);
+  }, [formik.values]);
 
   // Used to edit donation
   useEffect(() => {
@@ -419,6 +422,10 @@ const CreateDonationPanel = ({ mode, donation }) => {
     if (!selectedCategories.includes(category) && selectedCategories.length <= 2) {
       setSelectedCategories([...selectedCategories, category]);
       formik.setFieldValue('categories', [...selectedCategories, category]);
+    } else {
+      const remainingSelectedCategories = selectedCategories.filter((selectedCat) => selectedCat !== category);
+      setSelectedCategories(remainingSelectedCategories);
+      formik.setFieldValue('categories', remainingSelectedCategories);
     }
   };
 
@@ -436,7 +443,13 @@ const CreateDonationPanel = ({ mode, donation }) => {
     return (
       <div>
         {categories.map((category) => (
-          <ListChoice title={category.name} key={category.id} onClick={() => onChoiceClicked(category)} />
+          <ListChoice
+            title={category.name}
+            key={category.id}
+            onClick={() => onChoiceClicked(category)}
+            selectable
+            selected={selectedCategories.includes(category)}
+          />
         ))}
       </div>
     );
@@ -523,8 +536,6 @@ const CreateDonationPanel = ({ mode, donation }) => {
                       placeholder="DD"
                       type="number"
                       inputMode="numeric"
-                      maxValue={31}
-                      minValue={1}
                       {...formik.getFieldProps('validFromDay')}
                     />
                     <Select options={months} placeholder="Month" {...formik.getFieldProps('validFromMonth')} />
@@ -555,8 +566,6 @@ const CreateDonationPanel = ({ mode, donation }) => {
                       placeholder="DD"
                       type="number"
                       inputMode="numeric"
-                      maxValue={31}
-                      minValue={1}
                       {...formik.getFieldProps('validToDay')}
                     />
                     <Select options={months} placeholder="Month" {...formik.getFieldProps('validToMonth')} />
@@ -573,6 +582,7 @@ const CreateDonationPanel = ({ mode, donation }) => {
                   disabled={formik.isSubmitting}
                   label="Dimensions"
                   name="dimensions"
+                  help="Allow 140 characters only"
                   error={formik.touched.dimensions && formik.errors.dimensions ? formik.errors.dimensions : ''}
                   {...formik.getFieldProps('dimensions')}
                 />

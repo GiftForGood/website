@@ -5,8 +5,8 @@ import dynamic from 'next/dynamic';
 import SessionProvider from '../../../src/components/session/modules/SessionProvider';
 import { isAuthenticated } from '../../../utils/authentication/authentication';
 import Error from 'next/error';
-import Footer from '../../../src/components/footer/Footer';
 import Header from '../../../src/components/header';
+import { DONATIONS } from '../../../utils/constants/search';
 
 const TopNavigationBar = dynamic(() => import('../../../src/components/navbar/modules/TopNavigationBar'), {
   ssr: false,
@@ -14,6 +14,7 @@ const TopNavigationBar = dynamic(() => import('../../../src/components/navbar/mo
 const BottomNavigation = dynamic(() => import('../../../src/components/navbar/modules/BottomNavigation'), {
   ssr: false,
 });
+const Footer = dynamic(() => import('../../../src/components/footer/Footer'), { ssr: false });
 
 export async function getServerSideProps({ params, query, req, res }) {
   const [categoryDetails, user] = await Promise.all([getCategoryDetails(params.categoryId), isAuthenticated(req, res)]);
@@ -41,7 +42,7 @@ const ViewCategory = ({ categoryDetails, sortByQuery, user }) => {
   return (
     <SessionProvider user={user}>
       <Header title={`${categoryDetails.name} | Donations`} />
-      <TopNavigationBar />
+      <TopNavigationBar showNews={true} searchDefaultIndex={DONATIONS} />
       <ViewCategoryPage categoryDetails={categoryDetails} sortByQuery={sortByQuery} />
       <BottomNavigation />
       <Footer />

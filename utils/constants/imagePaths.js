@@ -5,7 +5,7 @@ export const companyLogoImagePath =
   'https://res.cloudinary.com/giftforgood/image/upload/f_auto/v1593346988/company/Artboard4_wgdscg.svg';
 
 export const allCategoriesImagePath =
-  'https://res.cloudinary.com/giftforgood/image/upload/w_100,h_100/v1590379184/all.jpg';
+  'https://res.cloudinary.com/giftforgood/image/upload/v1599013432/categories/all_nk7qwt.svg';
 export const ogImagePath = 'https://res.cloudinary.com/giftforgood/image/upload/v1590847455/ogimage_logo_erwdyd.jpg';
 export const donationItemConditionIconPath =
   'https://res.cloudinary.com/giftforgood/image/upload/v1591200186/icons/ticket_lfxp6q.svg';
@@ -16,13 +16,13 @@ export const companyIconImagePath =
 export const sgFundLogoPath =
   'https://res.cloudinary.com/giftforgood/image/upload/q_60/v1594741241/footer/6._High_Res_Logo_jbaaem.png';
 export const cypressLogoPath =
-  'https://res.cloudinary.com/giftforgood/image/upload/v1594817064/footer/Cypress-Logo-Black_uwaztc.png';
+  'https://res.cloudinary.com/giftforgood/image/upload/v1598533704/footer/Cypress_qhmbxz_ag69hu.png';
 export const cityOfGoodLogoPath =
-  'https://res.cloudinary.com/giftforgood/image/upload/v1594736302/Horizontal_City_of_Good_Full_Colour_Logo_cjrlqa.png';
+  'https://res.cloudinary.com/giftforgood/image/upload/v1598533388/footer/Horizontal_City_of_Good_Full_Colour_Logo_cjrlqa_tgqkys.png';
 export const nvpcLogoPath =
-  'https://res.cloudinary.com/giftforgood/image/upload/v1594735696/NVPC_Vertical_Logo_Colour_shifgv.png';
+  'https://res.cloudinary.com/giftforgood/image/upload/v1598533391/footer/NVPC_Vertical_Logo_Colour_shifgv_lpe3t1.png';
 export const gogovanLogoPath =
-  'https://res.cloudinary.com/giftforgood/image/upload/v1594827983/footer/GOGOVAN_Logo_gyunye.png';
+  'https://res.cloudinary.com/giftforgood/image/upload/v1594811474/footer/GOGOX_logo_24px-01_ovesez.svg';
 export const redsunmoversLogoPath =
   'https://res.cloudinary.com/giftforgood/image/upload/q_60/v1594817855/footer/redsunmovers_logo_uasl3m.png';
 export const algoliaLogoPath =

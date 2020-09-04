@@ -11,6 +11,14 @@ const TextContainer = styled.div`
   width: fit-content;
 `;
 
+const ClickablePost = styled.a`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+`;
+
 /**
  *
  * @param {string} postType is the type of the post
@@ -18,9 +26,10 @@ const TextContainer = styled.div`
  * @param {string} postTitle is the title of the post
  */
 const ChatDialogViewPostRow = ({ postType, postId, postTitle }) => {
+  const postHref = `/${postType}/${postId}`;
   const handleSeePost = (event) => {
     event.preventDefault();
-    router.push(`/${postType}/${postId}`);
+    router.push(postHref);
   };
 
   return (
@@ -34,15 +43,13 @@ const ChatDialogViewPostRow = ({ postType, postId, postTitle }) => {
             <BlackText size="small" weight="bold">
               {postTitle}
             </BlackText>
-            <BlackText size="tiny" weight="bold">
-              *Delivery cost will be covered by donor
-            </BlackText>
           </Stack>
         </TextContainer>
         <Button size="small" onClick={handleSeePost} asComponent={SeePostButton}>
-          See Post
+          {postType === donations ? 'View Donation' : 'View Wish'}
         </Button>
       </Stack>
+      <ClickablePost href={postHref} />
     </CardSection>
   );
 };

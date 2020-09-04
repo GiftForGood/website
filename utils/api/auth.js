@@ -1,6 +1,5 @@
 import { db, firebaseAuth, firebaseStorage } from '../firebase';
 import firebase from 'firebase/app';
-import * as moment from 'moment';
 import * as path from 'path';
 import { FIREBASE_EMAIL_ACTION_URL } from '../constants/siteUrl';
 import { DONOR, NPO } from '../constants/usersType';
@@ -67,12 +66,7 @@ class AuthAPI {
    * @param {string} email The email of the NPO
    * @param {string} password The password of the NPO
    * @param {string} organization The organization name that the NPO belongs to
-   * @param {string} registeredRegistrar The registrar the the NPO is registered with. Reference to npoRegisteredRegistrar constant file
    * @param {string} registrationNumber The registration number
-   * @param {string} dayOfRegistration The date when the NPO is registered with the registrar (day)
-   * @param {string} monthOfRegistration The date when the NPO is registered with the registrar (day)
-   * @param {string} yearOfRegistration The date when the NPO is registered with the registrar (day)
-   * @param {string} proofImage The image of the proof
    * @param {string} activities The description of the type of activities that the NPO does
    * @throws {AuthError}
    * @return {array} [token, userProfile, npoDoc]
@@ -80,38 +74,17 @@ class AuthAPI {
    *  userProfile: The user profile
    *  npoDoc: Firebase document that contains the userInfo in the db
    */
-  async registerNPO(
-    name,
-    contact,
-    email,
-    password,
-    organization,
-    registrationNumber,
-    dayOfRegistration,
-    monthOfRegistration,
-    yearOfRegistration,
-    activities
-  ) {
+  async registerNPO(name, contact, email, password, organization, registrationNumber, activities) {
     await firebaseAuth.createUserWithEmailAndPassword(email, password);
     const token = await firebaseAuth.currentUser.getIdToken();
     const userProfile = firebaseAuth.currentUser;
 
     await this._validateNPO(userProfile);
-    const [npoDoc, userVerificationData, userDoc] = await Promise.all([
+    const [npoDoc, userDoc] = await Promise.all([
       this._createNPO(userProfile, name, contact, organization),
-      this._createNPOVerificationData(
-        userProfile,
-        name,
-        contact,
-        organization,
-        registrationNumber,
-        dayOfRegistration,
-        monthOfRegistration,
-        yearOfRegistration,
-        activities
-      ),
       this._createUser(userProfile.uid, NPO),
     ]);
+    await this._createNPOVerificationData(userProfile, name, contact, organization, registrationNumber, activities);
 
     return [token, userProfile, npoDoc];
   }
@@ -129,6 +102,10 @@ class AuthAPI {
     await this._googleAuth();
     const token = await firebaseAuth.currentUser.getIdToken();
     const userProfile = firebaseAuth.currentUser;
+    if (!(await this._doesDonorExist(userProfile.uid))) {
+      this.logout();
+      throw new AuthError('invalid-user', 'donor account does not exist');
+    }
     const donorDoc = await this._updateDonorLoginTime(userProfile.uid);
 
     return [token, userProfile, donorDoc];
@@ -149,6 +126,10 @@ class AuthAPI {
     await firebaseAuth.signInWithEmailAndPassword(email, password);
     const token = await firebaseAuth.currentUser.getIdToken();
     const userProfile = firebaseAuth.currentUser;
+    if (!(await this._doesDonorExist(userProfile.uid))) {
+      this.logout();
+      throw new AuthError('invalid-user', 'donor account does not exist');
+    }
     const donorDoc = await this._updateDonorLoginTime(userProfile.uid);
 
     return [token, userProfile, donorDoc];
@@ -169,6 +150,10 @@ class AuthAPI {
     await firebaseAuth.signInWithEmailAndPassword(email, password);
     const token = await firebaseAuth.currentUser.getIdToken();
     const userProfile = firebaseAuth.currentUser;
+    if (!(await this._doesNPOExist(userProfile.uid))) {
+      this.logout();
+      throw new AuthError('invalid-user', 'npo account does not exist');
+    }
     const userDoc = await this._updateNPOLoginTime(userProfile.uid);
 
     return [token, userProfile, userDoc];
@@ -269,6 +254,12 @@ class AuthAPI {
       isForcedRefreshRequired: false,
       joinedDateTime: timeNow,
       lastLoggedInDateTime: timeNow,
+      email: userInfo.email,
+      notifications: {
+        allowSendChatEmail: true,
+      },
+      unreadChatNotificationsCount: 0,
+      unreadNotificationsCount: 0,
     };
     await newDonor.set(data);
 
@@ -317,32 +308,25 @@ class AuthAPI {
       isForcedRefreshRequired: false,
       joinedDateTime: timeNow,
       lastLoggedInDateTime: timeNow,
+      email: userProfile.email,
+      notifications: {
+        allowSendChatEmail: true,
+      },
+      unreadChatNotificationsCount: 0,
+      unreadNotificationsCount: 0,
     };
     await newNPO.set(data);
 
     return newNPO.get();
   }
 
-  async _createNPOVerificationData(
-    userProfile,
-    name,
-    contact,
-    organizationName,
-    registrationNumber,
-    dayOfRegistration,
-    monthOfRegistration,
-    yearOfRegistration,
-    activities
-  ) {
+  async _createNPOVerificationData(userProfile, name, contact, organizationName, registrationNumber, activities) {
     const organizationInfo = await this._getOrganizationInfo(organizationName);
-
-    const dateOfRegistration = dayOfRegistration + '-' + monthOfRegistration + '-' + yearOfRegistration;
     const timeNow = Date.now();
 
     const organization = {
       ...organizationInfo,
       registrationNumber: registrationNumber,
-      dateOfRegistration: moment(dateOfRegistration, 'DD-MM-YYYY').valueOf(),
       activities: activities,
     };
     const newVerificationData = db.collection('npoVerifications').doc(userProfile.uid);

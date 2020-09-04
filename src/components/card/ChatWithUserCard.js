@@ -96,7 +96,7 @@ const ChatWithUserCard = ({
 }) => {
   const router = useRouter();
   const { dateTime, contentType, content } = lastMessage;
-  const lastMessageDate = getFormattedDate(dateTime);
+  const lastMessageDate = getFormattedDate(dateTime.toMillis());
 
   const handleClickChat = () => {
     setIsNewChat(false);

@@ -88,7 +88,7 @@ export const LeftMessageSection = ({ message, loggedInUser, selectedChatId, offs
         <LeftColumnStackContainer>
           <Stack direction="column" spacing="extraTight">
             {getMessageContent(contentType, content, false, sender, loggedInUser, selectedChatId, offsetHeight)}
-            <GreyText size="tiny">{getTimeDifferenceFromNow(dateTime)}</GreyText>
+            <GreyText size="tiny">{getTimeDifferenceFromNow(dateTime.toMillis())}</GreyText>
           </Stack>
         </LeftColumnStackContainer>
       </Stack>
@@ -105,7 +105,7 @@ export const RightMessageSection = ({ message, loggedInUser, selectedChatId, off
           <RightColumnStackContainer>
             <Stack direction="column" spacing="extraTight" align="end">
               {getMessageContent(contentType, content, true, sender, loggedInUser, selectedChatId, offsetHeight)}
-              <GreyText size="tiny">{getTimeDifferenceFromNow(dateTime)}</GreyText>
+              <GreyText size="tiny">{getTimeDifferenceFromNow(dateTime.toMillis())}</GreyText>
             </Stack>
           </RightColumnStackContainer>
           <ProfileAvatar imageUrl={sender.profileImageUrl.small || sender.profileImageUrl.raw} width={25} height={25} />

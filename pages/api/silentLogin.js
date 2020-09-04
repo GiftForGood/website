@@ -17,18 +17,38 @@ async function handler(req, res) {
         let decodedClaims = await admin.auth().verifySessionCookie(sessionCookie, true /** checkRevoked */);
         let currentUser = await admin.auth().getUser(decodedClaims.uid);
         let user = await getUser(currentUser.customClaims, currentUser.uid);
+
         // Checking for user type from 3 different sources because Cloud function doesnt update the claims fast enough.
+        const donor =
+          (decodedClaims && decodedClaims.donor) ||
+          (user && user.donor) ||
+          (currentUser.customClaims && currentUser.customClaims.donor) ||
+          false;
+
+        const npo =
+          (decodedClaims && decodedClaims.npo) ||
+          (user && user.npo) ||
+          (currentUser.customClaims && currentUser.customClaims.npo) ||
+          false;
+
+        const isClaimSet =
+          (currentUser.customClaims && currentUser.customClaims.donor) ||
+          (currentUser.customClaims && currentUser.customClaims.npo) ||
+          false;
+
         res.json({
           user: {
             ...user,
-            donor: decodedClaims.donor || currentUser.customClaims.donor || user.donor,
-            npo: decodedClaims.npo || currentUser.customClaims.npo || user.npo,
+            donor: donor,
+            npo: npo,
             emailVerified: currentUser.emailVerified,
             email: decodedClaims.email,
+            isClaimSet: isClaimSet,
           },
         });
       } catch (error) {
         // Session cookie is unavailable or invalid. Force user to login.
+        console.error('silentLogin', error);
         res.status(401).json({
           error: {
             message: 'Unauthorized request',
@@ -44,14 +64,14 @@ async function handler(req, res) {
 }
 
 async function getUser(decodedClaims, uid) {
-  if (decodedClaims.donor) {
+  if (decodedClaims && decodedClaims.donor) {
     try {
       let doc = await admin.firestore().collection('donors').doc(uid).get();
       return doc.data();
     } catch (error) {
       throw new AuthError('user-does-not-exist', 'User does not exists');
     }
-  } else if (decodedClaims.npo) {
+  } else if (decodedClaims && decodedClaims.npo) {
     try {
       let doc = await admin.firestore().collection('npos').doc(uid).get();
       return doc.data();

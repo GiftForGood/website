@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ProfileAvatar from '../imageContainers/ProfileAvatar';
 import ReportPostModal from '../modal/ReportPostModal';
 import ClosePostModal from '../modal/ClosePostModal';
@@ -12,8 +12,22 @@ import { useRouter } from 'next/router';
 import { COMPLETED, CLOSED } from '../../../utils/constants/postStatus';
 import { donations, wishes } from '../../../utils/constants/postType';
 import { donor, npo } from '../../../utils/constants/userType';
-import RatingStars from '../ratingStars';
 import { colors } from '../../../utils/constants/colors';
+import { logStartChatToAnalytics } from '../../../utils/analytics';
+import styled from 'styled-components';
+
+const AvatarDetailsContainer = styled.div`
+  position: relative;
+`;
+
+const ClickableProfile = styled.a`
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: 1;
+`;
 
 const PostDetailsHeader = ({
   loginUserId,
@@ -25,7 +39,6 @@ const PostDetailsHeader = ({
   postId,
   postStatus,
   postType,
-  postUserReviewRating,
 }) => {
   const router = useRouter();
   const isOwnPost = loginUserId === postUserId; // whether login user is the post owner
@@ -33,6 +46,7 @@ const PostDetailsHeader = ({
     (postType === donations && loginUserType === donor) || (postType === wishes && loginUserType === npo);
   const chatType = isOwnPost ? 'View Chats' : 'Chat';
   const postUrl = `https://www.giftforgood.io${router.asPath}`;
+  const profileHref = `/profile/${postUserId}`;
   const isCompletedPost = postStatus === COMPLETED;
 
   const [isClosedPost, setIsClosedPost] = useState(postStatus === CLOSED);
@@ -68,6 +82,7 @@ const PostDetailsHeader = ({
     event.preventDefault();
     let destination = `/chat?postId=${postId}&postType=${postType}`;
     if (chatType === 'Chat') {
+      logStartChatToAnalytics();
       api.chats.getChatsForPost(postId).then((rawChats) => {
         if (rawChats.docs.length > 0) {
           // assumption: can only have one chat for a post that is not yours,
@@ -146,7 +161,7 @@ const PostDetailsHeader = ({
                   type="secondary"
                   iconLeft={<AlertCircle />}
                   onClick={handleReportPostModal}
-                  disabled={isDisabled || isClosedPost || isCompletedPost}
+                  disabled={isDisabled || isClosedPost || isCompletedPost || true}
                 >
                   Report post
                 </ButtonLink>
@@ -164,15 +179,16 @@ const PostDetailsHeader = ({
   const AvatarDetails = () => {
     return (
       <Stack align="center" direction="row" spacing="condensed" shrink>
-        <ProfileAvatar imageUrl={profileImageUrl.small || profileImageUrl.raw} />
-        <Stack direction="column" shrink spacing="none">
-          <Text>{postUserName}</Text>
-          {postType === donations ? (
-            <RatingStars rating={postUserReviewRating} size="small" color={colors.ratingStarBackground} showEmpty />
-          ) : (
-            <Text>{npoOrgName}</Text>
-          )}
-        </Stack>
+        <AvatarDetailsContainer>
+          <Stack align="center" direction="row" spacing="condensed" shrink>
+            <ProfileAvatar imageUrl={profileImageUrl.small || profileImageUrl.raw} />
+            <Stack direction="column" shrink spacing="none" space>
+              <Text>{postUserName}</Text>
+              {postType === wishes && <Text>{npoOrgName}</Text>}
+            </Stack>
+          </Stack>
+          <ClickableProfile href={profileHref} />
+        </AvatarDetailsContainer>
       </Stack>
     );
   };

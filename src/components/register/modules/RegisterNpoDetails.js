@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter } from 'next/router';
-import { Button, InputField, Stack, Alert } from '@kiwicom/orbit-components/lib';
+import { Button, InputField, Stack, Alert, Text, ButtonLink, Tooltip } from '@kiwicom/orbit-components/lib';
 import ChevronLeft from '@kiwicom/orbit-components/lib/icons/ChevronLeft';
 
 import { useDispatch, useSelector } from 'react-redux';
@@ -14,7 +14,11 @@ import TermsAndConditionModal from './TermsAndConditionModal';
 import api from '../../../../utils/api';
 import client from '../../../../utils/axios';
 import { useRouter } from 'next/router';
-import Field from '../../inputfield';
+import { timeout } from '../utils/timeout';
+
+import PasswordStrength from './PasswordStrength';
+import { Check } from '@kiwicom/orbit-components/lib/icons';
+import CheckIconWrapper from './CheckIconWrapper';
 
 const RegisterNpoDetails = () => {
   const dispatch = useDispatch();
@@ -29,6 +33,8 @@ const RegisterNpoDetails = () => {
   const [alertType, setAlertType] = useState('');
   const [alertDescription, setAlertDescription] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+
+  const [isPasswordSecure, setIsPasswordSecure] = useState(false);
 
   useEffect(() => {
     api.termsandconditions.get().then((doc) => {
@@ -50,6 +56,7 @@ const RegisterNpoDetails = () => {
   const handleFormSubmission = async () => {
     handleModal();
     setIsLoading(true);
+    setShowAlert(false);
     dispatch(setNpoDetails(values.name, values.mobileNumber));
     try {
       let name = values.name;
@@ -58,9 +65,6 @@ const RegisterNpoDetails = () => {
       let password = values.password;
       let organizationName = organization.name;
       let registrationNumber = organization.registrationNumber;
-      let dayOfRegistration = organization.dateOfRegistrationDay;
-      let monthOfRegistration = organization.dateOfRegistrationMonth;
-      let yearOfRegistration = organization.dateOfRegistrationYear;
       let activities = organization.activities;
       const [token, user, userDoc] = await api.auth.registerNPO(
         name,
@@ -69,20 +73,20 @@ const RegisterNpoDetails = () => {
         password,
         organizationName,
         registrationNumber,
-        dayOfRegistration,
-        monthOfRegistration,
-        yearOfRegistration,
         activities
       );
       await api.auth.sendVerificationEmail();
       displayAlert('Successfully Registered!', `A verification email has been sent to ${user.email}`, 'success');
       let response = await client.post('/api/sessionLogin', { token });
       if (response.status === 200) {
+        await timeout(1000);
         router.push('/');
       } else {
         throw response.error;
       }
     } catch (error) {
+      console.error(error);
+      await api.auth.logout();
       setIsLoading(false);
       formik.setSubmitting(false);
       if (error.code === 'auth/email-already-in-use') {
@@ -155,6 +159,17 @@ const RegisterNpoDetails = () => {
             placeholder="Your full name"
             error={formik.touched.name && formik.errors.name ? formik.errors.name : ''}
             {...formik.getFieldProps('name')}
+            help={
+              <Tooltip
+                content="Use your own name even though there might be multiple people sharing a single account."
+                enabled
+                preferredAlign="start"
+                preferredPosition="bottom"
+                size="medium"
+              >
+                <span>Not sure whose name to put?</span>
+              </Tooltip>
+            }
           />
 
           <InputField
@@ -173,20 +188,52 @@ const RegisterNpoDetails = () => {
             value="name@example.co"
             label="Email"
             name="email"
+            autoComplete="email"
             placeholder="e.g. name@email.com"
             help="Please use your work email"
             error={formik.touched.email && formik.errors.email ? formik.errors.email : ''}
             {...formik.getFieldProps('email')}
           />
 
-          <Field
-            disabled={formik.isSubmitting}
-            type="password"
-            label="Create a password"
-            name="password"
-            help="Please create a password with at least 12 characters, comprising a mix of uppercase and lowercase letters, numbers and symbols"
-            error={formik.touched.password && formik.errors.password ? formik.errors.password : ''}
-            {...formik.getFieldProps('password')}
+          <Stack spacing="none">
+            <InputField
+              disabled={formik.isSubmitting}
+              type="password"
+              label="Create a password"
+              name="password"
+              autoComplete="new-password"
+              error={formik.touched.password && formik.errors.password ? true : false}
+              {...formik.getFieldProps('password')}
+              suffix={
+                isPasswordSecure ? (
+                  <CheckIconWrapper>
+                    <Check />
+                  </CheckIconWrapper>
+                ) : null
+              }
+            />
+
+            {formik.touched.password && formik.errors.password ? (
+              <Text size="small" type="critical" weight="bold">
+                {formik.errors.password}
+              </Text>
+            ) : (
+              <Text size="small" type="secondary">
+                Please create a password with at least 12 characters, comprising a mix of uppercase and lowercase
+                letters, numbers and symbols
+              </Text>
+            )}
+          </Stack>
+
+          <PasswordStrength
+            password={formik.values.password}
+            show={formik.errors.password && formik.values.password.length > 0 ? true : false}
+            onSecure={() => {
+              setIsPasswordSecure(true);
+            }}
+            onNotSecure={() => {
+              setIsPasswordSecure(false);
+            }}
           />
 
           <InputField
@@ -194,6 +241,7 @@ const RegisterNpoDetails = () => {
             type="password"
             label="Confirm password"
             name="passwordConfirm"
+            autoComplete="new-password"
             error={
               formik.touched.passwordConfirmation && formik.errors.passwordConfirmation
                 ? formik.errors.passwordConfirmation
@@ -202,6 +250,12 @@ const RegisterNpoDetails = () => {
             {...formik.getFieldProps('passwordConfirmation')}
           />
 
+          {showAlert ? (
+            <Alert icon title={alertTitle} type={alertType}>
+              {alertDescription}
+            </Alert>
+          ) : null}
+
           <Button submit fullWidth={true} asComponent={BlueButton} loading={isLoading}>
             Register
           </Button>
@@ -209,12 +263,6 @@ const RegisterNpoDetails = () => {
       </form>
 
       {openTnC ? <TermsAndConditionModal onClose={handleModal} tnc={tnc} onSubmit={handleFormSubmission} /> : null}
-
-      {showAlert ? (
-        <Alert icon title={alertTitle} type={alertType}>
-          {alertDescription}
-        </Alert>
-      ) : null}
     </div>
   );
 };

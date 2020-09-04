@@ -3,6 +3,7 @@ import styled, { css } from 'styled-components';
 import { Grid } from '@kiwicom/orbit-components/lib';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import BannerCarousel from './BannerCarousel';
+import SideBanner from './SideBanner';
 
 // only display when it is desktop
 const AdvertisementContainer = styled.div`
@@ -39,7 +40,9 @@ const Banner = ({ type }) => {
         }}
       >
         <BannerCarousel />
-        <AdvertisementContainer></AdvertisementContainer>
+        <AdvertisementContainer>
+          <SideBanner />
+        </AdvertisementContainer>
       </Grid>
     </BannerContainer>
   );

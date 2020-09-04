@@ -4,11 +4,11 @@ import { isVerified } from '../../utils/authentication/verification';
 import { isNpo } from '../../utils/authentication/userType';
 import SessionProvider from '../../src/components/session/modules/SessionProvider';
 import CreateWishPage from '../../src/components/createWish/pages/createWishPage';
-import Footer from '../../src/components/footer/Footer';
 import dynamic from 'next/dynamic';
 import Header from '../../src/components/header';
 
 const TopNavigationBar = dynamic(() => import('../../src/components/navbar/modules/TopNavigationBar'), { ssr: false });
+const Footer = dynamic(() => import('../../src/components/footer/Footer'), { ssr: false });
 
 export async function getServerSideProps({ params, req, res, query }) {
   let user = await isAuthenticated(req, res);
@@ -29,7 +29,7 @@ const CreateWishes = ({ user }) => {
   return (
     <SessionProvider user={user}>
       <Header title="Create Wishes | GiftForGood" />
-      <TopNavigationBar />
+      <TopNavigationBar showNews={true} />
       <CreateWishPage mode="create" />
       <Footer />
     </SessionProvider>

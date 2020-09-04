@@ -1,5 +1,14 @@
 import React, { useState } from 'react';
-import { Button, InputField, Stack, Text, SocialButton, Heading, Alert } from '@kiwicom/orbit-components/lib';
+import {
+  Button,
+  InputField,
+  Stack,
+  Text,
+  SocialButton,
+  Heading,
+  Alert,
+  ButtonLink,
+} from '@kiwicom/orbit-components/lib';
 import ChevronLeft from '@kiwicom/orbit-components/lib/icons/ChevronLeft';
 
 import { useDispatch } from 'react-redux';
@@ -13,7 +22,10 @@ import RedButton from '../../buttons/RedButton';
 import api from '../../../../utils/api';
 import { useRouter } from 'next/router';
 import client from '../../../../utils/axios';
-import Field from '../../inputfield';
+import { timeout } from '../utils/timeout';
+import PasswordStrength from './PasswordStrength';
+import { Check } from '@kiwicom/orbit-components/lib/icons';
+import CheckIconWrapper from './CheckIconWrapper';
 
 const HeadingColor = styled.div`
   color: ${colors.donorBackground};
@@ -28,6 +40,8 @@ const RegisterDonor = () => {
   const [alertDescription, setAlertDescription] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
+
+  const [isPasswordSecure, setIsPasswordSecure] = useState(false);
 
   const handleBackToLandingOnClick = () => {
     dispatch(setIsBackToLanding());
@@ -48,12 +62,14 @@ const RegisterDonor = () => {
       displayAlert('Successfully Registered!', `A verification email has been sent to ${user.email}`, 'success');
       let response = await client.post('/api/sessionLogin', { token });
       if (response.status === 200) {
+        await timeout(1000);
         router.push('/');
       } else {
         throw response.error;
       }
     } catch (error) {
       console.error(error);
+      await api.auth.logout();
       setIsLoading(false);
       formik.setSubmitting(false);
       if (error.code === 'auth/email-already-in-use') {
@@ -74,12 +90,14 @@ const RegisterDonor = () => {
       const [token, user, userDoc] = await api.auth.registerDonorWithGoogle();
       let response = await client.post('/api/sessionLogin', { token });
       if (response.status === 200) {
+        await timeout(1000);
         router.push('/');
       } else {
         throw response.error;
       }
     } catch (error) {
       console.error(error);
+      await api.auth.logout();
       setGoogleLoading(false);
       if (error.code === 'auth/unable-to-create-user') {
         displayAlert('Error', error.message, 'critical');
@@ -139,6 +157,7 @@ const RegisterDonor = () => {
         spaceAfter="normal"
         onClick={handleGoogleRegister}
         loading={googleLoading}
+        disabled={isLoading}
       >
         Sign in with Google
       </SocialButton>
@@ -153,19 +172,51 @@ const RegisterDonor = () => {
             value="name@example.co"
             label="Email"
             name="email"
+            autoComplete="email"
             placeholder="e.g. name@email.com"
             error={formik.touched.email && formik.errors.email ? formik.errors.email : ''}
             {...formik.getFieldProps('email')}
           />
 
-          <Field
-            disabled={formik.isSubmitting}
-            type="password"
-            label="Create a password"
-            name="password"
-            help="Please create a password with at least 12 characters, comprising a mix of uppercase and lowercase letters, numbers and symbols"
-            error={formik.touched.password && formik.errors.password ? formik.errors.password : ''}
-            {...formik.getFieldProps('password')}
+          <Stack spacing="none">
+            <InputField
+              disabled={formik.isSubmitting}
+              type="password"
+              label="Create a password"
+              name="password"
+              autoComplete="new-password"
+              error={formik.touched.password && formik.errors.password ? true : false}
+              {...formik.getFieldProps('password')}
+              suffix={
+                isPasswordSecure ? (
+                  <CheckIconWrapper>
+                    <Check />
+                  </CheckIconWrapper>
+                ) : null
+              }
+            />
+
+            {formik.touched.password && formik.errors.password ? (
+              <Text size="small" type="critical" weight="bold">
+                {formik.errors.password}
+              </Text>
+            ) : (
+              <Text size="small" type="secondary">
+                Please create a password with at least 12 characters, comprising a mix of uppercase and lowercase
+                letters, numbers and symbols
+              </Text>
+            )}
+          </Stack>
+
+          <PasswordStrength
+            password={formik.values.password}
+            show={formik.errors.password && formik.values.password.length > 0 ? true : false}
+            onSecure={() => {
+              setIsPasswordSecure(true);
+            }}
+            onNotSecure={() => {
+              setIsPasswordSecure(false);
+            }}
           />
 
           <InputField
@@ -173,6 +224,7 @@ const RegisterDonor = () => {
             type="password"
             label="Confirm password"
             name="passwordConfirm"
+            autoComplete="new-password"
             error={
               formik.touched.passwordConfirmation && formik.errors.passwordConfirmation
                 ? formik.errors.passwordConfirmation
@@ -181,7 +233,14 @@ const RegisterDonor = () => {
             {...formik.getFieldProps('passwordConfirmation')}
           />
 
-          <Button submit fullWidth={true} asComponent={RedButton} disabled={formik.isSubmitting} loading={isLoading}>
+          <Button
+            submit
+            fullWidth={true}
+            asComponent={RedButton}
+            disabled={formik.isSubmitting}
+            loading={isLoading}
+            disabled={googleLoading}
+          >
             Register
           </Button>
         </Stack>

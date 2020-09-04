@@ -1,28 +1,28 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useContext } from 'react';
 import Gallery from '@kiwicom/orbit-components/lib/icons/Gallery';
 import { useDropzone } from 'react-dropzone';
 import ChatError from '../../../../utils/api/error/chatError';
 import api from '../../../../utils/api';
 import { donations } from '../../../../utils/constants/postType';
+import { MAXIMUM_FILE_SIZE_LIMIT } from '../../../../utils/constants/files';
 import { useRouter } from 'next/router';
+import ChatContext from '../context';
+import { setSelectedChatId, setIsNewChat } from '../actions';
+import { getSelectedChatId, getIsNewChat } from '../selectors';
 
-const ChatImageUpload = ({
-  postType,
-  postId,
-  selectedChatId,
-  setSelectedChatId,
-  setIsNewChat,
-  setAlertMessage,
-  isNewChat,
-  onCloseAlert,
-}) => {
+const ChatImageUpload = ({ postType, postId, setAlertMessage, onCloseAlert }) => {
   const router = useRouter();
+
+  const { state, dispatch } = useContext(ChatContext);
+  const isNewChat = getIsNewChat(state);
+  const selectedChatId = getSelectedChatId(state);
+
   const sendFirstImageMessages = async (images) => {
     const method = postType === donations ? 'sendInitialImageMessagesForDonation' : 'sendInitialImageMessagesForWish';
     const [rawChat, rawFirstMessage] = await api.chats[method](postId, images);
     const chatId = rawChat.data().chatId;
-    setIsNewChat(false);
-    setSelectedChatId(chatId);
+    dispatch(setIsNewChat(false));
+    dispatch(setSelectedChatId(chatId));
     router.push(`/chat`, `/chat?chatId=${chatId}`, { shallow: true });
   };
 
@@ -44,9 +44,9 @@ const ChatImageUpload = ({
 
   const onUpload = useCallback((uploadedFiles, isNewChat, selectedChatId) => {
     // check if file is more than 25 mb
-    if (uploadedFiles.some((file) => file.size > 25000000)) {
+    if (uploadedFiles.some((file) => file.size > MAXIMUM_FILE_SIZE_LIMIT)) {
       handleImageExceedSizeLimitError('Unable to upload files that are more than 25mb');
-      uploadedFiles = uploadedFiles.filter((file) => file.size <= 25000000);
+      uploadedFiles = uploadedFiles.filter((file) => file.size <= MAXIMUM_FILE_SIZE_LIMIT);
     }
 
     if (uploadedFiles.length === 0) {

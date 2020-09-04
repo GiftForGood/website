@@ -29,8 +29,20 @@ const DonationDescriptionContainer = styled.div`
   `)};
 `;
 
+const DimensionTextContainer = styled.div`
+  word-break: break-word;
+`;
+
 const BadgeWrapper = styled.div`
   margin-bottom: 8px !important;
+`;
+
+const TitleTextContainer = styled.div`
+  word-break: break-word;
+`;
+
+const DescriptionTextContainer = styled.div`
+  word-break: break-word;
 `;
 
 const DonationInformation = ({
@@ -49,7 +61,6 @@ const DonationInformation = ({
   validPeriodTo,
   locations,
   categoryTags,
-  postUserReviewRating,
 }) => {
   const CategoryTags = () => {
     return categoryTags.map((category) => {
@@ -94,7 +105,9 @@ const DonationInformation = ({
     return (
       <Stack direction="row" align="center">
         <img src={donationDimensionIconPath} height="24px" />
-        <Text>{dimensions === '' ? 'Not provided' : dimensions}</Text>
+        <DimensionTextContainer>
+          <Text>{dimensions === '' ? 'Not provided' : dimensions}</Text>
+        </DimensionTextContainer>
       </Stack>
     );
   };
@@ -104,8 +117,14 @@ const DonationInformation = ({
       <DonationDescriptionContainer>
         <Stack direction="column" spacing="loose">
           <Stack>
-            <Heading type="title2">{title}</Heading>
-            <Text>{description}</Text>
+            <TitleTextContainer>
+              <Heading type="title2">{title}</Heading>
+            </TitleTextContainer>
+            <DescriptionTextContainer>
+              <pre>
+                <Text>{description}</Text>
+              </pre>
+            </DescriptionTextContainer>
           </Stack>
           <Stack direction="row" wrap="true">
             <CategoryTags />
@@ -146,7 +165,6 @@ const DonationInformation = ({
         postId={donationId}
         postStatus={status}
         postType={donations}
-        postUserReviewRating={postUserReviewRating}
       />
       <DonationInformationBody />
     </Stack>

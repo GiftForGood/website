@@ -22,7 +22,7 @@ const SearchBarContainer = styled.div`
   `)};
 `;
 
-const TopLeftNavigation = ({ onHamburgerClick }) => {
+const TopLeftNavigation = ({ onHamburgerClick, searchDefaultIndex }) => {
   const { isDesktop } = useMediaQuery();
   return (
     <Stack direction="row" shrink spacing="tight">
@@ -30,17 +30,17 @@ const TopLeftNavigation = ({ onHamburgerClick }) => {
         <>
           <LogoButton src={companyLogoImagePath} height={45} href={'/'} />
           <SearchBarContainer>
-            <NavSearchBar />
+            <NavSearchBar searchDefaultIndex={searchDefaultIndex} />
           </SearchBarContainer>
 
           <Link href="/">
-            <ButtonLink transparent type="secondary" href={'/'}>
+            <ButtonLink type="secondary" href={'/'}>
               Wishes
             </ButtonLink>
           </Link>
 
           <Link href="/donations">
-            <ButtonLink transparent type="secondary" href={'/donations'}>
+            <ButtonLink type="secondary" href={'/donations'}>
               Donations
             </ButtonLink>
           </Link>

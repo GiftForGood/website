@@ -1,16 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Stack, Text } from '@kiwicom/orbit-components/lib';
+import { Stack } from '@kiwicom/orbit-components/lib';
 import Grid from '@kiwicom/orbit-components/lib/utils/Grid';
-import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import api from '../../../../utils/api';
 import { npo as npoProfileType } from '../../../../utils/constants/userType';
 import useUser from '../../session/modules/useUser';
 
 import ProfileHeaderBar from '../modules/ProfileHeaderBar';
-import ReviewPanel from '../modules/ReviewPanel';
 import ProfilePanel from '../modules/ProfilePanel';
 import PastWishesPanel from '../modules/PastWishesPanel';
+import CompletedDonationsPanel from '../modules/CompletedDonationsPanel';
 import Header from '../../header';
 
 const Wrapper = styled.div`
@@ -23,7 +22,7 @@ const Wrapper = styled.div`
 
 const NpoProfilePage = ({ userId }) => {
   const [isShowPastWishes, setIsShowPastWishes] = useState(true);
-  const [isShowReviews, setIsShowReviews] = useState(false);
+  const [isShowCompletedDonations, setIsShowCompletedDonations] = useState(false);
   const [isMine, setIsMine] = useState(false);
   const [npo, setNpo] = useState(null);
   const user = useUser();
@@ -59,12 +58,12 @@ const NpoProfilePage = ({ userId }) => {
           <ProfileHeaderBar
             profileType={npoProfileType}
             isShowPastPosts={isShowPastWishes}
-            isShowReviews={isShowReviews}
             setIsShowPastPosts={setIsShowPastWishes}
-            setIsShowReviews={setIsShowReviews}
+            isShowCompletedPosts={isShowCompletedDonations}
+            setIsShowCompletedPosts={setIsShowCompletedDonations}
             isMine={isMine}
           />
-          {isShowReviews && <ReviewPanel />}
+          {isShowCompletedDonations && <CompletedDonationsPanel isMine={isMine} userId={userId} />}
           {isShowPastWishes && <PastWishesPanel isMine={isMine} userId={userId} />}
         </Stack>
       </Grid>

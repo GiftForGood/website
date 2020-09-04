@@ -6,15 +6,17 @@ import { DONATIONS_BATCH_SIZE } from '../../../../utils/api/constants';
 import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import algoliasearch from 'algoliasearch/lite';
-import { InstantSearch, Configure, connectInfiniteHits, connectSortBy } from 'react-instantsearch-dom';
+import { InstantSearch, Configure, connectInfiniteHits } from 'react-instantsearch-dom';
 import DonationsHitWrapper from '../modules/DonationsHitWrapper';
 import { getByStatus } from '../../../../utils/algolia/filteringRules';
 import { donationsSortByRule } from '../../../../utils/algolia/sortByRules';
-import DonationsSortBy from '../modules/DonationsSortBy';
+import dynamic from 'next/dynamic';
+const DonationsSortFilterPanel = dynamic(() => import('../modules/DonationsSortFilterPanel'), {
+  ssr: false,
+});
 
 const searchClient = algoliasearch(process.env.NEXT_PUBLIC_ALGOLIA_APP_ID, process.env.NEXT_PUBLIC_ALGOLIA_SEARCH_KEY);
 const DonationsInfiniteHit = connectInfiniteHits(DonationsHitWrapper);
-const DonationsSort = connectSortBy(DonationsSortBy);
 
 const ViewAllDonationsContainer = styled.div`
   width: 90vw;
@@ -43,6 +45,11 @@ const ViewAllDonationsPage = ({ sortByQuery, query = '' }) => {
     id: '',
     name: 'All donations',
   };
+  const [latLngFilter, setLatLngFilter] = useState('');
+
+  const onLatLngUpdated = (latLng) => {
+    setLatLngFilter(latLng);
+  };
 
   return (
     <InstantSearch searchClient={searchClient} indexName="donations">
@@ -61,7 +68,12 @@ const ViewAllDonationsPage = ({ sortByQuery, query = '' }) => {
           rows="1fr auto"
         >
           <GridSectionContainer>
-            <DonationsSort items={donationsSortByRule().items} defaultRefinement={sortBy} category={null} />
+            <DonationsSortFilterPanel
+              sortItems={donationsSortByRule().items}
+              sortDefaultRefinement={sortBy}
+              category={null}
+              onLatLngUpdated={onLatLngUpdated}
+            />
           </GridSectionContainer>
 
           <GridSectionContainer>
@@ -70,7 +82,13 @@ const ViewAllDonationsPage = ({ sortByQuery, query = '' }) => {
             </BlackText>
 
             {/* Algolia */}
-            <Configure filters={getByStatus('pending')} hitsPerPage={DONATIONS_BATCH_SIZE} query={query} />
+            <Configure
+              filters={getByStatus('pending')}
+              hitsPerPage={DONATIONS_BATCH_SIZE}
+              query={query}
+              aroundLatLng={latLngFilter}
+              aroundRadius={10000}
+            />
             <DonationsContainer>
               {/* Desktop,Tablet,Mobile has infinite scrolling  */}
               <DonationsInfiniteHit category={category} minHitsPerPage={DONATIONS_BATCH_SIZE} />

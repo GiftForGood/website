@@ -55,7 +55,15 @@ const MrtDropdownField = ({ onSelectedStation, error, label, disabled, value }) 
           <ContentContainer>
             <>
               {currentList.map((station) => {
-                return <ListChoice title={station.name} onClick={() => setMrtValue(station)} />;
+                return (
+                  <ListChoice
+                    title={station.name}
+                    onClick={() => {
+                      setMrtValue(station);
+                      setIsOpen(false);
+                    }}
+                  />
+                );
               })}
             </>
           </ContentContainer>
@@ -68,6 +76,7 @@ const MrtDropdownField = ({ onSelectedStation, error, label, disabled, value }) 
           stations={stations}
           currentList={currentList}
           setCurrentList={setCurrentList}
+          onSelectedStation={onSelectedStation}
           value={selectedStation}
           label={label}
           error={error}
@@ -78,7 +87,7 @@ const MrtDropdownField = ({ onSelectedStation, error, label, disabled, value }) 
   );
 };
 
-const MRTInputField = ({ inputRef, stations, setCurrentList, value, error, label, disabled }) => {
+const MRTInputField = ({ inputRef, stations, setCurrentList, onSelectedStation, value, error, label, disabled }) => {
   const [search, setSearch] = useState('');
 
   useEffect(() => {
@@ -95,6 +104,9 @@ const MRTInputField = ({ inputRef, stations, setCurrentList, value, error, label
       }
     }
     setCurrentList(shouldBeInList);
+    if (e.target.value.length === 0) {
+      onSelectedStation('');
+    }
   };
 
   return (

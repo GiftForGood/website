@@ -49,6 +49,7 @@ const ThreeLineTextContainer = styled.div`
   font-size: 14px;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
+  word-break: break-word;
 `;
 
 const LineTextContainer = styled.div`
@@ -60,6 +61,7 @@ const LineTextContainer = styled.div`
   font-size: 14px;
   -webkit-line-clamp: ${(props) => (props.isTablet ? '7' : '8')};
   -webkit-box-orient: vertical;
+  word-break: break-word;
 `;
 
 const CardDescriptionContainer = styled.div`
@@ -149,6 +151,7 @@ const WishCard = ({
   profileImageUrl,
   postedDateTime,
   postHref,
+  profileHref,
   categoryTags = [],
   isBumped,
   expireDateTime,
@@ -196,7 +199,13 @@ const WishCard = ({
       <CardContainer>
         <Grid style={{ height: '100%' }} rows={status !== PENDING ? '2fr 0.5fr 6fr 2fr' : '2fr 6fr 2fr'} cols="1fr">
           <CardHeaderContainer>
-            <CardHeader name={name} imageUrl={profileImageUrl} timeAgo={timeAgo} isBumped={isBumped} />
+            <CardHeader
+              name={name}
+              imageUrl={profileImageUrl}
+              timeAgo={timeAgo}
+              isBumped={isBumped}
+              profileHref={profileHref}
+            />
           </CardHeaderContainer>
 
           {status !== PENDING ? <WishCardStatus status={status} /> : null}

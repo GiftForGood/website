@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Button, Stack } from '@kiwicom/orbit-components/lib';
 import CalendarModal from '../../calendar/modules/CalendarModal';
 import AppreciationMessageModal from '../../modal/AppreciationMessageModal';
 import ConfirmCompletionModal from '../../modal/ConfirmCompletionModal';
 import ProfileAvatar from '../../imageContainers/ProfileAvatar';
 import BlackText from '../../text/BlackText';
-import RatingStars from '../../ratingStars';
 import SuggestDateButton from '../../../components/buttons/ChatSuggestDatesButton';
 import CompleteButton from '../../../components/buttons/ChatCompleteButton';
 import styled from 'styled-components';
@@ -17,10 +16,23 @@ import { donations } from '../../../../utils/constants/postType';
 import { useRouter } from 'next/router';
 import api from '../../../../utils/api';
 import { getFormattedDateRange } from '../../../../utils/api/time';
+import ChatContext from '../context';
+import { setSelectedChatId, setIsNewChat, setHasError } from '../actions';
+import { getSelectedChatId, getIsNewChat, getUser } from '../selectors';
 
 const AvatarContainer = styled.div`
   float: left;
   width: fit-content;
+  position: relative;
+`;
+
+const ClickableProfile = styled.a`
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: 2;
 `;
 
 const ButtonsContainer = styled.div`
@@ -31,28 +43,18 @@ const ButtonsContainer = styled.div`
  *
  * @param {string} name is the name of the opposite user
  * @param {string} profileImageUrl is the url of the opposite user's profile image
- * @param {string} rating is the rating of the opposite user
  */
-const ChatDialogUserRow = ({
-  postId,
-  postType,
-  postStatus,
-  loggedInUser,
-  selectedChatId,
-  setSelectedChatId,
-  setHasError,
-  isNewChat,
-  setIsNewChat,
-  oppositeUser,
-  postOwnerId,
-  postEnquirerId,
-  rating,
-}) => {
+const ChatDialogUserRow = ({ postId, postType, postStatus, oppositeUser, postOwnerId, postEnquirerId }) => {
   const [showSuggestDateModal, setShowSuggestDateModal] = useState(false);
   const [showAppreciationMessageModal, setShowAppreciationMessageModal] = useState(false);
   const [showConfirmCompletionModal, setShowConfirmCompletionModal] = useState(false);
   const [status, setStatus] = useState(postStatus);
   const router = useRouter();
+
+  const { state, dispatch } = useContext(ChatContext);
+  const loggedInUser = getUser(state);
+  const isNewChat = getIsNewChat(state);
+  const selectedChatId = getSelectedChatId(state);
 
   const handleCloseAppreciationMessageModal = () => setShowAppreciationMessageModal(false);
   const handleShowAppreciationMessageModal = () => setShowAppreciationMessageModal(true);
@@ -91,10 +93,12 @@ const ChatDialogUserRow = ({
       postType === donations ? 'sendInitialCalendarMessageForDonation' : 'sendInitialCalendarMessageForWish';
     const [rawChat, rawFirstMessage] = await api.chats[method](postId, calendarRawString);
     const chatId = rawChat.data().chatId;
-    setIsNewChat(false);
-    setSelectedChatId(chatId);
+    dispatch(setIsNewChat(false));
+    dispatch(setSelectedChatId(chatId));
     router.push(`/chat`, `/chat?chatId=${chatId}`, { shallow: true });
   };
+
+  const profileHref = `/profile/${oppositeUser.id || oppositeUser.userId}`;
 
   return (
     <CardSection>
@@ -102,11 +106,9 @@ const ChatDialogUserRow = ({
         <AvatarContainer>
           <Stack direction="row" align="center">
             <ProfileAvatar imageUrl={oppositeUser.profileImageUrl.small || oppositeUser.profileImageUrl.raw} />
-            <Stack direction="column" align="start" spacing="extraTight">
-              <BlackText size="small">{oppositeUser.name || oppositeUser.userName}</BlackText>
-              <RatingStars rating={rating} showEmpty color={colors.ratingStarBackground} size="small" />
-            </Stack>
+            <BlackText size="small">{oppositeUser.name || oppositeUser.userName}</BlackText>
           </Stack>
+          <ClickableProfile href={profileHref} />
         </AvatarContainer>
         <ButtonsContainer>
           <Stack tablet={{ direction: 'row', spacing: 'condensed' }} direction="column" spacing="tight" align="end">
@@ -135,9 +137,9 @@ const ChatDialogUserRow = ({
               postId={postId}
               oppositeUserName={oppositeUser.name || oppositeUser.userName}
               selectedChatId={selectedChatId}
-              setSelectedChatId={setSelectedChatId}
+              setSelectedChatId={(chatId) => dispatch(setSelectedChatId(chatId))}
               isNewChat={isNewChat}
-              setIsNewChat={setIsNewChat}
+              setIsNewChat={(isNewChat) => dispatch(setIsNewChat(isNewChat))}
               onShow={showAppreciationMessageModal}
               onHide={handleCloseAppreciationMessageModal}
             />
@@ -147,7 +149,7 @@ const ChatDialogUserRow = ({
               postEnquirerId={postEnquirerId}
               onShow={showConfirmCompletionModal}
               onClose={handleCloseConfirmCompletionModal}
-              setHasError={setHasError}
+              setHasError={(hasError) => dispatch(setHasError(hasError))}
               setCompletedStatus={handleSetStatusToComplete}
               setShowAppreciationMessageModal={handleShowAppreciationMessageModal}
             />

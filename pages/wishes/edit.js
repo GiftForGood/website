@@ -7,10 +7,10 @@ import CreateWishPage from '../../src/components/createWish/pages/createWishPage
 import dynamic from 'next/dynamic';
 import api from '../../utils/api';
 import Error from 'next/error';
-import Footer from '../../src/components/footer/Footer';
 import Header from '../../src/components/header';
 
 const TopNavigationBar = dynamic(() => import('../../src/components/navbar/modules/TopNavigationBar'), { ssr: false });
+const Footer = dynamic(() => import('../../src/components/footer/Footer'), { ssr: false });
 
 export async function getServerSideProps({ params, req, res, query }) {
   let user = await isAuthenticated(req, res);
@@ -45,7 +45,7 @@ const CreateWishes = ({ user, wish, isMine }) => {
     <SessionProvider user={user}>
       <Header title="Edit Wishes | GiftForGood" />
 
-      <TopNavigationBar />
+      <TopNavigationBar showNews={true} />
       {wish ? null : <Error statusCode={404} />}
       {isMine ? null : <Error statusCode={404} />}
       {wish && isMine && <CreateWishPage wish={wish} mode="edit" />}

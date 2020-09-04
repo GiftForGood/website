@@ -1,27 +1,30 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Stack, Heading, Text } from '@kiwicom/orbit-components/lib';
-import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import DonationCard from '../../card/DonationCard';
 import { getTitle, getDescription, getCoverImage, getLocation, getValidFrom, getValidTo } from '../selectors';
 import useUser from '../../session/modules/useUser';
+import DonationContext from '../context';
 
 const Container = styled.div`
   padding: 20px;
 `;
 
 const LivePreviewDonation = () => {
+  const { state } = useContext(DonationContext);
   const user = useUser();
-  const title = useSelector(getTitle);
-  const description = useSelector(getDescription);
-  const coverImage = useSelector(getCoverImage);
-  const location = useSelector(getLocation);
-  const validFrom = useSelector(getValidFrom);
-  const validTo = useSelector(getValidTo);
+  const title = getTitle(state);
+  const description = getDescription(state);
+  const coverImage = getCoverImage(state);
+  const location = getLocation(state);
+  const validFrom = getValidFrom(state);
+  const validTo = getValidTo(state);
 
   if (!user) {
     return null;
   }
+
+  const profileHref = `/profile/${user.userId}`;
 
   return (
     <Stack align="center" direction="column" basis="50%">
@@ -41,6 +44,7 @@ const LivePreviewDonation = () => {
               coverImageUrl={coverImage ? coverImage.preview : ''}
               postedDateTime={Date.now()}
               postHref={''}
+              profileHref={profileHref}
               locations={location}
               validPeriod={validFrom + ' - ' + validTo}
             />

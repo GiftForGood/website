@@ -1,14 +1,16 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { Stack, ButtonLink, NavigationBar, Separator, Drawer } from '@kiwicom/orbit-components';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { Stack, ButtonLink, Separator, Drawer } from '@kiwicom/orbit-components';
 import TopLeftNavigation from './TopLeftNavigation';
 import TopRightNavigation from './TopRightNavigation';
 import CallToActionButton from '../../buttons/CallToActionButton';
 import styled, { css } from 'styled-components';
 import EmailVerificationNavigationBar from './EmailVerificationNavigationBar';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
-import { EMAIL_BAR_HEIGHT, NAVBAR_HEIGHT } from '../../../../utils/constants/navbar';
 import useUser from '../../session/modules/useUser';
 import transition from '@kiwicom/orbit-components/lib/utils/transition';
+import NewsNavigationBar from '../modules/NewsNavigationBar';
+import { useDispatch } from 'react-redux';
+import { setNavbarHeight } from '../actions';
 
 const TopNavigationBarContainer = styled.nav`
   position: fixed;
@@ -21,10 +23,10 @@ const TopNavigationBarContainer = styled.nav`
   box-sizing: border-box;
   z-index: 100;
   transition: ${transition(['transform'], 'normal', 'ease-in-out')};
-  transform: translate3d(0, ${({ shown }) => (shown ? '0' : `-100px`)}, 0);
+  transform: translate3d(0, ${({ shown, height }) => (shown ? '0' : `-${height}px`)}, 0);
 
   ${media.tablet(css`
-    transform: translate3d(0, ${({ shown }) => (shown ? '0' : `-100px`)}, 0);
+    transform: translate3d(0, ${({ shown, height }) => (shown ? '0' : `-${height}px`)}, 0);
   `)};
 `;
 
@@ -44,31 +46,20 @@ const NavigationBarContainer = styled.div`
   `)};
 `;
 
-// Used to push content downwards.
 const FakeContainer = styled.div`
   display: flex;
-  height: ${(props) =>
-    props.user
-      ? props.user.emailVerified
-        ? NAVBAR_HEIGHT.MOBILE
-        : NAVBAR_HEIGHT.MOBILE + EMAIL_BAR_HEIGHT.MOBILE
-      : NAVBAR_HEIGHT.MOBILE}px;
-
-  ${media.largeMobile(css`
-    height: ${(props) =>
-      props.user
-        ? props.user.emailVerified
-          ? NAVBAR_HEIGHT.DESKTOP
-          : NAVBAR_HEIGHT.DESKTOP + EMAIL_BAR_HEIGHT.DESKTOP
-        : NAVBAR_HEIGHT.DESKTOP}px;
-  `)};
+  height: ${(props) => props.height}px;
 `;
 
-const TopNavigationBar = () => {
+const TopNavigationBar = ({ showNews, searchDefaultIndex }) => {
   const user = useUser();
   const [showDrawer, setShowDrawer] = useState(false);
   const [shown, setShown] = useState(true);
   const [prevScrollPosition, setPrevScrollPosition] = useState(0);
+  const dispatch = useDispatch();
+
+  const ref = useRef(null);
+  const [height, setHeight] = useState(0);
 
   const onHamburgerClick = () => {
     setShowDrawer(true);
@@ -82,14 +73,14 @@ const TopNavigationBar = () => {
     const currentScrollPosition =
       window.scrollY || window.pageYOffset || (document.documentElement && document.documentElement.scrollTop);
 
-    if (prevScrollPosition < currentScrollPosition && currentScrollPosition > NAVBAR_HEIGHT.DESKTOP) {
+    if (prevScrollPosition < currentScrollPosition && currentScrollPosition > height) {
       setShown(false);
     } else {
       setShown(true);
     }
 
     setPrevScrollPosition(currentScrollPosition);
-  }, [prevScrollPosition, setShown]);
+  }, [prevScrollPosition, setShown, height]);
 
   useEffect(() => {
     window.addEventListener('scroll', handleNavigationBarPosition);
@@ -98,20 +89,26 @@ const TopNavigationBar = () => {
     };
   });
 
+  useEffect(() => {
+    setHeight(ref.current.clientHeight);
+    dispatch(setNavbarHeight(ref.current.clientHeight));
+  });
+
   return (
     <>
-      <TopNavigationBarContainer shown={shown}>
+      <TopNavigationBarContainer shown={shown} ref={ref} height={height}>
+        <NewsNavigationBar show={showNews} />
         <EmailVerificationNavigationBar />
 
         <NavigationBarContainer>
           <Stack justify="between" spacing="none">
-            <TopLeftNavigation onHamburgerClick={onHamburgerClick} />
+            <TopLeftNavigation onHamburgerClick={onHamburgerClick} searchDefaultIndex={searchDefaultIndex} />
             <TopRightNavigation />
           </Stack>
         </NavigationBarContainer>
       </TopNavigationBarContainer>
 
-      <FakeContainer user={user} />
+      <FakeContainer height={height} />
 
       <Drawer shown={showDrawer} position="left" onClose={onHamburgerClose} suppressed={false}>
         <Stack direction="column">

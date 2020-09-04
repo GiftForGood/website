@@ -54,6 +54,7 @@ const LoginDonor = () => {
       }
     } catch (error) {
       console.error(error);
+      await api.auth.logout();
       setIsLoading(false);
       formik.setSubmitting(false);
       if (error.code === 'auth/user-disabled') {
@@ -88,6 +89,7 @@ const LoginDonor = () => {
     } catch (error) {
       setIsGoogleLoading(false);
       console.error(error);
+      await api.auth.logout();
       if (error.code === 'auth/unable-to-create-user') {
         displayAlert('Error', error.message, 'critical');
       } else if (error.code === 'auth/invalid-user') {
@@ -139,6 +141,7 @@ const LoginDonor = () => {
         spaceAfter="normal"
         onClick={handleGoogleLogin}
         loading={isGoogleLoading}
+        disabled={isLoading}
       >
         Login with Google
       </SocialButton>
@@ -171,7 +174,7 @@ const LoginDonor = () => {
             }
           />
 
-          <Button submit fullWidth={true} asComponent={RedButton} loading={isLoading}>
+          <Button submit fullWidth={true} asComponent={RedButton} loading={isLoading} disabled={isGoogleLoading}>
             Login
           </Button>
         </Stack>
