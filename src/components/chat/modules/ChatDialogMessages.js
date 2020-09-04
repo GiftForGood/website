@@ -12,6 +12,7 @@ import { CHAT_MESSAGES_BATCH_SIZE } from '../../../../utils/api/constants';
 import { LeftMessageSection, RightMessageSection } from './ChatMessageSection';
 import ScrollToBottomButton from '../../buttons/ScrollToBottomButton';
 import useWindowDimensions from '../../../../utils/hooks/useWindowDimensions';
+import ChatDialogFloatingButtons from './ChatDialogFloatingButtons';
 import { isSafari } from 'react-device-detect';
 import ChatContext from '../context';
 import { getSelectedChatId, getIsNewChat, getUser } from '../selectors';
@@ -29,7 +30,7 @@ const desktopHeights = {
 
 const mobileHeights = {
   chatDialogBackButton: 44,
-  chatDialogUserRow: 108 + 1,
+  chatDialogUserRow: 72 + 1,
   chatDialogSeePostRow: 74 + 1,
   chatDialogMessagesPadding: 32 + 2,
 };
@@ -69,7 +70,7 @@ const NotificationBadgeWrapper = styled.div`
  *
  * @param {number} navBarHeight is the height of the navbar
  */
-const ChatDialogMessages = ({ postType, inputRowHeight, isShowPostDetails }) => {
+const ChatDialogMessages = ({ postType, postId, inputRowHeight, isShowPostDetails }) => {
   const { state } = useContext(ChatContext);
   const loggedInUser = getUser(state);
   const isNewChat = getIsNewChat(state);
@@ -287,6 +288,7 @@ const ChatDialogMessages = ({ postType, inputRowHeight, isShowPostDetails }) => 
                   />
                 );
               })}
+            <ChatDialogFloatingButtons postType={postType} postId={postId} />
           </Stack>
           <div ref={bottomOfScrollerRef} />
         </InfiniteScroll>

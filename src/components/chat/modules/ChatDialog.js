@@ -112,6 +112,7 @@ const ChatDialogContent = ({ post, chat }) => {
         )}
         <ChatDialogMessages
           postType={chatPostType}
+          postId={chatPostId}
           inputRowHeight={inputRowHeight}
           isShowPostDetails={isShowPostDetails}
         />

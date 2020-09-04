@@ -1,14 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Button, Stack } from '@kiwicom/orbit-components/lib';
-import CalendarModal from '../../calendar/modules/CalendarModal';
 import AppreciationMessageModal from '../../modal/AppreciationMessageModal';
 import ConfirmCompletionModal from '../../modal/ConfirmCompletionModal';
 import ProfileAvatar from '../../imageContainers/ProfileAvatar';
 import BlackText from '../../text/BlackText';
-import SuggestDateButton from '../../../components/buttons/ChatSuggestDatesButton';
 import CompleteButton from '../../../components/buttons/ChatCompleteButton';
 import styled from 'styled-components';
-import { colors } from '../../../../utils/constants/colors';
 import { CardSection } from '@kiwicom/orbit-components/lib/Card';
 import { PENDING, COMPLETED } from '../../../../utils/constants/postStatus';
 import StatusTag from '../../../components/tags/StatusTag';
@@ -49,7 +46,6 @@ const ChatDialogUserRow = ({ postId, postType, postStatus, oppositeUser, postOwn
   const [showAppreciationMessageModal, setShowAppreciationMessageModal] = useState(false);
   const [showConfirmCompletionModal, setShowConfirmCompletionModal] = useState(false);
   const [status, setStatus] = useState(postStatus);
-  const router = useRouter();
 
   const { state, dispatch } = useContext(ChatContext);
   const loggedInUser = getUser(state);
@@ -60,8 +56,6 @@ const ChatDialogUserRow = ({ postId, postType, postStatus, oppositeUser, postOwn
   const handleShowAppreciationMessageModal = () => setShowAppreciationMessageModal(true);
   const handleCloseConfirmCompletionModal = () => setShowConfirmCompletionModal(false);
   const handleSetStatusToComplete = () => setStatus(COMPLETED);
-  const handleShowSuggestDateModal = () => setShowSuggestDateModal(true);
-  const handleCloseSuggestDateModal = () => setShowSuggestDateModal(false);
 
   const handleCompletePost = () => {
     setShowConfirmCompletionModal(true);
@@ -71,32 +65,6 @@ const ChatDialogUserRow = ({ postId, postType, postStatus, oppositeUser, postOwn
   useEffect(() => {
     setStatus(postStatus);
   }, [postStatus]);
-
-  const handleSendCalendarMessage = (selectedDates) => {
-    if (selectedDates.length > 0) {
-      const message = selectedDates
-        .map((selectedDate) => getFormattedDateRange(selectedDate.startDate, selectedDate.endDate))
-        .join(','); // dates are separated by comma
-      if (isNewChat) {
-        sendFirstCalendarMessage(message)
-          .then(() => {})
-          .catch((err) => console.error(err));
-      } else {
-        api.chats.sendCalendarMessage(selectedChatId, message).catch((err) => console.error(err));
-      }
-    }
-    handleCloseSuggestDateModal();
-  };
-
-  const sendFirstCalendarMessage = async (calendarRawString) => {
-    const method =
-      postType === donations ? 'sendInitialCalendarMessageForDonation' : 'sendInitialCalendarMessageForWish';
-    const [rawChat, rawFirstMessage] = await api.chats[method](postId, calendarRawString);
-    const chatId = rawChat.data().chatId;
-    dispatch(setIsNewChat(false));
-    dispatch(setSelectedChatId(chatId));
-    router.push(`/chat`, `/chat?chatId=${chatId}`, { shallow: true });
-  };
 
   const profileHref = `/profile/${oppositeUser.id || oppositeUser.userId}`;
 
@@ -112,14 +80,6 @@ const ChatDialogUserRow = ({ postId, postType, postStatus, oppositeUser, postOwn
         </AvatarContainer>
         <ButtonsContainer>
           <Stack tablet={{ direction: 'row', spacing: 'condensed' }} direction="column" spacing="tight" align="end">
-            <Button size="small" onClick={handleShowSuggestDateModal} asComponent={SuggestDateButton}>
-              Suggest Dates
-            </Button>
-            <CalendarModal
-              onShow={showSuggestDateModal}
-              onHide={handleCloseSuggestDateModal}
-              sendCalendarMessage={handleSendCalendarMessage}
-            />
             {status === PENDING ? (
               <Button
                 size="small"
