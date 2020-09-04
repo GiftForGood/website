@@ -23,8 +23,8 @@ jobs:
       - name: Build
         run: npm run build
         env:
-          FIREBASE_API_KEY: ${{secrets.FIREBASE_API_KEY}}
-          FIREBASE_PROJECT_ID: ${{secrets.FIREBASE_PROJECT_ID}}
+          NEXT_PUBLIC_FIREBASE_API_KEY: ${{secrets.FIREBASE_API_KEY}}
+          NEXT_PUBLIC_FIREBASE_PROJECT_ID: ${{secrets.FIREBASE_PROJECT_ID}}
   deploy:
     needs: lint-and-build
     runs-on: ubuntu-latest
