@@ -1,8 +1,8 @@
 import React from 'react';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import styled, { css } from 'styled-components';
-import Header from '../src/components/header';
-import ForgetPasswordPage from '../src/components/forgetPassword/pages/ForgetPasswordPage';
+import Header from '@components/header';
+import ForgetPasswordPage from '@components/forgetPassword/pages/ForgetPasswordPage';
 
 const Wrapper = styled.div`
   display: flex;

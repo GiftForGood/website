@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from '../../src/components/markdown/markdown.module.css';
+import styles from '@components/markdown/markdown.module.css';
 
 const BlogPostPage = ({ blog }) => {
   return (
