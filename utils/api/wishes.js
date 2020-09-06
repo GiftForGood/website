@@ -1,4 +1,4 @@
-import { db, firebaseAuth } from '../firebase';
+import { db, firebaseAuth, firebase } from '../firebase';
 import { WISHES_BATCH_SIZE } from './constants';
 import { TIMESTAMP, NPO_NAME, POSTED_TIMESTAMP } from '../constants/wishesSortType';
 import { PENDING, CLOSED, COMPLETED } from '../constants/postStatus';
@@ -44,8 +44,9 @@ class WishesAPI {
     organizationInfo = allUserInfo.organization;
 
     let newWish = wishesCollection.doc();
-    const timeNow = Date.now();
-    const expiryDateTime = moment(timeNow).add(1, 'month').valueOf();
+    const timeNow = firebase.firestore.FieldValue.serverTimestamp();
+    const expiryDateTime = moment(timeNow).add(1, 'month').toDate();
+    const firestoreExpiryDateTime = firebase.firestore.Timestamp.fromDate(expiryDateTime);
     const data = {
       wishId: newWish.id,
       title: title,
@@ -58,7 +59,7 @@ class WishesAPI {
       postedDateTime: timeNow,
       updatedDateTime: timeNow,
       lastActionByUserDateTime: timeNow,
-      expireDateTime: expiryDateTime,
+      expireDateTime: firestoreExpiryDateTime,
       isBumped: false,
     };
     await newWish.set(data);
@@ -279,7 +280,7 @@ class WishesAPI {
       description: description,
       categories: categoryInfos,
       locations: locationInfos,
-      updatedDateTime: Date.now(),
+      updatedDateTime: firebase.firestore.FieldValue.serverTimestamp(),
     };
 
     let wishDoc = wishesCollection.doc(id);
@@ -301,10 +302,11 @@ class WishesAPI {
       throw new WishError('invalid-wish-status', 'only can update a pending wish');
     }
 
-    const updateTime = Date.now();
-    const newExpiryDateTime = moment(wishInfo.expireDateTime).add(1, 'week').valueOf();
+    const updateTime = firebase.firestore.FieldValue.serverTimestamp();
+    const newExpiryDateTime = moment(wishInfo.expireDateTime).add(1, 'week').toDate();
+    const firestoreNewExpiryDateTime = firebase.firestore.Timestamp.fromDate(newExpiryDateTime);
     const wishUpdateInfo = {
-      expireDateTime: newExpiryDateTime,
+      expireDateTime: firestoreNewExpiryDateTime,
       lastActionByUserDateTime: updateTime,
       updatedDateTime: updateTime,
       isBumped: true,
@@ -334,7 +336,7 @@ class WishesAPI {
       throw new WishError('invalid-wish-status', 'only can update a pending wish');
     }
 
-    const updateTime = Date.now();
+    const updateTime = firebase.firestore.FieldValue.serverTimestamp();
     const data = {
       updatedDateTime: updateTime,
       status: CLOSED,
@@ -364,7 +366,7 @@ class WishesAPI {
       throw new WishError('invalid-wish-status', 'only can update a pending wish');
     }
 
-    const updateTime = Date.now();
+    const updateTime = firebase.firestore.FieldValue.serverTimestamp();
     const data = {
       updatedDateTime: updateTime,
       status: COMPLETED,
