@@ -22,7 +22,7 @@ import RedButton from '../../buttons/RedButton';
 import api from '@api';
 import { useRouter } from 'next/router';
 import client from '@utils/axios';
-import { timeout } from '@utils/timeout';
+import { timeout } from '../utils/timeout';
 import PasswordStrength from './PasswordStrength';
 import { Check } from '@kiwicom/orbit-components/lib/icons';
 import CheckIconWrapper from './CheckIconWrapper';

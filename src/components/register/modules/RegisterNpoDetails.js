@@ -14,7 +14,7 @@ import TermsAndConditionModal from './TermsAndConditionModal';
 import api from '@api';
 import client from '@utils/axios';
 import { useRouter } from 'next/router';
-import { timeout } from '@utils/timeout';
+import { timeout } from '../utils/timeout';
 
 import PasswordStrength from './PasswordStrength';
 import { Check } from '@kiwicom/orbit-components/lib/icons';
