@@ -14,7 +14,7 @@ const BannerImageContainer = styled.div`
   height: 100%;
   min-height: 300px;
   position: relative;
-  background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(${(props) => props.src});
+  background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(${(props) => props.src});
   background-size: cover;
   background-position: 50% 50%;
   display: flex;
@@ -31,16 +31,15 @@ const BannerTextContainer = styled.div`
 const Banner = () => {
   return (
     <BannerContainer>
-      <BannerImageContainer src="https://res.cloudinary.com/giftforgood/image/upload/v1598075642/banners/DUMMY_baaocm.png">
+      <BannerImageContainer src="https://res.cloudinary.com/giftforgood/image/upload/v1591517911/donations-banner.jpg">
         <BannerTextContainer>
           <Heading as="h1" type="display" inverted spaceAfter="medium">
             Welcome to the GiftforGood!
           </Heading>
-          <WhiteText size="large">
-            GiftforGood is a simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
-            industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and
-            scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into
-            electronic typesetting, remaining essentially unchanged.
+          <WhiteText size="extraLarge">
+            The GiftforGood team is a team from Developer Student Club NUS,that comprises of a mixture of current and
+            prior NUS undergraduates. Our team's vision is to galvanise in-kind donations towards a more generous
+            Singapore.
           </WhiteText>
         </BannerTextContainer>
       </BannerImageContainer>

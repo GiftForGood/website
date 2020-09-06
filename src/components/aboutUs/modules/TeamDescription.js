@@ -1,10 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Heading, Text, Stack } from '@kiwicom/orbit-components/lib';
+import { Heading, Stack } from '@kiwicom/orbit-components/lib';
 import BlackText from '../../text/BlackText';
 import GreyText from '../../text/GreyText';
 import Avatar from '../../imageContainers/Avatar';
 import { marketingTeamMembers, techTeamMembers, partnershipTeamMembers } from '../../../../utils/constants/members';
+import Linkify from 'react-linkify';
 
 const DescriptionContainer = styled.div`
   position: relative;
@@ -53,7 +54,15 @@ const TeamSection = ({ teamMembers }) => {
                   </BlackText>
                   <GreyText style={{ fontStyle: 'italic' }}>{member.position}</GreyText>
                 </MemberDescriptionTitleContainer>
-                <BlackText>{member.description}</BlackText>
+                <Linkify
+                  componentDecorator={(decoratedHref, decoratedText, key) => (
+                    <a target="blank" href={decoratedHref} key={key}>
+                      {decoratedText}
+                    </a>
+                  )}
+                >
+                  <BlackText>{member.description}</BlackText>
+                </Linkify>
               </Stack>
             </MemberDescriptionContainer>
           </Stack>
@@ -72,10 +81,6 @@ const TeamDescription = () => {
         </Heading>
       </DescriptionTitleContainer>
       <DescriptionDetailsContainer>
-        <MarketingTeamContainer>
-          <Heading spaceAfter="largest">Marketing Team</Heading>
-          <TeamSection teamMembers={marketingTeamMembers} />
-        </MarketingTeamContainer>
         <PartnershipTeamContainer>
           <Heading spaceAfter="largest">Partnerships Team</Heading>
           <TeamSection teamMembers={partnershipTeamMembers} />
@@ -86,6 +91,10 @@ const TeamDescription = () => {
           </Heading>
           <TeamSection teamMembers={techTeamMembers} />
         </TechTeamContainer>
+        <MarketingTeamContainer>
+          <Heading spaceAfter="largest">Marketing Team</Heading>
+          <TeamSection teamMembers={marketingTeamMembers} />
+        </MarketingTeamContainer>
       </DescriptionDetailsContainer>
     </DescriptionContainer>
   );
