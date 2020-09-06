@@ -42,7 +42,7 @@ import { useRouter } from 'next/router';
 import { getDay, getMonth, getYear } from '@api/time';
 import { v4 as uuidv4 } from 'uuid';
 import MrtDropdownField from '../../inputfield/MrtDropdownField';
-import { logSuccessfullyCreatedDonation } from '../../../../utils/analytics';
+import { logSuccessfullyCreatedDonation } from '@utils/analytics';
 import DonationContext from '../context';
 
 const Container = styled.div`

@@ -10,7 +10,7 @@ import {
   logDesktopPostDonationToAnalytics,
   logMobilePostWishToAnalytics,
   logDesktopPostWishToAnalytics,
-} from '../../../utils/analytics';
+} from '@utils/analytics';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 import { NOT_VERIFIED_MESSAGE } from '@constants/callToActionButton';
 

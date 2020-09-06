@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { InputField, ButtonLink } from '@kiwicom/orbit-components/lib';
 import Close from '@kiwicom/orbit-components/lib/icons/Close';
-import useDebouncedEffect from '../../../utils/hooks/useDebouncedEffect';
+import useDebouncedEffect from '@utils/hooks/useDebouncedEffect';
 
 // Added 500ms of delay so that search does not incur so much request.
 const SearchBar = ({ currentRefinement, isSearchStalled, refine, inputRef }) => {

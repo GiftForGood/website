@@ -1,6 +1,6 @@
 import React from 'react';
 import SessionProvider from '../src/components/session/modules/SessionProvider';
-import { isAuthenticated } from '../utils/authentication/authentication';
+import { isAuthenticated } from '@utils/authentication/authentication';
 import DeliveryPartnersPage from '../src/components/deliveryPartners/pages/DeliveryPartnersPage';
 import dynamic from 'next/dynamic';
 import Header from '../src/components/header';

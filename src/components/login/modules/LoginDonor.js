@@ -13,7 +13,7 @@ import RedButton from '../../buttons/RedButton';
 import api from '@api';
 import 'isomorphic-unfetch';
 import { useRouter, withRouter } from 'next/router';
-import client from '../../../../utils/axios';
+import client from '@utils/axios';
 import AuthError from '@api/error/authError';
 
 const HeadingColor = styled.div`

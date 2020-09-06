@@ -3,7 +3,7 @@ import api from '@api';
 import ViewCategoryPage from '../../../src/components/category/pages/WishesViewCategoryPage';
 import dynamic from 'next/dynamic';
 import SessionProvider from '../../../src/components/session/modules/SessionProvider';
-import { isAuthenticated } from '../../../utils/authentication/authentication';
+import { isAuthenticated } from '@utils/authentication/authentication';
 import Error from 'next/error';
 import Header from '../../../src/components/header';
 import { WISHES } from '@constants/search';

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { InputField } from '@kiwicom/orbit-components/lib';
 import { GOOGLE_PLACE_AUTOCOMPLETE_URL } from '@constants/thirdPartyAPIUrl';
-import useLocalStorage from '../../../utils/hooks/useLocalStorage';
+import useLocalStorage from '@utils/hooks/useLocalStorage';
 
 let autoComplete;
 

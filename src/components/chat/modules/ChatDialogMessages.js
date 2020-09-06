@@ -11,7 +11,7 @@ import { wishes } from '@constants/postType';
 import { CHAT_MESSAGES_BATCH_SIZE } from '@api/constants';
 import { LeftMessageSection, RightMessageSection } from './ChatMessageSection';
 import ScrollToBottomButton from '../../buttons/ScrollToBottomButton';
-import useWindowDimensions from '../../../../utils/hooks/useWindowDimensions';
+import useWindowDimensions from '@utils/hooks/useWindowDimensions';
 import { isSafari } from 'react-device-detect';
 import ChatContext from '../context';
 import { getSelectedChatId, getIsNewChat, getUser } from '../selectors';

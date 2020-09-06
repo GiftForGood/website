@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { getCurrentPage } from '../selectors';
-import { LANDING, NPO_LOGIN, DONOR_LOGIN } from '../utils/SubPages';
+import { LANDING, NPO_LOGIN, DONOR_LOGIN } from '@utils/SubPages';
 
 import LoginLanding from '../modules/LoginLanding';
 import LoginNpo from '../modules/LoginNpo';

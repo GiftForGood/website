@@ -11,7 +11,7 @@ import styled from 'styled-components';
 import { colors } from '@constants/colors';
 import BlueButton from '../../buttons/BlueButton';
 import api from '@api';
-import client from '../../../../utils/axios';
+import client from '@utils/axios';
 import { useRouter } from 'next/router';
 
 const HeadingColor = styled.div`

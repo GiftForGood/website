@@ -1,7 +1,7 @@
 import React from 'react';
-import { isAuthenticated } from '../../utils/authentication/authentication';
-import { isVerified } from '../../utils/authentication/verification';
-import { isNpo } from '../../utils/authentication/userType';
+import { isAuthenticated } from '@utils/authentication/authentication';
+import { isVerified } from '@utils/authentication/verification';
+import { isNpo } from '@utils/authentication/userType';
 import SessionProvider from '../../src/components/session/modules/SessionProvider';
 import CreateWishPage from '../../src/components/createWish/pages/createWishPage';
 import dynamic from 'next/dynamic';

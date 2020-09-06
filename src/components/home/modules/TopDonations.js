@@ -11,7 +11,7 @@ import Desktop from '@kiwicom/orbit-components/lib/Desktop';
 import { getFormattedDate } from '@api/time';
 
 import { InstantSearch, connectHits, Configure } from 'react-instantsearch-dom';
-import { getByCategoryIdAndStatus } from '../../../../utils/algolia/filteringRules';
+import { getByCategoryIdAndStatus } from '@utils/algolia/filteringRules';
 import algoliasearch from 'algoliasearch/lite';
 import { getTopNCategoriesFromAlgolia, sortObjectEntries } from './algoliaHelpers';
 const searchClient = algoliasearch(process.env.NEXT_PUBLIC_ALGOLIA_APP_ID, process.env.NEXT_PUBLIC_ALGOLIA_SEARCH_KEY);

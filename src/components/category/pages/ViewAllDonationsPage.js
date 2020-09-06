@@ -8,8 +8,8 @@ import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import algoliasearch from 'algoliasearch/lite';
 import { InstantSearch, Configure, connectInfiniteHits } from 'react-instantsearch-dom';
 import DonationsHitWrapper from '../modules/DonationsHitWrapper';
-import { getByStatus } from '../../../../utils/algolia/filteringRules';
-import { donationsSortByRule } from '../../../../utils/algolia/sortByRules';
+import { getByStatus } from '@utils/algolia/filteringRules';
+import { donationsSortByRule } from '@utils/algolia/sortByRules';
 import dynamic from 'next/dynamic';
 const DonationsSortFilterPanel = dynamic(() => import('../modules/DonationsSortFilterPanel'), {
   ssr: false,

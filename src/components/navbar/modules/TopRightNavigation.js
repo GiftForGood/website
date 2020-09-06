@@ -8,11 +8,11 @@ import { useRouter } from 'next/router';
 import Desktop from '@kiwicom/orbit-components/lib/Desktop';
 import Mobile from '@kiwicom/orbit-components/lib/Mobile';
 import api from '@api';
-import client from '../../../../utils/axios';
+import client from '@utils/axios';
 import styled from 'styled-components';
 import { useDispatch } from 'react-redux';
 import { logout } from '../../session/actions';
-import useLocalStorage from '../../../../utils/hooks/useLocalStorage';
+import useLocalStorage from '@utils/hooks/useLocalStorage';
 
 const AccountImageContainer = styled.div`
   width: 24px;

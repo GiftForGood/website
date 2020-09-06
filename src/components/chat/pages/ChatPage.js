@@ -7,7 +7,7 @@ import Error from 'next/error';
 import styled from 'styled-components';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 import Router from 'next/router';
-import useWindowDimensions from '../../../../utils/hooks/useWindowDimensions';
+import useWindowDimensions from '@utils/hooks/useWindowDimensions';
 import useNavbarHeight from '../../navbar/modules/useNavbarHeight';
 import ChatContext from '../context';
 import initialState from '../initialState';

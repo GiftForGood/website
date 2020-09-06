@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { withRouter } from 'next/router';
-import { isAuthenticated } from '../utils/authentication/authentication';
+import { isAuthenticated } from '@utils/authentication/authentication';
 import LoginPage from '../src/components/login/pages/LoginPage';
 import Header from '../src/components/header';
 

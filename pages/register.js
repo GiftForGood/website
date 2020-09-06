@@ -1,6 +1,6 @@
 import React from 'react';
 import { withRouter } from 'next/router';
-import { isAuthenticated } from '../utils/authentication/authentication';
+import { isAuthenticated } from '@utils/authentication/authentication';
 import RegisterPage from '../src/components/register/pages/RegisterPage';
 import Header from '../src/components/header';
 

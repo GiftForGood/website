@@ -4,7 +4,7 @@ import DonationPage from '../../src/components/donationDetail/pages/DonationPage
 import dynamic from 'next/dynamic';
 import SessionProvider from '../../src/components/session/modules/SessionProvider';
 import Head from 'next/head';
-import { isAuthenticated } from '../../utils/authentication/authentication';
+import { isAuthenticated } from '@utils/authentication/authentication';
 import Error from 'next/error';
 import { ogImagePath } from '@constants/imagePaths';
 import { useRouter } from 'next/router';

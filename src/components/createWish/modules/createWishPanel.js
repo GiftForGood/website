@@ -27,7 +27,7 @@ import { useRouter } from 'next/router';
 
 import { getExpireWishDate, getExpireWishDateFormat } from '@api/time';
 import GooglePlacesAutoCompleteField from '../../inputfield/GooglePlacesAutoCompleteField';
-import { logSuccessfullyCreatedWish } from '../../../../utils/analytics';
+import { logSuccessfullyCreatedWish } from '@utils/analytics';
 import ExpirePostAlert from './ExpirePostAlert';
 import WishContext from '../context';
 

@@ -1,7 +1,7 @@
 import React from 'react';
-import { isAuthenticated } from '../../utils/authentication/authentication';
-import { isVerified } from '../../utils/authentication/verification';
-import { isDonor } from '../../utils/authentication/userType';
+import { isAuthenticated } from '@utils/authentication/authentication';
+import { isVerified } from '@utils/authentication/verification';
+import { isDonor } from '@utils/authentication/userType';
 import SessionProvider from '../../src/components/session/modules/SessionProvider';
 import CreateDonationPage from '../../src/components/createDonation/pages/createDonationPage';
 import dynamic from 'next/dynamic';

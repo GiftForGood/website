@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { getCurrentPage } from '../selectors';
-import { LANDING, NPO_REGISTER, DONOR_REGISTER, NPO_DETAILS } from '../utils/SubPages';
+import { LANDING, NPO_REGISTER, DONOR_REGISTER, NPO_DETAILS } from '@utils/SubPages';
 
 import RegisterLanding from '../modules/RegisterLanding';
 import RegisterNpoOrganization from '../modules/RegisterNpoOrganization';

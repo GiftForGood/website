@@ -13,7 +13,7 @@ import { COMPLETED, CLOSED } from '@constants/postStatus';
 import { donations, wishes } from '@constants/postType';
 import { donor, npo } from '@constants/userType';
 import { colors } from '@constants/colors';
-import { logStartChatToAnalytics } from '../../../utils/analytics';
+import { logStartChatToAnalytics } from '@utils/analytics';
 import styled from 'styled-components';
 
 const AvatarDetailsContainer = styled.div`
