@@ -5,7 +5,7 @@ import { isNpo } from '../../utils/authentication/userType';
 import SessionProvider from '../../src/components/session/modules/SessionProvider';
 import CreateWishPage from '../../src/components/createWish/pages/createWishPage';
 import dynamic from 'next/dynamic';
-import api from '../../utils/api';
+import api from '@api';
 import Error from 'next/error';
 import Header from '../../src/components/header';
 

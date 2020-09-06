@@ -19,7 +19,7 @@ import { setIsBackToLanding } from '../actions';
 import styled from 'styled-components';
 import { colors } from '@constants/colors';
 import RedButton from '../../buttons/RedButton';
-import api from '../../../../utils/api';
+import api from '@api';
 import { useRouter } from 'next/router';
 import client from '../../../../utils/axios';
 import { timeout } from '../utils/timeout';

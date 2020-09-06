@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Categories from '../modules/Categories';
 import BlackText from '../../text/BlackText';
 import { Grid } from '@kiwicom/orbit-components/lib';
-import { DONATIONS_BATCH_SIZE } from '../../../../utils/api/constants';
+import { DONATIONS_BATCH_SIZE } from '@api/constants';
 import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import algoliasearch from 'algoliasearch/lite';

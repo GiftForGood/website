@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
 import { Stack, Loading, Button, NotificationBadge } from '@kiwicom/orbit-components/lib';
 import { ChevronDown } from '@kiwicom/orbit-components/lib/icons';
-import api from '../../../../utils/api';
+import api from '@api';
 import styled from 'styled-components';
 import { CardSection } from '@kiwicom/orbit-components/lib/Card';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 import NewChatTips from './NewChatTipsForWish';
 import InfiniteScroll from '../../scroller/InfiniteScroller';
 import { wishes } from '@constants/postType';
-import { CHAT_MESSAGES_BATCH_SIZE } from '../../../../utils/api/constants';
+import { CHAT_MESSAGES_BATCH_SIZE } from '@api/constants';
 import { LeftMessageSection, RightMessageSection } from './ChatMessageSection';
 import ScrollToBottomButton from '../../buttons/ScrollToBottomButton';
 import useWindowDimensions from '../../../../utils/hooks/useWindowDimensions';

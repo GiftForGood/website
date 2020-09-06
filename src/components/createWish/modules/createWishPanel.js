@@ -15,7 +15,7 @@ import {
 } from '@kiwicom/orbit-components/lib';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import api from '../../../../utils/api';
+import api from '@api';
 import RedButton from '../../buttons/RedButton';
 
 import styled from 'styled-components';
@@ -25,7 +25,7 @@ import { setTitle, setDescription, setAllCategories, setPostedDateTime } from '.
 import LivePreviewPanel from './livePreviewPanel';
 import { useRouter } from 'next/router';
 
-import { getExpireWishDate, getExpireWishDateFormat } from '../../../../utils/api/time';
+import { getExpireWishDate, getExpireWishDateFormat } from '@api/time';
 import GooglePlacesAutoCompleteField from '../../inputfield/GooglePlacesAutoCompleteField';
 import { logSuccessfullyCreatedWish } from '../../../../utils/analytics';
 import ExpirePostAlert from './ExpirePostAlert';

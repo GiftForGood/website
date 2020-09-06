@@ -1,8 +1,8 @@
 import React, { useCallback, useContext } from 'react';
 import Gallery from '@kiwicom/orbit-components/lib/icons/Gallery';
 import { useDropzone } from 'react-dropzone';
-import ChatError from '../../../../utils/api/error/chatError';
-import api from '../../../../utils/api';
+import ChatError from '@api/error/chatError';
+import api from '@api';
 import { donations } from '@constants/postType';
 import { MAXIMUM_FILE_SIZE_LIMIT } from '@constants/files';
 import { useRouter } from 'next/router';

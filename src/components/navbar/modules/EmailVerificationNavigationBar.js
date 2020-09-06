@@ -5,7 +5,7 @@ import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import { colors } from '@constants/colors';
 import useUser from '../../session/modules/useUser';
 import AlertCircle from '@kiwicom/orbit-components/lib/icons/AlertCircle';
-import api from '../../../../utils/api';
+import api from '@api';
 
 const Container = styled.div`
   display: ${({ shown }) => (shown ? 'flex' : 'none')};

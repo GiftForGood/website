@@ -1,5 +1,5 @@
 import React from 'react';
-import api from '../../../utils/api';
+import api from '@api';
 import ViewCategoryPage from '../../../src/components/category/pages/WishesViewCategoryPage';
 import dynamic from 'next/dynamic';
 import SessionProvider from '../../../src/components/session/modules/SessionProvider';

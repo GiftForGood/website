@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import api from '../../../../utils/api';
+import api from '@api';
 import { Loading, Button, Text, Heading, Stack, InputField } from '@kiwicom/orbit-components/lib';
 import styled from 'styled-components';
 import { companyIconImagePath } from '@constants/imagePaths';

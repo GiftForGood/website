@@ -17,7 +17,7 @@ import { getOrganization } from '../selectors';
 import styled from 'styled-components';
 import BlueButton from '../../buttons/BlueButton';
 import { colors } from '@constants/colors';
-import api from '../../../../utils/api';
+import api from '@api';
 import NpoOrganizationDropdownField from '../../inputfield/NpoOrganizationDropdownField';
 import { newOrganizationGoogleFormPath } from '@constants/googleFormPaths';
 

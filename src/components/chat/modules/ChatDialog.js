@@ -6,7 +6,7 @@ import ChatDialogViewPostRow from './ChatDialogViewPostRow';
 import ChatDialogMessages from './ChatDialogMessages';
 import ChatDialogInputRow from './ChatDialogInputRow';
 import BlackText from '../../text/BlackText';
-import api from '../../../../utils/api';
+import api from '@api';
 import styled from 'styled-components';
 import ChevronLeft from '@kiwicom/orbit-components/lib/icons/ChevronLeft';
 import ChevronDown from '@kiwicom/orbit-components/lib/icons/ChevronDown';

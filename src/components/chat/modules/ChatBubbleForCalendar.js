@@ -5,7 +5,7 @@ import { Stack } from '@kiwicom/orbit-components/lib';
 import WhiteText from '../../text/WhiteText';
 import BlackText from '../../text/BlackText';
 import CalendarButton from '../../buttons/CalendarButton';
-import api from '../../../../utils/api';
+import api from '@api';
 
 const ChatTextContainer = styled.div`
   width: fit-content;

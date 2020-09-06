@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import RedButton from '../buttons/RedButton';
 import Alert from '@kiwicom/orbit-components/lib/icons/Alert';
-import api from '../../../utils/api';
+import api from '@api';
 import { wishClosePostReasons, donationClosePostReasons } from '@constants/closePostReasons';
 import { Button, ChoiceGroup, Heading, Stack, Radio, Text, Textarea } from '@kiwicom/orbit-components/lib';
 import Modal, { ModalSection } from '@kiwicom/orbit-components/lib/Modal';

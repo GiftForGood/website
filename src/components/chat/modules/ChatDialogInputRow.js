@@ -2,7 +2,7 @@ import React, { useState, forwardRef, useRef, useContext } from 'react';
 import { Button, Stack, Alert } from '@kiwicom/orbit-components/lib';
 import ChatButton from '../../../components/buttons/ChatButton';
 import ChatImageUpload from './ChatImageUpload';
-import api from '../../../../utils/api';
+import api from '@api';
 import styled, { css } from 'styled-components';
 import { donations } from '@constants/postType';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';

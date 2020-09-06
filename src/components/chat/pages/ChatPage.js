@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext, useReducer, useMemo } from 'rea
 import { Grid } from '@kiwicom/orbit-components/lib';
 import ListOfChats from '../modules/ListOfChats';
 import ChatDialog from '../modules/ChatDialog';
-import api from '../../../../utils/api';
+import api from '@api';
 import Error from 'next/error';
 import styled from 'styled-components';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';

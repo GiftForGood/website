@@ -5,7 +5,7 @@ import { Button, Heading, Stack, Textarea } from '@kiwicom/orbit-components/lib'
 import Modal, { ModalSection, ModalFooter } from '@kiwicom/orbit-components/lib/Modal';
 import { donations } from '@constants/postType';
 import { useRouter } from 'next/router';
-import api from '../../../utils/api';
+import api from '@api';
 
 const submitButton = styled.button`
   background: ${colors.appreciationSelectedBackground};

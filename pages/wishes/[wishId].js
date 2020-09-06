@@ -1,5 +1,5 @@
 import React from 'react';
-import api from '../../utils/api';
+import api from '@api';
 import WishPage from '../../src/components/wishDetail/pages/WishPage';
 import dynamic from 'next/dynamic';
 import SessionProvider from '../../src/components/session/modules/SessionProvider';

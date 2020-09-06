@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Stack, TileGroup, Loading } from '@kiwicom/orbit-components/lib';
 import ChatWithUserCard from '../../card/ChatWithUserCard';
-import api from '../../../../utils/api';
+import api from '@api';
 import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import { colors } from '@constants/colors';
 import { MODIFIED, ADDED } from '@constants/chatSubscriptionChange';
 import InfiniteScroll from '../../scroller/InfiniteScroller';
-import { USER_CHATS_BATCH_SIZE } from '../../../../utils/api/constants';
+import { USER_CHATS_BATCH_SIZE } from '@api/constants';
 import ChatContext from '../context';
 import { setSelectedChatId, setIsNewChat } from '../actions';
 import { getSelectedChatId, getIsNewChat, getUser, getIsViewingChatsForMyPost, getPostId } from '../selectors';

@@ -7,7 +7,7 @@ import CallToActionButton from '../../buttons/CallToActionButton';
 import { useRouter } from 'next/router';
 import Desktop from '@kiwicom/orbit-components/lib/Desktop';
 import Mobile from '@kiwicom/orbit-components/lib/Mobile';
-import api from '../../../../utils/api';
+import api from '@api';
 import client from '../../../../utils/axios';
 import styled from 'styled-components';
 import { useDispatch } from 'react-redux';

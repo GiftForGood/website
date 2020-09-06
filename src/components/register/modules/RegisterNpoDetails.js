@@ -11,7 +11,7 @@ import { setIsBackToNpoRegister, setNpoDetails } from '../actions';
 import { getOrganization } from '../selectors';
 import BlueButton from '../../buttons/BlueButton';
 import TermsAndConditionModal from './TermsAndConditionModal';
-import api from '../../../../utils/api';
+import api from '@api';
 import client from '../../../../utils/axios';
 import { useRouter } from 'next/router';
 import { timeout } from '../utils/timeout';

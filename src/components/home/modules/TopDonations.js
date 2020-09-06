@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { Stack, Button, Text } from '@kiwicom/orbit-components/lib';
-import api from '../../../../utils/api/index';
+import api from '@api';
 import styled from 'styled-components';
 import BlackText from '../../text/BlackText';
 import GreySubtleButton from '../../buttons/GreySubtleButton';
 import DonationCard from '../../card/DonationCard';
 import CarouselScrollButton from '../../buttons/CarouselScrollButton';
 import Desktop from '@kiwicom/orbit-components/lib/Desktop';
-import { getFormattedDate } from '../../../../utils/api/time';
+import { getFormattedDate } from '@api/time';
 
 import { InstantSearch, connectHits, Configure } from 'react-instantsearch-dom';
 import { getByCategoryIdAndStatus } from '../../../../utils/algolia/filteringRules';

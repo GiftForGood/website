@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import CardHeader from '../card/CardHeader';
 import { Stack, Text, Grid, Modal, ModalSection, ModalHeader, ModalFooter, Badge } from '@kiwicom/orbit-components/lib';
-import { getTimeDifferenceFromNow } from '../../../utils/api/time';
+import { getTimeDifferenceFromNow } from '@api/time';
 import styled, { css } from 'styled-components';
 import { useRouter } from 'next/router';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import Button from '@kiwicom/orbit-components/lib/Button';
 import moment from 'moment';
-import api from '../../../utils/api';
+import api from '@api';
 import WishCardStatus from './WishCardStatus';
 import { PENDING } from '.@constants/postStatus';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';

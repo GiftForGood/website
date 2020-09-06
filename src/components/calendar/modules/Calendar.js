@@ -5,7 +5,7 @@ import MonthYearTitle from './MonthYearTitle';
 import RangeDatesDesktop from './RangeDatesDesktop';
 import RangeDatesMobile from './RangeDatesMobile';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
-import { RENDER_DAYS } from '@constants/week';
+import { RENDER_DAYS } from '../constants/week';
 import { Stack, Tag, Text, Heading } from '@kiwicom/orbit-components/lib';
 
 // overwrite the default days to render based on the props renderDays

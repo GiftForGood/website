@@ -3,7 +3,7 @@ import dynamic from 'next/dynamic';
 import NpoProfilePage from '../../src/components/profile/pages/NpoProfilePage';
 import SessionProvider from '../../src/components/session/modules/SessionProvider';
 import { isAuthenticated } from '../../utils/authentication/authentication';
-import api from '../../utils/api';
+import api from '@api';
 import { containsNPO, containsDonor } from '../../utils/authentication/userType';
 import Error from 'next/error';
 import DonorProfilePage from '../../src/components/profile/pages/DonorProfilePage';

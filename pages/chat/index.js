@@ -2,7 +2,7 @@ import React from 'react';
 import dynamic from 'next/dynamic';
 import SessionProvider from '../../src/components/session/modules/SessionProvider';
 import { isAuthenticated } from '../../utils/authentication/authentication';
-import api from '../../utils/api';
+import api from '@api';
 import Error from 'next/error';
 import ChatPage from '../../src/components/chat/pages/ChatPage';
 import Header from '../../src/components/header';

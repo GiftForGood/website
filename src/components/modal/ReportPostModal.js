@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import RedButton from '../buttons/RedButton';
-import api from '../../../utils/api';
+import api from '@api';
 import { reportPostReasons } from '@constants/reportPostReasons';
 import { Button, ChoiceGroup, Stack, Radio, Textarea } from '@kiwicom/orbit-components/lib';
 import Modal, { ModalSection } from '@kiwicom/orbit-components/lib/Modal';

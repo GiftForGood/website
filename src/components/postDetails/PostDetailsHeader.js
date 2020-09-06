@@ -5,7 +5,7 @@ import ClosePostModal from '../modal/ClosePostModal';
 import SharePostModal from '../modal/SharePostModal';
 import ChatButton from '../buttons/ChatButton';
 import Verified from '../session/modules/Verified';
-import api from '../../../utils/api';
+import api from '@api';
 import { AlertCircle, Edit, CloseCircle, MenuKebab, ShareAndroid } from '@kiwicom/orbit-components/lib/icons';
 import { Button, Stack, Text, Popover, ButtonLink } from '@kiwicom/orbit-components/lib';
 import { useRouter } from 'next/router';

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { Stack, Button, Text } from '@kiwicom/orbit-components/lib';
-import api from '../../../../utils/api/index';
+import api from '@api';
 import styled, { css } from 'styled-components';
 import BlackText from '../../text/BlackText';
 import GroupWishCard from '../../card/GroupWishCard';

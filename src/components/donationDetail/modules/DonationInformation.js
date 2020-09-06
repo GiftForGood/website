@@ -6,7 +6,7 @@ import { donations } from '@constants/postType';
 import Separator from '@kiwicom/orbit-components/lib/Separator';
 import Grid from '@kiwicom/orbit-components/lib/utils/Grid';
 import styled, { css } from 'styled-components';
-import { getFormattedDate } from '../../../../utils/api/time';
+import { getFormattedDate } from '@api/time';
 import { donationItemConditionIconPath, donationDimensionIconPath } from '@constants/imagePaths';
 import { colors } from '@constants/colors';
 

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Stack } from '@kiwicom/orbit-components/lib';
 import Grid from '@kiwicom/orbit-components/lib/utils/Grid';
 import styled from 'styled-components';
-import api from '../../../../utils/api';
+import api from '@api';
 import { donor as donorProfileType } from '@constants/userType';
 import useUser from '../../session/modules/useUser';
 
