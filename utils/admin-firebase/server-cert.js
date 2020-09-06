@@ -3,7 +3,7 @@ const adminPrivateKeyParsed = adminPrivateKey.replace(/\\n/g, '\n');
 
 module.exports = {
   type: 'service_account',
-  project_id: process.env.FIREBASE_PROJECT_ID,
+  project_id: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
   private_key_id: process.env.FIREBASE_ADMIN_PRIVATE_KEY_ID,
   private_key: adminPrivateKeyParsed,
   client_email: process.env.FIREBASE_ADMIN_CLIENT_EMAIL,

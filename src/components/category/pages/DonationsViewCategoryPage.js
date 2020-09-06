@@ -15,7 +15,7 @@ const DonationsSortFilterPanel = dynamic(() => import('../modules/DonationsSortF
   ssr: false,
 });
 
-const searchClient = algoliasearch(process.env.ALGOLIA_APP_ID, process.env.ALGOLIA_SEARCH_KEY);
+const searchClient = algoliasearch(process.env.NEXT_PUBLIC_ALGOLIA_APP_ID, process.env.NEXT_PUBLIC_ALGOLIA_SEARCH_KEY);
 const DonationsInfiniteHit = connectInfiniteHits(DonationsHitWrapper);
 
 const ViewCategoryContainer = styled.div`
