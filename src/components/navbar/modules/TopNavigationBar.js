@@ -125,17 +125,26 @@ const TopNavigationBar = ({ showNews, searchDefaultIndex }) => {
           <Separator fullWidth />
 
           <Stack direction="column" spacing="tight">
-            <ButtonLink transparent type="secondary">
-              Terms and Conditions
+            <ButtonLink transparent href="/about" type="secondary">
+              About Us
             </ButtonLink>
-            <ButtonLink transparent type="secondary">
+            <ButtonLink transparent href="/privacy-policy" type="secondary">
               Privacy Policy
             </ButtonLink>
-            <ButtonLink transparent type="secondary">
+            <ButtonLink transparent href="/terms-and-conditions" type="secondary">
+              Terms and Conditions
+            </ButtonLink>
+            <ButtonLink transparent href="/partners" type="secondary">
               Partners
             </ButtonLink>
-            <ButtonLink transparent type="secondary">
-              Blog
+            <ButtonLink transparent href="https://dsc.comp.nus.edu.sg" type="secondary">
+              Developer Student Club
+            </ButtonLink>
+            <ButtonLink transparent href="/contact" type="secondary">
+              Contact Us
+            </ButtonLink>
+            <ButtonLink transparent href="/faq" type="secondary">
+              FAQ
             </ButtonLink>
           </Stack>
         </Stack>
