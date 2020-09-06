@@ -47,7 +47,7 @@ const getDonorDetails = async (donorId) => {
 
 const Donation = ({ donationId, donationDetails, donorDetails, user, prevHref, categoryName }) => {
   const router = useRouter();
-  if (Object.keys(donationDetails).length === 0) {
+  if (donationDetails === undefined || Object.keys(donationDetails).length === 0) {
     return <Error statusCode={404} />;
   }
 

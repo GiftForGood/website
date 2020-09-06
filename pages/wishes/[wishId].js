@@ -47,7 +47,7 @@ const getNpoDetails = async (npoId) => {
 
 const Wish = ({ wishId, wishDetails, npoDetails, user, prevHref, categoryName }) => {
   const router = useRouter();
-  if (Object.keys(wishDetails).length === 0) {
+  if (wishDetails === undefined || Object.keys(wishDetails).length === 0) {
     return <Error statusCode={404} />;
   }
   return (
