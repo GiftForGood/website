@@ -10,6 +10,6 @@ export const getByStatus = (status) => {
   return `status:'${status}'`;
 };
 
-export const getByStatusAndNotExpired = (status) => {
-  return `status:'${status} AND expireDateTime >= ${currentDateTime}'`;
+export const getByStatusAndNotExpired = (status, currentDateTime) => {
+  return `status:'${status}' AND expireDateTime >= ${currentDateTime}`;
 };

@@ -9,6 +9,7 @@ import {
   TextLink,
   InputFile,
   Alert,
+  Text,
 } from '@kiwicom/orbit-components/lib';
 import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
@@ -202,6 +203,12 @@ const NpoEditProfilePanel = () => {
                     placeholder="website"
                     value={user.organization.website}
                   />
+
+                  <div>
+                    <Text size="small">
+                      Looking to change the fields above? <TextLink>Contact the administrators</TextLink>
+                    </Text>
+                  </div>
 
                   <Button
                     asComponent={SaveChangesButton}

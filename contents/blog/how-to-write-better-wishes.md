@@ -30,15 +30,15 @@ Item Condition: New
 
 | Category            | Question                                                                                              |
 | ------------------- | ----------------------------------------------------------------------------------------------------- |
-| Apparel 👕           | - What sizes are you looking for?                                                                     |
-| Baby Needs 🍼        | - What age group are you requesting for? <br> - Does the item need to be sterilised?                  |
+| Apparel 👕           | - What sizes are you looking for? <br> - Is the clothing for a specific need? E.g uniform            |
+| Baby Needs 🍼        | - What age group are you requesting for? <br> - Does the item need to be sterilised? <br> - Do you need a laptop/computer with specific specs? <br> - Do you need a whole PC or only parts of it? |
 | Electronics 💻       | - What brand of laptop does your client need? <br>                                                    |
-| Food 🍚              | - Does it need to be halal certified? <br> - Does it need to be individually packed?                  |
+| Food 🍚              | - Does it need to be halal certified? <br> - Does it need to be vegetarian/vegan? <br> - Does it need to be individually packed? <br> - Are there any allergens to avoid? |
 | Furniture 🛋         | - What are the dimensions of the furniture you are requesting for?                                    |
-| PPE 🧴               | - What type of mask are you requesting for? <br>- What brand of hand sanitizer are you looking at?    |
-| Medical Equipment 🦽 | - What type of thermometer you requesting for? <br> - What type of wheelchair are you requesting for? |
-| Sports Equipment ⚽️  | - What sizes of sport shoes are you requesting for? <br>                                              |
-| Kitchenware 🍽       | - Can it be previously owned by a non-muslim family?                                                  |
-| Stationery ✏️        | - Does it need to be individually packed?                                                             |
+| PPE 🧴               | - What type of mask are you requesting for? <br>- What brand of hand sanitizer are you looking at? <br> - Is there a maximum alcohol % for the hand sanitizers?   |
+| Medical Equipment 🦽 | - What type of thermometer you requesting for? (Ear thermometer, oral thermometer, forehead thermometer) <br> - What type of wheelchair are you requesting for? |
+| Sports Equipment ⚽️  | - What sizes of sport shoes are you requesting for? <br> - Are you specifically looking for running shoes, hiking shoes, cleats etc?                                             |
+| Kitchenware 🍽       | - Can it be previously owned by a non-muslim family? <br> - Does it have to be non-stick? <br> - What are the dimensions of the pot/pan/plate you are looking for? <br> - Stainless steel, plastic or ceramic tableware?                                              |
+| Stationery ✏️        | - Does it need to be individually packed? <br> - Refillable?                                                             |
 | Toys and Games 🏎    | - What age group are you requesting for? <br> - What gender group are you requesting for? <br>        |
 

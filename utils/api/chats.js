@@ -491,6 +491,81 @@ class ChatsAPI {
   }
 
   /**
+   * Activate a user presence on a chat
+   * @param {string} id The id of the chat
+   * @param {string} userId The id of the user
+   * @throws {ChatError}
+   * @throws {FirebaseError}
+   */
+  async activateUserChatPresence(id, userId) {
+    const userChatStatusDatabaseRef = firebase.database().ref(`chatStatuses/${id}/users/${userId}`);
+    const userChatStatusFirestoreRef = chatsCollection.doc(id);
+
+    const chatFirebaseSnapshot = await userChatStatusFirestoreRef.get();
+    const chat = chatFirebaseSnapshot.data();
+    let userType;
+    if (chat.donor.id === userId) {
+      userType = donor;
+    } else if (chat.npo.id === userId) {
+      userType = npo;
+    } else {
+      throw new ChatError('invalid-user-type');
+    }
+
+    const isOfflineForDatabase = {
+      status: OFF,
+      lastActiveDateTime: firebase.database.ServerValue.TIMESTAMP,
+    };
+    const isOnlineForDatabase = {
+      status: ON,
+      lastActiveDateTime: firebase.database.ServerValue.TIMESTAMP,
+    };
+    const isOfflineForFirestore = {
+      [`${userType}.status`]: OFF,
+      [`${userType}.lastActiveDateTime`]: firebase.firestore.FieldValue.serverTimestamp(),
+    };
+    const isOnlineForFirestore = {
+      [`${userType}.status`]: ON,
+      [`${userType}.lastActiveDateTime`]: firebase.firestore.FieldValue.serverTimestamp(),
+      [`${userType}.unreadCount`]: 0,
+    };
+
+    firebase
+      .database()
+      .ref('.info/connected')
+      .on('value', (snapshot) => {
+        if (snapshot.val() == false) {
+          userChatStatusFirestoreRef.update(isOfflineForFirestore);
+          return;
+        }
+
+        userChatStatusDatabaseRef
+          .onDisconnect()
+          .set(isOfflineForDatabase)
+          .then(() => {
+            userChatStatusDatabaseRef.set(isOnlineForDatabase);
+            userChatStatusFirestoreRef.update(isOnlineForFirestore);
+          });
+      });
+  }
+
+  /**
+   * Deactivate a user presence on a chat
+   * @param {string} id The id of the chat
+   * @param {string} userId The id of the user
+   */
+  deactivateUserChatPresence(id, userId) {
+    firebase.database().ref('.info/connected').off();
+    firebase
+      .database()
+      .ref('chatStatuses/' + id + '/users/' + userId)
+      .set({
+        status: OFF,
+        lastActiveDateTime: firebase.database.ServerValue.TIMESTAMP,
+      });
+  }
+
+  /**
    * Subscribe to messages belonging a chat
    * @param {string} id The id of the chat
    * @param {string} userId The id of the user
@@ -502,8 +577,6 @@ class ChatsAPI {
    * @return {function} The subscriber function. Needed to unsubscribe from the listener
    */
   async subscribeToChatMessages(id, userId, callback) {
-    await this._updateChatStatus(id, userId, ON);
-
     return chatsCollection
       .doc(id)
       .collection('messages')
@@ -540,7 +613,6 @@ class ChatsAPI {
       throw new ChatError('invalid-unsubscribe-function', 'only can unsubscribe using a function');
     }
 
-    await this._updateChatStatus(id, userId, OFF);
     unsubscribeFunction();
   }
 
@@ -550,11 +622,13 @@ class ChatsAPI {
     await this._validateChat(wishInfo.wishId, npoInfo.userId, donorInfo.userId);
 
     const chatDoc = await this._createChatForWish(wishInfo, npoInfo, donorInfo);
+    this._RTDBCreateChatPresence(chatDoc.id, npoInfo, donorInfo);
 
     return [chatDoc, donorInfo];
   }
 
   async _createChatForWish(wishInfo, npoInfo, donorInfo) {
+    // TODO: Refractor
     if (wishInfo.status !== PENDING) {
       throw new ChatError('invalid-post-status', 'only can start a chat on a pending wish');
     }
@@ -571,7 +645,7 @@ class ChatsAPI {
       id: wishInfo.user.userId,
       profileImageUrl: wishInfo.user.profileImageUrl,
       status: OFF, // By default, status will always be off
-      lastActiveDateTime: npoInfo.lastLoggedInDateTime, // However, does not reflect in the current NPO is online
+      lastActiveDateTime: firebase.firestore.FieldValue.serverTimestamp(), // However, does not reflect in the current NPO is online
       unreadCount: 0,
       organization: wishInfo.organization,
     };
@@ -603,11 +677,13 @@ class ChatsAPI {
     await this._validateChat(donationInfo.donationId, npoInfo.userId, donorInfo.userId);
 
     const chatDoc = await this._createChatForDonation(donationInfo, npoInfo, donorInfo);
+    this._RTDBCreateChatPresence(chatDoc.id, npoInfo, donorInfo);
 
     return [chatDoc, npoInfo];
   }
 
   async _createChatForDonation(donationInfo, npoInfo, donorInfo) {
+    // TODO: Refractor
     if (donationInfo.status !== PENDING) {
       throw new ChatError('invalid-post-status', 'only can start a chat on a pending donation');
     }
@@ -634,7 +710,7 @@ class ChatsAPI {
       id: donationInfo.user.userId,
       profileImageUrl: donationInfo.user.profileImageUrl,
       status: OFF, // By default, status will always be off
-      lastActiveDateTime: donorInfo.lastLoggedInDateTime, // However, does not reflect in the current donor is online
+      lastActiveDateTime: firebase.firestore.FieldValue.serverTimestamp(), // However, does not reflect in the current donor is online
       unreadCount: 0,
     };
 
@@ -648,6 +724,26 @@ class ChatsAPI {
     await newChat.set(data);
 
     return newChat.get();
+  }
+
+  async _RTDBCreateChatPresence(chatId, npoInfo, donorInfo) {
+    const userInfos = {
+      [npoInfo.userId]: {
+        status: OFF,
+        lastActiveDateTime: firebase.database.ServerValue.TIMESTAMP,
+      },
+      [donorInfo.userId]: {
+        status: OFF,
+        lastActiveDateTime: firebase.database.ServerValue.TIMESTAMP,
+      },
+    };
+
+    firebase
+      .database()
+      .ref('chatStatuses/' + chatId)
+      .set({
+        users: userInfos,
+      });
   }
 
   async _sendTextMessages(chatId, texts, chatInfo = null, senderType = null, senderInfo = null) {
@@ -749,39 +845,6 @@ class ChatsAPI {
     }
 
     chatsCollection.doc(chatInfo.chatId).update(data);
-  }
-
-  async _updateChatStatus(id, userId, status) {
-    const doc = chatsCollection.doc(id);
-    const snapshot = await doc.get();
-    if (!snapshot.exists) {
-      throw new ChatError('invalid-chat-id', 'chat does not exist');
-    }
-    const chat = snapshot.data();
-
-    let userType;
-    if (chat.donor.id === userId) {
-      userType = donor;
-    } else if (chat.npo.id === userId) {
-      userType = npo;
-    } else {
-      throw new ChatError('invalid-user-type');
-    }
-
-    const statusField = `${userType}.status`;
-    const unreadCountField = `${userType}.unreadCount`;
-    const lastActiveDateTimeField = `${userType}.lastActiveDateTime`;
-    let data = {
-      [statusField]: status,
-      [lastActiveDateTimeField]: firebase.firestore.FieldValue.serverTimestamp(),
-    };
-
-    // Only should read the message when the user is on the chat
-    if (status === ON) {
-      data[unreadCountField] = 0;
-    }
-
-    doc.update(data);
   }
 
   // Not used at the moment. Might need to use it if we decided to actively managed uses lastActiveDateTimeField

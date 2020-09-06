@@ -62,4 +62,8 @@ export const colors = {
   newsBackground: '#f3f4f5',
   passwordCorrect: '#4caf50',
   passwordWrong: '#f44336',
+  chatScrollToBottomButtonBackground: '#3B80ED',
+  chatScrollToBottomButtonHoverActive: '#3975D5',
+  chatScrollToBottomButtonFocus: '#3167BC',
+  categoryHover: '#eeeeee',
 };

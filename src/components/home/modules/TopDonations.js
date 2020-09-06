@@ -10,6 +10,12 @@ import CarouselScrollButton from '../../buttons/CarouselScrollButton';
 import Desktop from '@kiwicom/orbit-components/lib/Desktop';
 import { getFormattedDate } from '../../../../utils/api/time';
 
+import { InstantSearch, connectHits, Configure } from 'react-instantsearch-dom';
+import { getByCategoryIdAndStatus } from '../../../../utils/algolia/filteringRules';
+import algoliasearch from 'algoliasearch/lite';
+import { getTopNCategoriesFromAlgolia, sortObjectEntries } from './algoliaHelpers';
+const searchClient = algoliasearch(process.env.NEXT_PUBLIC_ALGOLIA_APP_ID, process.env.NEXT_PUBLIC_ALGOLIA_SEARCH_KEY);
+
 const CategoryHeader = styled.div`
   align-items: center;
   display: flex;
@@ -42,45 +48,41 @@ const TopDonationCardsContainer = styled.div`
 `;
 
 const TopDonations = ({ numberOfPosts, numberOfCategories }) => {
-  // assumes that there are only 3 top categories
-  const [firstTopCategoryAndDonations, setFirstTopCategoryAndDonations] = useState({});
-  const [secondTopCategoryAndDonations, setSecondTopCategoryAndDonations] = useState({});
-  const [thirdTopCategoryAndDonations, setThirdTopCategoryAndDonations] = useState({});
   const router = useRouter();
+  const [topCategories, setTopCategories] = useState([]);
 
   useEffect(() => {
-    getTopNCategories(numberOfCategories).then((categories) => {
-      // set all three top categories and their donations in parallel
-      getTopDonationForCategory(categories[0], numberOfPosts).then((result) => {
-        setFirstTopCategoryAndDonations(result);
-      });
-      getTopDonationForCategory(categories[1], numberOfPosts).then((result) => {
-        setSecondTopCategoryAndDonations(result);
-      });
-      getTopDonationForCategory(categories[2], numberOfPosts).then((result) => {
-        setThirdTopCategoryAndDonations(result);
+    getTopNCategories().then((categories) => {
+      getTopNCategoriesFromAlgolia('donations').then(({ hits, facets }) => {
+        const sorted = sortObjectEntries(facets['categories.id']);
+        if (sorted.length >= numberOfCategories) {
+          const topNCategoriesIds = sorted.slice(0, numberOfCategories);
+          const topNCategories = categories.filter((category) => {
+            if (topNCategoriesIds.includes(category.id)) {
+              return true;
+            }
+            return false;
+          });
+          setTopCategories(topNCategories);
+        } else if (sorted.length > 0 && sorted.length < numberOfCategories) {
+          const topCategories = categories.filter((category) => {
+            if (sorted.includes(category.id)) {
+              return true;
+            }
+            return false;
+          });
+          setTopCategories(topCategories);
+        }
       });
     });
   }, []);
 
-  const getTopDonationForCategory = async (category, numberOfPosts) => {
-    const rawDonations = await api.donations
-      .getTopNPendingDonationsForCategory(category.id, numberOfPosts)
-      .catch((err) => console.error(err));
-    return { category: category, donations: rawDonations.docs.map((doc) => doc.data()) };
-  };
-
-  const getTopNCategories = async (numberOfCategories) => {
+  const getTopNCategories = async () => {
     const rawCategories = await api.categories.getAll().catch((err) => console.error(err));
-    return rawCategories.docs.slice(0, numberOfCategories).map((doc) => doc.data());
+    return rawCategories.docs.map((doc) => doc.data());
   };
 
-  const TopDonationsRow = (topCategoryAndDonations) => {
-    // haven't loaded the data yet
-    if (Object.keys(topCategoryAndDonations).length === 0) {
-      return;
-    }
-    const { category, donations } = topCategoryAndDonations;
+  const TopDonationsRow = ({ hits, category }) => {
     const categoryHref = `/donations/category/${category.id}`;
     const handleViewAllButton = (event) => {
       event.preventDefault();
@@ -109,8 +111,8 @@ const TopDonations = ({ numberOfPosts, numberOfCategories }) => {
           </Desktop>
           <DonationsRow id={category.id} className="scrollableDonation">
             <Stack direction="row" align="start" spacing="extraLoose">
-              {donations.map((donation) => {
-                const donationPostHref = `/donations/${donation.donationId}`;
+              {hits.map((donation) => {
+                const donationPostHref = `/donations/${donation.objectID}`;
                 const profileHref = `/profile/${donation.user.userId}`;
                 const locations = donation.locations.map((location) => {
                   return location.name;
@@ -146,11 +148,16 @@ const TopDonations = ({ numberOfPosts, numberOfCategories }) => {
     );
   };
 
+  const TopCategories = connectHits(TopDonationsRow);
+
   return (
     <Stack direction="column" align="start" spacing="natural">
-      {TopDonationsRow(firstTopCategoryAndDonations)}
-      {TopDonationsRow(secondTopCategoryAndDonations)}
-      {TopDonationsRow(thirdTopCategoryAndDonations)}
+      {topCategories.map((category) => (
+        <InstantSearch searchClient={searchClient} indexName="donations">
+          <TopCategories category={category} />
+          <Configure filters={getByCategoryIdAndStatus(category.id, 'pending')} hitsPerPage={numberOfPosts} />
+        </InstantSearch>
+      ))}
     </Stack>
   );
 };
