@@ -8,4 +8,5 @@ module.exports = withImages({
 
     return config;
   },
+  trailingSlash: true,
 });
