@@ -3,8 +3,9 @@
     "baseUrl": ".",
     "paths": {
       "@components/*": ["src/components/*"],
-      "@constant/*": ["utils/constants/*"],
-      "@api": ["utils/api"]
+      "@constants/*": ["utils/constants/*"],
+      "@api": ["utils/api"],
+      "@utils/*": ["utils/*"]
     }
   }
 }
