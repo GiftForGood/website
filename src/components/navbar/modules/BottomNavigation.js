@@ -3,7 +3,7 @@ import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import CallToActionButton from '../../buttons/CallToActionButton';
 import transition from '@kiwicom/orbit-components/lib/utils/transition';
-import { BOTTOMBAR_HEIGHT } from '../../../../utils/constants/navbar';
+import { BOTTOMBAR_HEIGHT } from '@constants/navbar';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 
 const BottomNavigationContainer = styled.div`

@@ -16,10 +16,10 @@ import {
 import { getOrganization } from '../selectors';
 import styled from 'styled-components';
 import BlueButton from '../../buttons/BlueButton';
-import { colors } from '../../../../utils/constants/colors';
+import { colors } from '@constants/colors';
 import api from '../../../../utils/api';
 import NpoOrganizationDropdownField from '../../inputfield/NpoOrganizationDropdownField';
-import { newOrganizationGoogleFormPath } from '../../../../utils/constants/googleFormPaths';
+import { newOrganizationGoogleFormPath } from '@constants/googleFormPaths';
 
 const HeadingColor = styled.div`
   color: ${colors.npoBackground};

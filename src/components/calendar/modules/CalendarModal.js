@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Calendar from './Calendar';
 import styled from 'styled-components';
-import { colors } from '../../../../utils/constants/colors';
+import { colors } from '@constants/colors';
 import { Button, Heading, Stack } from '@kiwicom/orbit-components/lib';
 import Modal, { ModalSection, ModalFooter } from '@kiwicom/orbit-components/lib/Modal';
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import Head from 'next/head';
-import { favicon } from '../../../utils/constants/imagePaths';
+import { favicon } from '@constants/imagePaths';
 
 const Header = ({ title }) => {
   return (

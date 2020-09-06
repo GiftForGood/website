@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { colors } from '../../../utils/constants/colors';
+import { colors } from '@constants/colors';
 import { Button, Heading, Stack, Textarea } from '@kiwicom/orbit-components/lib';
 import Modal, { ModalSection, ModalFooter } from '@kiwicom/orbit-components/lib/Modal';
-import { donations } from '../../../utils/constants/postType';
+import { donations } from '@constants/postType';
 import { useRouter } from 'next/router';
 import api from '../../../utils/api';
 

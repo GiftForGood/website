@@ -7,7 +7,7 @@ import * as Yup from 'yup';
 import useUser from '../../../session/modules/useUser';
 import ProfileAvatar from '../../../imageContainers/ProfileAvatar';
 import api from '../../../../../utils/api';
-import { MAXIMUM_FILE_SIZE_LIMIT } from '../../../../../utils/constants/files';
+import { MAXIMUM_FILE_SIZE_LIMIT } from '@constants/files';
 import { useRouter } from 'next/router';
 import SaveChangesButton from '../../../buttons/SaveChangesButton';
 

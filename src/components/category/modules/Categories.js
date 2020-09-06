@@ -5,7 +5,7 @@ import api from '../../../../utils/api/index';
 import styled from 'styled-components';
 import CarouselScrollButton from '../../buttons/CarouselScrollButton';
 import Desktop from '@kiwicom/orbit-components/lib/Desktop';
-import { allCategoriesImagePath } from '../../../../utils/constants/imagePaths';
+import { allCategoriesImagePath } from '@constants/imagePaths';
 import CategoryImageBox from '../../imageContainers/CategoryImageBox';
 
 // The home page is structured using a grid and the row of categories has

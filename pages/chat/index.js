@@ -6,7 +6,7 @@ import api from '../../utils/api';
 import Error from 'next/error';
 import ChatPage from '../../src/components/chat/pages/ChatPage';
 import Header from '../../src/components/header';
-import { donations, wishes } from '../../utils/constants/postType';
+import { donations, wishes } from '@constants/postType';
 
 const TopNavigationBar = dynamic(() => import('../../src/components/navbar/modules/TopNavigationBar'), {
   ssr: false,

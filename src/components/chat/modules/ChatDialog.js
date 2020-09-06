@@ -12,7 +12,7 @@ import ChevronLeft from '@kiwicom/orbit-components/lib/icons/ChevronLeft';
 import ChevronDown from '@kiwicom/orbit-components/lib/icons/ChevronDown';
 import ChevronUp from '@kiwicom/orbit-components/lib/icons/ChevronUp';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
-import { donations } from '../../../../utils/constants/postType';
+import { donations } from '@constants/postType';
 import ChatContext from '../context';
 import { setSelectedChatId, setIsNewChat } from '../actions';
 import { getSelectedChatId, getIsNewChat, getPostId, getPostType, getUser } from '../selectors';

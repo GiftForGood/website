@@ -3,7 +3,7 @@ import { Stack } from '@kiwicom/orbit-components/lib';
 import Grid from '@kiwicom/orbit-components/lib/utils/Grid';
 import styled from 'styled-components';
 import api from '../../../../utils/api';
-import { donor as donorProfileType } from '../../../../utils/constants/userType';
+import { donor as donorProfileType } from '@constants/userType';
 import useUser from '../../session/modules/useUser';
 
 import ProfileHeaderBar from '../modules/ProfileHeaderBar';

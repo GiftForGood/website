@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import RedButton from '../buttons/RedButton';
 import Alert from '@kiwicom/orbit-components/lib/icons/Alert';
 import api from '../../../utils/api';
-import { wishClosePostReasons, donationClosePostReasons } from '../../../utils/constants/closePostReasons';
+import { wishClosePostReasons, donationClosePostReasons } from '@constants/closePostReasons';
 import { Button, ChoiceGroup, Heading, Stack, Radio, Text, Textarea } from '@kiwicom/orbit-components/lib';
 import Modal, { ModalSection } from '@kiwicom/orbit-components/lib/Modal';
-import { wishes } from '../../../utils/constants/postType';
+import { wishes } from '@constants/postType';
 
 const ClosePostModal = ({ postId, postType, onClose, setIsClosedPost }) => {
   const isWishPost = postType === wishes;

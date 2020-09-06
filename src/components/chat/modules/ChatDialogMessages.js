@@ -7,7 +7,7 @@ import { CardSection } from '@kiwicom/orbit-components/lib/Card';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 import NewChatTips from './NewChatTipsForWish';
 import InfiniteScroll from '../../scroller/InfiniteScroller';
-import { wishes } from '../../../../utils/constants/postType';
+import { wishes } from '@constants/postType';
 import { CHAT_MESSAGES_BATCH_SIZE } from '../../../../utils/api/constants';
 import { LeftMessageSection, RightMessageSection } from './ChatMessageSection';
 import ScrollToBottomButton from '../../buttons/ScrollToBottomButton';

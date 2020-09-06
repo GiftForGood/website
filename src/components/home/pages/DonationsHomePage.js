@@ -5,7 +5,7 @@ import TopDonations from '../modules/TopDonations';
 import { Grid } from '@kiwicom/orbit-components/lib';
 import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
-import { donationsHomePageDetails } from '../../../../utils/constants/homePageDetails';
+import { donationsHomePageDetails } from '@constants/homePageDetails';
 
 const HomePageContainer = styled.div`
   display: flex;

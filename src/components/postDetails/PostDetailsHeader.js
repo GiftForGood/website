@@ -9,10 +9,10 @@ import api from '../../../utils/api';
 import { AlertCircle, Edit, CloseCircle, MenuKebab, ShareAndroid } from '@kiwicom/orbit-components/lib/icons';
 import { Button, Stack, Text, Popover, ButtonLink } from '@kiwicom/orbit-components/lib';
 import { useRouter } from 'next/router';
-import { COMPLETED, CLOSED } from '../../../utils/constants/postStatus';
-import { donations, wishes } from '../../../utils/constants/postType';
-import { donor, npo } from '../../../utils/constants/userType';
-import { colors } from '../../../utils/constants/colors';
+import { COMPLETED, CLOSED } from '@constants/postStatus';
+import { donations, wishes } from '@constants/postType';
+import { donor, npo } from '@constants/userType';
+import { colors } from '@constants/colors';
 import { logStartChatToAnalytics } from '../../../utils/analytics';
 import styled from 'styled-components';
 

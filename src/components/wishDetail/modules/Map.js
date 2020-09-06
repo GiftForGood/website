@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { GOOGLE_MAP_URL } from '../../../../utils/constants/thirdPartyAPIUrl';
+import { GOOGLE_MAP_URL } from '@constants/thirdPartyAPIUrl';
 
 const Map = ({ npoOrgName, locations }) => {
   useEffect(() => {

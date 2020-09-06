@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { colors } from '../../../utils/constants/colors';
+import { colors } from '@constants/colors';
 
 const TimeslotButton = styled.button`
   background: ${colors.calendarUnselectedBackground};

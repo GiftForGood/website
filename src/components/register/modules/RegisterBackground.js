@@ -4,7 +4,7 @@ import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import styled, { css } from 'styled-components';
 import { Text, Heading } from '@kiwicom/orbit-components/lib';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
-import { leftRegistrationPanelImagePath } from '../../../../utils/constants/imagePaths';
+import { leftRegistrationPanelImagePath } from '@constants/imagePaths';
 
 const Wrapper = styled.div`
   background-size: cover;

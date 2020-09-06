@@ -2,10 +2,10 @@ import React from 'react';
 import ProfileAvatar from '../imageContainers/ProfileAvatar';
 import KiwicomGuarantee from '@kiwicom/orbit-components/lib/icons/KiwicomGuarantee';
 import styled from 'styled-components';
-import { colors } from '../../../utils/constants/colors';
+import { colors } from '@constants/colors';
 import { Stack, Text, TextLink } from '@kiwicom/orbit-components/lib';
 import { CardSection } from '@kiwicom/orbit-components/lib/Card';
-import { wishes } from '../../../utils/constants/postType';
+import { wishes } from '@constants/postType';
 
 const CheckProfileLink = styled.a`
   color: ${colors.npoBackground};

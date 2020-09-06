@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { colors } from '../../../../utils/constants/colors';
+import { colors } from '@constants/colors';
 
 // note that the max height of the image is set to 80% of the chat dialog messages' height,
 // to prevent any image message that is longer than the chat dialog height.

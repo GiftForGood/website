@@ -19,7 +19,7 @@ import {
 import styled from 'styled-components';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { months } from '../../../../utils/constants/month';
+import { months } from '@constants/month';
 import api from '../../../../utils/api';
 import DragNDropInputField from './DragNDropInputField';
 import moment from 'moment';

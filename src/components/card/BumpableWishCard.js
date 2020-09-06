@@ -9,7 +9,7 @@ import Button from '@kiwicom/orbit-components/lib/Button';
 import moment from 'moment';
 import api from '../../../utils/api';
 import WishCardStatus from './WishCardStatus';
-import { PENDING } from '../../../utils/constants/postStatus';
+import { PENDING } from '.@constants/postStatus';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 
 const CardContainer = styled.div`

@@ -5,7 +5,7 @@ import useUser from '../src/components/session/modules/useUser';
 import { isAuthenticated } from '../utils/authentication/authentication';
 import dynamic from 'next/dynamic';
 import Header from '../src/components/header';
-import { DONATIONS } from '../utils/constants/search';
+import { DONATIONS } from '@constants/search';
 
 const TopNavigationBar = dynamic(() => import('../src/components/navbar/modules/TopNavigationBar'), { ssr: false });
 const BottomNavigation = dynamic(() => import('../src/components/navbar/modules/BottomNavigation'), { ssr: false });

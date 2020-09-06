@@ -6,9 +6,9 @@ import GreyText from '../text/GreyText';
 import styled, { css } from 'styled-components';
 import { useRouter } from 'next/router';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
-import { PENDING } from '../../../utils/constants/postStatus';
+import { PENDING } from '@constants/postStatus';
 import DonationCardStatus from './DonationCardStatus';
-import { colors } from '../../../utils/constants/colors';
+import { colors } from '@constants/colors';
 
 const CardContainer = styled.div`
   display: flex;

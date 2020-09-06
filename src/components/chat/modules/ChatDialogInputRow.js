@@ -4,7 +4,7 @@ import ChatButton from '../../../components/buttons/ChatButton';
 import ChatImageUpload from './ChatImageUpload';
 import api from '../../../../utils/api';
 import styled, { css } from 'styled-components';
-import { donations } from '../../../../utils/constants/postType';
+import { donations } from '@constants/postType';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import TextareaAutosize from 'react-textarea-autosize';
 import { useRouter } from 'next/router';

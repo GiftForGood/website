@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import api from '../../../../utils/api';
 import { Loading, Button, Text, Heading, Stack, InputField } from '@kiwicom/orbit-components/lib';
 import styled from 'styled-components';
-import { companyIconImagePath } from '../../../../utils/constants/imagePaths';
+import { companyIconImagePath } from '@constants/imagePaths';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import Field from '../../inputfield';

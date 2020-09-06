@@ -6,7 +6,7 @@ import SessionProvider from '../../../src/components/session/modules/SessionProv
 import { isAuthenticated } from '../../../utils/authentication/authentication';
 import Error from 'next/error';
 import Header from '../../../src/components/header';
-import { DONATIONS } from '../../../utils/constants/search';
+import { DONATIONS } from '@constants/search';
 
 const TopNavigationBar = dynamic(() => import('../../../src/components/navbar/modules/TopNavigationBar'), {
   ssr: false,

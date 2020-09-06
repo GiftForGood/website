@@ -4,7 +4,7 @@ import { getTokens } from '@kiwicom/orbit-components';
 import { ThemeProvider, createGlobalStyle } from 'styled-components';
 import { Provider } from 'react-redux';
 import { createWrapper } from 'next-redux-wrapper';
-import { colors } from '../utils/constants/colors';
+import { colors } from '@constants/colors';
 import store from '../store';
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';

@@ -6,7 +6,7 @@ import SessionProvider from '../../src/components/session/modules/SessionProvide
 import Head from 'next/head';
 import { isAuthenticated } from '../../utils/authentication/authentication';
 import Error from 'next/error';
-import { ogImagePath } from '../../utils/constants/imagePaths';
+import { ogImagePath } from '@constants/imagePaths';
 import { useRouter } from 'next/router';
 import Header from '../../src/components/header';
 const TopNavigationBar = dynamic(() => import('../../src/components/navbar/modules/TopNavigationBar'), {

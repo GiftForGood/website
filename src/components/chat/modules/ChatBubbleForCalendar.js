@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { colors } from '../../../../utils/constants/colors';
+import { colors } from '@constants/colors';
 import { Stack } from '@kiwicom/orbit-components/lib';
 import WhiteText from '../../text/WhiteText';
 import BlackText from '../../text/BlackText';

@@ -4,7 +4,7 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import styled from 'styled-components';
 import ForgetPasswordButton from '../../buttons/ForgetPasswordButton';
-import { companyIconImagePath } from '../../../../utils/constants/imagePaths';
+import { companyIconImagePath } from '@constants/imagePaths';
 import api from '../../../../utils/api';
 
 const Logo = styled.img`

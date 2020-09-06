@@ -3,8 +3,8 @@ import styled from 'styled-components';
 import EditProfileButton from '../../buttons/EditProfileButton';
 import { useRouter } from 'next/router';
 import { Button, Stack, TextLink, Separator } from '@kiwicom/orbit-components/lib';
-import { colors } from '../../../../utils/constants/colors';
-import { npo } from '../../../../utils/constants/userType';
+import { colors } from '@constants/colors';
+import { npo } from '@constants/userType';
 
 const HeaderBarContainer = styled.div`
   padding: 0px 25px 0px 30px;

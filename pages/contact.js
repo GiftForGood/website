@@ -4,7 +4,7 @@ import { isAuthenticated } from '../utils/authentication/authentication';
 import ContactUsPage from '../src/components/contactUs/pages/ContactUsPage';
 import dynamic from 'next/dynamic';
 import Header from '../src/components/header';
-import { WISHES } from '../utils/constants/search';
+import { WISHES } from '@constants/search';
 
 const TopNavigationBar = dynamic(() => import('../src/components/navbar/modules/TopNavigationBar'), { ssr: false });
 const BottomNavigation = dynamic(() => import('../src/components/navbar/modules/BottomNavigation'), { ssr: false });
