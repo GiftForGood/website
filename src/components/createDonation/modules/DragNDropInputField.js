@@ -3,12 +3,12 @@ import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import { useDropzone } from 'react-dropzone';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import { MAXIMUM_ALLOWED_PHOTOS } from '../../../../utils/constants/donorUploadPhoto';
-import { MAXIMUM_FILE_SIZE_LIMIT } from '../../../../utils/constants/files';
+import { MAXIMUM_ALLOWED_PHOTOS } from '@constants/donorUploadPhoto';
+import { MAXIMUM_FILE_SIZE_LIMIT } from '@constants/files';
 import { Text, ButtonPrimitive, Alert } from '@kiwicom/orbit-components/lib';
 import { v4 as uuidv4 } from 'uuid';
 import Remove from '@kiwicom/orbit-components/lib/icons/Remove';
-import { colors } from '../../../../utils/constants/colors';
+import { colors } from '@constants/colors';
 
 const getColor = (props) => {
   if (props.isDragAccept) {

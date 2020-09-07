@@ -5,7 +5,7 @@ import TopWishes from '../modules/TopWishes';
 import { Grid } from '@kiwicom/orbit-components/lib';
 import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
-import { wishesHomePageDetails } from '../../../../utils/constants/homePageDetails';
+import { wishesHomePageDetails } from '@constants/homePageDetails';
 
 const WishesHomePageContainer = styled.div`
   display: flex;

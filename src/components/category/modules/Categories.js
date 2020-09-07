@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { Stack } from '@kiwicom/orbit-components/lib';
-import api from '../../../../utils/api/index';
+import api from '@api';
 import styled from 'styled-components';
 import CarouselScrollButton from '../../buttons/CarouselScrollButton';
 import Desktop from '@kiwicom/orbit-components/lib/Desktop';
-import { allCategoriesImagePath } from '../../../../utils/constants/imagePaths';
+import { allCategoriesImagePath } from '@constants/imagePaths';
 import CategoryImageBox from '../../imageContainers/CategoryImageBox';
 
 // The home page is structured using a grid and the row of categories has

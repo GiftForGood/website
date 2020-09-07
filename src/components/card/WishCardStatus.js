@@ -1,7 +1,7 @@
 import React from 'react';
-import { colors } from '../../../utils/constants/colors';
+import { colors } from '@constants/colors';
 import styled from 'styled-components';
-import { COMPLETED, CLOSED } from '../../../utils/constants/postStatus';
+import { COMPLETED, CLOSED } from '@constants/postStatus';
 
 const CardStatusContainer = styled.div`
   display: flex;

@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import { colors } from '../../../utils/constants/colors';
+import { colors } from '@constants/colors';
 import WhiteText from '../../components/text/WhiteText';
-import { COMPLETED, CLOSED } from '../../../utils/constants/postStatus';
+import { COMPLETED, CLOSED } from '@constants/postStatus';
 
 const TagContainer = styled.div`
   background-color: ${(props) => props.color};

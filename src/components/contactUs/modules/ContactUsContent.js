@@ -2,7 +2,7 @@ import React from 'react';
 import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import { Heading, Text, TextLink } from '@kiwicom/orbit-components/lib';
-import { contactUsGoogleFormPath } from '../../../../utils/constants/googleFormPaths';
+import { contactUsGoogleFormPath } from '@constants/googleFormPaths';
 
 const TitleContainer = styled.div`
   margin-bottom: 50px;

@@ -2,7 +2,7 @@ import React from 'react';
 import DonationCard from '../../card/DonationCard';
 import BlackText from '../../text/BlackText';
 import { Grid } from '@kiwicom/orbit-components/lib';
-import { getFormattedDate } from '../../../../utils/api/time';
+import { getFormattedDate } from '@api/time';
 
 /**
  * https://www.algolia.com/doc/api-reference/widgets/infinite-hits/react/#create-a-react-component

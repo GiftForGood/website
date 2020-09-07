@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { Stack, Button, Text } from '@kiwicom/orbit-components/lib';
-import api from '../../../../utils/api/index';
+import api from '@api';
 import styled, { css } from 'styled-components';
 import BlackText from '../../text/BlackText';
 import GroupWishCard from '../../card/GroupWishCard';
@@ -11,7 +11,7 @@ import Mobile from '@kiwicom/orbit-components/lib/Mobile';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 
 import { InstantSearch, connectHits, Configure } from 'react-instantsearch-dom';
-import { getByCategoryIdAndStatusAndNotExpired } from '../../../../utils/algolia/filteringRules';
+import { getByCategoryIdAndStatusAndNotExpired } from '@utils/algolia/filteringRules';
 import algoliasearch from 'algoliasearch/lite';
 import { getTopNCategoriesFromAlgoliaWithExpireDateTime, sortObjectEntries } from './algoliaHelpers';
 const searchClient = algoliasearch(process.env.NEXT_PUBLIC_ALGOLIA_APP_ID, process.env.NEXT_PUBLIC_ALGOLIA_SEARCH_KEY);

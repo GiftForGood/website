@@ -3,7 +3,7 @@ import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import styled, { css } from 'styled-components';
 import { Badge, Stack, Text, Heading } from '@kiwicom/orbit-components/lib';
 import WishInformationHeader from '../../postDetails/PostDetailsHeader';
-import { wishes } from '../../../../utils/constants/postType';
+import { wishes } from '@constants/postType';
 
 const WishInformationBodyContainer = styled.div`
   min-height: 100px;

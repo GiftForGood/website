@@ -1,6 +1,6 @@
 import React from 'react';
 import ChatCompleteButton from '../buttons/ChatCompleteButton';
-import api from '../../../utils/api';
+import api from '@api';
 import { Button, Stack } from '@kiwicom/orbit-components/lib';
 import Modal, { ModalSection, ModalHeader } from '@kiwicom/orbit-components/lib/Modal';
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import ProfileAvatar from '../../imageContainers/ProfileAvatar';
 import { Stack, Text, Heading } from '@kiwicom/orbit-components/lib';
-import { npo } from '../../../../utils/constants/userType';
+import { npo } from '@constants/userType';
 
 const ProfileDetails = ({ profileImageUrl, npoOrgName, npoOrgAddress, npoContact, name, userType }) => {
   const isNpo = userType === npo;

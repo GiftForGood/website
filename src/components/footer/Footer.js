@@ -10,8 +10,8 @@ import {
   redsunmoversLogoPath,
   algoliaLogoPath,
   groundUpCentralLogoPath,
-} from '../../../utils/constants/imagePaths';
-import { colors } from '../../../utils/constants/colors';
+} from '@constants/imagePaths';
+import { colors } from '@constants/colors';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 
 const Container = styled.div`

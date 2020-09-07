@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import Popover from 'react-tiny-popover';
 import styled from 'styled-components';
 import { ListChoice, InputField } from '@kiwicom/orbit-components/lib';
-import client from '../../../utils/axios';
+import client from '@utils/axios';
 
 const ContentContainer = styled.div`
   background: white;

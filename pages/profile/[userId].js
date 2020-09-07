@@ -1,19 +1,19 @@
 import React from 'react';
 import dynamic from 'next/dynamic';
-import NpoProfilePage from '../../src/components/profile/pages/NpoProfilePage';
-import SessionProvider from '../../src/components/session/modules/SessionProvider';
-import { isAuthenticated } from '../../utils/authentication/authentication';
-import api from '../../utils/api';
-import { containsNPO, containsDonor } from '../../utils/authentication/userType';
+import NpoProfilePage from '@components/profile/pages/NpoProfilePage';
+import SessionProvider from '@components/session/modules/SessionProvider';
+import { isAuthenticated } from '@utils/authentication/authentication';
+import api from '@api';
+import { containsNPO, containsDonor } from '@utils/authentication/userType';
 import Error from 'next/error';
-import DonorProfilePage from '../../src/components/profile/pages/DonorProfilePage';
-const TopNavigationBar = dynamic(() => import('../../src/components/navbar/modules/TopNavigationBar'), {
+import DonorProfilePage from '@components/profile/pages/DonorProfilePage';
+const TopNavigationBar = dynamic(() => import('@components/navbar/modules/TopNavigationBar'), {
   ssr: false,
 });
-const BottomNavigation = dynamic(() => import('../../src/components/navbar/modules/BottomNavigation'), {
+const BottomNavigation = dynamic(() => import('@components/navbar/modules/BottomNavigation'), {
   ssr: false,
 });
-const Footer = dynamic(() => import('../../src/components/footer/Footer'), { ssr: false });
+const Footer = dynamic(() => import('@components/footer/Footer'), { ssr: false });
 
 export async function getServerSideProps({ params, req, res, query }) {
   let userId = params.userId;

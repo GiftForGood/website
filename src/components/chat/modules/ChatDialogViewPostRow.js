@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, Stack } from '@kiwicom/orbit-components/lib';
 import BlackText from '../../text/BlackText';
 import styled from 'styled-components';
-import { donations, wishes } from '../../../../utils/constants/postType';
+import { donations, wishes } from '@constants/postType';
 import { CardSection } from '@kiwicom/orbit-components/lib/Card';
 import SeePostButton from '../../../components/buttons/ChatSeePostButton';
 import router from 'next/router';

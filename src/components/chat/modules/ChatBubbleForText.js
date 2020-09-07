@@ -2,7 +2,7 @@ import React from 'react';
 import BlackText from '../../text/BlackText';
 import WhiteText from '../../text/WhiteText';
 import styled from 'styled-components';
-import { colors } from '../../../../utils/constants/colors';
+import { colors } from '@constants/colors';
 import Linkify from 'react-linkify';
 
 const ChatBubbleContainer = styled.div`
