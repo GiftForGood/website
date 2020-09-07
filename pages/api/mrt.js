@@ -1,4 +1,4 @@
-import { cors } from '../../utils/middleware/cors';
+import { cors } from '@utils/middleware/cors';
 import mrt from '../../public/assets/mrt-list.json';
 
 async function handler(req, res) {

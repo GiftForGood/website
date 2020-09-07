@@ -5,7 +5,7 @@ import Hits from './Hits';
 import algoliasearch from 'algoliasearch/lite';
 import styled from 'styled-components';
 import { Text } from '@kiwicom/orbit-components/lib';
-import { MAXIMUM_SEARCH_DESKTOP } from '../../../../utils/constants/search';
+import { MAXIMUM_SEARCH_DESKTOP } from '@constants/search';
 import Popover from 'react-tiny-popover';
 
 const CustomSearchBox = connectSearchBox(SearchBar);

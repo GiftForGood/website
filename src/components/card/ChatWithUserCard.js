@@ -4,9 +4,9 @@ import { useRouter } from 'next/router';
 import styled, { css } from 'styled-components';
 import ProfileAvatar from '../../components/imageContainers/ProfileAvatar';
 import BlackText from '../../components/text/BlackText';
-import { getFormattedDate } from '../../../utils/api/time';
-import { IMAGE, CALENDAR } from '../../../utils/constants/chatContentType';
-import { colors } from '../../../utils/constants/colors';
+import { getFormattedDate } from '@api/time';
+import { IMAGE, CALENDAR } from '@constants/chatContentType';
+import { colors } from '@constants/colors';
 
 const DetailsContainer = styled.div`
   display: flex;

@@ -5,7 +5,7 @@ import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 import { Stack } from '@kiwicom/orbit-components/lib';
 import CarouselScrollButton from '../../buttons/CarouselScrollButton';
 import { Carousel } from 'react-responsive-carousel';
-import { colors } from '../../../../utils/constants/colors';
+import { colors } from '@constants/colors';
 
 const CarouselImage = styled.img`
   height: 100vw;

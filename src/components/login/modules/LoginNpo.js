@@ -8,10 +8,10 @@ import * as Yup from 'yup';
 
 import { setIsBackToLanding } from '../actions';
 import styled from 'styled-components';
-import { colors } from '../../../../utils/constants/colors';
+import { colors } from '@constants/colors';
 import BlueButton from '../../buttons/BlueButton';
-import api from '../../../../utils/api';
-import client from '../../../../utils/axios';
+import api from '@api';
+import client from '@utils/axios';
 import { useRouter } from 'next/router';
 
 const HeadingColor = styled.div`

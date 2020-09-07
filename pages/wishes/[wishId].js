@@ -1,18 +1,20 @@
 import React from 'react';
-import api from '../../utils/api';
-import WishPage from '../../src/components/wishDetail/pages/WishPage';
+import api from '@api';
+import WishPage from '@components/wishDetail/pages/WishPage';
 import dynamic from 'next/dynamic';
-import SessionProvider from '../../src/components/session/modules/SessionProvider';
+import SessionProvider from '@components/session/modules/SessionProvider';
 import Head from 'next/head';
-import { isAuthenticated } from '../../utils/authentication/authentication';
+import { isAuthenticated } from '@utils/authentication/authentication';
 import Error from 'next/error';
-import { ogImagePath } from '../../utils/constants/imagePaths';
+import { ogImagePath } from '@constants/imagePaths';
 import { useRouter } from 'next/router';
-import Header from '../../src/components/header';
-const TopNavigationBar = dynamic(() => import('../../src/components/navbar/modules/TopNavigationBar'), {
+import Header from '@components/header';
+import { deserializeFirestoreTimestampToUnixTimestamp } from '@utils/firebase/deserializer';
+
+const TopNavigationBar = dynamic(() => import('@components/navbar/modules/TopNavigationBar'), {
   ssr: false,
 });
-const Footer = dynamic(() => import('../../src/components/footer/Footer'), { ssr: false });
+const Footer = dynamic(() => import('@components/footer/Footer'), { ssr: false });
 
 export async function getServerSideProps({ params, req, res, query }) {
   const wishId = params.wishId;
@@ -23,6 +25,7 @@ export async function getServerSideProps({ params, req, res, query }) {
   if (Object.keys(wishDetails).length !== 0) {
     npoDetails = await getNpoDetails(wishDetails.user.userId);
   }
+  deserializeFirestoreTimestampToUnixTimestamp(wishDetails, npoDetails);
   return {
     props: {
       wishId,
@@ -47,7 +50,7 @@ const getNpoDetails = async (npoId) => {
 
 const Wish = ({ wishId, wishDetails, npoDetails, user, prevHref, categoryName }) => {
   const router = useRouter();
-  if (Object.keys(wishDetails).length === 0) {
+  if (wishDetails === undefined || Object.keys(wishDetails).length === 0) {
     return <Error statusCode={404} />;
   }
   return (

@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { colors } from '../../../../utils/constants/colors';
+import { colors } from '@constants/colors';
 import { Button, Stack, Text } from '@kiwicom/orbit-components/lib';
 import { ChevronLeft, ChevronRight } from '@kiwicom/orbit-components/lib/icons';
 

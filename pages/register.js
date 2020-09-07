@@ -1,8 +1,8 @@
 import React from 'react';
 import { withRouter } from 'next/router';
-import { isAuthenticated } from '../utils/authentication/authentication';
-import RegisterPage from '../src/components/register/pages/RegisterPage';
-import Header from '../src/components/header';
+import { isAuthenticated } from '@utils/authentication/authentication';
+import RegisterPage from '@components/register/pages/RegisterPage';
+import Header from '@components/header';
 
 // Route back to home page if already authenticated
 export async function getServerSideProps({ params, req, res, query }) {

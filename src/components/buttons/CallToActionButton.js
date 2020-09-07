@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { Button, Tooltip } from '@kiwicom/orbit-components/';
-import { colors } from '../../../utils/constants/colors';
+import { colors } from '@constants/colors';
 import useUser from '../session/modules/useUser';
 import Verified from '../session/modules/Verified';
 import { useRouter } from 'next/router';
@@ -10,9 +10,9 @@ import {
   logDesktopPostDonationToAnalytics,
   logMobilePostWishToAnalytics,
   logDesktopPostWishToAnalytics,
-} from '../../../utils/analytics';
+} from '@utils/analytics';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
-import { NOT_VERIFIED_MESSAGE } from '../../../utils/constants/callToActionButton';
+import { NOT_VERIFIED_MESSAGE } from '@constants/callToActionButton';
 
 const CallToActionButtonStyle = styled.button`
   background: ${colors.donorBackground};

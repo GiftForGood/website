@@ -4,7 +4,7 @@ import BlackText from '../text/BlackText';
 import ProfileAvatar from '../imageContainers/ProfileAvatar';
 import { Stack } from '@kiwicom/orbit-components/lib';
 import Replace from '@kiwicom/orbit-components/lib/icons/Replace';
-import { colors } from '../../../utils/constants/colors';
+import { colors } from '@constants/colors';
 
 const CardHeaderContainer = styled.div`
   display: flex;

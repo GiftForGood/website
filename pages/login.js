@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import { withRouter } from 'next/router';
-import { isAuthenticated } from '../utils/authentication/authentication';
-import LoginPage from '../src/components/login/pages/LoginPage';
-import Header from '../src/components/header';
+import { isAuthenticated } from '@utils/authentication/authentication';
+import LoginPage from '@components/login/pages/LoginPage';
+import Header from '@components/header';
 
 // Route back to home page if already authenticated
 export async function getServerSideProps({ params, req, res, query }) {

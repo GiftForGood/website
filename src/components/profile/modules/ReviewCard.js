@@ -2,7 +2,7 @@ import React from 'react';
 import Avatar from '../../imageContainers/Avatar';
 import RatingStars from '../../ratingStars';
 import styled from 'styled-components';
-import { colors } from '../../../../utils/constants/colors';
+import { colors } from '@constants/colors';
 import { Stack, Text, Separator, Loading } from '@kiwicom/orbit-components/lib';
 
 const ReviewCardContainer = styled.div`

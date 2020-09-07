@@ -8,13 +8,13 @@ import * as Yup from 'yup';
 
 import { setIsBackToLanding } from '../actions';
 import styled from 'styled-components';
-import { colors } from '../../../../utils/constants/colors';
+import { colors } from '@constants/colors';
 import RedButton from '../../buttons/RedButton';
-import api from '../../../../utils/api';
+import api from '@api';
 import 'isomorphic-unfetch';
 import { useRouter, withRouter } from 'next/router';
-import client from '../../../../utils/axios';
-import AuthError from '../../../../utils/api/error/authError';
+import client from '@utils/axios';
+import AuthError from '@api/error/authError';
 
 const HeadingColor = styled.div`
   color: ${colors.donorBackground};

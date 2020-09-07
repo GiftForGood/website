@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import { Heading, Stack, Text, TextLink, Grid, Tile } from '@kiwicom/orbit-components/lib';
-import api from '../../../../utils/api';
+import api from '@api';
 
 const MainContainer = styled.div`
   max-width: 1280px;

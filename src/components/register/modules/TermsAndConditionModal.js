@@ -11,7 +11,7 @@ import {
   ModalFooter,
 } from '@kiwicom/orbit-components/lib';
 import ChevronLeft from '@kiwicom/orbit-components/lib/icons/ChevronLeft';
-import api from '../../../../utils/api';
+import api from '@api';
 
 const TermsAndConditionModal = ({ onClose, onSubmit, tnc }) => {
   const [submitButtonEnabled, setSubmitButtonEnabled] = useState(true);
@@ -33,7 +33,7 @@ const TermsAndConditionModal = ({ onClose, onSubmit, tnc }) => {
   return (
     <>
       <Modal fixedFooter onClose={onClose}>
-        <ModalHeader title="Terms and Conditions" illustration={<Illustration name="Insurance" size="extraSmall" />} />
+        <ModalHeader title="" />
         <ModalSection>
           <Stack>
             <Text as="div">

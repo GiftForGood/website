@@ -2,14 +2,14 @@ import React, { useState, useEffect } from 'react';
 import Categories from '../modules/Categories';
 import BlackText from '../../text/BlackText';
 import { Grid } from '@kiwicom/orbit-components/lib';
-import { WISHES_BATCH_SIZE } from '../../../../utils/api/constants';
+import { WISHES_BATCH_SIZE } from '@api/constants';
 import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import algoliasearch from 'algoliasearch/lite';
 import { InstantSearch, Configure, connectInfiniteHits } from 'react-instantsearch-dom';
 import WishesHitWrapper from '../modules/WishesHitWrapper';
-import { getByStatusAndNotExpired } from '../../../../utils/algolia/filteringRules';
-import { wishesSortByRule } from '../../../../utils/algolia/sortByRules';
+import { getByStatusAndNotExpired } from '@utils/algolia/filteringRules';
+import { wishesSortByRule } from '@utils/algolia/sortByRules';
 import dynamic from 'next/dynamic';
 const WishesSortFilterPanel = dynamic(() => import('../modules/WishesSortFilterPanel'), {
   ssr: false,

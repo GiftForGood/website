@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import api from '../../../../utils/api';
+import api from '@api';
 import BumpableWishCard from '../../card/BumpableWishCard';
 import { Grid, Button, Loading, Stack } from '@kiwicom/orbit-components/lib';
 import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import SeeMoreButtonStyle from '../../buttons/SeeMoreButton';
 import BlackText from '../../text/BlackText';
-import { WISHES_BATCH_SIZE } from '../../../../utils/api/constants';
+import { WISHES_BATCH_SIZE } from '@api/constants';
 import InfiniteScroll from '../../scroller/InfiniteScroller';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
+import { deserializeFirestoreTimestampToUnixTimestamp } from '@utils/firebase/deserializer';
 
 const GridSectionContainer = styled.div`
   margin-top: 20px;
@@ -176,25 +177,38 @@ const PastWishesPanel = ({ isMine, userId }) => {
 
   const PastWishes = () => {
     return pastWishes.map((pastWish, index) => {
+      const pastWishData = pastWish.data();
+      deserializeFirestoreTimestampToUnixTimestamp(pastWishData);
+      const {
+        wishId,
+        organization,
+        title,
+        description,
+        user,
+        postedDateTime,
+        isBumped,
+        status,
+        expireDateTime,
+      } = pastWishData;
       const categoryTags = pastWish.data().categories.map((category) => category.name);
       return (
         <BumpableWishCard
           index={index}
-          key={pastWish.data().wishId}
-          wishId={pastWish.data().wishId}
-          name={pastWish.data().organization.name}
-          title={pastWish.data().title}
-          description={pastWish.data().description}
-          profileImageUrl={pastWish.data().user.profileImageUrl}
-          postedDateTime={pastWish.data().postedDateTime}
-          postHref={`/wishes/${pastWish.data().wishId}`}
+          key={wishId}
+          wishId={wishId}
+          name={organization.name}
+          title={title}
+          description={description}
+          profileImageUrl={user.profileImageUrl}
+          postedDateTime={postedDateTime}
+          postHref={`/wishes/${wishId}`}
           profileHref={`/profile/${userId}`}
           categoryTags={categoryTags}
-          isBumped={pastWish.data().isBumped}
-          expireDateTime={pastWish.data().expireDateTime}
+          isBumped={isBumped}
+          expireDateTime={expireDateTime}
           bumpCallback={bumpCallback}
           isMine={isMine}
-          status={pastWish.data().status}
+          status={status}
         />
       );
     });

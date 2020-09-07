@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import api from '../../../../utils/api';
+import api from '@api';
 import DonationCard from '../../card/DonationCard';
 import { Grid, Button, Loading, Stack } from '@kiwicom/orbit-components/lib';
 import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import SeeMoreButtonStyle from '../../buttons/SeeMoreButton';
 import BlackText from '../../text/BlackText';
-import { DONATIONS_BATCH_SIZE } from '../../../../utils/api/constants';
+import { DONATIONS_BATCH_SIZE } from '@api/constants';
 import InfiniteScroll from '../../scroller/InfiniteScroller';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
-import { getFormattedDate } from '../../../../utils/api/time';
+import { getFormattedDate } from '@api/time';
+import { deserializeFirestoreTimestampToUnixTimestamp } from '@utils/firebase/deserializer';
 
 const GridSectionContainer = styled.div`
   margin-top: 20px;
@@ -171,6 +172,8 @@ const CompletedDonationsPanel = ({ isMine, userId }) => {
 
   const CompletedDonations = () => {
     return completedDonations.map((completedDonation) => {
+      const completedDonationData = completedDonation.data();
+      deserializeFirestoreTimestampToUnixTimestamp(completedDonationData);
       const {
         donationId,
         user,
@@ -182,8 +185,7 @@ const CompletedDonationsPanel = ({ isMine, userId }) => {
         coverImageUrl,
         validPeriodFrom,
         validPeriodTo,
-      } = completedDonation.data();
-      console.log(completedDonation.data());
+      } = completedDonationData;
       const locationNames = locations.map((location) => location.name).join(', ');
       const postHref = `/donations/${donationId}`;
       const profileHref = `/profile/${user.userId}`;

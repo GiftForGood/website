@@ -1,6 +1,6 @@
 import React from 'react';
 import Error from 'next/error';
-import ActionPage from '../src/components/action/pages/ActionPage';
+import ActionPage from '@components/action/pages/ActionPage';
 import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 

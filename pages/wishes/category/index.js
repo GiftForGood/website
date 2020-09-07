@@ -1,18 +1,18 @@
 import React from 'react';
-import ViewAllWishesPage from '../../../src/components/category/pages/ViewAllWishesPage';
+import ViewAllWishesPage from '@components/category/pages/ViewAllWishesPage';
 import dynamic from 'next/dynamic';
-import SessionProvider from '../../../src/components/session/modules/SessionProvider';
-import { isAuthenticated } from '../../../utils/authentication/authentication';
-import Header from '../../../src/components/header';
-import { WISHES } from '../../../utils/constants/search';
+import SessionProvider from '@components/session/modules/SessionProvider';
+import { isAuthenticated } from '@utils/authentication/authentication';
+import Header from '@components/header';
+import { WISHES } from '@constants/search';
 
-const TopNavigationBar = dynamic(() => import('../../../src/components/navbar/modules/TopNavigationBar'), {
+const TopNavigationBar = dynamic(() => import('@components/navbar/modules/TopNavigationBar'), {
   ssr: false,
 });
-const BottomNavigation = dynamic(() => import('../../../src/components/navbar/modules/BottomNavigation'), {
+const BottomNavigation = dynamic(() => import('@components/navbar/modules/BottomNavigation'), {
   ssr: false,
 });
-const Footer = dynamic(() => import('../../../src/components/footer/Footer'), { ssr: false });
+const Footer = dynamic(() => import('@components/footer/Footer'), { ssr: false });
 
 export async function getServerSideProps({ query, req, res }) {
   let user = await isAuthenticated(req, res);

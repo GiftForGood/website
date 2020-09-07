@@ -19,8 +19,8 @@ import {
 import styled from 'styled-components';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { months } from '../../../../utils/constants/month';
-import api from '../../../../utils/api';
+import { months } from '@constants/month';
+import api from '@api';
 import DragNDropInputField from './DragNDropInputField';
 import moment from 'moment';
 import LivePreviewDonation from './livePreviewDonation';
@@ -39,10 +39,10 @@ import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 import { toast } from 'react-toastify';
 import ToastContainer from '../../toast/ToastContainer';
 import { useRouter } from 'next/router';
-import { getDay, getMonth, getYear } from '../../../../utils/api/time';
+import { getDay, getMonth, getYear } from '@api/time';
 import { v4 as uuidv4 } from 'uuid';
 import MrtDropdownField from '../../inputfield/MrtDropdownField';
-import { logSuccessfullyCreatedDonation } from '../../../../utils/analytics';
+import { logSuccessfullyCreatedDonation } from '@utils/analytics';
 import DonationContext from '../context';
 
 const Container = styled.div`

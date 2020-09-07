@@ -1,18 +1,20 @@
 import React from 'react';
-import api from '../../utils/api';
-import DonationPage from '../../src/components/donationDetail/pages/DonationPage';
+import api from '@api';
+import DonationPage from '@components/donationDetail/pages/DonationPage';
 import dynamic from 'next/dynamic';
-import SessionProvider from '../../src/components/session/modules/SessionProvider';
+import SessionProvider from '@components/session/modules/SessionProvider';
 import Head from 'next/head';
-import { isAuthenticated } from '../../utils/authentication/authentication';
+import { isAuthenticated } from '@utils/authentication/authentication';
 import Error from 'next/error';
-import { ogImagePath } from '../../utils/constants/imagePaths';
+import { ogImagePath } from '@constants/imagePaths';
 import { useRouter } from 'next/router';
-import Header from '../../src/components/header';
-const TopNavigationBar = dynamic(() => import('../../src/components/navbar/modules/TopNavigationBar'), {
+import Header from '@components/header';
+import { deserializeFirestoreTimestampToUnixTimestamp } from '@utils/firebase/deserializer';
+
+const TopNavigationBar = dynamic(() => import('@components/navbar/modules/TopNavigationBar'), {
   ssr: false,
 });
-const Footer = dynamic(() => import('../../src/components/footer/Footer'), { ssr: false });
+const Footer = dynamic(() => import('@components/footer/Footer'), { ssr: false });
 
 export async function getServerSideProps({ params, req, res, query }) {
   const donationId = params.donationId;
@@ -23,6 +25,7 @@ export async function getServerSideProps({ params, req, res, query }) {
   if (Object.keys(donationDetails).length !== 0) {
     donorDetails = await getDonorDetails(donationDetails.user.userId);
   }
+  deserializeFirestoreTimestampToUnixTimestamp(donorDetails, donationDetails);
   return {
     props: {
       donationId,
@@ -47,7 +50,7 @@ const getDonorDetails = async (donorId) => {
 
 const Donation = ({ donationId, donationDetails, donorDetails, user, prevHref, categoryName }) => {
   const router = useRouter();
-  if (Object.keys(donationDetails).length === 0) {
+  if (donationDetails === undefined || Object.keys(donationDetails).length === 0) {
     return <Error statusCode={404} />;
   }
 

@@ -3,7 +3,7 @@ import { Text } from '@kiwicom/orbit-components/lib';
 import Stack from '@kiwicom/orbit-components/lib/Stack';
 import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
-import { colors } from '../../../utils/constants/colors';
+import { colors } from '@constants/colors';
 
 const SquareBox = styled.div`
   width: calc(60px + 2vw);

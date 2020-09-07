@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Modal, { ModalSection } from '@kiwicom/orbit-components/lib/Modal';
 import { ButtonLink, Heading, Stack } from '@kiwicom/orbit-components/lib';
 import { Facebook, Twitter, Link } from '@kiwicom/orbit-components/lib/icons';
-import { wishes } from '../../../utils/constants/postType';
+import { wishes } from '@constants/postType';
 import { useRouter } from 'next/router';
 
 const SharePostModal = ({ postUrl, postType, onClose }) => {

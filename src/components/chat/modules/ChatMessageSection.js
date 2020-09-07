@@ -7,7 +7,7 @@ import ChatBubbleForImage from './ChatBubbleForImage';
 import ChatBubbleForCalendar from './ChatBubbleForCalendar';
 import ProfileAvatar from '../../imageContainers/ProfileAvatar';
 import GreyText from '../../text/GreyText';
-import { getTimeDifferenceFromNow } from '../../../../utils/api/time';
+import { getTimeDifferenceFromNow } from '@api/time';
 
 // to following two containers are used to prevent the
 // right section to exceed the maximum width
