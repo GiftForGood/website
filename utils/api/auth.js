@@ -1,5 +1,4 @@
-import { db, firebaseAuth, firebaseStorage } from '../firebase';
-import firebase from 'firebase/app';
+import { db, firebaseAuth, firebaseStorage, firebase } from '../firebase';
 import * as path from 'path';
 import { FIREBASE_EMAIL_ACTION_URL } from '../constants/siteUrl';
 import { DONOR, NPO } from '../constants/usersType';
@@ -240,7 +239,7 @@ class AuthAPI {
     }
 
     const newDonor = donorsCollection.doc(userInfo.uid);
-    const timeNow = Date.now();
+    const timeNow = firebase.firestore.FieldValue.serverTimestamp();
     const data = {
       userId: userInfo.uid,
       name: name,
@@ -270,7 +269,7 @@ class AuthAPI {
     const userDoc = donorsCollection.doc(id);
 
     const data = {
-      lastLoggedInDateTime: Date.now(),
+      lastLoggedInDateTime: firebase.firestore.FieldValue.serverTimestamp(),
     };
     await userDoc.update(data);
 
@@ -292,7 +291,7 @@ class AuthAPI {
 
     const userId = userProfile.uid;
     const newNPO = nposCollection.doc(userId);
-    const timeNow = Date.now();
+    const timeNow = firebase.firestore.FieldValue.serverTimestamp();
     const data = {
       userId: userId,
       name: name,
@@ -322,7 +321,7 @@ class AuthAPI {
 
   async _createNPOVerificationData(userProfile, name, contact, organizationName, registrationNumber, activities) {
     const organizationInfo = await this._getOrganizationInfo(organizationName);
-    const timeNow = Date.now();
+    const timeNow = firebase.firestore.FieldValue.serverTimestamp();
 
     const organization = {
       ...organizationInfo,
@@ -359,7 +358,7 @@ class AuthAPI {
     const userDoc = nposCollection.doc(id);
 
     const data = {
-      lastLoggedInDateTime: Date.now(),
+      lastLoggedInDateTime: firebase.firestore.FieldValue.serverTimestamp(),
     };
     await userDoc.update(data);
 
