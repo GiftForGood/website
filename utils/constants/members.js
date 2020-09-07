@@ -38,6 +38,13 @@ export const partnershipTeamMembers = [
       'Qin-Liang loves bringing people together and hopes to channel this energy towards connecting NPOs and donors on GiftforGood. Work aside, he has found the perfect popiah combination. Ask him about it!',
   },
   {
+    imageUrl: 'https://res.cloudinary.com/giftforgood/image/upload/v1599487007/members/roxanne.jpg',
+    name: 'Roxanne Kwek',
+    position: 'Partnerships Executive',
+    description:
+      'Hey! I’m Roxanne, in my schooling days, I was an active volunteer and am now serving the public in the government. I believe  in the vision of Gift for Good; and hope that donations-in-kind would gain greater momentum with us :)',
+  },
+  {
     imageUrl: 'https://res.cloudinary.com/giftforgood/image/upload/v1599146285/members/sylvia.jpg',
     name: 'Sylvia Chong',
     position: 'Partnerships Executive',
