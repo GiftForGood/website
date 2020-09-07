@@ -6,7 +6,7 @@ const SearchPage = () => {
   const router = useRouter();
 
   const onEnterPressed = (query, selectedIndex) => {
-    router.push(`/${selectedIndex}/category`, `/${selectedIndex}/category?q=${query}`);
+    router.push(`/${selectedIndex}/category?q=${query}`);
   };
 
   return <SearchBarV2 onEnterPressed={onEnterPressed} />;
