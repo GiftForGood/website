@@ -9,6 +9,7 @@ import BlackText from '../../text/BlackText';
 import { WISHES_BATCH_SIZE } from '@api/constants';
 import InfiniteScroll from '../../scroller/InfiniteScroller';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
+import { deserializeFirestoreTimestampToUnixTimestamp } from '@utils/firebase/deserializer';
 
 const GridSectionContainer = styled.div`
   margin-top: 20px;
@@ -170,24 +171,26 @@ const CompletedWishesPanel = ({ isMine, userId }) => {
 
   const CompletedWishes = () => {
     return completedWishes.map((completedWish, index) => {
-      console.log(completedWish.data());
+      const completedWishData = completedWish.data();
+      deserializeFirestoreTimestampToUnixTimestamp(completedWishData);
+      const { wishId, organization, title, description, user, postedDateTime, isBumped, status } = completedWishData;
       const categoryTags = completedWish.data().categories.map((category) => category.name);
       return (
         <BumpableWishCard
           index={index}
-          key={completedWish.data().wishId}
-          wishId={completedWish.data().wishId}
-          name={completedWish.data().organization.name}
-          title={completedWish.data().title}
-          description={completedWish.data().description}
-          profileImageUrl={completedWish.data().user.profileImageUrl}
-          postedDateTime={completedWish.data().postedDateTime}
-          postHref={`/wishes/${completedWish.data().wishId}`}
-          profileHref={`/profile/${completedWish.data().user.userId}`}
+          key={wishId}
+          wishId={wishId}
+          name={organization.name}
+          title={title}
+          description={description}
+          profileImageUrl={user.profileImageUrl}
+          postedDateTime={postedDateTime}
+          postHref={`/wishes/${wishId}`}
+          profileHref={`/profile/${user.userId}`}
           categoryTags={categoryTags}
-          isBumped={completedWish.data().isBumped}
+          isBumped={isBumped}
           isMine={false}
-          status={completedWish.data().status}
+          status={status}
         />
       );
     });
