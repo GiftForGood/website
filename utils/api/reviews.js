@@ -1,4 +1,4 @@
-import { db } from '../firebase';
+import { db, firebase } from '../firebase';
 import { REVIEWS_BATCH_SIZE } from './constants';
 import { wishes, donations } from '@constants/postType';
 import ReviewError from './error/reviewError';
@@ -80,7 +80,7 @@ class ReviewsAPI {
       post: post,
       reviewBy: reviewBy,
       reviewFor: reviewFor,
-      dateTime: Date.now(),
+      dateTime: firebase.firestore.FieldValue.serverTimestamp(),
     };
     await newReview.set(data);
 
@@ -135,7 +135,7 @@ class ReviewsAPI {
       post: post,
       reviewBy: reviewBy,
       reviewFor: reviewFor,
-      dateTime: Date.now(),
+      dateTime: firebase.firestore.FieldValue.serverTimestamp(),
     };
     await newReview.set(data);
 
