@@ -33,7 +33,7 @@ const TermsAndConditionModal = ({ onClose, onSubmit, tnc }) => {
   return (
     <>
       <Modal fixedFooter onClose={onClose}>
-        <ModalHeader title="Terms and Conditions" illustration={<Illustration name="Insurance" size="extraSmall" />} />
+        <ModalHeader title="" />
         <ModalSection>
           <Stack>
             <Text as="div">
