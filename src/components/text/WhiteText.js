@@ -21,6 +21,9 @@ const WhiteText = styled.div`
     if (props.size === 'large') {
       return '18px';
     }
+    if (props.size === 'extraLarge') {
+      return '22px';
+    }
   }};
 `;
 

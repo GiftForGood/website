@@ -1,7 +1,7 @@
 import React from 'react';
 import CardHeader from '../card/CardHeader';
 import { Stack, Text, Grid, Badge } from '@kiwicom/orbit-components/lib';
-import { getTimeDifferenceFromNow } from '../../../utils/api/time';
+import { getTimeDifferenceFromNow } from '@api/time';
 import styled, { css } from 'styled-components';
 import { useRouter } from 'next/router';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';

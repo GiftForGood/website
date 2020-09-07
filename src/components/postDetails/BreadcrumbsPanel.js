@@ -1,7 +1,7 @@
 import React from 'react';
 import Breadcrumbs, { BreadcrumbsItem } from '@kiwicom/orbit-components/lib/Breadcrumbs';
 import { Text } from '@kiwicom/orbit-components/lib';
-import { wishes } from '../../../utils/constants/postType';
+import { wishes } from '@constants/postType';
 
 const BreadcrumbsPanel = ({ postType, prevHref, categoryName }) => {
   const isWishPost = postType === wishes;

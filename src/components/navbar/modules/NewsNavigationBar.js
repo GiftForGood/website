@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
 import { Text, Stack } from '@kiwicom/orbit-components';
-import { colors } from '../../../../utils/constants/colors';
+import { colors } from '@constants/colors';
 
 const Container = styled.div`
   display: ${({ shown }) => (shown ? 'flex' : 'none')};

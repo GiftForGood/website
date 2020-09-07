@@ -4,8 +4,8 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import styled from 'styled-components';
 import ForgetPasswordButton from '../../buttons/ForgetPasswordButton';
-import { companyIconImagePath } from '../../../../utils/constants/imagePaths';
-import api from '../../../../utils/api';
+import { companyIconImagePath } from '@constants/imagePaths';
+import api from '@api';
 
 const Logo = styled.img`
   height: 100px;

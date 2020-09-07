@@ -3,7 +3,7 @@ import { Button, InputField, Stack, Separator } from '@kiwicom/orbit-components/
 import BlackText from '../../text/BlackText';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { getLocations } from '../../../../utils/api/common/location';
+import { getLocations } from '@api/common/location';
 
 const WishesFilterBy = ({ onLatLngUpdated }) => {
   const validationSchema = Yup.object().shape({

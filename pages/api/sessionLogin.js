@@ -1,7 +1,7 @@
-import admin from '../../utils/admin-firebase';
-import cookies from '../../utils/cookie';
-import { SECURE_COOKIE } from '../../utils/constants/cookie';
-import { cors } from '../../utils/middleware/cors';
+import admin from '@utils/admin-firebase';
+import cookies from '@utils/cookie';
+import { SECURE_COOKIE } from '@constants/cookie';
+import { cors } from '@utils/middleware/cors';
 
 async function handler(req, res) {
   await cors(req, res);

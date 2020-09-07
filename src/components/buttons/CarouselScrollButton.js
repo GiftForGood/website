@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { Button } from '@kiwicom/orbit-components/lib';
 import { ChevronRight, ChevronLeft } from '@kiwicom/orbit-components/lib/icons';
-import { colors } from '../../../utils/constants/colors';
+import { colors } from '@constants/colors';
 
 const CarouselButton = styled.div`
   background: Gainsboro;

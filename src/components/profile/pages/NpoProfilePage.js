@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Stack } from '@kiwicom/orbit-components/lib';
 import Grid from '@kiwicom/orbit-components/lib/utils/Grid';
 import styled from 'styled-components';
-import api from '../../../../utils/api';
-import { npo as npoProfileType } from '../../../../utils/constants/userType';
+import api from '@api';
+import { npo as npoProfileType } from '@constants/userType';
 import useUser from '../../session/modules/useUser';
 
 import ProfileHeaderBar from '../modules/ProfileHeaderBar';

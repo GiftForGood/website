@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import api from '../../../../utils/api';
+import api from '@api';
 import BumpableWishCard from '../../card/BumpableWishCard';
 import { Grid, Button, Loading, Stack } from '@kiwicom/orbit-components/lib';
 import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import SeeMoreButtonStyle from '../../buttons/SeeMoreButton';
 import BlackText from '../../text/BlackText';
-import { WISHES_BATCH_SIZE } from '../../../../utils/api/constants';
+import { WISHES_BATCH_SIZE } from '@api/constants';
 import InfiniteScroll from '../../scroller/InfiniteScroller';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 

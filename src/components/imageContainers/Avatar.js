@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import AccountCircle from '@kiwicom/orbit-components/lib/icons/AccountCircle';
-import { colors } from '../../../utils/constants/colors';
+import { colors } from '@constants/colors';
 
 const CircularImage = styled.img`
   width: ${(props) => (props.size ? props.size : '40px')};

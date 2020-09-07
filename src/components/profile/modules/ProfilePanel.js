@@ -1,7 +1,7 @@
 import React from 'react';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import styled, { css } from 'styled-components';
-import { npo } from '../../../../utils/constants/userType';
+import { npo } from '@constants/userType';
 import ProfileDetails from './ProfileDetails';
 
 const ProfilePanelWrapper = styled.div`

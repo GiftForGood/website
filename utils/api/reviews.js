@@ -1,6 +1,6 @@
 import { db, firebase } from '../firebase';
 import { REVIEWS_BATCH_SIZE } from './constants';
-import { wishes, donations } from '../../utils/constants/postType';
+import { wishes, donations } from '@constants/postType';
 import ReviewError from './error/reviewError';
 
 const reviewsCollection = db.collection('reviews');

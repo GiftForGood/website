@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled, { css } from 'styled-components';
-import api from '../../../../utils/api/';
+import api from '@api';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 import CarouselScrollButton from '../../buttons/CarouselScrollButton';

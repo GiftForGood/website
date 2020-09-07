@@ -3,7 +3,7 @@ import Popover from 'react-tiny-popover';
 import styled from 'styled-components';
 import { ListChoice, InputField, ButtonLink, Loading } from '@kiwicom/orbit-components/lib';
 import { ChevronDown } from '@kiwicom/orbit-components/lib/icons';
-import useDebouncedEffect from '../../../utils/hooks/useDebouncedEffect';
+import useDebouncedEffect from '@utils/hooks/useDebouncedEffect';
 import BlackText from '../text/BlackText';
 
 const ContentContainer = styled.div`

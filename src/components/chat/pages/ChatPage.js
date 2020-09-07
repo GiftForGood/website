@@ -2,12 +2,12 @@ import React, { useState, useEffect, useContext, useReducer, useMemo } from 'rea
 import { Grid } from '@kiwicom/orbit-components/lib';
 import ListOfChats from '../modules/ListOfChats';
 import ChatDialog from '../modules/ChatDialog';
-import api from '../../../../utils/api';
+import api from '@api';
 import Error from 'next/error';
 import styled from 'styled-components';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 import Router from 'next/router';
-import useWindowDimensions from '../../../../utils/hooks/useWindowDimensions';
+import useWindowDimensions from '@utils/hooks/useWindowDimensions';
 import useNavbarHeight from '../../navbar/modules/useNavbarHeight';
 import ChatContext from '../context';
 import initialState from '../initialState';

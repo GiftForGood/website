@@ -2,14 +2,14 @@ import React, { useState } from 'react';
 import Categories from '../modules/Categories';
 import BlackText from '../../text/BlackText';
 import { Grid } from '@kiwicom/orbit-components/lib';
-import { DONATIONS_BATCH_SIZE } from '../../../../utils/api/constants';
+import { DONATIONS_BATCH_SIZE } from '@api/constants';
 import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import algoliasearch from 'algoliasearch/lite';
 import { InstantSearch, Configure, connectInfiniteHits } from 'react-instantsearch-dom';
 import DonationsHitWrapper from '../modules/DonationsHitWrapper';
-import { getByStatus } from '../../../../utils/algolia/filteringRules';
-import { donationsSortByRule } from '../../../../utils/algolia/sortByRules';
+import { getByStatus } from '@utils/algolia/filteringRules';
+import { donationsSortByRule } from '@utils/algolia/sortByRules';
 import dynamic from 'next/dynamic';
 const DonationsSortFilterPanel = dynamic(() => import('../modules/DonationsSortFilterPanel'), {
   ssr: false,

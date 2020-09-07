@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { Button } from '@kiwicom/orbit-components/lib';
-import { colors } from '../../../utils/constants/colors';
+import { colors } from '@constants/colors';
 import GreyText from '../text/GreyText';
 
 const CalendarButtonStyle = styled.button`
