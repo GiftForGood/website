@@ -173,7 +173,7 @@ const CompletedDonationsPanel = ({ isMine, userId }) => {
   const CompletedDonations = () => {
     return completedDonations.map((completedDonation) => {
       const completedDonationData = completedDonation.data();
-      deserializeFirestoreTimestampToUnixTimestamp(completedDonation);
+      deserializeFirestoreTimestampToUnixTimestamp(completedDonationData);
       const {
         donationId,
         user,
