@@ -9,6 +9,8 @@ import Error from 'next/error';
 import { ogImagePath } from '@constants/imagePaths';
 import { useRouter } from 'next/router';
 import Header from '@components/header';
+import { deserializeFirestoreTimestampToUnixTimestamp } from '@utils/firebase/deserializer';
+
 const TopNavigationBar = dynamic(() => import('@components/navbar/modules/TopNavigationBar'), {
   ssr: false,
 });
@@ -23,6 +25,7 @@ export async function getServerSideProps({ params, req, res, query }) {
   if (Object.keys(wishDetails).length !== 0) {
     npoDetails = await getNpoDetails(wishDetails.user.userId);
   }
+  deserializeFirestoreTimestampToUnixTimestamp(wishDetails, npoDetails);
   return {
     props: {
       wishId,

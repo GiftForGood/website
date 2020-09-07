@@ -1,6 +1,5 @@
-import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
-import { db, firebaseAuth, firebaseStorage } from '../firebase';
+import { db, firebaseAuth, firebaseStorage, firebase } from '../firebase';
 import * as moment from 'moment';
 import * as path from 'path';
 import { DONATIONS_BATCH_SIZE } from './constants';
@@ -96,7 +95,11 @@ class DonationsAPI {
       getLocations(locations),
     ]);
 
-    const timeNow = Date.now();
+    const timeNow = firebase.firestore.FieldValue.serverTimestamp();
+    const validPeriodFrom = moment(validPeriodFromDate, 'DD-MM-YYYY').toDate();
+    const validPeriodTo = moment(validPeriodToDate, 'DD-MM-YYYY').toDate();
+    const firestoreValidPeriodFrom = firebase.firestore.Timestamp.fromDate(validPeriodFrom);
+    const firestoreValidPeriodTo = firebase.firestore.Timestamp.fromDate(validPeriodTo);
     let data = {
       donationId: newDonation.id,
       title: title,
@@ -106,8 +109,8 @@ class DonationsAPI {
       user: userInfo,
       imageUrls: imageUrls,
       coverImageUrl: coverImageUrl,
-      validPeriodFrom: moment(validPeriodFromDate, 'DD-MM-YYYY').valueOf(),
-      validPeriodTo: moment(validPeriodToDate, 'DD-MM-YYYY').valueOf(),
+      validPeriodFrom: firestoreValidPeriodFrom,
+      validPeriodTo: firestoreValidPeriodTo,
       dimensions: dimensions,
       locations: locationInfos,
       itemCondition: itemCondition,
@@ -382,18 +385,22 @@ class DonationsAPI {
 
     const categoryInfos = getCustomPostCategoryInfos(allCategoryInfos);
 
+    const validPeriodFrom = moment(validPeriodFromDate, 'DD-MM-YYYY').toDate();
+    const validPeriodTo = moment(validPeriodToDate, 'DD-MM-YYYY').toDate();
+    const firestoreValidPeriodFrom = firebase.firestore.Timestamp.fromDate(validPeriodFrom);
+    const firestoreValidPeriodTo = firebase.firestore.Timestamp.fromDate(validPeriodTo);
     const data = {
       title: title,
       description: description,
       categories: categoryInfos,
       imageUrls: imageUrls,
       coverImageUrl: coverImageUrl,
-      validPeriodFrom: moment(validPeriodFromDate, 'DD-MM-YYYY').valueOf(),
-      validPeriodTo: moment(validPeriodToDate, 'DD-MM-YYYY').valueOf(),
+      validPeriodFrom: firestoreValidPeriodFrom,
+      validPeriodTo: firestoreValidPeriodTo,
       dimensions: dimensions,
       locations: locationInfos,
       itemCondition: itemCondition,
-      updatedDateTime: Date.now(),
+      updatedDateTime: firebase.firestore.FieldValue.serverTimestamp(),
     };
 
     let donationDoc = donationsCollection.doc(id);
@@ -416,7 +423,7 @@ class DonationsAPI {
       throw new DonationError('invalid-donation-status', 'Only can close a pending donation');
     }
 
-    const updateTime = Date.now();
+    const updateTime = firebase.firestore.FieldValue.serverTimestamp();
     const data = {
       updatedDateTime: updateTime,
       status: CLOSED,
@@ -451,7 +458,7 @@ class DonationsAPI {
       address: npoInfo.organization.address,
     };
 
-    const updateTime = Date.now();
+    const updateTime = firebase.firestore.FieldValue.serverTimestamp();
     const data = {
       updatedDateTime: updateTime,
       status: COMPLETED,
