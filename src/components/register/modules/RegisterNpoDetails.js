@@ -76,7 +76,11 @@ const RegisterNpoDetails = () => {
         activities
       );
       await api.auth.sendVerificationEmail();
-      displayAlert('Successfully Registered!', `A verification email has been sent to ${user.email}`, 'success');
+      displayAlert(
+        'Successfully Registered!',
+        `A verification email has been sent to ${user.email}. Remember to check your junk email too!`,
+        'success'
+      );
       let response = await client.post('/api/sessionLogin', { token });
       if (response.status === 200) {
         await timeout(1000);

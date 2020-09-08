@@ -54,7 +54,7 @@ updatedOn: 8 Sept 2020
 </details>
 
 <details>
-  <summary>Which location should i use in my “Wishes” post?</summary>
+  <summary>Which location should I use in my “Wishes” post?</summary>
   <p>We recommend you to use the address of your centre. We strongly advise against listing your beneficiaries’ address here. You may inform donors of the beneficiary’s addresses at their consent in a private message.</p>
 </details>
 

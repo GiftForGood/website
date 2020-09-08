@@ -10,7 +10,7 @@ createdOn: "17 Aug 2020"
     - Doing so will reduce the need for back and forth communication between you and donors
 2. If you require large quantity items, try to break your wish down to a size that is manageable by one donor. This is so that your wish can be fulfilled in a shorter period of time.
 3. If you require specific type/brand of item, please list it down within the wish description as well.
-4. If you required new item, do indicate. 
+4. If you require new item, do indicate. 
 
 **Sample wish description**
 ```
@@ -31,8 +31,8 @@ Item Condition: New
 | Category            | Question                                                                                              |
 | ------------------- | ----------------------------------------------------------------------------------------------------- |
 | Apparel 👕           | - What sizes are you looking for? <br> - Is the clothing for a specific need? E.g uniform            |
-| Baby Needs 🍼        | - What age group are you requesting for? <br> - Does the item need to be sterilised? <br> - Do you need a laptop/computer with specific specs? <br> - Do you need a whole PC or only parts of it? |
-| Electronics 💻       | - What brand of laptop does your client need? <br>                                                    |
+| Baby Needs 🍼        | - What age group are you requesting for? <br> - Does the item need to be sterilised? |
+| Electronics 💻       | - What brand of laptop does your client need? <br> - Do you need a laptop/computer with specific specs? <br> - Do you need a whole PC or only parts of it?                                                   |
 | Food 🍚              | - Does it need to be halal certified? <br> - Does it need to be vegetarian/vegan? <br> - Does it need to be individually packed? <br> - Are there any allergens to avoid? |
 | Furniture 🛋         | - What are the dimensions of the furniture you are requesting for?                                    |
 | PPE 🧴               | - What type of mask are you requesting for? <br>- What brand of hand sanitizer are you looking at? <br> - Is there a maximum alcohol % for the hand sanitizers?   |
