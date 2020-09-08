@@ -51,7 +51,9 @@ const Card = ({ onClick, buttonTitle }) => {
     <CardWrapper>
       <CardContent>
         <Title />
-        <Description>Donating in-kind has never been easier. Join us as a donor and get connected to NPOs across Singapore!</Description>
+        <Description>
+          Donating in-kind has never been easier. Join us as a donor and get connected to NPOs across Singapore!
+        </Description>
       </CardContent>
 
       <CardAction>
