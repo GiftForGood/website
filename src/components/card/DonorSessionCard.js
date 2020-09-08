@@ -51,7 +51,7 @@ const Card = ({ onClick, buttonTitle }) => {
     <CardWrapper>
       <CardContent>
         <Title />
-        <Description>With over 300 Non Profit Organizations, you will definitely find something to donate.</Description>
+        <Description>Donating in-kind has never been easier. Join us as a donor and get connected to NPOs across Singapore!</Description>
       </CardContent>
 
       <CardAction>
