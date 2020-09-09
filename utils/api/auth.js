@@ -404,7 +404,7 @@ class AuthAPI {
     }
 
     if (await this._doesNPOExist(userInfo.uid)) {
-      throw new AuthError('unable-to-create-user', 'User already sign up as a NPO');
+      throw new AuthError('unable-to-create-user', 'User already signed up as a NPO');
     }
   }
 
@@ -418,7 +418,7 @@ class AuthAPI {
     }
 
     if (await this._doesDonorExist(userInfo.uid)) {
-      throw new AuthError('unable-to-create-user', 'User already sign up as a Donor');
+      throw new AuthError('unable-to-create-user', 'User already signed up as a Donor');
     }
   }
 }
