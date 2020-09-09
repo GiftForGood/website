@@ -12,7 +12,7 @@ import {
   logDesktopPostWishToAnalytics,
 } from '@utils/analytics';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
-import { NOT_VERIFIED_MESSAGE } from '@constants/callToActionButton';
+import { NOT_VERIFIED_MESSAGE_NPO, NOT_VERIFIED_MESSAGE_DONOR } from '@constants/callToActionButton';
 
 const CallToActionButtonStyle = styled.button`
   background: ${colors.donorBackground};
@@ -79,7 +79,7 @@ const CallToActionButton = ({ fullWidth, rounded }) => {
   return (
     <Verified>
       {({ isDisabled }) => (
-        <Tooltip content={NOT_VERIFIED_MESSAGE} enabled={isDisabled}>
+        <Tooltip content={user.donor ? NOT_VERIFIED_MESSAGE_DONOR : NOT_VERIFIED_MESSAGE_NPO} enabled={isDisabled}>
           <Button
             fullWidth={fullWidth}
             asComponent={rounded ? BottomCallToActionButtonStyle : CallToActionButtonStyle}
