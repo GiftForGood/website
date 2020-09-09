@@ -16,10 +16,7 @@ const NewsNavigationBar = ({ show = false }) => {
   return (
     <Container shown={shown}>
       <Stack justify="center" align="center" direction="row">
-        <Text>
-          Disclaimer: This website is still under development and all posts are meant for illustration purposes only.
-          The official launch of GiftForGood will be in Sept 2020.
-        </Text>
+        <Text>Soft launch (08/09 - 13/09): We are currently onboarding NPOs only</Text>
       </Stack>
     </Container>
   );
