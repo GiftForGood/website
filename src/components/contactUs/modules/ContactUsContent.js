@@ -36,11 +36,17 @@ const ContactUsContent = () => {
       </TitleContainer>
       <ContactUsContainer>
         <Text size="large" weight="bold" spaceAfter="normal">
-          Contact us
+          Contact us @
         </Text>
-        <TextLink size="large" href="mailto: support@giftforgood.io">
-          support@giftforgood.io
-        </TextLink>
+        <Text size="large">
+          <TextLink size="large" href="mailto: support@giftforgood.io">
+            support@giftforgood.io
+          </TextLink>{' '}
+          or{' '}
+          <TextLink size="large" href="mailto: support@giftforgood.io">
+            hello@giftforgood.io
+          </TextLink>
+        </Text>
       </ContactUsContainer>
       <FeedbackContainer>
         <Text size="large" weight="bold" spaceAfter="normal">
