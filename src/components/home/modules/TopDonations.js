@@ -54,6 +54,9 @@ const TopDonations = ({ numberOfPosts, numberOfCategories }) => {
   useEffect(() => {
     getTopNCategories().then((categories) => {
       getTopNCategoriesFromAlgolia('donations').then(({ hits, facets }) => {
+        if (facets['categories.id'] === undefined || Object.keys(facets['categories.id']).length === 0) {
+          return;
+        }
         const sorted = sortObjectEntries(facets['categories.id']);
         if (sorted.length >= numberOfCategories) {
           const topNCategoriesIds = sorted.slice(0, numberOfCategories);
