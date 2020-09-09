@@ -61,6 +61,8 @@ Promo Code: ${partner.promoCode ? partner.promoCode : 'Not Required'}`;
 
 The following are delivery partners of GiftForGood:
 ${partnersMessage}
+
+More details on our delivery partners: https://www.giftforgood.io/delivery-partners
 `;
         api.chats
           .sendTextMessage(selectedChatId, systemGeneratedMessage)
