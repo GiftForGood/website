@@ -42,10 +42,11 @@ const ContactUsContent = () => {
           <TextLink size="large" href="mailto: support@giftforgood.io">
             support@giftforgood.io
           </TextLink>{' '}
-          or{' '}
-          <TextLink size="large" href="mailto: support@giftforgood.io">
+          (for tech enquiries) or{' '}
+          <TextLink size="large" href="mailto: hello@giftforgood.io">
             hello@giftforgood.io
-          </TextLink>
+          </TextLink>{' '}
+          (for all other enquiries)
         </Text>
       </ContactUsContainer>
       <FeedbackContainer>
