@@ -33,7 +33,7 @@ const ChatBubbleForCalendar = ({ dateTimes, isByLoggedInUser, sender, loggedInUs
     // Not sure if need this check as the button is disabled for the owner
     if (sender.id !== loggedInUser.user.userId) {
       // send auto generated message when the user that clicked isn't the one that sent
-      const message = `I am available for ${dateTime}`;
+      const message = `I am available on ${dateTime}`;
       api.chats
         .sendTextMessage(selectedChatId, message)
         .then(() => {})
