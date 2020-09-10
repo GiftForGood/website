@@ -1,5 +1,5 @@
 import React from 'react';
-import Avatar from '../../imageContainers/Avatar';
+import ProfileAvatar from '@components/imageContainers/ProfileAvatar';
 import RatingStars from '../../ratingStars';
 import styled from 'styled-components';
 import { colors } from '@constants/colors';
@@ -17,7 +17,7 @@ const ReviewCard = ({ isLoading, reviewByImageUrl, reviewByName, reviewRating, r
         <Loading loading={isLoading} text="Please wait, fetching reviews..." type="pageLoader">
           <Stack direction="column" spacing="condensed">
             <Stack direction="row" spacing="condensed">
-              <Avatar imageUrl={reviewByImageUrl} />
+              <ProfileAvatar imageUrl={reviewByImageUrl} />
               <Stack direction="column" shrink spacing="none">
                 <Text>
                   {reviewByName} ∙ {reviewDateTime}
