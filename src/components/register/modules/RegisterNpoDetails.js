@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter } from 'next/router';
-import { Button, InputField, Stack, Alert, Text, ButtonLink, Tooltip } from '@kiwicom/orbit-components/lib';
+import { Button, InputField, Stack, Alert, Text, ButtonLink, Tooltip, TextLink } from '@kiwicom/orbit-components/lib';
 import ChevronLeft from '@kiwicom/orbit-components/lib/icons/ChevronLeft';
 
 import { useDispatch, useSelector } from 'react-redux';
@@ -175,7 +175,6 @@ const RegisterNpoDetails = () => {
               </Tooltip>
             }
           />
-
           <InputField
             prefix="+65"
             disabled={formik.isSubmitting}
@@ -185,7 +184,6 @@ const RegisterNpoDetails = () => {
             error={formik.touched.mobileNumber && formik.errors.mobileNumber ? formik.errors.mobileNumber : ''}
             {...formik.getFieldProps('mobileNumber')}
           />
-
           <InputField
             disabled={formik.isSubmitting}
             type="email"
@@ -198,7 +196,6 @@ const RegisterNpoDetails = () => {
             error={formik.touched.email && formik.errors.email ? formik.errors.email : ''}
             {...formik.getFieldProps('email')}
           />
-
           <Stack spacing="none">
             <InputField
               disabled={formik.isSubmitting}
@@ -228,7 +225,6 @@ const RegisterNpoDetails = () => {
               </Text>
             )}
           </Stack>
-
           <PasswordStrength
             password={formik.values.password}
             show={formik.errors.password && formik.values.password.length > 0 ? true : false}
@@ -239,7 +235,6 @@ const RegisterNpoDetails = () => {
               setIsPasswordSecure(false);
             }}
           />
-
           <InputField
             disabled={formik.isSubmitting}
             type="password"
@@ -253,16 +248,25 @@ const RegisterNpoDetails = () => {
             }
             {...formik.getFieldProps('passwordConfirmation')}
           />
-
           {showAlert ? (
             <Alert icon title={alertTitle} type={alertType}>
               {alertDescription}
             </Alert>
           ) : null}
-
           <Button submit fullWidth={true} asComponent={BlueButton} loading={isLoading}>
             Register
           </Button>
+          <Text align="center" type="secondary">
+            By joining, you agree to the{' '}
+            <TextLink type="secondary" external href="https://www.giftforgood.io/privacy-policy">
+              Privacy Policy
+            </TextLink>{' '}
+            and our{' '}
+            <TextLink type="secondary" external href="https://www.giftforgood.io/terms-and-conditions">
+              Terms and Conditions
+            </TextLink>
+            .
+          </Text>
         </Stack>
       </form>
 

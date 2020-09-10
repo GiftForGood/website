@@ -26,6 +26,7 @@ import { timeout } from '../utils/timeout';
 import PasswordStrength from './PasswordStrength';
 import { Check } from '@kiwicom/orbit-components/lib/icons';
 import CheckIconWrapper from './CheckIconWrapper';
+import TextLink from '@kiwicom/orbit-components/lib/TextLink';
 
 const HeadingColor = styled.div`
   color: ${colors.donorBackground};
@@ -243,6 +244,17 @@ const RegisterDonor = () => {
           >
             Register
           </Button>
+          <Text align="center" type="secondary">
+            By joining, you agree to the{' '}
+            <TextLink type="secondary" external href="https://www.giftforgood.io/privacy-policy">
+              Privacy Policy
+            </TextLink>{' '}
+            and our{' '}
+            <TextLink type="secondary" external href="https://www.giftforgood.io/terms-and-conditions">
+              Terms and Conditions
+            </TextLink>
+            .
+          </Text>
         </Stack>
       </form>
 
