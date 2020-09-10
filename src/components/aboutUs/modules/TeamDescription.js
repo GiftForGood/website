@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Heading, Stack } from '@kiwicom/orbit-components/lib';
 import BlackText from '../../text/BlackText';
 import GreyText from '../../text/GreyText';
-import Avatar from '../../imageContainers/Avatar';
+import ProfileAvatar from '@components/imageContainers/ProfileAvatar';
 import { marketingTeamMembers, techTeamMembers, partnershipTeamMembers } from '../../../../utils/constants/members';
 import Linkify from 'react-linkify';
 
@@ -45,7 +45,7 @@ const TeamSection = ({ teamMembers }) => {
       {teamMembers.map((member) => {
         return (
           <Stack direction="row" spacing="extraLoose">
-            <Avatar size="125px" imageUrl={member.imageUrl} />
+            <ProfileAvatar width="125px" height="125px" imageUrl={member.imageUrl} />
             <MemberDescriptionContainer>
               <Stack direction="column">
                 <MemberDescriptionTitleContainer>
