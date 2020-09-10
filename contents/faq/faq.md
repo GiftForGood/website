@@ -2,7 +2,7 @@
 title: FAQ
 slug: faq
 createdOn: 17 Aug 2020
-updatedOn: 8 Sept 2020
+updatedOn: 9 Sept 2020
 ---
 # Frequently Asked Questions
 ### For NPOs
@@ -140,7 +140,7 @@ updatedOn: 8 Sept 2020
 </details>
 
 <details>
-  <summary>What I donate on GfG?</summary>
+  <summary>What can I donate on GfG?</summary>
   <p>
     GfG allows in-kind donations of various items listed below (based on categories)
   </p>
@@ -161,7 +161,7 @@ updatedOn: 8 Sept 2020
 
 <details>
   <summary>How long will my post stay up on the “Donations” page?</summary>
-  <p>Posts on the donation page will be up forever.</p>
+  <p>Posts on the donation page will be up for the valid period specified when creating the post.</p>
 </details>
 
 <details>
@@ -172,6 +172,16 @@ updatedOn: 8 Sept 2020
 <details>
   <summary>Who will pay for deliveries of the items?</summary>
   <p>We highly encourage donors to pay for delivery items as an act of goodwill. However, if you (as the donor) are unable to cover the delivery costs, do inform the NPOs to make the necessary delivery arrangements. </p>
+</details>
+
+<details>
+  <summary>Who arranges for delivery?</summary>
+  <p>Please check with the NPO to confirm the delivery arrangement. Depending on the confidentiality of beneficiaries' addresses, some NPOs would prefer to arrange the delivery. In cases where NPOs obtain consent from beneficiaries to share their addresses, NPOs may require your assistance to arrange for delivery instead.</p>
+</details>
+
+<details>
+  <summary>Can I drop off donated items?</summary>
+  <p>Yes. Before dropping off your items, please check with the NPO on the centre address, opening hours and whether there is space to hold your donated items.</p>
 </details>
 
 <details>
@@ -211,5 +221,5 @@ updatedOn: 8 Sept 2020
 
 <details>
   <summary>If I am interested in being a corporate donor, how can I help?</summary>
-  <p>If you wish to be a corporate donor, do contact us via partnerships@giftforgood.io we will reply within 3 working days.</p>
+  <p>If you wish to be a corporate donor, do contact us via partnerships@giftforgood.io and we will reply within 3 working days.</p>
 </details>

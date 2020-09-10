@@ -137,6 +137,9 @@ const TopNavigationBar = ({ showNews, searchDefaultIndex }) => {
             <ButtonLink transparent href="/partners" type="secondary">
               Partners
             </ButtonLink>
+            <ButtonLink transparent href="/delivery-partners" type="secondary">
+              Delivery Partners
+            </ButtonLink>
             <ButtonLink transparent href="https://dsc.comp.nus.edu.sg" type="secondary">
               Developer Student Club
             </ButtonLink>

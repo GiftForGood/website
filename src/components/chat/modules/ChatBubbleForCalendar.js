@@ -33,7 +33,7 @@ const ChatBubbleForCalendar = ({ dateTimes, isByLoggedInUser, sender, loggedInUs
     // Not sure if need this check as the button is disabled for the owner
     if (sender.id !== loggedInUser.user.userId) {
       // send auto generated message when the user that clicked isn't the one that sent
-      const message = `I am available for ${dateTime}`;
+      const message = `I am available on ${dateTime}`;
       api.chats
         .sendTextMessage(selectedChatId, message)
         .then(() => {})
@@ -61,6 +61,8 @@ Promo Code: ${partner.promoCode ? partner.promoCode : 'Not Required'}`;
 
 The following are delivery partners of GiftForGood:
 ${partnersMessage}
+
+More details on our delivery partners: https://www.giftforgood.io/delivery-partners
 `;
         api.chats
           .sendTextMessage(selectedChatId, systemGeneratedMessage)
