@@ -6,6 +6,6 @@ export const npoPartners = [
   {
     name: `Children's Aid Society`,
     imageUrl:
-      'https://res.cloudinary.com/giftforgood/image/upload/v1599748043/partners/CAS_IconLogo_RGB_Full_fplsy5.jpg',
+      'https://res.cloudinary.com/giftforgood/image/upload/v1599755328/partners/CAS_IconLogo_RGB_Full_fplsy5.jpg',
   },
 ];
