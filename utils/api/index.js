@@ -10,7 +10,6 @@ import BannersAPI from './banners';
 import TermsAndConditionsAPI from './termsandconditions';
 import ChatsAPI from './chats';
 import LogisticsAPI from './logistics';
-import PartnersAPI from './partners';
 
 class API {
   auth = new AuthAPI();
@@ -25,7 +24,6 @@ class API {
   termsandconditions = new TermsAndConditionsAPI();
   chats = new ChatsAPI();
   logistics = new LogisticsAPI();
-  partners = new PartnersAPI();
 }
 
 const api = new API();

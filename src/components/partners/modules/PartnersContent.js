@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import { Heading, Stack, Text, Grid, Tile } from '@kiwicom/orbit-components/lib';
-import api from '@api';
+import { partners } from '@constants/partners';
 
 const MainContainer = styled.div`
   max-width: 1280px;
@@ -45,22 +45,22 @@ const CardContainer = styled.div`
   `)}
 `;
 
-const PartnersSection = ({ partners }) => {
+const PartnersSection = () => {
   return (
     <Stack direction="column" spacing="loose">
       {partners.map((partner, index) => {
         return (
-          <Tile key={index} href={partner.data().siteUrl} external>
+          <Tile key={index} href={partner.siteUrl} external>
             <CardContainer>
               <Grid tablet={{ columns: '1fr 1fr' }} gap="20px">
                 <LogoContainer>
-                  <img src={partner.data().imageUrl} width="200px" height="auto" />
+                  <img src={partner.imageUrl} width="200px" height="auto" />
                 </LogoContainer>
                 <DetailsContainer>
                   <Stack spacing="none" spaceAfter="large">
-                    <Heading type="title2">About {partner.data().name}</Heading>
+                    <Heading type="title2">About {partner.name}</Heading>
                   </Stack>
-                  <Text>{partner.data().description}</Text>
+                  <Text>{partner.description}</Text>
                 </DetailsContainer>
               </Grid>
             </CardContainer>
@@ -72,30 +72,13 @@ const PartnersSection = ({ partners }) => {
 };
 
 const PartnersContent = () => {
-  const [partners, setPartners] = useState([]);
-
-  const getAllPartners = async () => {
-    api.partners
-      .getAll()
-      .then((res) => {
-        setPartners(res.docs);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  };
-
-  useEffect(() => {
-    getAllPartners();
-  }, []);
-
   return (
     <MainContainer>
       <Heading as="h1" type="display" spaceAfter="largest">
         Partners
       </Heading>
       <PartnersContainer>
-        <PartnersSection partners={partners} />
+        <PartnersSection />
       </PartnersContainer>
     </MainContainer>
   );
