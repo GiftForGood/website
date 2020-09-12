@@ -9,6 +9,9 @@ import Header from '@components/header';
 import api from '@api';
 import Quill from '@components/legal/module/Quill';
 import { LEGAL_TYPE } from '@constants/legal';
+
+import StaticNavbar from '@components/navbar/modules/StaticNavbar';
+
 const Footer = dynamic(() => import('@components/footer/Footer'), { ssr: false });
 
 export async function getStaticProps() {
@@ -35,6 +38,7 @@ const TermsAndConditions = ({ legalGeneral, legalNPO, legalDonor }) => {
   return (
     <>
       <Header title="Terms and Conditions | GiftForGood" />
+      <StaticNavbar />
       <MaxWidthContainer>
         <Grid
           columnGap="20px"
@@ -42,7 +46,7 @@ const TermsAndConditions = ({ legalGeneral, legalNPO, legalDonor }) => {
             columns: '8fr 2fr',
           }}
         >
-          <Quill content={html.content}/>
+          <Quill content={html.content} />
           <Stack>
             <ListChoice title="General terms and conditions" onClick={() => setHtml(legalGeneral)} />
             <ListChoice

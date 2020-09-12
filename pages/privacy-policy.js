@@ -5,6 +5,8 @@ import Header from '@components/header';
 import api from '@api';
 import Quill from '@components/legal/module/Quill';
 import { LEGAL_TYPE } from '@constants/legal';
+import StaticNavbar from '@components/navbar/modules/StaticNavbar';
+
 const Footer = dynamic(() => import('@components/footer/Footer'), { ssr: false });
 
 export async function getStaticProps() {
@@ -24,6 +26,7 @@ const PrivacyPolicy = ({ legal }) => {
   return (
     <>
       <Header title="Privacy Policy | GiftForGood" />
+      <StaticNavbar />
       <MaxWithContainer>
         <Quill content={legal ? legal.content : null} />
       </MaxWithContainer>
