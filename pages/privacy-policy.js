@@ -4,11 +4,11 @@ import dynamic from 'next/dynamic';
 import Header from '@components/header';
 import api from '@api';
 import Quill from '@components/legal/module/Quill';
-
+import { LEGAL_TYPE } from '@constants/legal';
 const Footer = dynamic(() => import('@components/footer/Footer'), { ssr: false });
 
 export async function getStaticProps() {
-  let dataSnapshot = await api.legal.get('privacy_policy');
+  let dataSnapshot = await api.legal.get(LEGAL_TYPE.PRIVACY_POLICY);
   return {
     props: {
       legal: dataSnapshot.exists ? dataSnapshot.data() : null,
