@@ -117,9 +117,6 @@ const TopDonations = ({ numberOfPosts, numberOfCategories }) => {
               {hits.map((donation) => {
                 const donationPostHref = `/donations/${donation.objectID}`;
                 const profileHref = `/profile/${donation.user.userId}`;
-                const locations = donation.locations.map((location) => {
-                  return location.name;
-                });
                 const validPeriod = `${getFormattedDate(donation.validPeriodFrom)} - ${getFormattedDate(
                   donation.validPeriodTo
                 )}`;
@@ -135,7 +132,7 @@ const TopDonations = ({ numberOfPosts, numberOfCategories }) => {
                     postHref={donationPostHref}
                     profileHref={profileHref}
                     validPeriod={validPeriod}
-                    locations={locations.join(', ')}
+                    itemCondition={donation.itemCondition}
                     categoryId={category.id}
                     categoryName={category.name}
                   ></DonationCard>
