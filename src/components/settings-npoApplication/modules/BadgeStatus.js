@@ -14,7 +14,7 @@ const BadgeStatus = ({ status }) => {
   } else if (status === STATUS.REVIEWING) {
     return <Badge type="dark">{status.toUpperCase()}</Badge>;
   } else {
-    return <Badge type="dark">{"Undefined"}</Badge>;
+    return <Badge type="dark">{"Loading"}</Badge>;
   }
 };
 

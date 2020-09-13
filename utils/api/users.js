@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import * as path from 'path';
 import { ALL_TEXT } from '../constants/imageVariation';
 import { uploadImage } from './common/images';
+import { getCurrentUser } from './common/user';
 import UserError from './error/userError';
 
 class UsersAPI {
@@ -134,6 +135,18 @@ class UsersAPI {
     await donorDoc.update(data);
 
     return donorDoc.get();
+  }
+
+  /**
+   * Update fields of current logged in donor
+   * @throws {UserError}
+   * @throws {FirebaseError}
+   * @return {object} A firebase document of the npo application info
+   */
+  async getNpoApplication() {
+    const user = await getCurrentUser();
+
+    return db.collection('npoVerifications').doc(user.uid).get();
   }
 
   async _getCurrentUserId() {
