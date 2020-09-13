@@ -7,9 +7,9 @@ import ReviewsAPI from './reviews';
 import UsersAPI from './users';
 import WishesAPI from './wishes';
 import BannersAPI from './banners';
-import TermsAndConditionsAPI from './termsandconditions';
 import ChatsAPI from './chats';
 import LogisticsAPI from './logistics';
+import LegalAPI from './legal';
 
 class API {
   auth = new AuthAPI();
@@ -21,9 +21,9 @@ class API {
   users = new UsersAPI();
   wishes = new WishesAPI();
   banners = new BannersAPI();
-  termsandconditions = new TermsAndConditionsAPI();
   chats = new ChatsAPI();
   logistics = new LogisticsAPI();
+  legal = new LegalAPI();
 }
 
 const api = new API();

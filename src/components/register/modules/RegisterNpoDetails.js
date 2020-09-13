@@ -37,7 +37,7 @@ const RegisterNpoDetails = () => {
   const [isPasswordSecure, setIsPasswordSecure] = useState(false);
 
   useEffect(() => {
-    api.termsandconditions.get().then((doc) => {
+    api.legal.get('tnc_npo').then((doc) => {
       setTnC(doc.data().content);
     });
   }, []);
