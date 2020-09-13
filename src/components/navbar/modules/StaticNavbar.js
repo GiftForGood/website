@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { Stack, ButtonLink, Separator, Drawer } from '@kiwicom/orbit-components';
-import CallToActionButton from '../../buttons/CallToActionButton';
+import { Stack } from '@kiwicom/orbit-components';
 import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import transition from '@kiwicom/orbit-components/lib/utils/transition';
 import { useDispatch } from 'react-redux';
 import { setNavbarHeight } from '../actions';
 import StaticLeftNavigation from './StaticLeftNavigation';
+import MobileDrawer from './MobileDrawer';
 
 const TopNavigationBarContainer = styled.nav`
   position: fixed;
@@ -101,48 +101,7 @@ const TopNavigationBar = ({ showNews, searchDefaultIndex }) => {
 
       <FakeContainer height={height} />
 
-      <Drawer shown={showDrawer} position="left" onClose={onHamburgerClose} suppressed={false}>
-        <Stack direction="column">
-          <Stack direction="column" spacing="tight">
-            <ButtonLink transparent type="secondary" href={'/'}>
-              Wishes
-            </ButtonLink>
-            <ButtonLink transparent type="secondary" href={'/donations'}>
-              Donations
-            </ButtonLink>
-            <CallToActionButton fullWidth={true} />
-          </Stack>
-
-          <Separator fullWidth />
-
-          <Stack direction="column" spacing="tight">
-            <ButtonLink transparent href="/about" type="secondary">
-              About Us
-            </ButtonLink>
-            <ButtonLink transparent href="/privacy-policy" type="secondary">
-              Privacy Policy
-            </ButtonLink>
-            <ButtonLink transparent href="/terms-and-conditions" type="secondary">
-              Terms and Conditions
-            </ButtonLink>
-            <ButtonLink transparent href="/partners" type="secondary">
-              Partners
-            </ButtonLink>
-            <ButtonLink transparent href="/delivery-partners" type="secondary">
-              Delivery Partners
-            </ButtonLink>
-            <ButtonLink transparent href="https://dsc.comp.nus.edu.sg" type="secondary">
-              Developer Student Club
-            </ButtonLink>
-            <ButtonLink transparent href="/contact" type="secondary">
-              Contact Us
-            </ButtonLink>
-            <ButtonLink transparent href="/faq" type="secondary">
-              FAQ
-            </ButtonLink>
-          </Stack>
-        </Stack>
-      </Drawer>
+      <MobileDrawer shown={showDrawer} onClose={onHamburgerClose} />
     </>
   );
 };
