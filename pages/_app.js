@@ -41,6 +41,10 @@ const GlobalStyle = createGlobalStyle`
   .control-dots {
     padding-inline-start: 0px; 
   }
+
+  .ql-editor li {
+    padding-bottom: 15px;
+  }
 `;
 
 const tokens = getTokens();
