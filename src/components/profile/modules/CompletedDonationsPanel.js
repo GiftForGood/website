@@ -181,12 +181,11 @@ const CompletedDonationsPanel = ({ isMine, userId }) => {
         description,
         postedDateTime,
         status,
-        locations,
+        itemCondition,
         coverImageUrl,
         validPeriodFrom,
         validPeriodTo,
       } = completedDonationData;
-      const locationNames = locations.map((location) => location.name).join(', ');
       const postHref = `/donations/${donationId}`;
       const profileHref = `/profile/${user.userId}`;
       const validPeriod = `${getFormattedDate(validPeriodFrom)} - ${getFormattedDate(validPeriodTo)}`;
@@ -203,7 +202,7 @@ const CompletedDonationsPanel = ({ isMine, userId }) => {
           coverImageUrl={coverImageUrl}
           status={status}
           validPeriod={validPeriod}
-          locations={locationNames}
+          itemCondition={itemCondition}
         />
       );
     });

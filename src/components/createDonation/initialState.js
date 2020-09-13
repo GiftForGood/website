@@ -5,7 +5,7 @@ const initialState = {
   validFrom: '',
   validTo: '',
   coverImage: null,
-  location: '',
+  itemCondition: '',
 };
 
 export default initialState;

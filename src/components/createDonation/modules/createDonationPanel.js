@@ -30,7 +30,7 @@ import {
   setDescription,
   setAllCategories,
   setCoverImage,
-  setLocation,
+  setItemCondition,
   setValidFrom,
   setValidTo,
   resetToInitialState,
@@ -376,7 +376,7 @@ const CreateDonationPanel = ({ mode, donation }) => {
       dispatch(setDescription(formik.values.description));
       dispatch(setAllCategories(formik.values.categories));
       dispatch(setCoverImage(formik.values.selectedImages[0]));
-      dispatch(setLocation(formik.values.location));
+      dispatch(setItemCondition(formik.values.itemCondition));
       dispatch(
         setValidFrom(
           formik.values.validFromDay + '/' + formik.values.validFromMonth + '/' + formik.values.validFromYear

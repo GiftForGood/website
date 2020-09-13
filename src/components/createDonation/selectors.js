@@ -18,8 +18,8 @@ export function getValidTo(state) {
   return state.validTo;
 }
 
-export function getLocation(state) {
-  return state.location;
+export function getItemCondition(state) {
+  return state.itemCondition;
 }
 
 export function getCoverImage(state) {

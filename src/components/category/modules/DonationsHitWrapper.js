@@ -39,7 +39,7 @@ const DonationsHitWrapper = ({ hits, category, hasPrevious, hasMore, refinePrevi
             description,
             user,
             postedDateTime,
-            locations,
+            itemCondition,
             validPeriodFrom,
             validPeriodTo,
           } = hit;
@@ -57,7 +57,7 @@ const DonationsHitWrapper = ({ hits, category, hasPrevious, hasMore, refinePrevi
               postedDateTime={postedDateTime}
               postHref={postHref}
               profileHref={profileHref}
-              locations={locations.map((location) => location.name).join(', ')}
+              itemCondition={itemCondition}
               validPeriod={validPeriod}
               categoryId={category.id}
               categoryName={category.name}

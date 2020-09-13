@@ -37,10 +37,10 @@ const createDonationReducer = (state = initialState, action) => {
         validTo: action.validTo,
       };
 
-    case 'create-donation/SET_LOCATION':
+    case 'create-donation/SET_ITEM_CONDITION':
       return {
         ...state,
-        location: action.location,
+        itemCondition: action.itemCondition,
       };
 
     case 'create-donation/SET_COVER_IMAGE':
