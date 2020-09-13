@@ -4,10 +4,6 @@ import { MenuHamburger } from '@kiwicom/orbit-components/lib/icons';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 import LogoButton from '../../buttons/LogoButton';
 import { companyLogoImagePath } from '@constants/imagePaths';
-import styled, { css } from 'styled-components';
-import NavSearchBar from '../../search/modules/NavSearchBar';
-import Link from 'next/link';
-import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 
 const TopLeftNavigation = ({ onHamburgerClick, searchDefaultIndex }) => {
   const { isDesktop } = useMediaQuery();
