@@ -9,8 +9,6 @@ import NavSearchBar from '../../search/modules/NavSearchBar';
 import Link from 'next/link';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 
-
-
 const TopLeftNavigation = ({ onHamburgerClick, searchDefaultIndex }) => {
   const { isDesktop } = useMediaQuery();
   return (
