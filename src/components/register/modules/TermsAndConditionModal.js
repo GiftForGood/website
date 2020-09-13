@@ -7,11 +7,10 @@ import {
   Modal,
   ModalHeader,
   ModalSection,
-  Illustration,
   ModalFooter,
 } from '@kiwicom/orbit-components/lib';
 import ChevronLeft from '@kiwicom/orbit-components/lib/icons/ChevronLeft';
-import api from '@api';
+import ReactHtmlParser from 'react-html-parser';
 
 const TermsAndConditionModal = ({ onClose, onSubmit, tnc }) => {
   const [submitButtonEnabled, setSubmitButtonEnabled] = useState(true);
@@ -26,10 +25,6 @@ const TermsAndConditionModal = ({ onClose, onSubmit, tnc }) => {
     }
   };
 
-  const createHTML = () => {
-    return { __html: tnc };
-  };
-
   return (
     <>
       <Modal fixedFooter onClose={onClose}>
@@ -37,7 +32,7 @@ const TermsAndConditionModal = ({ onClose, onSubmit, tnc }) => {
         <ModalSection>
           <Stack>
             <Text as="div">
-              <div dangerouslySetInnerHTML={createHTML()} />
+              <div className="ql-editor">{ReactHtmlParser(tnc)}</div>
             </Text>
 
             <Checkbox

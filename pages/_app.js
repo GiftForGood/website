@@ -9,6 +9,7 @@ import store from '../store';
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import { initGA, logPageView } from '@utils/analytics';
+import 'react-quill/dist/quill.snow.css';
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -39,6 +40,10 @@ const GlobalStyle = createGlobalStyle`
 
   .control-dots {
     padding-inline-start: 0px; 
+  }
+
+  .ql-editor li {
+    padding-bottom: 15px;
   }
 `;
 
