@@ -97,7 +97,7 @@ const TopNavigationBar = ({ showNews, searchDefaultIndex }) => {
   return (
     <>
       <TopNavigationBarContainer shown={shown} ref={ref} height={height}>
-        <NewsNavigationBar show={showNews} />
+        <NewsNavigationBar />
         <EmailVerificationNavigationBar />
 
         <NavigationBarContainer>
