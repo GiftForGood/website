@@ -9,7 +9,8 @@ const ExpirePostAlert = () => {
       <Tooltip
         content={
           <div>
-            Bumping will extend your post by <b>{BUMP_DURATION} more week</b> and bring your wish to the top of the list temporarily.
+            Bumping will extend your post by <b>{BUMP_DURATION} more week</b> and bring your wish to the top of the list
+            temporarily.
           </div>
         }
         preferredPosition="left"

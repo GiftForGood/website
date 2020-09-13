@@ -235,7 +235,8 @@ const WishCard = ({
           <ModalHeader title="Bump your Wish"></ModalHeader>
           <ModalSection>
             <Text>
-              Bumping your post means that your wish will expire <u>{BUMP_DURATION} week</u> later than the stipulated date.
+              Bumping your post means that your wish will expire <u>{BUMP_DURATION} week</u> later than the stipulated
+              date.
             </Text>
             <br />
             <Text>
