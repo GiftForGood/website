@@ -8,6 +8,7 @@ import dynamic from 'next/dynamic';
 import api from '@api';
 import Error from 'next/error';
 import Header from '@components/header';
+import { deserializeFirestoreTimestampToUnixTimestamp } from '@utils/firebase/deserializer';
 
 const TopNavigationBar = dynamic(() => import('@components/navbar/modules/TopNavigationBar'), { ssr: false });
 const Footer = dynamic(() => import('@components/footer/Footer'), { ssr: false });
@@ -31,6 +32,7 @@ export async function getServerSideProps({ params, req, res, query }) {
     // checks if the wish is mine.
     isMine = true;
   }
+  deserializeFirestoreTimestampToUnixTimestamp(donation);
   return {
     props: {
       user,
