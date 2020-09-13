@@ -1,5 +1,6 @@
 import React from 'react';
 import { Alert, Tooltip, TextLink } from '@kiwicom/orbit-components/lib';
+import { BUMP_DURATION } from '@constants/wishes';
 
 const ExpirePostAlert = () => {
   return (
@@ -8,7 +9,7 @@ const ExpirePostAlert = () => {
       <Tooltip
         content={
           <div>
-            Bumping will extend your post by <b>1 more week</b> and bring your wish to the top of the list temporarily.
+            Bumping will extend your post by <b>{BUMP_DURATION} more week</b> and bring your wish to the top of the list temporarily.
           </div>
         }
         preferredPosition="left"
