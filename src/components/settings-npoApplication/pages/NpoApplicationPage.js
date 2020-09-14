@@ -2,6 +2,9 @@ import React from 'react';
 import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import NpoApplicationPanel from '../modules/NpoApplicationPanel';
+import SettingsTabs from '@components/tabs/SettingsTabs';
+import { Stack } from '@kiwicom/orbit-components/lib';
+import { TABS } from '@constants/settings';
 
 const Container = styled.div`
   display: flex;
@@ -21,7 +24,10 @@ const Container = styled.div`
 const NpoApplicationPage = () => {
   return (
     <Container>
-      <NpoApplicationPanel />
+      <Stack justify="center" direction="column" desktop={{ direction: 'row' }}>
+        <SettingsTabs activeTab={TABS.NPO_APPLICATION} />
+        <NpoApplicationPanel />
+      </Stack>
     </Container>
   );
 };

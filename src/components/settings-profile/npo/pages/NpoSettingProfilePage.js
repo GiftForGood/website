@@ -2,6 +2,10 @@ import React from 'react';
 import NpoEditProfilePanel from '../modules/NpoEditProfilePanel';
 import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
+import VerticalTabs from '@components/tabs/VerticalTabs';
+import { Stack } from '@kiwicom/orbit-components/lib';
+import SettingsTabs from '@components/tabs/SettingsTabs';
+import { TABS } from '@constants/settings';
 
 const Container = styled.div`
   display: flex;
@@ -21,7 +25,10 @@ const Container = styled.div`
 const NpoSettingProfilePage = () => {
   return (
     <Container>
-      <NpoEditProfilePanel />
+      <Stack justify="center" direction="column" desktop={{ direction: 'row' }}>
+        <SettingsTabs activeTab={TABS.EDIT_PROFILE} />
+        <NpoEditProfilePanel />
+      </Stack>
     </Container>
   );
 };
