@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import DonationCard from '../../card/DonationCard';
 import BlackText from '../../text/BlackText';
 import { Grid } from '@kiwicom/orbit-components/lib';
@@ -17,6 +17,27 @@ const DonationsHitWrapper = ({ hits, category, hasPrevious, hasMore, refinePrevi
   if (hits.length === 0) {
     return <BlackText size="medium">No donations found.</BlackText>;
   }
+
+  const sentinel = useRef(null);
+
+  const onSentinelIntersection = (entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting && hasMore) {
+        refine();
+      }
+    });
+  };
+
+  useEffect(() => {
+    if (sentinel) {
+      const observer = new IntersectionObserver(onSentinelIntersection);
+      observer.observe(sentinel.current);
+
+      return () => {
+        observer.disconnect();
+      };
+    }
+  }, [sentinel]);
 
   return (
     <>
@@ -64,6 +85,7 @@ const DonationsHitWrapper = ({ hits, category, hasPrevious, hasMore, refinePrevi
             />
           );
         })}
+        <li ref={sentinel} />
       </Grid>
     </>
   );
