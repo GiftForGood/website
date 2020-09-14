@@ -209,7 +209,10 @@ const NpoEditProfilePanel = () => {
 
                   <div>
                     <Text size="small">
-                      Looking to change the fields above? <TextLink>Contact the administrators</TextLink>
+                      Looking to change the fields above?{' '}
+                      <TextLink external href="/contact">
+                        Contact the administrators
+                      </TextLink>
                     </Text>
                   </div>
 
