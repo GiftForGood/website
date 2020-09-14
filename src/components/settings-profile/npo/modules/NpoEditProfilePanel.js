@@ -168,7 +168,10 @@ const NpoEditProfilePanel = () => {
                     value={user.email}
                     help={
                       <div>
-                        Looking to change your email? <TextLink>Contact the administrators</TextLink>
+                        Looking to change your email?{' '}
+                        <TextLink external href="/contact">
+                          Contact the administrators
+                        </TextLink>
                       </div>
                     }
                   />
@@ -206,7 +209,10 @@ const NpoEditProfilePanel = () => {
 
                   <div>
                     <Text size="small">
-                      Looking to change the fields above? <TextLink>Contact the administrators</TextLink>
+                      Looking to change the fields above?{' '}
+                      <TextLink external href="/contact">
+                        Contact the administrators
+                      </TextLink>
                     </Text>
                   </div>
 
