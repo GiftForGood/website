@@ -168,7 +168,7 @@ const NpoEditProfilePanel = () => {
                     value={user.email}
                     help={
                       <div>
-                        Looking to change your email? <TextLink>Contact the administrators</TextLink>
+                        Looking to change your email? <TextLink href="/contact">Contact the administrators</TextLink>
                       </div>
                     }
                   />
