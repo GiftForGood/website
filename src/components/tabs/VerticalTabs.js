@@ -12,7 +12,7 @@ const VerticalTabs = ({ children }) => {
       {children.map((child) => {
         const { label, href, active } = child.props;
 
-        return <Tab activeTab={active} key={label} label={label} onClick={(tabLabel) => {}} href={href} />;
+        return <Tab active={active} key={label} label={label} onClick={(tabLabel) => {}} href={href} />;
       })}
     </div>
   );
