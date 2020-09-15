@@ -2,15 +2,14 @@ import React, { useRef, useState } from 'react';
 import { InstantSearch, connectSearchBox, Index, Configure, connectHits } from 'react-instantsearch-dom';
 import SearchBar from './AlgoliaSearchBar';
 import Hits from './Hits';
-import algoliasearch from 'algoliasearch/lite';
 import styled from 'styled-components';
 import { Text } from '@kiwicom/orbit-components/lib';
 import { MAXIMUM_SEARCH_DESKTOP } from '@constants/search';
 import Popover from 'react-tiny-popover';
+import { searchClient } from '@utils/algolia';
 
 const CustomSearchBox = connectSearchBox(SearchBar);
 const CustomHits = connectHits(Hits);
-const searchClient = algoliasearch(process.env.NEXT_PUBLIC_ALGOLIA_APP_ID, process.env.NEXT_PUBLIC_ALGOLIA_SEARCH_KEY);
 
 const Container = styled.div`
   padding-top: 10px;

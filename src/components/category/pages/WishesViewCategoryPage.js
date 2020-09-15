@@ -5,17 +5,17 @@ import { Grid } from '@kiwicom/orbit-components/lib';
 import { WISHES_BATCH_SIZE } from '@api/constants';
 import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
-import algoliasearch from 'algoliasearch/lite';
 import { InstantSearch, Configure, connectInfiniteHits } from 'react-instantsearch-dom';
 import WishesHitWrapper from '../modules/WishesHitWrapper';
 import { getByCategoryIdAndStatusAndNotExpired } from '@utils/algolia/filteringRules';
 import { wishesSortByRule } from '@utils/algolia/sortByRules';
 import dynamic from 'next/dynamic';
+import { searchClient } from '@utils/algolia';
+
 const WishesSortFilterPanel = dynamic(() => import('../modules/WishesSortFilterPanel'), {
   ssr: false,
 });
 
-const searchClient = algoliasearch(process.env.NEXT_PUBLIC_ALGOLIA_APP_ID, process.env.NEXT_PUBLIC_ALGOLIA_SEARCH_KEY);
 const WishesInfiniteHit = connectInfiniteHits(WishesHitWrapper);
 
 const ViewCategoryContainer = styled.div`
