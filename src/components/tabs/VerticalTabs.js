@@ -1,6 +1,11 @@
 import React, { useState } from 'react';
 import Tab from '@components/tabs/Tab';
+import PropTypes from 'prop-types';
 
+/**
+ * VerticalTabs works slightly differently than other Tabs components. It only renders
+ * the label of the tab but not the content of the tab.
+ */
 const VerticalTabs = ({ children }) => {
   return (
     <div>
@@ -11,6 +16,10 @@ const VerticalTabs = ({ children }) => {
       })}
     </div>
   );
+};
+
+VerticalTabs.propTypes = {
+  children: PropTypes.arrayOf(PropTypes.element),
 };
 
 export default VerticalTabs;

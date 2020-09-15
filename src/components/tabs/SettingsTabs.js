@@ -1,6 +1,7 @@
 import React from 'react';
 import VerticalTabs from '@components/tabs/VerticalTabs';
 import { TABS } from '@constants/settings';
+import PropTypes from 'prop-types';
 
 const SettingsTabs = ({ activeTab }) => {
   return (
@@ -10,6 +11,10 @@ const SettingsTabs = ({ activeTab }) => {
       <div label={TABS.NPO_APPLICATION} href="/settings/npo-application" active={activeTab === TABS.NPO_APPLICATION} />
     </VerticalTabs>
   );
+};
+
+SettingsTabs.propTypes = {
+  activeTab: PropTypes.string.isRequired,
 };
 
 export default SettingsTabs;
