@@ -22,3 +22,5 @@ jobs:
         env:
           NEXT_PUBLIC_FIREBASE_API_KEY: ${{secrets.FIREBASE_API_KEY}}
           NEXT_PUBLIC_FIREBASE_PROJECT_ID: ${{secrets.FIREBASE_PROJECT_ID}}
+          NEXT_PUBLIC_ALGOLIA_APP_ID: ${{secrets.ALGOLIA_APP_ID}}
+          NEXT_PUBLIC_ALGOLIA_SEARCH_KEY: ${{secrets.ALGOLIA_SEARCH_KEY}}
