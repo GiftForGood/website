@@ -6,6 +6,10 @@ import { getFormattedDate } from '@api/time';
 import useUser from '@components/session/modules/useUser';
 import aa from 'search-insights';
 
+aa('init', {
+  appId: process.env.NEXT_PUBLIC_ALGOLIA_APP_ID,
+  apiKey: process.env.NEXT_PUBLIC_ALGOLIA_SEARCH_KEY,
+});
 /**
  * https://www.algolia.com/doc/api-reference/widgets/infinite-hits/react/#create-a-react-component
  * @param {object[]} hits
@@ -91,6 +95,12 @@ const DonationsHitWrapper = ({ hits, category, hasPrevious, hasMore, refinePrevi
                   index: 'donations',
                   eventName: 'Clicked on a donation',
                   objectIDs: [objectID],
+                });
+                aa('viewedObjectIDs', {
+                  userToken: userObject?.userId,
+                  index: "donations",
+                  eventName: "View Donation Detail Page",
+                  objectIDs: [objectID]
                 });
               }}
             />

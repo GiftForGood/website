@@ -86,6 +86,12 @@ const WishesHitWrapper = ({ hits, category, hasPrevious, hasMore, refinePrevious
                   eventName: 'Clicked on a wish',
                   objectIDs: [objectID],
                 });
+                aa('viewedObjectIDs', {
+                  userToken: userObject?.userId,
+                  index: "wishes",
+                  eventName: "View Wish Detail Page",
+                  objectIDs: [objectID]
+                });
               }}
             />
           );
