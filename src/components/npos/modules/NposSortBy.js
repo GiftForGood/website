@@ -15,7 +15,6 @@ const NposSortBy = ({ items, currentRefinement, refine, sortByIndex }) => {
   const handleSelect = (event) => {
     const sortBy = event.target.value;
     refine(sortBy);
-    // for view all wishes
     router.push(`/npos`, `/npos?sortBy=${event.target.value}`, {
       shallow: true,
     });

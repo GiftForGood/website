@@ -3,9 +3,10 @@ import { Stack, Collapse } from '@kiwicom/orbit-components/lib';
 import NposSortBy from '../modules/NposSortBy';
 import NposFilterBy from '../modules/NposFilterBy';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
-import { connectSortBy } from 'react-instantsearch-dom';
+import { connectSortBy, connectRefinementList } from 'react-instantsearch-dom';
 
 const NposSort = connectSortBy(NposSortBy);
+const NposFilter = connectRefinementList(NposFilterBy);
 
 const NposSortFilterPanel = ({ sortItems, sortDefaultRefinement }) => {
   const { isDesktop } = useMediaQuery();
@@ -15,13 +16,13 @@ const NposSortFilterPanel = ({ sortItems, sortDefaultRefinement }) => {
       {isDesktop ? (
         <>
           <NposSort items={sortItems} defaultRefinement={sortDefaultRefinement} />
-          <NposFilterBy />
+          <NposFilter attribute="organization.sector"/>
         </>
       ) : (
         <Collapse label="Filter/Sort Settings">
           <Stack>
             <NposSort items={sortItems} defaultRefinement={sortDefaultRefinement} />
-            <NposFilterBy />
+            <NposFilter attribute="organization.sector"/>
           </Stack>
         </Collapse>
       )}
