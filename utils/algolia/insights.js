@@ -19,6 +19,24 @@ export const clickedOnDonation = (userObject, objectID) => {
   });
 };
 
+export const clickedOnStartChatWithWish = (userObject, objectID) => {
+  insight('clickedObjectIDs', {
+    userToken: userObject?.userId,
+    index: 'wishes',
+    eventName: 'Clicked on start chat with wish',
+    objectIDs: [objectID],
+  });
+};
+
+export const clickedOnStartChatWithDonation = (userObject, objectID) => {
+  insight('clickedObjectIDs', {
+    userToken: userObject?.userId,
+    index: 'donations',
+    eventName: 'Clicked on start chat with donation',
+    objectIDs: [objectID],
+  });
+};
+
 // Views
 export const viewedWishDetails = (userObject, objectID) => {
   insight('viewedObjectIDs', {
