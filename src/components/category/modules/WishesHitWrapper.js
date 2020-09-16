@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import WishCard from '../../card/WishCard';
 import BlackText from '../../text/BlackText';
 import { Grid } from '@kiwicom/orbit-components/lib';
+import useUser from '@components/session/modules/useUser';
 
 import aa from 'search-insights';
 
@@ -25,6 +26,7 @@ const WishesHitWrapper = ({ hits, category, hasPrevious, hasMore, refinePrevious
   }
 
   const sentinel = useRef(null);
+  const userObject = useUser();
 
   const onSentinelIntersection = (entries) => {
     entries.forEach((entry) => {
@@ -80,9 +82,9 @@ const WishesHitWrapper = ({ hits, category, hasPrevious, hasMore, refinePrevious
               categoryName={category.name}
               onClick={() => {
                 aa('clickedObjectIDs', {
-                  userToken: "abc",
+                  userToken: userObject?.userId,
                   index: 'wishes',
-                  eventName: 'Add to Cart',
+                  eventName: 'Clicked on a wish',
                   objectIDs: [objectID],
                 });
               }}

@@ -11,6 +11,8 @@ import WishesHitWrapper from '../modules/WishesHitWrapper';
 import { getByCategoryIdAndStatusAndNotExpired } from '@utils/algolia/filteringRules';
 import { wishesSortByRule } from '@utils/algolia/sortByRules';
 import dynamic from 'next/dynamic';
+import useUser from '@components/session/modules/useUser';
+
 const WishesSortFilterPanel = dynamic(() => import('../modules/WishesSortFilterPanel'), {
   ssr: false,
 });
@@ -45,6 +47,7 @@ const GridSectionContainer = styled.div`
  * wishes, wishes_npo_name_asc, wishes_npo_name_desc
  */
 const ViewCategoryPage = ({ categoryDetails, sortByQuery }) => {
+  const user = useUser();
   const category = categoryDetails;
   const [sortBy, setSortBy] = useState(sortByQuery ? sortByQuery : wishesSortByRule().defaultRefinement);
   const [latLngFilter, setLatLngFilter] = useState('');
@@ -85,6 +88,9 @@ const ViewCategoryPage = ({ categoryDetails, sortByQuery }) => {
               hitsPerPage={WISHES_BATCH_SIZE}
               aroundLatLng={latLngFilter}
               aroundRadius={10000}
+              enablePersonalization={true}
+              userToken={user?.userId}
+              clickAnalytics={true}
             />
             <WishesContainer>
               {/* Desktop,Tablet,Mobile has infinite scrolling  */}

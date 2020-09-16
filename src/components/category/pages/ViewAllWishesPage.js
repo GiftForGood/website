@@ -13,7 +13,6 @@ import { wishesSortByRule } from '@utils/algolia/sortByRules';
 import dynamic from 'next/dynamic';
 import useUser from '@components/session/modules/useUser';
 
-
 const WishesSortFilterPanel = dynamic(() => import('../modules/WishesSortFilterPanel'), {
   ssr: false,
 });
@@ -94,7 +93,8 @@ const ViewAllWishesPage = ({ sortByQuery, query = '' }) => {
               aroundLatLng={latLngFilter}
               aroundRadius={10000}
               enablePersonalization={true}
-              userToken={user ? user.email : ''}
+              userToken={user?.userId}
+              clickAnalytics={true}
             />
             <WishesContainer>
               {/* Desktop,Tablet,Mobile has infinite scrolling  */}
