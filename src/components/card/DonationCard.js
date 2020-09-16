@@ -160,7 +160,9 @@ const DonationCard = ({
 
   const handleOnClickDonationPost = (event) => {
     event.preventDefault();
-    onClick();
+    if (onClick) {
+      onClick();
+    }
     router.push({
       pathname: postHref,
       query: { categoryId: categoryId, categoryName: categoryName },
