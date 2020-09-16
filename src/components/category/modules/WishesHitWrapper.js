@@ -4,7 +4,6 @@ import WishCard from '../../card/WishCard';
 import BlackText from '../../text/BlackText';
 import { Grid } from '@kiwicom/orbit-components/lib';
 import useUser from '@components/session/modules/useUser';
-
 import aa from 'search-insights';
 
 aa('init', {

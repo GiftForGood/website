@@ -50,8 +50,6 @@ const ViewAllWishesPage = ({ sortByQuery, query = '' }) => {
   };
   const [latLngFilter, setLatLngFilter] = useState('');
 
- 
-
   const onLatLngUpdated = (latLng) => {
     setLatLngFilter(latLng);
   };

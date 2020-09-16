@@ -11,6 +11,8 @@ import DonationsHitWrapper from '../modules/DonationsHitWrapper';
 import { getByStatus } from '@utils/algolia/filteringRules';
 import { donationsSortByRule } from '@utils/algolia/sortByRules';
 import dynamic from 'next/dynamic';
+import useUser from '@components/session/modules/useUser';
+
 const DonationsSortFilterPanel = dynamic(() => import('../modules/DonationsSortFilterPanel'), {
   ssr: false,
 });
@@ -40,6 +42,7 @@ const GridSectionContainer = styled.div`
 `;
 
 const ViewAllDonationsPage = ({ sortByQuery, query = '' }) => {
+  const user = useUser();
   const [sortBy, setSortBy] = useState(sortByQuery ? sortByQuery : donationsSortByRule().defaultRefinement);
   const category = {
     id: '',
@@ -88,6 +91,9 @@ const ViewAllDonationsPage = ({ sortByQuery, query = '' }) => {
               query={query}
               aroundLatLng={latLngFilter}
               aroundRadius={10000}
+              enablePersonalization={true}
+              userToken={user?.userId}
+              clickAnalytics={true}
             />
             <DonationsContainer>
               {/* Desktop,Tablet,Mobile has infinite scrolling  */}

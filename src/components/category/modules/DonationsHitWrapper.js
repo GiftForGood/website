@@ -3,6 +3,8 @@ import DonationCard from '../../card/DonationCard';
 import BlackText from '../../text/BlackText';
 import { Grid } from '@kiwicom/orbit-components/lib';
 import { getFormattedDate } from '@api/time';
+import useUser from '@components/session/modules/useUser';
+import aa from 'search-insights';
 
 /**
  * https://www.algolia.com/doc/api-reference/widgets/infinite-hits/react/#create-a-react-component
@@ -19,6 +21,7 @@ const DonationsHitWrapper = ({ hits, category, hasPrevious, hasMore, refinePrevi
   }
 
   const sentinel = useRef(null);
+  const userObject = useUser();
 
   const onSentinelIntersection = (entries) => {
     entries.forEach((entry) => {
@@ -82,6 +85,14 @@ const DonationsHitWrapper = ({ hits, category, hasPrevious, hasMore, refinePrevi
               validPeriod={validPeriod}
               categoryId={category.id}
               categoryName={category.name}
+              onClick={() => {
+                aa('clickedObjectIDs', {
+                  userToken: userObject?.userId,
+                  index: 'donations',
+                  eventName: 'Clicked on a donation',
+                  objectIDs: [objectID],
+                });
+              }}
             />
           );
         })}
