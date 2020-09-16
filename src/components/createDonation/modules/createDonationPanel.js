@@ -44,6 +44,8 @@ import { v4 as uuidv4 } from 'uuid';
 import MrtDropdownField from '../../inputfield/MrtDropdownField';
 import { logSuccessfullyCreatedDonation } from '@utils/analytics';
 import DonationContext from '../context';
+import useUser from '@components/session/modules/useUser';
+import { createdDonation } from '@utils/algolia/insights';
 
 const Container = styled.div`
   min-width: 300px;
@@ -96,6 +98,7 @@ const CreateDonationPanel = ({ mode, donation }) => {
   const [alertDescription, setAlertDescription] = useState('');
 
   const [images, setImages] = useState(null);
+  const user = useUser();
 
   const displayAlert = (title, description, type) => {
     setShowAlert(true);
@@ -158,6 +161,7 @@ const CreateDonationPanel = ({ mode, donation }) => {
       );
       const donationId = donationDoc.data().donationId;
       logSuccessfullyCreatedDonation();
+      createdDonation(user, donationId);
       router.push(`/donations/${donationId}`);
     } catch (error) {
       console.error(error);

@@ -17,14 +17,16 @@ jobs:
       - name: Update NPM
         run: npm i -g npm
       - name: Install packages
-        run: npm install 
-      - name: Run Prettier 
+        run: npm install
+      - name: Run Prettier
         run: npm run lint
       - name: Build
         run: npm run build
         env:
           NEXT_PUBLIC_FIREBASE_API_KEY: ${{secrets.FIREBASE_API_KEY}}
           NEXT_PUBLIC_FIREBASE_PROJECT_ID: ${{secrets.FIREBASE_PROJECT_ID}}
+          NEXT_PUBLIC_ALGOLIA_APP_ID: ${{secrets.ALGOLIA_APP_ID}}
+          NEXT_PUBLIC_ALGOLIA_SEARCH_KEY: ${{secrets.ALGOLIA_SEARCH_KEY}}
   deploy:
     needs: lint-and-build
     runs-on: ubuntu-latest
@@ -33,6 +35,5 @@ jobs:
       - uses: akhileshns/heroku-deploy@v3.2.6 # This is the action
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-          heroku_app_name: "website-gfg" #Must be unique in Heroku
-          heroku_email: "giftforgood.dev@gmail.com"
-  
+          heroku_app_name: 'website-gfg' #Must be unique in Heroku
+          heroku_email: 'giftforgood.dev@gmail.com'

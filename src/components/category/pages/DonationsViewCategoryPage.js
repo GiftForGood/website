@@ -10,6 +10,7 @@ import DonationsHitWrapper from '../modules/DonationsHitWrapper';
 import { getByCategoryIdAndStatus } from '@utils/algolia/filteringRules';
 import { donationsSortByRule } from '@utils/algolia/sortByRules';
 import dynamic from 'next/dynamic';
+import useUser from '@components/session/modules/useUser';
 import { searchClient } from '@utils/algolia';
 
 const DonationsSortFilterPanel = dynamic(() => import('../modules/DonationsSortFilterPanel'), {
@@ -40,6 +41,7 @@ const GridSectionContainer = styled.div`
 `;
 
 const ViewCategoryPage = ({ categoryDetails, sortByQuery }) => {
+  const user = useUser();
   const category = categoryDetails;
   const [sortBy, setSortBy] = useState(sortByQuery ? sortByQuery : donationsSortByRule().defaultRefinement);
   const [latLngFilter, setLatLngFilter] = useState('');
@@ -80,6 +82,9 @@ const ViewCategoryPage = ({ categoryDetails, sortByQuery }) => {
               hitsPerPage={DONATIONS_BATCH_SIZE}
               aroundLatLng={latLngFilter}
               aroundRadius={10000}
+              enablePersonalization={true}
+              userToken={user?.userId}
+              clickAnalytics={true}
             />
             <DonationsContainer>
               {/* Desktop,Tablet,Mobile has infinite scrolling  */}

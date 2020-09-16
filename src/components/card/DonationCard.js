@@ -151,6 +151,7 @@ const DonationCard = ({
   validPeriod,
   categoryId,
   categoryName,
+  onClick,
 }) => {
   const [hasImage, setHasImage] = useState(true);
   const [imageUrl, setImageUrl] = useState(null);
@@ -159,6 +160,9 @@ const DonationCard = ({
 
   const handleOnClickDonationPost = (event) => {
     event.preventDefault();
+    if (onClick) {
+      onClick();
+    }
     router.push({
       pathname: postHref,
       query: { categoryId: categoryId, categoryName: categoryName },

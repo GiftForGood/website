@@ -30,6 +30,8 @@ import GooglePlacesAutoCompleteField from '../../inputfield/GooglePlacesAutoComp
 import { logSuccessfullyCreatedWish } from '@utils/analytics';
 import ExpirePostAlert from './ExpirePostAlert';
 import WishContext from '../context';
+import useUser from '@components/session/modules/useUser';
+import { createdWish } from '@utils/algolia/insights';
 
 const Container = styled.div`
   min-width: 300px;
@@ -50,6 +52,8 @@ const CreateWishPanel = ({ wish, mode }) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const { state, dispatch } = useContext(WishContext);
+
+  const user = useUser();
 
   const displayAlert = (title, description, type) => {
     setShowAlert(true);
@@ -77,6 +81,7 @@ const CreateWishPanel = ({ wish, mode }) => {
       const wishDoc = await api.wishes.create(title, description, categoryIds, locations);
       let wishId = wishDoc.data().wishId;
       logSuccessfullyCreatedWish();
+      createdWish(user, wishId);
       router.push(`/wishes/${wishId}`);
     } catch (error) {
       console.error(error);

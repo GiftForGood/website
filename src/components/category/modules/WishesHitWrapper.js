@@ -3,6 +3,8 @@ import { useRouter } from 'next/router';
 import WishCard from '../../card/WishCard';
 import BlackText from '../../text/BlackText';
 import { Grid } from '@kiwicom/orbit-components/lib';
+import useUser from '@components/session/modules/useUser';
+import { clickedOnWish } from '@utils/algolia/insights';
 
 /**
  * https://www.algolia.com/doc/api-reference/widgets/infinite-hits/react/#create-a-react-component
@@ -19,6 +21,7 @@ const WishesHitWrapper = ({ hits, category, hasPrevious, hasMore, refinePrevious
   }
 
   const sentinel = useRef(null);
+  const userObject = useUser();
 
   const onSentinelIntersection = (entries) => {
     entries.forEach((entry) => {
@@ -72,6 +75,9 @@ const WishesHitWrapper = ({ hits, category, hasPrevious, hasMore, refinePrevious
               isBumped={isBumped}
               categoryId={category.id}
               categoryName={category.name}
+              onClick={() => {
+                clickedOnWish(userObject, objectID);
+              }}
             />
           );
         })}
