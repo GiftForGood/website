@@ -10,7 +10,7 @@ import Desktop from '@kiwicom/orbit-components/lib/Desktop';
 import BreadcrumbsPanel from '../../postDetails/BreadcrumbsPanel';
 import ImagePanel from '../modules/ImagePanel';
 import useUser from '@components/session/modules/useUser';
-import { insight } from '@utils/algolia';
+import { viewedDonationDetails } from '@utils/algolia/insights';
 
 const Wrapper = styled.div`
   margin: 0 auto;
@@ -44,13 +44,8 @@ const DonationPage = ({ donationId, donationDetails, donorDetails, user, prevHre
   const userObject = useUser();
 
   useEffect(() => {
-    insight('viewedObjectIDs', {
-      userToken: userObject?.userId,
-      index: "donations",
-      eventName: "View Donation Detail Page",
-      objectIDs: [donationId]
-    });
-  }, [])
+    viewedDonationDetails(userObject, donationId);
+  }, []);
 
   return (
     <Wrapper>

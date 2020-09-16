@@ -4,7 +4,7 @@ import BlackText from '../../text/BlackText';
 import { Grid } from '@kiwicom/orbit-components/lib';
 import { getFormattedDate } from '@api/time';
 import useUser from '@components/session/modules/useUser';
-import { insight } from '@utils/algolia';
+import { clickedOnDonation } from '@utils/algolia/insights';
 
 /**
  * https://www.algolia.com/doc/api-reference/widgets/infinite-hits/react/#create-a-react-component
@@ -86,18 +86,7 @@ const DonationsHitWrapper = ({ hits, category, hasPrevious, hasMore, refinePrevi
               categoryId={category.id}
               categoryName={category.name}
               onClick={() => {
-                insight('clickedObjectIDs', {
-                  userToken: userObject?.userId,
-                  index: 'donations',
-                  eventName: 'Clicked on a donation',
-                  objectIDs: [objectID],
-                });
-                insight('viewedObjectIDs', {
-                  userToken: userObject?.userId,
-                  index: "donations",
-                  eventName: "View Donation Detail Page",
-                  objectIDs: [objectID]
-                });
+                clickedOnDonation(userObject, objectID);
               }}
             />
           );

@@ -10,7 +10,7 @@ import { donor as donorType, npo as npoType } from '@constants/userType';
 import Desktop from '@kiwicom/orbit-components/lib/Desktop';
 import BreadcrumbsPanel from '../../postDetails/BreadcrumbsPanel';
 import useUser from '@components/session/modules/useUser';
-import { insight } from '@utils/algolia';
+import { viewedWishDetails } from '@utils/algolia/insights';
 
 const Wrapper = styled.div`
   margin: 0 auto;
@@ -48,13 +48,8 @@ const WishPage = ({ wishId, wishDetails, npoDetails, user, prevHref, categoryNam
   const userObject = useUser();
 
   useEffect(() => {
-    insight('viewedObjectIDs', {
-      userToken: userObject?.userId,
-      index: "wishes",
-      eventName: "View Wish Detail Page",
-      objectIDs: [wishId]
-    });
-  }, [])
+    viewedWishDetails(userObject, wishId);
+  }, []);
 
   return (
     <Wrapper>

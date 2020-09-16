@@ -4,7 +4,7 @@ import WishCard from '../../card/WishCard';
 import BlackText from '../../text/BlackText';
 import { Grid } from '@kiwicom/orbit-components/lib';
 import useUser from '@components/session/modules/useUser';
-import { insight } from '@utils/algolia';
+import { clickedOnWish } from '@utils/algolia/insights';
 
 /**
  * https://www.algolia.com/doc/api-reference/widgets/infinite-hits/react/#create-a-react-component
@@ -76,18 +76,7 @@ const WishesHitWrapper = ({ hits, category, hasPrevious, hasMore, refinePrevious
               categoryId={category.id}
               categoryName={category.name}
               onClick={() => {
-                insight('clickedObjectIDs', {
-                  userToken: userObject?.userId,
-                  index: 'wishes',
-                  eventName: 'Clicked on a wish',
-                  objectIDs: [objectID],
-                });
-                insight('viewedObjectIDs', {
-                  userToken: userObject?.userId,
-                  index: "wishes",
-                  eventName: "View Wish Detail Page",
-                  objectIDs: [objectID]
-                });
+                clickedOnWish(userObject, objectID);
               }}
             />
           );
