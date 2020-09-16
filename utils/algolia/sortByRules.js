@@ -15,3 +15,13 @@ export const donationsSortByRule = () => {
     defaultRefinement: 'donations',
   };
 };
+
+export const nposSortByRule = () => {
+  return {
+    items: [
+      { value: 'npos_name_asc', label: 'NPO Name (A-Z)' },
+      { value: 'npos_name_desc', label: 'NPO Name (Z-A)' },
+    ],
+    defaultRefinement: 'npos_name_asc',
+  };
+};
