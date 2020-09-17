@@ -15,7 +15,7 @@ const BorderContainer = styled.div`
   transition: border-color 0.1s ease-in-out;
   display: flex;
   flex-direction: column;
-  width: 100%;
+  width: 340px;
 
   :hover {
     border-color: ${colors.nposCardBorderHover};
