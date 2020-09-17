@@ -43,6 +43,24 @@ const CardHeaderContent = styled.div`
   max-width: calc(100% - 80px);
 `;
 
+const ThreeLineTextContainer = styled.div`
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  word-break: break-word;
+`;
+
+const OneLineTextContainer = styled.div`
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  word-break: break-word;
+`;
+
 const CardButtonContainer = styled.div`
   display: flex;
   align-items: center;
@@ -63,15 +81,23 @@ const NpoUserCard = ({ userId, name, organization, profileImageUrl, href, onClic
           </CardProfileImage>
 
           <CardHeaderContent>
-            <BlackText weight="bold" size="medium">
-              {organization?.name}
-            </BlackText>
-            <GreyText weight="normal" size="small">
-              {name}
-            </GreyText>
-            <GreyText weight="normal" size="small">
-              {organization?.sector}
-            </GreyText>
+            <ThreeLineTextContainer>
+              <BlackText weight="bold" size="medium">
+                {organization?.name}
+              </BlackText>
+            </ThreeLineTextContainer>
+
+            <OneLineTextContainer>
+              <GreyText weight="normal" size="small">
+                {name}
+              </GreyText>
+            </OneLineTextContainer>
+
+            <OneLineTextContainer>
+              <GreyText weight="normal" size="small">
+                {organization?.sector}
+              </GreyText>
+            </OneLineTextContainer>
           </CardHeaderContent>
         </CardHeader>
 
