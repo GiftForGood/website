@@ -77,7 +77,7 @@ const NpoUserCard = ({ userId, name, organization, profileImageUrl, href, onClic
       <Anchor href={href} onClick={onCardClicked}>
         <CardHeader>
           <CardProfileImage>
-            <ProfileAvatar imageUrl={profileImageUrl.small} height="64" width="64" />
+            <ProfileAvatar imageUrl={profileImageUrl?.small} height="64" width="64" />
           </CardProfileImage>
 
           <CardHeaderContent>
