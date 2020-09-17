@@ -38,6 +38,7 @@ const SearchBar = ({ onEnterPressed, defaultIndex = WISHES }) => {
         <div>
           <ListChoice title="Wishes" onClick={() => setSelectedIndex('Wishes')} />
           <ListChoice title="Donations" onClick={() => setSelectedIndex('Donations')} />
+          <ListChoice title="NPOs" onClick={() => setSelectedIndex('NPOs')} />
         </div>
       }
       noPadding
@@ -57,6 +58,7 @@ const SearchBar = ({ onEnterPressed, defaultIndex = WISHES }) => {
         <div>
           <ListChoice title="Wishes" onClick={() => setSelectedIndex('Wishes')} />
           <ListChoice title="Donations" onClick={() => setSelectedIndex('Donations')} />
+          <ListChoice title="NPOs" onClick={() => setSelectedIndex('NPOs')} />
         </div>
       }
       noPadding
@@ -87,7 +89,7 @@ const SearchBar = ({ onEnterPressed, defaultIndex = WISHES }) => {
 
         <InputField
           inputMode="search"
-          placeholder="Search for wishes or donations"
+          placeholder="Search for wishes, donations or NPOs"
           value={searchQuery}
           onChange={onChange}
           suffix={

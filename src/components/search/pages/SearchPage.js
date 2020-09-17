@@ -6,7 +6,11 @@ const SearchPage = () => {
   const router = useRouter();
 
   const onEnterPressed = (query, selectedIndex) => {
-    router.push(`/${selectedIndex}/category?q=${query}`);
+    if (selectedIndex === 'npos') {
+      router.push(`/${selectedIndex}?q=${query}`);
+    } else {
+      router.push(`/${selectedIndex}/category?q=${query}`);
+    }
   };
 
   return <SearchBarV2 onEnterPressed={onEnterPressed} />;
