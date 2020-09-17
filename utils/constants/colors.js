@@ -68,4 +68,5 @@ export const colors = {
   categoryHover: '#eeeeee',
   nposCardBorder: '#d1d1d1',
   nposCardBorderHover: '#767676',
+  yellowBackground: '#FFC620',
 };

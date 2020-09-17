@@ -15,5 +15,5 @@ export const getByStatusAndNotExpired = (status, currentDateTime) => {
 };
 
 export const getNpoNotBlocked = () => {
-  return `isBlocked: '${false}'`
-}
+  return `isBlocked: '${false}'`;
+};

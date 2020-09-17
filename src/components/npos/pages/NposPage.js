@@ -55,7 +55,7 @@ const NposPage = ({ sortByQuery, query = '' }) => {
           rows="1fr auto"
         >
           <GridSectionContainer>
-            <NposSortFilterPanel sortItems={nposSortByRule().items} sortDefaultRefinement={sortBy} query={query}/>
+            <NposSortFilterPanel sortItems={nposSortByRule().items} sortDefaultRefinement={sortBy} query={query} />
           </GridSectionContainer>
 
           <GridSectionContainer>

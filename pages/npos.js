@@ -7,7 +7,7 @@ import WishesHomePage from '@components/home/pages/WishesHomePage';
 import dynamic from 'next/dynamic';
 import Header from '@components/header';
 import { WISHES } from '@constants/search';
-import NposPage from '@components/npos/pages/NposPage'
+import NposPage from '@components/npos/pages/NposPage';
 
 const TopNavigationBar = dynamic(() => import('@components/navbar/modules/TopNavigationBar'), { ssr: false });
 const BottomNavigation = dynamic(() => import('@components/navbar/modules/BottomNavigation'), { ssr: false });

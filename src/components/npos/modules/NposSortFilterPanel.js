@@ -15,14 +15,14 @@ const NposSortFilterPanel = ({ sortItems, sortDefaultRefinement, query }) => {
     <Stack>
       {isDesktop ? (
         <>
-          <NposSort items={sortItems} defaultRefinement={sortDefaultRefinement} query={query}/>
-          <NposFilter attribute="organization.sector"/>
+          <NposSort items={sortItems} defaultRefinement={sortDefaultRefinement} query={query} />
+          <NposFilter attribute="organization.sector" />
         </>
       ) : (
         <Collapse label="Filter/Sort Settings">
           <Stack>
-            <NposSort items={sortItems} defaultRefinement={sortDefaultRefinement} query={query}/>
-            <NposFilter attribute="organization.sector"/>
+            <NposSort items={sortItems} defaultRefinement={sortDefaultRefinement} query={query} />
+            <NposFilter attribute="organization.sector" />
           </Stack>
         </Collapse>
       )}
