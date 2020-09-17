@@ -1,12 +1,9 @@
 import React from 'react';
 import SessionProvider from '@components/session/modules/SessionProvider';
-import useUser from '@components/session/modules/useUser';
 import { isAuthenticated } from '@utils/authentication/authentication';
-import Verified from '@components/session/modules/Verified';
-import WishesHomePage from '@components/home/pages/WishesHomePage';
 import dynamic from 'next/dynamic';
 import Header from '@components/header';
-import { WISHES } from '@constants/search';
+import { NPOS } from '@constants/search';
 import NposPage from '@components/npos/pages/NposPage';
 
 const TopNavigationBar = dynamic(() => import('@components/navbar/modules/TopNavigationBar'), { ssr: false });
@@ -27,8 +24,8 @@ export async function getServerSideProps({ params, req, res, query }) {
 const Npos = ({ sortByQuery, user, query }) => {
   return (
     <SessionProvider user={user}>
-      <Header title="Npos | GiftForGood" />
-      <TopNavigationBar showNews={true} searchDefaultIndex={WISHES} />
+      <Header title="NPOs | GiftForGood" />
+      <TopNavigationBar showNews={true} searchDefaultIndex={NPOS} />
       <NposPage sortByQuery={sortByQuery} query={query} />
       <BottomNavigation />
       <Footer />
