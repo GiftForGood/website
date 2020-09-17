@@ -8,20 +8,20 @@ import { connectSortBy, connectRefinementList } from 'react-instantsearch-dom';
 const NposSort = connectSortBy(NposSortBy);
 const NposFilter = connectRefinementList(NposFilterBy);
 
-const NposSortFilterPanel = ({ sortItems, sortDefaultRefinement }) => {
+const NposSortFilterPanel = ({ sortItems, sortDefaultRefinement, query }) => {
   const { isDesktop } = useMediaQuery();
 
   return (
     <Stack>
       {isDesktop ? (
         <>
-          <NposSort items={sortItems} defaultRefinement={sortDefaultRefinement} />
+          <NposSort items={sortItems} defaultRefinement={sortDefaultRefinement} query={query}/>
           <NposFilter attribute="organization.sector"/>
         </>
       ) : (
         <Collapse label="Filter/Sort Settings">
           <Stack>
-            <NposSort items={sortItems} defaultRefinement={sortDefaultRefinement} />
+            <NposSort items={sortItems} defaultRefinement={sortDefaultRefinement} query={query}/>
             <NposFilter attribute="organization.sector"/>
           </Stack>
         </Collapse>

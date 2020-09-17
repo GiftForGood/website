@@ -9,13 +9,13 @@ import { useRouter } from 'next/router';
  * @param {string} currentRefinement
  * @param {function} refine
  */
-const NposSortBy = ({ items, currentRefinement, refine, sortByIndex }) => {
+const NposSortBy = ({ items, currentRefinement, refine, sortByIndex, query }) => {
   const router = useRouter();
 
   const handleSelect = (event) => {
     const sortBy = event.target.value;
     refine(sortBy);
-    router.push(`/npos`, `/npos?sortBy=${event.target.value}`, {
+    router.push(`/npos`, `/npos?sortBy=${event.target.value}&q=${query}`, {
       shallow: true,
     });
   };
