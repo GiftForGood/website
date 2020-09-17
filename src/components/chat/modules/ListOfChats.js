@@ -32,6 +32,9 @@ const EmptyChatContainer = styled.div`
   height: 100%;
   width: 100%;
   border-right: 1px solid ${colors.chatBorders};
+  display: ${({ isShow }) => {
+    return isShow ? 'unset' : 'none';
+  }};
 `;
 
 const EmptyChatTextContainer = styled.div`
@@ -148,7 +151,7 @@ const ListOfChats = ({ isShow }) => {
 
   if (isMounted && chatDocs.length === 0) {
     return (
-      <EmptyChatContainer>
+      <EmptyChatContainer isShow={isShow}>
         <EmptyChatTextContainer>No chats available.</EmptyChatTextContainer>
       </EmptyChatContainer>
     );
