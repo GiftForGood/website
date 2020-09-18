@@ -56,19 +56,15 @@ const WishesHomePage = () => {
     <WishesHomePageContainer>
       <Grid
         style={styles.gridContainer}
-        rows="1fr 0.25fr 0.5fr auto"
+        rows="1fr 0.5fr auto"
         rowGap="25px"
         columns="1fr"
         desktop={{
-          rows: '1.5fr 0.25fr 1fr auto',
+          rows: '1.5fr 1fr auto',
           rowGap: '30px',
         }}
       >
         <Banner type={pageType} />
-
-        <CategoriesContainer>
-          <RoutingCarousel />
-        </CategoriesContainer>
 
         <CategoriesContainer>
           <ResponsiveTitle>{categoriesTitle}</ResponsiveTitle>
