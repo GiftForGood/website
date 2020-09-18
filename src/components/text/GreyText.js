@@ -3,6 +3,12 @@ import { colors } from '@constants/colors';
 
 const GreyText = styled.div`
   color: ${colors.subtleGrey};
+  text-align: ${(props) => {
+    if (props.align === 'center' || props.align === 'left' || props.align === 'right') {
+      return props.align;
+    }
+    return 'left';
+  }};
   font-size: ${(props) => {
     if (props.size === 'extraTiny') {
       return '8px';
