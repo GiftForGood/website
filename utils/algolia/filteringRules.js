@@ -13,3 +13,7 @@ export const getByStatus = (status) => {
 export const getByStatusAndNotExpired = (status, currentDateTime) => {
   return `status:'${status}' AND expireDateTime >= ${currentDateTime}`;
 };
+
+export const getNpoNotBlocked = () => {
+  return `isBlocked: '${false}'`;
+};
