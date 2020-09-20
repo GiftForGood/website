@@ -10,6 +10,7 @@ import { WISHES_BATCH_SIZE } from '@api/constants';
 import InfiniteScroll from '../../scroller/InfiniteScroller';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 import { deserializeFirestoreTimestampToUnixTimestamp } from '@utils/firebase/deserializer';
+import EmptyStateImage from '@components/imageContainers/EmptyStateImage';
 
 const GridSectionContainer = styled.div`
   margin-top: 20px;
@@ -104,7 +105,7 @@ const CompletedWishesPanel = ({ isMine, userId }) => {
     if (completedWishes.length === 0) {
       return (
         <Stack justify="center" align="center" direction="column" grow>
-          <BlackText size="medium">No completed wish yet.</BlackText>
+          <EmptyStateImage label="No completed wish yet." />
         </Stack>
       );
     }
@@ -143,7 +144,7 @@ const CompletedWishesPanel = ({ isMine, userId }) => {
     if (completedWishes.length === 0) {
       return (
         <Stack justify="center" align="center" direction="column" grow>
-          <BlackText size="medium">No completed wish yet.</BlackText>
+          <EmptyStateImage label="No completed wish yet." />
         </Stack>
       );
     }
