@@ -13,6 +13,9 @@ const MobileDrawer = ({ shown, onClose }) => {
           <ButtonLink transparent type="secondary" href={'/donations'}>
             Donations
           </ButtonLink>
+          <ButtonLink transparent type="secondary" href={'/npos'}>
+            NPOs
+          </ButtonLink>
           <CallToActionButton fullWidth={true} />
         </Stack>
 
