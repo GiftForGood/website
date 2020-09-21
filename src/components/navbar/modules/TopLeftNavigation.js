@@ -44,6 +44,12 @@ const TopLeftNavigation = ({ onHamburgerClick, searchDefaultIndex }) => {
               Donations
             </ButtonLink>
           </Link>
+
+          <Link href="/npos">
+            <ButtonLink type="secondary" href={'/npos'}>
+              NPOs
+            </ButtonLink>
+          </Link>
         </>
       ) : (
         <ButtonLink iconLeft={<MenuHamburger />} transparent type="secondary" onClick={onHamburgerClick} />
