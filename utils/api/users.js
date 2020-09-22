@@ -108,42 +108,6 @@ class UsersAPI {
     return npoVerificationDoc.get();
   }
 
-  // TODO: Remove
-  /**
-   * Update the verification proof of the current logged in NPO
-   * @param {object} proofFile The image of the proof. Only `.pdf` is allowed.
-   * @throws {UserError}
-   * @throws {FirebaseError}
-   * @return {object} A firebase document of the updated NPO verification info.
-   */
-  async updateNPOVerificationProof(proofFile) {
-    this._validateProofFileExtension(proofFile);
-
-    const userId = await this._getCurrentUserId();
-
-    let npoVerificationDoc = db.collection('npoVerifications').doc(userId);
-    const npoVerificationSnapshot = await npoVerificationDoc.get();
-    const npoVerificationInfo = npoVerificationSnapshot.data();
-    if (typeof npoVerificationInfo === 'undefined') {
-      throw new UserError('invalid-current-user', 'no logged in user');
-    }
-
-    const currentProofVersion = npoVerificationInfo.organization.proofImageVersion;
-    const nextVersion = parseInt(currentProofVersion + 1);
-    const nextVersionString = `v${nextVersion}`;
-
-    const proofFileUrl = await this._uploadNPOProofFile(userId, proofFile, nextVersionString);
-
-    const data = {
-      ['organization.proofImageUrl']: proofFileUrl,
-      ['organization.proofImageVersion']: nextVersion,
-    };
-
-    await npoVerificationDoc.update(data);
-
-    return npoVerificationDoc.get();
-  }
-
   /**
    * Get a donor info by its id
    * @param {string} id The NPO id to search by
