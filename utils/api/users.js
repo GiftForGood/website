@@ -151,18 +151,6 @@ class UsersAPI {
     return donorDoc.get();
   }
 
-  /**
-   * Update fields of current logged in donor
-   * @throws {UserError}
-   * @throws {FirebaseError}
-   * @return {object} A firebase document of the npo application info
-   */
-  async getNpoApplication() {
-    const user = await getCurrentUser();
-
-    return db.collection('npoVerifications').doc(user.uid).get();
-  }
-
   async _getCurrentUserId() {
     const user = firebaseAuth.currentUser;
 

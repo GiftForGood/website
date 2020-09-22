@@ -29,7 +29,7 @@ const NpoApplicationPanel = () => {
 
   const [alertTitle, setAlertTitle] = useState('');
   const [showAlert, setShowAlert] = useState(false);
-  const [alertType, setAlertType] = useState('');
+  const [alertType, setAlertType] = useState(null);
   const [alertDescription, setAlertDescription] = useState('');
 
   const displayAlert = (title, description, type) => {
@@ -47,6 +47,21 @@ const NpoApplicationPanel = () => {
       .required('Required'),
   });
 
+  const handleUpdate = async (values) => {
+    setIsLoading(true);
+    const { registrationNumber, activities } = values;
+    try {
+      await api.users.updateNPOVerification(registrationNumber, activities);
+      displayAlert('Successfully resubmitted!', `Please wait up to 3 to 5 working days for approval.`, 'success');
+    } catch (error) {
+      console.error(error);
+      formik.setSubmitting(false);
+      displayAlert('Error', error.message, 'critical');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const formik = useFormik({
     initialValues: {
       registrationNumber: application?.organization?.uen,
@@ -54,14 +69,32 @@ const NpoApplicationPanel = () => {
     },
     enableReinitialize: true,
     validationSchema: validationSchema,
-    onSubmit: (values) => {},
+    onSubmit: (values) => {
+      handleUpdate(values);
+    },
   });
 
   useEffect(() => {
     if (user) {
-      api.users.getNpoApplication().then((snapshot) => {
+      api.users.getNPOVerification(user.userId).then((snapshot) => {
         if (snapshot.exists) {
-          setApplication(snapshot.data());
+          const app = snapshot.data();
+          setApplication(app);
+          if (app.status === 'accepted') {
+            displayAlert(
+              'Accepted',
+              'Your application have been accepted by the administrator of GiftforGood',
+              'success'
+            );
+          } else if (app.status === 'resubmission') {
+            displayAlert(
+              'Resubmission required',
+              'Your application requires additional information. Please update your UEN if its wrong or tell us more about your organization',
+              'warning'
+            );
+          } else {
+            displayAlert('No further action required', 'No further action required from your end', 'info');
+          }
         }
       });
     }
@@ -74,6 +107,12 @@ const NpoApplicationPanel = () => {
           <form onSubmit={formik.handleSubmit}>
             <Stack spacing="loose">
               <Heading>Your application</Heading>
+
+              {showAlert ? (
+                <Alert icon title={alertTitle} type={alertType}>
+                  {alertDescription}
+                </Alert>
+              ) : null}
 
               <BadgeStatus status={application?.status} />
 
@@ -115,12 +154,6 @@ const NpoApplicationPanel = () => {
               >
                 Save changes
               </Button>
-
-              {showAlert ? (
-                <Alert icon title={alertTitle} type={alertType}>
-                  {alertDescription}
-                </Alert>
-              ) : null}
             </Stack>
           </form>
         </CardSection>
