@@ -139,11 +139,13 @@ const WishCard = ({
   isBumped,
   categoryId,
   categoryName,
+  onClick,
 }) => {
   const timeAgo = getTimeDifferenceFromNow(postedDateTime);
   const router = useRouter();
   const handleOnClickWishPost = (event) => {
     event.preventDefault();
+    onClick();
     router.push({
       pathname: postHref,
       query: { categoryId: categoryId, categoryName: categoryName },

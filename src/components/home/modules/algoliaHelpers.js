@@ -1,5 +1,4 @@
-import algoliasearch from 'algoliasearch/lite';
-const searchClient = algoliasearch(process.env.NEXT_PUBLIC_ALGOLIA_APP_ID, process.env.NEXT_PUBLIC_ALGOLIA_SEARCH_KEY);
+import { searchClient } from '@utils/algolia';
 
 export const getTopNCategoriesFromAlgoliaWithExpireDateTime = async (algoliaIndex) => {
   const index = searchClient.initIndex(algoliaIndex);

@@ -6,6 +6,7 @@ import { Grid } from '@kiwicom/orbit-components/lib';
 import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import { wishesHomePageDetails } from '@constants/homePageDetails';
+import RoutingCarousel from '@components/carousel/RoutingCarousel';
 
 const WishesHomePageContainer = styled.div`
   display: flex;
@@ -64,10 +65,12 @@ const WishesHomePage = () => {
         }}
       >
         <Banner type={pageType} />
+
         <CategoriesContainer>
           <ResponsiveTitle>{categoriesTitle}</ResponsiveTitle>
           <Categories type="wishes" />
         </CategoriesContainer>
+
         <TopWishesContainer>
           <ResponsiveTitle>{topCategoriesTitle}</ResponsiveTitle>
           <TopWishes numberOfPosts={numberOfPostsPerCategory} numberOfCategories={numberOfCategories} />

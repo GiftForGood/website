@@ -15,6 +15,8 @@ import { donor, npo } from '@constants/userType';
 import { colors } from '@constants/colors';
 import { logStartChatToAnalytics } from '@utils/analytics';
 import styled from 'styled-components';
+import { clickedOnStartChatWithDonation, clickedOnStartChatWithWish } from '@utils/algolia/insights';
+import useUser from '@components/session/modules/useUser';
 
 const AvatarDetailsContainer = styled.div`
   position: relative;
@@ -54,6 +56,8 @@ const PostDetailsHeader = ({
   const [showClosePostModal, setShowClosePostModal] = useState(false);
   const [showSharePostModal, setShowSharePostModal] = useState(false);
 
+  const userObject = useUser();
+
   const handleReportPostModal = () => {
     if (showReportPostModal) {
       setShowPostPostModal(false);
@@ -83,6 +87,11 @@ const PostDetailsHeader = ({
     let destination = `/chat?postId=${postId}&postType=${postType}`;
     if (chatType === 'Chat') {
       logStartChatToAnalytics();
+      if (postType === donations) {
+        clickedOnStartChatWithDonation(userObject, postId);
+      } else {
+        clickedOnStartChatWithWish(userObject, postId);
+      }
       api.chats.getChatsForPost(postId).then((rawChats) => {
         if (rawChats.docs.length > 0) {
           // assumption: can only have one chat for a post that is not yours,

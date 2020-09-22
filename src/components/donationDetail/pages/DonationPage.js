@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled, { css } from 'styled-components';
 import Grid from '@kiwicom/orbit-components/lib/utils/Grid';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
@@ -9,6 +9,8 @@ import DonorInformation from '../../postDetails/UserInfoCard';
 import Desktop from '@kiwicom/orbit-components/lib/Desktop';
 import BreadcrumbsPanel from '../../postDetails/BreadcrumbsPanel';
 import ImagePanel from '../modules/ImagePanel';
+import useUser from '@components/session/modules/useUser';
+import { viewedDonationDetails } from '@utils/algolia/insights';
 
 const Wrapper = styled.div`
   margin: 0 auto;
@@ -39,6 +41,11 @@ const DonationPage = ({ donationId, donationDetails, donorDetails, user, prevHre
   const categoryTags = donation.categories.map((category) => category.name);
   const loginUserId = user == null ? '' : user.user.userId;
   const loginUserType = user == null ? '' : user.user.donor ? donorType : npoType;
+  const userObject = useUser();
+
+  useEffect(() => {
+    viewedDonationDetails(userObject, donationId);
+  }, []);
 
   return (
     <Wrapper>

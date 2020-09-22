@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import DonationCard from '../../card/DonationCard';
 import BlackText from '../../text/BlackText';
 import { Grid } from '@kiwicom/orbit-components/lib';
 import { getFormattedDate } from '@api/time';
+import useUser from '@components/session/modules/useUser';
+import { clickedOnDonation } from '@utils/algolia/insights';
 
 /**
  * https://www.algolia.com/doc/api-reference/widgets/infinite-hits/react/#create-a-react-component
@@ -17,6 +19,28 @@ const DonationsHitWrapper = ({ hits, category, hasPrevious, hasMore, refinePrevi
   if (hits.length === 0) {
     return <BlackText size="medium">No donations found.</BlackText>;
   }
+
+  const sentinel = useRef(null);
+  const userObject = useUser();
+
+  const onSentinelIntersection = (entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting && hasMore) {
+        refine();
+      }
+    });
+  };
+
+  useEffect(() => {
+    if (sentinel) {
+      const observer = new IntersectionObserver(onSentinelIntersection);
+      observer.observe(sentinel.current);
+
+      return () => {
+        observer.disconnect();
+      };
+    }
+  }, [sentinel]);
 
   return (
     <>
@@ -39,7 +63,7 @@ const DonationsHitWrapper = ({ hits, category, hasPrevious, hasMore, refinePrevi
             description,
             user,
             postedDateTime,
-            locations,
+            itemCondition,
             validPeriodFrom,
             validPeriodTo,
           } = hit;
@@ -57,13 +81,17 @@ const DonationsHitWrapper = ({ hits, category, hasPrevious, hasMore, refinePrevi
               postedDateTime={postedDateTime}
               postHref={postHref}
               profileHref={profileHref}
-              locations={locations.map((location) => location.name).join(', ')}
+              itemCondition={itemCondition}
               validPeriod={validPeriod}
               categoryId={category.id}
               categoryName={category.name}
+              onClick={() => {
+                clickedOnDonation(userObject, objectID);
+              }}
             />
           );
         })}
+        <li ref={sentinel} />
       </Grid>
     </>
   );

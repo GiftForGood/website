@@ -12,9 +12,8 @@ import { getFormattedDate } from '@api/time';
 
 import { InstantSearch, connectHits, Configure } from 'react-instantsearch-dom';
 import { getByCategoryIdAndStatus } from '@utils/algolia/filteringRules';
-import algoliasearch from 'algoliasearch/lite';
 import { getTopNCategoriesFromAlgolia, sortObjectEntries } from './algoliaHelpers';
-const searchClient = algoliasearch(process.env.NEXT_PUBLIC_ALGOLIA_APP_ID, process.env.NEXT_PUBLIC_ALGOLIA_SEARCH_KEY);
+import { searchClient } from '@utils/algolia';
 
 const CategoryHeader = styled.div`
   align-items: center;
@@ -117,9 +116,6 @@ const TopDonations = ({ numberOfPosts, numberOfCategories }) => {
               {hits.map((donation) => {
                 const donationPostHref = `/donations/${donation.objectID}`;
                 const profileHref = `/profile/${donation.user.userId}`;
-                const locations = donation.locations.map((location) => {
-                  return location.name;
-                });
                 const validPeriod = `${getFormattedDate(donation.validPeriodFrom)} - ${getFormattedDate(
                   donation.validPeriodTo
                 )}`;
@@ -135,7 +131,7 @@ const TopDonations = ({ numberOfPosts, numberOfCategories }) => {
                     postHref={donationPostHref}
                     profileHref={profileHref}
                     validPeriod={validPeriod}
-                    locations={locations.join(', ')}
+                    itemCondition={donation.itemCondition}
                     categoryId={category.id}
                     categoryName={category.name}
                   ></DonationCard>

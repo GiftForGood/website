@@ -1,6 +1,7 @@
 import { db, firebaseAuth, firebase } from '../firebase';
 import { WISHES_BATCH_SIZE } from './constants';
 import { TIMESTAMP, NPO_NAME, POSTED_TIMESTAMP } from '../constants/wishesSortType';
+import { BUMP_DURATION } from '@constants/wishes';
 import { PENDING, CLOSED, COMPLETED } from '../constants/postStatus';
 import { getLocations, getUpdatedLocations } from './common/location';
 import {
@@ -303,7 +304,7 @@ class WishesAPI {
     }
 
     const updateTime = firebase.firestore.FieldValue.serverTimestamp();
-    const newExpiryDateTime = moment(wishInfo.expireDateTime).add(1, 'week').toDate();
+    const newExpiryDateTime = moment(wishInfo.expireDateTime).add(BUMP_DURATION, 'week').toDate();
     const firestoreNewExpiryDateTime = firebase.firestore.Timestamp.fromDate(newExpiryDateTime);
     const wishUpdateInfo = {
       expireDateTime: firestoreNewExpiryDateTime,

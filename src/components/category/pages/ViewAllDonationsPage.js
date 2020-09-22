@@ -5,17 +5,18 @@ import { Grid } from '@kiwicom/orbit-components/lib';
 import { DONATIONS_BATCH_SIZE } from '@api/constants';
 import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
-import algoliasearch from 'algoliasearch/lite';
 import { InstantSearch, Configure, connectInfiniteHits } from 'react-instantsearch-dom';
 import DonationsHitWrapper from '../modules/DonationsHitWrapper';
 import { getByStatus } from '@utils/algolia/filteringRules';
 import { donationsSortByRule } from '@utils/algolia/sortByRules';
 import dynamic from 'next/dynamic';
+import useUser from '@components/session/modules/useUser';
+import { searchClient } from '@utils/algolia';
+
 const DonationsSortFilterPanel = dynamic(() => import('../modules/DonationsSortFilterPanel'), {
   ssr: false,
 });
 
-const searchClient = algoliasearch(process.env.NEXT_PUBLIC_ALGOLIA_APP_ID, process.env.NEXT_PUBLIC_ALGOLIA_SEARCH_KEY);
 const DonationsInfiniteHit = connectInfiniteHits(DonationsHitWrapper);
 
 const ViewAllDonationsContainer = styled.div`
@@ -40,6 +41,7 @@ const GridSectionContainer = styled.div`
 `;
 
 const ViewAllDonationsPage = ({ sortByQuery, query = '' }) => {
+  const user = useUser();
   const [sortBy, setSortBy] = useState(sortByQuery ? sortByQuery : donationsSortByRule().defaultRefinement);
   const category = {
     id: '',
@@ -88,6 +90,9 @@ const ViewAllDonationsPage = ({ sortByQuery, query = '' }) => {
               query={query}
               aroundLatLng={latLngFilter}
               aroundRadius={10000}
+              enablePersonalization={true}
+              userToken={user?.userId}
+              clickAnalytics={true}
             />
             <DonationsContainer>
               {/* Desktop,Tablet,Mobile has infinite scrolling  */}

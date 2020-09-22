@@ -10,6 +10,7 @@ import moment from 'moment';
 import api from '@api';
 import WishCardStatus from './WishCardStatus';
 import { PENDING } from '@constants/postStatus';
+import { BUMP_DURATION } from '@constants/wishes';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 
 const CardContainer = styled.div`
@@ -234,7 +235,8 @@ const WishCard = ({
           <ModalHeader title="Bump your Wish"></ModalHeader>
           <ModalSection>
             <Text>
-              Bumping your post means that your wish will expire <u>1 week</u> later than the stipulated date.
+              Bumping your post means that your wish will expire <u>{BUMP_DURATION} week</u> later than the stipulated
+              date.
             </Text>
             <br />
             <Text>

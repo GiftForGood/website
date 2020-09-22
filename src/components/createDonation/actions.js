@@ -40,10 +40,10 @@ export function setValidTo(validTo) {
   };
 }
 
-export function setLocation(location) {
+export function setItemCondition(itemCondition) {
   return {
-    type: 'create-donation/SET_LOCATION',
-    location,
+    type: 'create-donation/SET_ITEM_CONDITION',
+    itemCondition,
   };
 }
 

@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { Stack, Heading, Text } from '@kiwicom/orbit-components/lib';
 import styled from 'styled-components';
 import DonationCard from '../../card/DonationCard';
-import { getTitle, getDescription, getCoverImage, getLocation, getValidFrom, getValidTo } from '../selectors';
+import { getTitle, getDescription, getCoverImage, getItemCondition, getValidFrom, getValidTo } from '../selectors';
 import useUser from '../../session/modules/useUser';
 import DonationContext from '../context';
 
@@ -16,7 +16,7 @@ const LivePreviewDonation = () => {
   const title = getTitle(state);
   const description = getDescription(state);
   const coverImage = getCoverImage(state);
-  const location = getLocation(state);
+  const itemCondition = getItemCondition(state);
   const validFrom = getValidFrom(state);
   const validTo = getValidTo(state);
 
@@ -45,7 +45,7 @@ const LivePreviewDonation = () => {
               postedDateTime={Date.now()}
               postHref={''}
               profileHref={profileHref}
-              locations={location}
+              itemCondition={itemCondition}
               validPeriod={validFrom + ' - ' + validTo}
             />
           </Stack>

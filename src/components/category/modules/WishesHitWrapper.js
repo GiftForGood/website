@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
 import WishCard from '../../card/WishCard';
 import BlackText from '../../text/BlackText';
 import { Grid } from '@kiwicom/orbit-components/lib';
+import useUser from '@components/session/modules/useUser';
+import { clickedOnWish } from '@utils/algolia/insights';
 
 /**
  * https://www.algolia.com/doc/api-reference/widgets/infinite-hits/react/#create-a-react-component
@@ -13,10 +15,32 @@ import { Grid } from '@kiwicom/orbit-components/lib';
  * @param {function} refinePrevious
  * @param {function} refineNext
  */
-const WishesHitWrapper = ({ hits, category, hasPrevious, hasMore, refinePrevious, refineNext }) => {
+const WishesHitWrapper = ({ hits, category, hasPrevious, hasMore, refinePrevious, refineNext, refine }) => {
   if (hits.length === 0) {
     return <BlackText size="medium">No wishes found.</BlackText>;
   }
+
+  const sentinel = useRef(null);
+  const userObject = useUser();
+
+  const onSentinelIntersection = (entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting && hasMore) {
+        refine();
+      }
+    });
+  };
+
+  useEffect(() => {
+    if (sentinel) {
+      const observer = new IntersectionObserver(onSentinelIntersection);
+      observer.observe(sentinel.current);
+
+      return () => {
+        observer.disconnect();
+      };
+    }
+  }, [sentinel]);
 
   return (
     <>
@@ -51,9 +75,13 @@ const WishesHitWrapper = ({ hits, category, hasPrevious, hasMore, refinePrevious
               isBumped={isBumped}
               categoryId={category.id}
               categoryName={category.name}
+              onClick={() => {
+                clickedOnWish(userObject, objectID);
+              }}
             />
           );
         })}
+        <li ref={sentinel} />
       </Grid>
     </>
   );
