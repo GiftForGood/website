@@ -83,7 +83,7 @@ const NpoApplicationPanel = () => {
           if (app.status === 'accepted') {
             displayAlert(
               'Accepted',
-              'Your application have been accepted by the administrator of GiftforGood',
+              'Your application has been accepted by the administrator of GiftforGood',
               'success'
             );
           } else if (app.status === 'resubmission') {
@@ -92,8 +92,18 @@ const NpoApplicationPanel = () => {
               'Your application requires additional information. Please update your UEN if its wrong or tell us more about your organization',
               'warning'
             );
-          } else {
-            displayAlert('No further action required', 'No further action required from your end', 'info');
+          } else if (app.status === 'pending' || app.status === 'reviewing') {
+            displayAlert(
+              'No further action required',
+              'No further action required from your end, please wait for a few days for the administrator to approve your application',
+              'info'
+            );
+          } else if (app.status === 'rejected') {
+            displayAlert(
+              'No further action required',
+              'Your application has been rejected by the administrator of GiftforGood',
+              'critical'
+            );
           }
         }
       });
