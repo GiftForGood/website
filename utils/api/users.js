@@ -4,6 +4,7 @@ import * as path from 'path';
 import { ALL_TEXT } from '../constants/imageVariation';
 import { NPO_VERIFICATION_STATUS_RESUBMISSION } from '@constants/npos';
 import { uploadImage } from './common/images';
+import { getCurrentUser } from './common/user';
 import UserError from './error/userError';
 
 class UsersAPI {
