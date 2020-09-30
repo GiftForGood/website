@@ -1,8 +1,10 @@
-import { db, firebaseAuth, firebaseStorage } from '../firebase';
+import { db, firebaseAuth, firebaseStorage, firebase } from '../firebase';
 import { v4 as uuidv4 } from 'uuid';
 import * as path from 'path';
 import { ALL_TEXT } from '../constants/imageVariation';
+import { NPO_VERIFICATION_STATUS_RESUBMISSION } from '@constants/npos';
 import { uploadImage } from './common/images';
+import { getCurrentUser } from './common/user';
 import UserError from './error/userError';
 
 class UsersAPI {
@@ -22,6 +24,15 @@ class UsersAPI {
    */
   async getNPO(id) {
     return db.collection('npos').doc(id).get();
+  }
+
+  /**
+   * Get a npo verification info by its id
+   * @param {string} id npo id
+   * @return {object} A firebase document of the npo verification info
+   */
+  async getNPOVerification(id) {
+    return db.collection('npoVerifications').doc(id).get();
   }
 
   /**
@@ -60,35 +71,39 @@ class UsersAPI {
   }
 
   /**
-   * Update the verification proof of the current logged in NPO
-   * @param {object} proofFile The image of the proof. Only `.pdf` is allowed.
+   * Update the verification details of the current logged in NPO
+   * @param {string} registrationNumber The uen number that npo registered with
+   * @param {string} activities
    * @throws {UserError}
    * @throws {FirebaseError}
-   * @return {object} A firebase document of the updated NPO verification info.
+   * @return {object} A firebase document of the updated NPO verification info
    */
-  async updateNPOVerificationProof(proofFile) {
-    this._validateProofFileExtension(proofFile);
-
+  async updateNPOVerification(registrationNumber, activities) {
     const userId = await this._getCurrentUserId();
 
-    let npoVerificationDoc = db.collection('npoVerifications').doc(userId);
-    const npoVerificationSnapshot = await npoVerificationDoc.get();
-    const npoVerificationInfo = npoVerificationSnapshot.data();
-    if (typeof npoVerificationInfo === 'undefined') {
-      throw new UserError('invalid-current-user', 'no logged in user');
+    const [npoSnapshot, npoVerificationSnapshot] = await Promise.all([
+      this.getNPO(userId),
+      this.getNPOVerification(userId),
+    ]);
+    if (!npoSnapshot.exists || !npoVerificationSnapshot.exists) {
+      throw new UserError('invalid-user-info', 'failed to fetch user info');
     }
 
-    const currentProofVersion = npoVerificationInfo.organization.proofImageVersion;
-    const nextVersion = parseInt(currentProofVersion + 1);
-    const nextVersionString = `v${nextVersion}`;
-
-    const proofFileUrl = await this._uploadNPOProofFile(userId, proofFile, nextVersionString);
+    const npoVerification = npoVerificationSnapshot.data();
+    if (npoVerification.status !== NPO_VERIFICATION_STATUS_RESUBMISSION) {
+      throw new UserError(
+        'invalid-verification-status',
+        'Only can update verification information when it is in resubmission'
+      );
+    }
 
     const data = {
-      ['organization.proofImageUrl']: proofFileUrl,
-      ['organization.proofImageVersion']: nextVersion,
+      ['organization.registrationNumber']: registrationNumber,
+      ['organization.activities']: activities,
+      lastUpdatedDateTime: firebase.firestore.FieldValue.serverTimestamp(),
     };
 
+    const npoVerificationDoc = db.collection('npoVerifications').doc(userId);
     await npoVerificationDoc.update(data);
 
     return npoVerificationDoc.get();

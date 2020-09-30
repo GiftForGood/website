@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Heading, Stack } from '@kiwicom/orbit-components/lib';
 import BlackText from '../../text/BlackText';
@@ -6,6 +6,7 @@ import GreyText from '../../text/GreyText';
 import ProfileAvatar from '@components/imageContainers/ProfileAvatar';
 import { marketingTeamMembers, techTeamMembers, partnershipTeamMembers } from '../../../../utils/constants/members';
 import Linkify from 'react-linkify';
+import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 
 const DescriptionContainer = styled.div`
   position: relative;
@@ -40,12 +41,20 @@ const MemberDescriptionContainer = styled.div``;
 const MemberDescriptionTitleContainer = styled.div``;
 
 const TeamSection = ({ teamMembers }) => {
+  const { isTablet } = useMediaQuery();
+
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => setIsMounted(true), []);
+
+  if (!isMounted) return null;
+
   return (
     <Stack direction="column" spacing="loose">
       {teamMembers.map((member) => {
-        return (
+        return isTablet ? (
           <Stack direction="row" spacing="extraLoose">
-            <ProfileAvatar width="125px" height="125px" imageUrl={member.imageUrl} />
+            <ProfileAvatar width="125" height="125" imageUrl={member.imageUrl} />
             <MemberDescriptionContainer>
               <Stack direction="column">
                 <MemberDescriptionTitleContainer>
@@ -53,6 +62,31 @@ const TeamSection = ({ teamMembers }) => {
                     {member.name}
                   </BlackText>
                   <GreyText style={{ fontStyle: 'italic' }}>{member.position}</GreyText>
+                </MemberDescriptionTitleContainer>
+                <Linkify
+                  componentDecorator={(decoratedHref, decoratedText, key) => (
+                    <a target="blank" href={decoratedHref} key={key}>
+                      {decoratedText}
+                    </a>
+                  )}
+                >
+                  <BlackText>{member.description}</BlackText>
+                </Linkify>
+              </Stack>
+            </MemberDescriptionContainer>
+          </Stack>
+        ) : (
+          <Stack direction="column" spacing="compact" align="center">
+            <ProfileAvatar width="100" height="100" imageUrl={member.imageUrl} />
+            <MemberDescriptionContainer>
+              <Stack direction="column" align="center">
+                <MemberDescriptionTitleContainer>
+                  <BlackText weight="bold" size="large" align="center">
+                    {member.name}
+                  </BlackText>
+                  <GreyText align="center" style={{ fontStyle: 'italic' }}>
+                    {member.position}
+                  </GreyText>
                 </MemberDescriptionTitleContainer>
                 <Linkify
                   componentDecorator={(decoratedHref, decoratedText, key) => (

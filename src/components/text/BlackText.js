@@ -5,6 +5,12 @@ const BlackText = styled.div`
   font-weight: ${(props) => {
     return props.weight === 'bold' ? 'bold' : 'normal';
   }};
+  text-align: ${(props) => {
+    if (props.align === 'center' || props.align === 'left' || props.align === 'right') {
+      return props.align;
+    }
+    return 'left';
+  }};
   font-size: ${(props) => {
     if (props.size === 'extraTiny') {
       return '8px';
