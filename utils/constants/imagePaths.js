@@ -31,3 +31,6 @@ export const groundUpCentralLogoPath =
   'https://res.cloudinary.com/giftforgood/image/upload/v1594736348/footer/groundup-central_logo-2C_vtsh9t.png';
 
 export const favicon = '/assets/favicon.ico';
+
+export const emptyStateImagePath =
+  'https://res.cloudinary.com/giftforgood/image/upload/v1600521695/empty-state/undraw_empty_xct9_g1ndx6.svg';
