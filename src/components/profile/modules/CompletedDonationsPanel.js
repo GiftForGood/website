@@ -106,7 +106,7 @@ const CompletedDonationsPanel = ({ isMine, userId }) => {
     if (completedDonations.length === 0) {
       return (
         <Stack justify="center" align="center" direction="column" grow>
-          <EmptyStateImage label="No completed donation yet." />
+          <EmptyStateImage label="No completed donations yet." />
         </Stack>
       );
     }
