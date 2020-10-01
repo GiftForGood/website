@@ -5,6 +5,7 @@ import BlackText from '../../text/BlackText';
 import { Grid } from '@kiwicom/orbit-components/lib';
 import useUser from '@components/session/modules/useUser';
 import { clickedOnWish } from '@utils/algolia/insights';
+import EmptyStateImage from '@components/imageContainers/EmptyStateImage';
 
 /**
  * https://www.algolia.com/doc/api-reference/widgets/infinite-hits/react/#create-a-react-component
@@ -17,7 +18,7 @@ import { clickedOnWish } from '@utils/algolia/insights';
  */
 const WishesHitWrapper = ({ hits, category, hasPrevious, hasMore, refinePrevious, refineNext, refine }) => {
   if (hits.length === 0) {
-    return <BlackText size="medium">No wishes found.</BlackText>;
+    return <EmptyStateImage label="No wishes found." />;
   }
 
   const sentinel = useRef(null);
