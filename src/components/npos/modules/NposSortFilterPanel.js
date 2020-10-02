@@ -1,32 +1,56 @@
-import React from 'react';
-import { Stack, Collapse } from '@kiwicom/orbit-components/lib';
+import React, { useState } from 'react';
+import { Stack, Button, Modal } from '@kiwicom/orbit-components/lib';
 import NposSortBy from '../modules/NposSortBy';
 import NposFilterBy from '../modules/NposFilterBy';
-import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 import { connectSortBy, connectRefinementList } from 'react-instantsearch-dom';
+import styled from 'styled-components';
+import Desktop from '@kiwicom/orbit-components/lib/Desktop';
+import Mobile from '@kiwicom/orbit-components/lib/Mobile';
+import { ModalFooter, ModalSection } from '@kiwicom/orbit-components/lib/Modal';
+
+const ModalContainer = styled.div`
+  display: ${({ hide }) => (hide ? 'none' : 'box')};
+`;
 
 const NposSort = connectSortBy(NposSortBy);
 const NposFilter = connectRefinementList(NposFilterBy);
 
 const NposSortFilterPanel = ({ sortItems, sortDefaultRefinement, query }) => {
-  const { isDesktop } = useMediaQuery();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
-    <Stack>
-      {isDesktop ? (
-        <>
+    <>
+      <Desktop>
+        <Stack>
           <NposSort items={sortItems} defaultRefinement={sortDefaultRefinement} query={query} />
           <NposFilter attribute="organization.sector" />
-        </>
-      ) : (
-        <Collapse label="Filter/Sort Settings">
-          <Stack>
-            <NposSort items={sortItems} defaultRefinement={sortDefaultRefinement} query={query} />
-            <NposFilter attribute="organization.sector" />
-          </Stack>
-        </Collapse>
-      )}
-    </Stack>
+        </Stack>
+      </Desktop>
+
+      <Mobile>
+        <Stack>
+          <Button onClick={() => setIsModalOpen(true)} size="small" type="secondary" width={0}>
+            Filter/Sort Settings
+          </Button>
+        </Stack>
+
+        <ModalContainer hide={!isModalOpen}>
+          <Modal onClose={() => setIsModalOpen(false)} size="small">
+            <ModalSection>
+              <Stack>
+                <NposSort items={sortItems} defaultRefinement={sortDefaultRefinement} query={query} />
+                <NposFilter attribute="organization.sector" />
+              </Stack>
+            </ModalSection>
+            <ModalFooter>
+              <Button fullWidth onClick={() => setIsModalOpen(false)} type="secondary">
+                Close
+              </Button>
+            </ModalFooter>
+          </Modal>
+        </ModalContainer>
+      </Mobile>
+    </>
   );
 };
 
