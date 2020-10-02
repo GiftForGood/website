@@ -15,7 +15,8 @@ const NposSortBy = ({ items, currentRefinement, refine, sortByIndex, query }) =>
   const handleSelect = (event) => {
     const sortBy = event.target.value;
     refine(sortBy);
-    router.push(`/npos`, `/npos?sortBy=${event.target.value}&q=${query}`, {
+    const q = query ? `&q=${query}` : '';
+    router.push(`/npos`, `/npos?sortBy=${event.target.value}${q}`, {
       shallow: true,
     });
   };
