@@ -25,12 +25,6 @@ const MobileDrawer = ({ shown, onClose }) => {
           <ButtonLink transparent href="/about" type="secondary">
             About Us
           </ButtonLink>
-          <ButtonLink transparent href="/privacy-policy" type="secondary">
-            Privacy Policy
-          </ButtonLink>
-          <ButtonLink transparent href="/terms-and-conditions" type="secondary">
-            Terms and Conditions
-          </ButtonLink>
           <ButtonLink transparent href="/partners" type="secondary">
             Partners
           </ButtonLink>
@@ -45,6 +39,12 @@ const MobileDrawer = ({ shown, onClose }) => {
           </ButtonLink>
           <ButtonLink transparent href="/faq" type="secondary">
             FAQ
+          </ButtonLink>
+          <ButtonLink transparent href="/privacy-policy" type="secondary">
+            Privacy Policy
+          </ButtonLink>
+          <ButtonLink transparent href="/terms-and-conditions" type="secondary">
+            Terms and Conditions
           </ButtonLink>
           <ButtonLink transparent href="/credits" type="secondary">
             Credits

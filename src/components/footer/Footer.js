@@ -96,12 +96,6 @@ const Footer = () => {
           <TextLink asComponent={Link} href="/about" type="secondary" size="small">
             About Us
           </TextLink>
-          <TextLink asComponent={Link} href="/privacy-policy" type="secondary" size="small">
-            Privacy Policy
-          </TextLink>
-          <TextLink asComponent={Link} href="/terms-and-conditions" type="secondary" size="small">
-            Terms and Conditions
-          </TextLink>
           <TextLink asComponent={Link} href="/partners" type="secondary" size="small">
             Partners
           </TextLink>
@@ -113,6 +107,12 @@ const Footer = () => {
           </TextLink>
           <TextLink asComponent={Link} href="/faq" type="secondary" size="small">
             FAQ
+          </TextLink>
+          <TextLink asComponent={Link} href="/privacy-policy" type="secondary" size="small">
+            Privacy Policy
+          </TextLink>
+          <TextLink asComponent={Link} href="/terms-and-conditions" type="secondary" size="small">
+            Terms and Conditions
           </TextLink>
           <TextLink asComponent={Link} href="/credits" type="secondary" size="small">
             Credits
