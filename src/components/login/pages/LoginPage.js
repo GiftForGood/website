@@ -47,7 +47,7 @@ const Panel = styled.div`
   `)};
 `;
 
-const LoginPage = (props, state) => {
+const LoginPage = ({ redirectUrlAfterLogin }) => {
   const currentPage = useSelector(getCurrentPage);
 
   function panel(currentPage) {
@@ -55,9 +55,9 @@ const LoginPage = (props, state) => {
       case LANDING:
         return <LoginLanding />;
       case NPO_LOGIN:
-        return <LoginNpo />;
+        return <LoginNpo redirectUrlAfterLogin={redirectUrlAfterLogin} />;
       case DONOR_LOGIN:
-        return <LoginDonor />;
+        return <LoginDonor redirectUrlAfterLogin={redirectUrlAfterLogin} />;
       default:
         return <LoginLanding />;
     }
