@@ -1,12 +1,16 @@
 export const onboardingDonor = [
   {
     src: 'https://res.cloudinary.com/giftforgood/image/upload/v1601521851/onboarding/undraw_send_gift_7o4m_lat4mf.svg',
-    description: 'You can donate by posting your items and wait for NPOs to chat with you.',
+    description: 'Start donating by browsing wishes or listing your items for donation!',
   },
   {
     src: 'https://res.cloudinary.com/giftforgood/image/upload/v1601521853/onboarding/undraw_chatting_2yvo_jzcdik.svg',
-    description: 'You can donate by chatting with wishes on the platform and see how you can help.',
+    description: 'Chat with NPOs to confirm your donation',
   },
+  {
+    src: 'https://res.cloudinary.com/giftforgood/image/upload/v1602139758/onboarding/undraw_Savings_re_eq4w_moc7yu.svg',
+    description: 'Use our promo codes for discounted delivery rates! https://www.giftforgood.io/delivery-partners'
+  }
 ];
 
 export const onboardingNpo = [
@@ -14,11 +18,15 @@ export const onboardingNpo = [
     src:
       'https://res.cloudinary.com/giftforgood/image/upload/v1601533846/onboarding/undraw_publish_post_vowb_lhsz01.svg',
     description:
-      'You can request for items by posting a wish, with a title, description and location of delivery. Donors will be able to view them in individual category page.',
+      'You can now post your wishes or check out items listed by donors!',
   },
   {
     src: 'https://res.cloudinary.com/giftforgood/image/upload/v1601533848/onboarding/undraw_chatting_2yvo_1_f78qcq.svg',
     description:
-      'You can request for donations by chatting with donations on the platform and see how they can help you.',
+      'Chat with donors to accept their donations',
   },
+  {
+    src: 'https://res.cloudinary.com/giftforgood/image/upload/v1602139760/onboarding/undraw_Savings_re_eq4w_1_qfcbum.svg',
+    description: 'Use our promo codes for discounted delivery rates! https://www.giftforgood.io/delivery-partners'
+  }
 ];
