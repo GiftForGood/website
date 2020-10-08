@@ -11,6 +11,7 @@ import InfiniteScroll from '../../scroller/InfiniteScroller';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 import { getFormattedDate } from '@api/time';
 import { deserializeFirestoreTimestampToUnixTimestamp } from '@utils/firebase/deserializer';
+import EmptyStateImage from '@components/imageContainers/EmptyStateImage';
 
 const GridSectionContainer = styled.div`
   margin-top: 20px;
@@ -105,7 +106,7 @@ const PastDonationsPanel = ({ isMine, userId }) => {
     if (pastDonations.length === 0) {
       return (
         <Stack justify="center" align="center" direction="column" grow>
-          <BlackText size="medium">No donations posted yet.</BlackText>
+          <EmptyStateImage label="No donations posted yet." />
         </Stack>
       );
     }
@@ -144,7 +145,7 @@ const PastDonationsPanel = ({ isMine, userId }) => {
     if (pastDonations.length === 0) {
       return (
         <Stack justify="center" align="center" direction="column" grow>
-          <BlackText size="medium">No donations posted yet.</BlackText>
+          <EmptyStateImage label="No donations posted yet." />
         </Stack>
       );
     }

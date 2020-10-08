@@ -18,7 +18,7 @@ const HeadingColor = styled.div`
   color: ${colors.npoBackground};
 `;
 
-const LoginNpo = () => {
+const LoginNpo = ({ redirectUrlAfterLogin }) => {
   const dispatch = useDispatch();
   const router = useRouter();
   const [alertTitle, setAlertTitle] = useState('');
@@ -45,7 +45,11 @@ const LoginNpo = () => {
       let userData = userDoc.data();
       let response = await client.post('/api/sessionLogin', { token });
       if (response.status === 200) {
-        router.push('/');
+        if (redirectUrlAfterLogin) {
+          router.push(redirectUrlAfterLogin);
+        } else {
+          router.push('/');
+        }
       } else {
         throw response.error;
       }

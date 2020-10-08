@@ -6,7 +6,14 @@ import SharePostModal from '../modal/SharePostModal';
 import ChatButton from '../buttons/ChatButton';
 import Verified from '../session/modules/Verified';
 import api from '@api';
-import { AlertCircle, Edit, CloseCircle, MenuKebab, ShareAndroid } from '@kiwicom/orbit-components/lib/icons';
+import {
+  AlertCircle,
+  Edit,
+  CloseCircle,
+  MenuKebab,
+  ShareAndroid,
+  FlightNomad,
+} from '@kiwicom/orbit-components/lib/icons';
 import { Button, Stack, Text, Popover, ButtonLink } from '@kiwicom/orbit-components/lib';
 import { useRouter } from 'next/router';
 import { COMPLETED, CLOSED } from '@constants/postStatus';
@@ -154,6 +161,16 @@ const PostDetailsHeader = ({
                   >
                     Edit post
                   </ButtonLink>
+                  {postType === wishes && (
+                    <ButtonLink
+                      type="secondary"
+                      transparent
+                      iconLeft={<FlightNomad />}
+                      href={`/wishes/create?wishId=${postId}`}
+                    >
+                      Duplicate Wish
+                    </ButtonLink>
+                  )}
                   <ButtonLink
                     transparent
                     type="secondary"

@@ -20,7 +20,7 @@ const HeadingColor = styled.div`
   color: ${colors.donorBackground};
 `;
 
-const LoginDonor = () => {
+const LoginDonor = ({ redirectUrlAfterLogin }) => {
   const dispatch = useDispatch();
   const [alertTitle, setAlertTitle] = useState('');
   const [showAlert, setShowAlert] = useState(false);
@@ -48,7 +48,11 @@ const LoginDonor = () => {
       let userData = userDoc.data();
       let response = await client.post('/api/sessionLogin', { token });
       if (response.status === 200) {
-        router.push('/');
+        if (redirectUrlAfterLogin) {
+          router.push(redirectUrlAfterLogin);
+        } else {
+          router.push('/');
+        }
       } else {
         throw response.error;
       }
@@ -82,7 +86,11 @@ const LoginDonor = () => {
       let userData = userDoc.data();
       let response = await client.post('/api/sessionLogin', { token });
       if (response.status === 200) {
-        router.push('/');
+        if (redirectUrlAfterLogin) {
+          router.push(redirectUrlAfterLogin);
+        } else {
+          router.push('/');
+        }
       } else {
         throw response.error;
       }

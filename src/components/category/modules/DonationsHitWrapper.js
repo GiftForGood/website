@@ -1,11 +1,10 @@
 import React, { useEffect, useRef } from 'react';
 import DonationCard from '../../card/DonationCard';
-import BlackText from '../../text/BlackText';
 import { Grid } from '@kiwicom/orbit-components/lib';
 import { getFormattedDate } from '@api/time';
 import useUser from '@components/session/modules/useUser';
 import { clickedOnDonation } from '@utils/algolia/insights';
-
+import EmptyStateImage from '@components/imageContainers/EmptyStateImage';
 /**
  * https://www.algolia.com/doc/api-reference/widgets/infinite-hits/react/#create-a-react-component
  * @param {object[]} hits
@@ -17,7 +16,7 @@ import { clickedOnDonation } from '@utils/algolia/insights';
  */
 const DonationsHitWrapper = ({ hits, category, hasPrevious, hasMore, refinePrevious, refineNext }) => {
   if (hits.length === 0) {
-    return <BlackText size="medium">No donations found.</BlackText>;
+    return <EmptyStateImage label="No donations found." />;
   }
 
   const sentinel = useRef(null);
