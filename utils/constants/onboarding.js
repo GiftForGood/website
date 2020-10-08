@@ -9,24 +9,23 @@ export const onboardingDonor = [
   },
   {
     src: 'https://res.cloudinary.com/giftforgood/image/upload/v1602139758/onboarding/undraw_Savings_re_eq4w_moc7yu.svg',
-    description: 'Use our promo codes for discounted delivery rates! https://www.giftforgood.io/delivery-partners'
-  }
+    description: 'Use our promo codes for discounted delivery rates! https://www.giftforgood.io/delivery-partners',
+  },
 ];
 
 export const onboardingNpo = [
   {
     src:
       'https://res.cloudinary.com/giftforgood/image/upload/v1601533846/onboarding/undraw_publish_post_vowb_lhsz01.svg',
-    description:
-      'You can now post your wishes or check out items listed by donors!',
+    description: 'You can now post your wishes or check out items listed by donors!',
   },
   {
     src: 'https://res.cloudinary.com/giftforgood/image/upload/v1601533848/onboarding/undraw_chatting_2yvo_1_f78qcq.svg',
-    description:
-      'Chat with donors to accept their donations',
+    description: 'Chat with donors to accept their donations',
   },
   {
-    src: 'https://res.cloudinary.com/giftforgood/image/upload/v1602139760/onboarding/undraw_Savings_re_eq4w_1_qfcbum.svg',
-    description: 'Use our promo codes for discounted delivery rates! https://www.giftforgood.io/delivery-partners'
-  }
+    src:
+      'https://res.cloudinary.com/giftforgood/image/upload/v1602139760/onboarding/undraw_Savings_re_eq4w_1_qfcbum.svg',
+    description: 'Use our promo codes for discounted delivery rates! https://www.giftforgood.io/delivery-partners',
+  },
 ];
