@@ -8,7 +8,7 @@ export const onboardingDonor = [
     description: 'Chat with NPOs to confirm your donation',
   },
   {
-    src: 'https://res.cloudinary.com/giftforgood/image/upload/v1602139758/onboarding/undraw_Savings_re_eq4w_moc7yu.svg',
+    src: 'https://res.cloudinary.com/giftforgood/image/upload/v1602142785/onboarding/undraw_discount_d4bd_jutjwn.svg',
     description: 'Use our promo codes for discounted delivery rates! https://www.giftforgood.io/delivery-partners',
   },
 ];
@@ -24,8 +24,7 @@ export const onboardingNpo = [
     description: 'Chat with donors to accept their donations',
   },
   {
-    src:
-      'https://res.cloudinary.com/giftforgood/image/upload/v1602139760/onboarding/undraw_Savings_re_eq4w_1_qfcbum.svg',
+    src: 'https://res.cloudinary.com/giftforgood/image/upload/v1602142787/onboarding/undraw_discount_d4bd_1_djsvsl.svg',
     description: 'Use our promo codes for discounted delivery rates! https://www.giftforgood.io/delivery-partners',
   },
 ];
