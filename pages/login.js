@@ -11,18 +11,20 @@ export async function getServerSideProps({ params, req, res, query }) {
     res.writeHead(302, { Location: '/' });
     res.end();
   }
+  let redirectUrlAfterLogin = query.redirect ? query.redirect : null;
   return {
     props: {
       user,
+      redirectUrlAfterLogin,
     },
   };
 }
 
-const Login = () => {
+const Login = ({ redirectUrlAfterLogin }) => {
   return (
     <div>
       <Header title="Login | GiftForGood" />
-      <LoginPage />
+      <LoginPage redirectUrlAfterLogin={redirectUrlAfterLogin} />
     </div>
   );
 };

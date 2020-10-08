@@ -22,11 +22,8 @@ const TopNavigationBar = dynamic(() => import('@components/navbar/modules/TopNav
 export async function getServerSideProps({ params, req, res, query }) {
   const user = await isAuthenticated(req, res);
   if (!user) {
-    return {
-      props: {
-        hasError: true,
-      },
-    };
+    res.writeHead(302, { Location: `/login?redirect=${req.url}` });
+    res.end();
   }
 
   if (!user.user.emailVerified) {
