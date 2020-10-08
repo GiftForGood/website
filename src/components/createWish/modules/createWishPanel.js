@@ -290,7 +290,7 @@ const CreateWishPanel = ({ wish, mode }) => {
                   label="Expire at"
                   name="expireAt"
                   placeholder="Expire at"
-                  value={wish ? getExpireWishDateFormat(wish.expireDateTime) : getExpireWishDate()}
+                  value={wish && mode === 'edit' ? getExpireWishDateFormat(wish.expireDateTime) : getExpireWishDate()}
                   help={'Your wish will be automatically removed after this date.'}
                 />
 
