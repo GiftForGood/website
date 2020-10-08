@@ -11,6 +11,7 @@ import { DONOR } from '@constants/usersType';
 import { colors } from '@constants/colors';
 import BlueButton from '@components/buttons/BlueButton';
 import RedButton from '@components/buttons/RedButton';
+import Linkify from 'react-linkify';
 
 const Image = styled.img`
   height: 200px;
@@ -36,7 +37,16 @@ const BannerContent = ({ src, description }) => {
   return (
     <BannerContentContainer>
       <Image src={src} />
-      <Text align="center">{description}</Text>
+
+      <Linkify
+        componentDecorator={(decoratedHref, decoratedText, key) => (
+          <a target="blank" href={decoratedHref} key={key}>
+            {decoratedText}
+          </a>
+        )}
+      >
+        <Text align="center">{description}</Text>
+      </Linkify>
     </BannerContentContainer>
   );
 };
