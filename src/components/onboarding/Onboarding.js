@@ -12,6 +12,7 @@ import { colors } from '@constants/colors';
 import BlueButton from '@components/buttons/BlueButton';
 import RedButton from '@components/buttons/RedButton';
 import Linkify from 'react-linkify';
+import { useRouter } from 'next/router';
 
 const Image = styled.img`
   height: 200px;
@@ -52,6 +53,7 @@ const BannerContent = ({ src, description }) => {
 };
 
 const Onboarding = ({ type, show = false, name = '' }) => {
+  const router = useRouter();
   const [shown, setShown] = useState(show);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [onboardingContent, setOnboardingContent] = useState(type === DONOR ? onboardingDonor : onboardingNpo);
@@ -62,10 +64,17 @@ const Onboarding = ({ type, show = false, name = '' }) => {
     }
   };
 
+  const closeOnboarding = () => {
+    setShown(false);
+    router.push('/', '/', {
+      shallow: true,
+    });
+  };
+
   return (
     <>
       {shown ? (
-        <Modal onClose={() => setShown(false)} size="small">
+        <Modal onClose={closeOnboarding} size="small">
           <ModalHeader title={`Welcome, ${name}!`}></ModalHeader>
           <ModalSection>
             <Carousel
@@ -101,7 +110,7 @@ const Onboarding = ({ type, show = false, name = '' }) => {
             </Carousel>
 
             <Stack direction="row" justify="between">
-              <ButtonLink onClick={() => setShown(false)} type="secondary">
+              <ButtonLink onClick={closeOnboarding} type="secondary">
                 Skip intro
               </ButtonLink>
               <Button
