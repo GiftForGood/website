@@ -1,11 +1,11 @@
 import React from 'react';
-import { Button, InputField, Stack, Separator } from '@kiwicom/orbit-components/lib';
+import { Button, InputField, Stack, Separator, Checkbox } from '@kiwicom/orbit-components/lib';
 import BlackText from '../../text/BlackText';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { getLocations } from '@api/common/location';
 
-const WishesFilterBy = ({ onLatLngUpdated }) => {
+const WishesFilterBy = ({ onLatLngUpdated, items, currentRefinement, refine }) => {
   const validationSchema = Yup.object().shape({
     postalCode: Yup.string().matches(/\d{6}/, 'Invalid postal code'),
   });
@@ -46,17 +46,34 @@ const WishesFilterBy = ({ onLatLngUpdated }) => {
         Filter By
       </BlackText>
       <Separator />
-      <form onSubmit={formik.handleSubmit}>
-        <Stack>
-          <InputField
-            placeholder="postal code"
-            label="Nearest - Furthest"
-            error={formik.touched.postalCode && formik.errors.postalCode ? formik.errors.postalCode : ''}
-            {...formik.getFieldProps('postalCode')}
-          />
-          <Button onClick={formik.handleSubmit}>Go</Button>
-        </Stack>
-      </form>
+
+      <Stack>
+        {items.map((item, index) => {
+          return (
+            <Checkbox
+              label={item.label + ' (' + item.count + ') '}
+              value={item.value}
+              checked={item.isRefined}
+              key={item.value}
+              onChange={() => {
+                refine(item.value);
+              }}
+            />
+          );
+        })}
+
+        <form onSubmit={formik.handleSubmit}>
+          <Stack>
+            <InputField
+              placeholder="postal code"
+              label="Nearest - Furthest"
+              error={formik.touched.postalCode && formik.errors.postalCode ? formik.errors.postalCode : ''}
+              {...formik.getFieldProps('postalCode')}
+            />
+            <Button onClick={formik.handleSubmit}>Go</Button>
+          </Stack>
+        </form>
+      </Stack>
     </div>
   );
 };
