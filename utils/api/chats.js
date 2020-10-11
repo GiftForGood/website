@@ -6,7 +6,7 @@ import { wishes, donations } from '../constants/postType';
 import { npo, donor } from '../constants/userType';
 import { PENDING } from '../constants/postStatus';
 import { IMAGE, TEXT, CALENDAR } from '../constants/chatContentType';
-import { ON, OFF } from '../constants/chatStatus';
+import { ON, OFF, DELIVERED } from '../constants/chatStatus';
 import { ADDED, MODIFIED } from '../constants/chatSubscriptionChange';
 import { uploadImage } from './common/images';
 import { getCurrentUser } from './common/user';
@@ -424,6 +424,26 @@ class ChatsAPI {
   async sendImageMessage(id, image) {
     const messages = await this._sendImageMessages(id, [image]);
     return messages[0];
+  }
+
+  /**
+   * Mark a chat with status as delivered
+   * @param {string} id The id of the chat that tbe message belongs to
+   * @throws {ChatError}
+   * @throws {FirebaseError}
+   * @return {object} A firebase document of the updated chat
+   */
+  async markWishAsDelivered(id) {
+    let chatDoc = await this.getChat(id);
+    if (!chatDoc.exists) {
+      throw new ChatError('invalid-chat', `chat of ${id} does not exist`);
+    }
+    let data = {
+      status: DELIVERED,
+    };
+    chatsCollection.doc(id).update(data);
+    chatDoc = await this.getChat(id);
+    return chatDoc.data();
   }
 
   /**

@@ -12,6 +12,7 @@ import DeliveredButton from '../../../components/buttons/ChatDeliveredButton';
 import styled from 'styled-components';
 import { CardSection } from '@kiwicom/orbit-components/lib/Card';
 import { PENDING, COMPLETED } from '@constants/postStatus';
+import { DELIVERED } from '@constants/chatStatus';
 import StatusTag from '../../../components/tags/StatusTag';
 import { donations, wishes } from '@constants/postType';
 import { useRouter } from 'next/router';
@@ -45,7 +46,16 @@ const ButtonsContainer = styled.div`
  * @param {string} name is the name of the opposite user
  * @param {string} profileImageUrl is the url of the opposite user's profile image
  */
-const ChatDialogUserRow = ({ postId, postType, postStatus, oppositeUser, postOwnerId, postEnquirerId }) => {
+const ChatDialogUserRow = ({
+  postId,
+  postType,
+  postStatus,
+  chatStatus,
+  setChat,
+  oppositeUser,
+  postOwnerId,
+  postEnquirerId,
+}) => {
   const [showSuggestDateModal, setShowSuggestDateModal] = useState(false);
   const [showAppreciationMessageModal, setShowAppreciationMessageModal] = useState(false);
   const [showConfirmCompletionModal, setShowConfirmCompletionModal] = useState(false);
@@ -107,12 +117,14 @@ const ChatDialogUserRow = ({ postId, postType, postStatus, oppositeUser, postOwn
   const profileHref = `/profile/${oppositeUser.id || oppositeUser.userId}`;
 
   const CTAButton = () => {
+    // donor chatting for a wish
     if (status === PENDING && postType === wishes && (oppositeUser.id || oppositeUser.userId) === postOwnerId) {
-      // donor able to mark as delivered
-      return (
+      return chatStatus !== DELIVERED ? (
         <Button size="small" onClick={handleDeliveredPost} asComponent={DeliveredButton}>
           Mark as Delivered
         </Button>
+      ) : (
+        <StatusTag status={chatStatus} />
       );
     }
 
@@ -129,7 +141,7 @@ const ChatDialogUserRow = ({ postId, postType, postStatus, oppositeUser, postOwn
       );
     }
 
-    return <StatusTag postStatus={status} />;
+    return <StatusTag status={status} />;
   };
 
   return (
@@ -178,6 +190,7 @@ const ChatDialogUserRow = ({ postId, postType, postStatus, oppositeUser, postOwn
               postId={postId}
               selectedChatId={selectedChatId}
               setSelectedChatId={(chatId) => dispatch(setSelectedChatId(chatId))}
+              setChat={setChat}
               isNewChat={isNewChat}
               setIsNewChat={(isNewChat) => dispatch(setIsNewChat(isNewChat))}
               onShow={showConfirmDeliveredModal}

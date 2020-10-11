@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { colors } from '@constants/colors';
 import WhiteText from '../../components/text/WhiteText';
 import { COMPLETED, CLOSED } from '@constants/postStatus';
+import { DELIVERED } from '@constants/chatStatus';
 
 const TagContainer = styled.div`
   background-color: ${(props) => props.color};
@@ -11,12 +12,14 @@ const TagContainer = styled.div`
   border-radius: 3px;
 `;
 
-const StatusTag = ({ postStatus }) => {
+const StatusTag = ({ status }) => {
   let tagColor;
-  if (postStatus === COMPLETED) {
+  if (status === COMPLETED) {
     tagColor = colors.completedTagBackground;
-  } else if (postStatus === CLOSED) {
+  } else if (status === CLOSED) {
     tagColor = colors.closedTagBackground;
+  } else if (status === DELIVERED) {
+    tagColor = colors.deliveredTagBackground;
   } else {
     tagColor = colors.pendingTagBackground;
   }
@@ -24,7 +27,7 @@ const StatusTag = ({ postStatus }) => {
   return (
     <TagContainer color={tagColor}>
       <WhiteText size="small" weight="bold">
-        {postStatus.toUpperCase()}
+        {status.toUpperCase()}
       </WhiteText>
     </TagContainer>
   );

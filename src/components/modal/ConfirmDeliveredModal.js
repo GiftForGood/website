@@ -9,6 +9,7 @@ const ConfirmDeliveredModal = ({
   postId,
   selectedChatId,
   setSelectedChatId,
+  setChat,
   isNewChat,
   setIsNewChat,
   onShow,
@@ -24,14 +25,21 @@ const ConfirmDeliveredModal = ({
   const onConfirm = async () => {
     if (isNewChat) {
       sendFirstMessage(deliveredMessage)
-        .then((chat) => {
+        .then(async (chat) => {
+          await api.chats.markWishAsDelivered(chat.chatId);
           setIsNewChat(false);
           setSelectedChatId(chat.chatId);
           router.push(`/chat?chatId=${chat.chatId}`);
         })
         .catch((err) => console.error(err));
     } else {
-      api.chats.sendTextMessage(selectedChatId, deliveredMessage).catch((err) => console.error(err));
+      api.chats
+        .sendTextMessage(selectedChatId, deliveredMessage)
+        .then(async () => {
+          let updatedChat = await api.chats.markWishAsDelivered(selectedChatId);
+          setChat(updatedChat);
+        })
+        .catch((err) => console.error(err));
     }
     onClose();
   };

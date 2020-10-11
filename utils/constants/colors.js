@@ -43,6 +43,7 @@ export const colors = {
   ratingStarBackground: '#ED5555',
   closedTagBackground: '#ED5555',
   completedTagBackground: '#4DB6AC',
+  deliveredTagBackground: '#4DB6AC',
   pendingTagBackground: '#C2C2C2',
   saveChangesBackground: '#4db6ac',
   saveChangesHoverActive: '#35ada0',
