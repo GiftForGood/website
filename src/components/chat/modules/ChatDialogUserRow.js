@@ -3,16 +3,17 @@ import { Button, Stack } from '@kiwicom/orbit-components/lib';
 import CalendarModal from '../../calendar/modules/CalendarModal';
 import AppreciationMessageModal from '../../modal/AppreciationMessageModal';
 import ConfirmCompletionModal from '../../modal/ConfirmCompletionModal';
+import ConfirmDeliveredModal from '../../modal/ConfirmDeliveredModal';
 import ProfileAvatar from '../../imageContainers/ProfileAvatar';
 import BlackText from '../../text/BlackText';
 import SuggestDateButton from '../../../components/buttons/ChatSuggestDatesButton';
 import CompleteButton from '../../../components/buttons/ChatCompleteButton';
+import DeliveredButton from '../../../components/buttons/ChatDeliveredButton';
 import styled from 'styled-components';
-import { colors } from '@constants/colors';
 import { CardSection } from '@kiwicom/orbit-components/lib/Card';
 import { PENDING, COMPLETED } from '@constants/postStatus';
 import StatusTag from '../../../components/tags/StatusTag';
-import { donations } from '@constants/postType';
+import { donations, wishes } from '@constants/postType';
 import { useRouter } from 'next/router';
 import api from '@api';
 import { getFormattedDateRange } from '@api/time';
@@ -48,6 +49,7 @@ const ChatDialogUserRow = ({ postId, postType, postStatus, oppositeUser, postOwn
   const [showSuggestDateModal, setShowSuggestDateModal] = useState(false);
   const [showAppreciationMessageModal, setShowAppreciationMessageModal] = useState(false);
   const [showConfirmCompletionModal, setShowConfirmCompletionModal] = useState(false);
+  const [showConfirmDeliveredModal, setShowConfirmDeliveredModal] = useState(false);
   const [status, setStatus] = useState(postStatus);
   const router = useRouter();
 
@@ -65,6 +67,10 @@ const ChatDialogUserRow = ({ postId, postType, postStatus, oppositeUser, postOwn
 
   const handleCompletePost = () => {
     setShowConfirmCompletionModal(true);
+  };
+
+  const handleDeliveredPost = () => {
+    setShowConfirmDeliveredModal(true);
   };
 
   // set status state based on the changes in passed input parameter postStatus
@@ -100,6 +106,32 @@ const ChatDialogUserRow = ({ postId, postType, postStatus, oppositeUser, postOwn
 
   const profileHref = `/profile/${oppositeUser.id || oppositeUser.userId}`;
 
+  const CTAButton = () => {
+    if (status === PENDING && postType === wishes && (oppositeUser.id || oppositeUser.userId) === postOwnerId) {
+      // donor able to mark as delivered
+      return (
+        <Button size="small" onClick={handleDeliveredPost} asComponent={DeliveredButton}>
+          Mark as Delivered
+        </Button>
+      );
+    }
+
+    if (status === PENDING) {
+      return (
+        <Button
+          size="small"
+          onClick={handleCompletePost}
+          asComponent={CompleteButton}
+          disabled={loggedInUser.user.userId !== postOwnerId}
+        >
+          Complete {postType === wishes ? 'Wish' : 'Donation'}
+        </Button>
+      );
+    }
+
+    return <StatusTag postStatus={status} />;
+  };
+
   return (
     <CardSection>
       <Stack direction="row" justify="between" align="center">
@@ -120,18 +152,7 @@ const ChatDialogUserRow = ({ postId, postType, postStatus, oppositeUser, postOwn
               onHide={handleCloseSuggestDateModal}
               sendCalendarMessage={handleSendCalendarMessage}
             />
-            {status === PENDING ? (
-              <Button
-                size="small"
-                onClick={handleCompletePost}
-                asComponent={CompleteButton}
-                disabled={loggedInUser.user.userId !== postOwnerId}
-              >
-                Complete
-              </Button>
-            ) : (
-              <StatusTag postStatus={status} />
-            )}
+            <CTAButton />
             <AppreciationMessageModal
               postType={postType}
               postId={postId}
@@ -152,6 +173,15 @@ const ChatDialogUserRow = ({ postId, postType, postStatus, oppositeUser, postOwn
               setHasError={(hasError) => dispatch(setHasError(hasError))}
               setCompletedStatus={handleSetStatusToComplete}
               setShowAppreciationMessageModal={handleShowAppreciationMessageModal}
+            />
+            <ConfirmDeliveredModal
+              postId={postId}
+              selectedChatId={selectedChatId}
+              setSelectedChatId={(chatId) => dispatch(setSelectedChatId(chatId))}
+              isNewChat={isNewChat}
+              setIsNewChat={(isNewChat) => dispatch(setIsNewChat(isNewChat))}
+              onShow={showConfirmDeliveredModal}
+              onClose={() => setShowConfirmDeliveredModal(false)}
             />
           </Stack>
         </ButtonsContainer>

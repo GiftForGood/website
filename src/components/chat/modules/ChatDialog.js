@@ -55,8 +55,8 @@ const ChatDialogContent = ({ post, chat }) => {
     // get from post
     chatPostTitle = post.title;
     oppositeUser = post.user;
-    postOwnerId = post.user.id;
-    postEnquirerId = loggedInUser.user.id;
+    postOwnerId = post.user.userId;
+    postEnquirerId = loggedInUser.user.userId;
     chatPostType = postType;
     chatPostId = postId;
     postStatus = post.status;
