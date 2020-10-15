@@ -4,7 +4,7 @@ import Desktop from '@kiwicom/orbit-components/lib/Desktop';
 import Mobile from '@kiwicom/orbit-components/lib/Mobile';
 import WishesSortBy from '../modules/WishesSortBy';
 import WishesFilterby from '../modules/WishesFilterBy';
-import { connectSortBy } from 'react-instantsearch-dom';
+import { connectSortBy, connectRefinementList } from 'react-instantsearch-dom';
 import { ModalFooter, ModalSection } from '@kiwicom/orbit-components/lib/Modal';
 import styled from 'styled-components';
 
@@ -13,6 +13,7 @@ const ModalContainer = styled.div`
 `;
 
 const WishesSort = connectSortBy(WishesSortBy);
+const WishesFilter = connectRefinementList(WishesFilterby);
 
 const WishesSortFilterPanel = ({ sortItems, sortDefaultRefinement, category, onLatLngUpdated }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -22,7 +23,7 @@ const WishesSortFilterPanel = ({ sortItems, sortDefaultRefinement, category, onL
       <Desktop>
         <Stack>
           <WishesSort items={sortItems} defaultRefinement={sortDefaultRefinement} category={category} />
-          <WishesFilterby onLatLngUpdated={onLatLngUpdated} />
+          <WishesFilter onLatLngUpdated={onLatLngUpdated} attribute="organization.sector" />
         </Stack>
       </Desktop>
 
@@ -38,7 +39,7 @@ const WishesSortFilterPanel = ({ sortItems, sortDefaultRefinement, category, onL
             <ModalSection>
               <Stack>
                 <WishesSort items={sortItems} defaultRefinement={sortDefaultRefinement} category={category} />
-                <WishesFilterby onLatLngUpdated={onLatLngUpdated} />
+                <WishesFilter onLatLngUpdated={onLatLngUpdated} attribute="organization.sector" />
               </Stack>
             </ModalSection>
             <ModalFooter>
