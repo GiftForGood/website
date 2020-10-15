@@ -15,6 +15,11 @@ const ForgetPasswordButton = styled.button`
   :focus {
     box-shadow: 0 0 0 3px rgba(46, 46, 46, 0.5);
   }
+
+  :focus:not(:focus-visible) {
+    box-shadow: 0 0 0 3px rgba(46, 46, 46, 0.5);
+    background: ${colors.loginHoverActive};
+  }
 `;
 
 export default ForgetPasswordButton;

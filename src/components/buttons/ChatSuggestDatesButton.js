@@ -15,6 +15,11 @@ const ChatSuggestDatesButton = styled.button`
   :focus {
     box-shadow: 0 0 0 3px ${colors.chatSuggestDateButtonFocus};
   }
+
+  :focus:not(:focus-visible) {
+    box-shadow: 0 0 0 3px ${colors.chatSuggestDateButtonFocus};
+    background: ${colors.chatSuggestDateButtonHoverActive};
+  }
 `;
 
 export default ChatSuggestDatesButton;

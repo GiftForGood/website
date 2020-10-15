@@ -13,6 +13,11 @@ const BlackButton = styled.button`
     background: ${colors.loginHoverActive};
   }
 
+  :focus:not(:focus-visible) {
+    background: ${colors.loginHoverActive};
+    box-shadow: 0 0 0 3px rgba(46, 46, 46, 0.5);
+  }
+
   :focus {
     box-shadow: 0 0 0 3px rgba(46, 46, 46, 0.5);
   }
