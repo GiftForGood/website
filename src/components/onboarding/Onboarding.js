@@ -57,6 +57,7 @@ const Onboarding = ({ type, show = false, name = '' }) => {
   const [shown, setShown] = useState(show);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [onboardingContent, setOnboardingContent] = useState(type === DONOR ? onboardingDonor : onboardingNpo);
+  const [buttonLabel, setButtonLabel] = useState('Next');
 
   const updateCurrentSlide = (index) => {
     if (currentSlide !== index) {
@@ -115,9 +116,17 @@ const Onboarding = ({ type, show = false, name = '' }) => {
               </ButtonLink>
               <Button
                 asComponent={type === DONOR ? RedButton : BlueButton}
-                onClick={() => setCurrentSlide(currentSlide + 1)}
+                onClick={() => {
+                  setCurrentSlide(currentSlide + 1);
+                  if (currentSlide + 2 === onboardingContent.length) {
+                    setButtonLabel('Done');
+                  }
+                  if (currentSlide + 1 === onboardingContent.length) {
+                    closeOnboarding();
+                  }
+                }}
               >
-                Next
+                {buttonLabel}
               </Button>
             </Stack>
           </ModalSection>
