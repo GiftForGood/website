@@ -28,7 +28,7 @@ const CallToActionButtonStyle = styled.button`
 
   :focus:not(:focus-visible) {
     background: ${colors.donorHoverActive};
-    box-shadow: 0 0 0 3px rgba(222, 24, 24, 0.5) ;
+    box-shadow: 0 0 0 3px rgba(222, 24, 24, 0.5);
   }
 
   :focus {
@@ -51,7 +51,7 @@ const BottomCallToActionButtonStyle = styled.button`
 
   :focus:not(:focus-visible) {
     background: ${colors.donorHoverActive};
-    box-shadow: 0 0 0 3px rgba(222, 24, 24, 0.5) ;
+    box-shadow: 0 0 0 3px rgba(222, 24, 24, 0.5);
   }
 
   :focus {
