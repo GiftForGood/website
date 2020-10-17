@@ -23,6 +23,11 @@ const CalendarButtonStyle = styled.button`
   :focus {
     box-shadow: 0 0 0 3px rgba(37, 42, 49, 0.16), 0px 2px 8px 0px rgba(37, 42, 49, 0.12);
   }
+
+  :focus:not(:focus-visible) {
+    background: Transparent;
+    box-shadow: 0 0 0 3px rgba(37, 42, 49, 0.16), 0px 2px 8px 0px rgba(37, 42, 49, 0.12);
+  }
 `;
 
 const CalendarButton = ({ dateTime, onClickHandler, isByLoggedInUser }) => {

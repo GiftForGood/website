@@ -13,6 +13,11 @@ const TimeslotButton = styled.button`
   :focus {
     box-shadow: 1px 1px 2px 2px ${colors.calendarUnselectedHoverActiveFocus};
   }
+
+  :focus:not(:focus-visible) {
+    background: ${colors.calendarUnselectedHoverActiveFocus};
+    box-shadow: 1px 1px 2px 2px ${colors.calendarUnselectedHoverActiveFocus};
+  }
 `;
 
 export default TimeslotButton;

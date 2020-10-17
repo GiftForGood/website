@@ -12,6 +12,11 @@ const BlueButton = styled.button`
     background: ${colors.npoHoverActive};
   }
 
+  :focus:not(:focus-visible) {
+    background: ${colors.npoHoverActive};
+    box-shadow: 0 0 0 3px rgba(4, 65, 170, 0.5);
+  }
+
   :focus {
     box-shadow: 0 0 0 3px rgba(4, 65, 170, 0.5);
   }

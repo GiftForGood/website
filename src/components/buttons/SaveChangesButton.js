@@ -13,7 +13,12 @@ const SaveChangesButton = styled.button`
   }
 
   :focus {
-    box-shadow: 0 0 0 3px rgba(46, 46, 46, 0.5);
+    box-shadow: 0 0 0 3px ${colors.chatCompleteButtonFocus};
+  }
+
+  :focus:not(:focus-visible) {
+    box-shadow: 0 0 0 3px ${colors.chatCompleteButtonFocus};
+    background: ${colors.saveChangesHoverActive};
   }
 `;
 
