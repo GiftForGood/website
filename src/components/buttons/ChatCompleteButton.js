@@ -15,6 +15,11 @@ const ChatCompleteButton = styled.button`
   :focus {
     box-shadow: 0 0 0 3px ${colors.chatCompleteButtonFocus};
   }
+
+  :focus:not(:focus-visible) {
+    box-shadow: 0 0 0 3px ${colors.chatCompleteButtonFocus};
+    background: ${colors.chatCompleteButtonHoverActive};
+  }
 `;
 
 export default ChatCompleteButton;
