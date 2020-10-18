@@ -15,6 +15,11 @@ const ChatDeliveredButton = styled.button`
   :focus {
     box-shadow: 0 0 0 3px ${colors.chatDeliveredButtonFocus};
   }
+
+  :focus:not(:focus-visible) {
+    background: ${colors.chatDeliveredButtonBackground};
+    box-shadow: 0 0 0 3px ${colors.chatDeliveredButtonFocus};
+  }
 `;
 
 export default ChatDeliveredButton;

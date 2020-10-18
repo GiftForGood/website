@@ -60,6 +60,10 @@ const TileContainer = styled.div`
     `}
 `;
 
+const StatusBadgeContainer = styled.div`
+  padding-top: 10px;
+`;
+
 const LastMessageDate = ({ date }) => {
   return <BlackText size="small">{date}</BlackText>;
 };
@@ -128,10 +132,10 @@ const ChatWithUserCard = ({
 
   const StatusBadge = () => {
     if (post.status === COMPLETED || post.status === CLOSED) {
-      return <Badge type="neutral">{post.status}</Badge>;
+      return <Badge type="neutral">{post.status.toUpperCase()}</Badge>;
     }
     if (chatStatus === DELIVERED) {
-      return <Badge type="neutral">{chatStatus}</Badge>;
+      return <Badge type="neutral">{chatStatus.toUpperCase()}</Badge>;
     }
     return null;
   };
@@ -162,7 +166,9 @@ const ChatWithUserCard = ({
                     {contentType === IMAGE ? 'Sent an image' : contentType === CALENDAR ? 'Sent a calendar' : content}
                   </BlackText>
                 </OneLineTextContainer>
-                <StatusBadge />
+                <StatusBadgeContainer>
+                  <StatusBadge />
+                </StatusBadgeContainer>
               </Stack>
             </Stack>
             {unreadCount > 0 && (
