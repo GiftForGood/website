@@ -13,6 +13,10 @@ const GreySubtleButton = styled.button`
     background: Transparent;
     box-shadow: 0px 0px 5px 0px rgba(37, 42, 49, 0.16), 0px 2px 8px 0px rgba(37, 42, 49, 0.12);
   }
+
+  :focus:not(:focus-visible) {
+    background: Transparent;
+  }
 `;
 
 export default GreySubtleButton;

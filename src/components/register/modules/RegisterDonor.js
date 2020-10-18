@@ -64,7 +64,7 @@ const RegisterDonor = () => {
       let response = await client.post('/api/sessionLogin', { token });
       if (response.status === 200) {
         await timeout(1000);
-        router.push('/');
+        router.push('/?next=onboarding');
       } else {
         throw response.error;
       }
