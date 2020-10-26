@@ -621,33 +621,50 @@ class ChatsAPI {
     const npoInfo = await this._getNPOInfo(wishInfo.user.userId);
     await this._validateChat(wishInfo.wishId, npoInfo.userId, donorInfo.userId);
 
-    const chatDoc = await this._createChatForWish(wishInfo, npoInfo, donorInfo);
+    const chatDoc = await this._createChat(wishes, wishInfo, npoInfo, donorInfo);
     this._RTDBCreateChatPresence(chatDoc.id, npoInfo, donorInfo);
 
     return [chatDoc, donorInfo];
   }
 
-  async _createChatForWish(wishInfo, npoInfo, donorInfo) {
-    // TODO: Refractor
-    if (wishInfo.status !== PENDING) {
-      throw new ChatError('invalid-post-status', 'only can start a chat on a pending wish');
+  async _fetchInfoAndCreateChatForDonation(donationId) {
+    const [donationInfo, npoInfo] = await Promise.all([this._getDonationInfo(donationId), this._getCurrentNPOInfo()]);
+    const donorInfo = await this._getDonorInfo(donationInfo.user.userId);
+    await this._validateChat(donationInfo.donationId, npoInfo.userId, donorInfo.userId);
+
+    const chatDoc = await this._createChat(donations, donationInfo, npoInfo, donorInfo);
+    this._RTDBCreateChatPresence(chatDoc.id, npoInfo, donorInfo);
+
+    return [chatDoc, npoInfo];
+  }
+
+  async _createChat(postType, postInfo, npoInfo, donorInfo) {
+    if (postInfo.status !== PENDING) {
+      throw new ChatError('invalid-post-status', `only can start a chat on a pending ${postType}`);
+    }
+
+    let postId = null;
+    if (postType === wishes) {
+      postId = postInfo.wishId;
+    } else {
+      postId = postInfo.donationId;
     }
 
     const chatPost = {
-      id: wishInfo.wishId,
-      title: wishInfo.title,
-      status: wishInfo.status,
-      type: wishes,
+      id: postId,
+      title: postInfo.title,
+      status: postInfo.status,
+      type: postType,
     };
 
     const chatNPO = {
-      name: wishInfo.user.userName,
-      id: wishInfo.user.userId,
-      profileImageUrl: wishInfo.user.profileImageUrl,
+      name: npoInfo.name,
+      id: npoInfo.userId,
+      profileImageUrl: npoInfo.profileImageUrl,
       status: OFF, // By default, status will always be off
-      lastActiveDateTime: firebase.firestore.FieldValue.serverTimestamp(), // However, does not reflect in the current NPO is online
+      lastActiveDateTime: firebase.firestore.FieldValue.serverTimestamp(),
       unreadCount: 0,
-      organization: wishInfo.organization,
+      organization: npoInfo.organization,
     };
 
     const chatDonor = {
@@ -666,63 +683,8 @@ class ChatsAPI {
       [npo]: chatNPO,
       [donor]: chatDonor,
     };
+
     await newChat.set(data);
-
-    return newChat.get();
-  }
-
-  async _fetchInfoAndCreateChatForDonation(donationId) {
-    const [donationInfo, npoInfo] = await Promise.all([this._getDonationInfo(donationId), this._getCurrentNPOInfo()]);
-    const donorInfo = await this._getDonorInfo(donationInfo.user.userId);
-    await this._validateChat(donationInfo.donationId, npoInfo.userId, donorInfo.userId);
-
-    const chatDoc = await this._createChatForDonation(donationInfo, npoInfo, donorInfo);
-    this._RTDBCreateChatPresence(chatDoc.id, npoInfo, donorInfo);
-
-    return [chatDoc, npoInfo];
-  }
-
-  async _createChatForDonation(donationInfo, npoInfo, donorInfo) {
-    // TODO: Refractor
-    if (donationInfo.status !== PENDING) {
-      throw new ChatError('invalid-post-status', 'only can start a chat on a pending donation');
-    }
-
-    const chatPost = {
-      id: donationInfo.donationId,
-      title: donationInfo.title,
-      status: donationInfo.status,
-      type: donations,
-    };
-
-    const chatNPO = {
-      name: npoInfo.name,
-      id: npoInfo.userId,
-      profileImageUrl: npoInfo.profileImageUrl,
-      status: OFF, // By default, status will always be off
-      lastActiveDateTime: firebase.firestore.FieldValue.serverTimestamp(),
-      unreadCount: 0,
-      organization: npoInfo.organization,
-    };
-
-    const chatDonor = {
-      name: donationInfo.user.userName,
-      id: donationInfo.user.userId,
-      profileImageUrl: donationInfo.user.profileImageUrl,
-      status: OFF, // By default, status will always be off
-      lastActiveDateTime: firebase.firestore.FieldValue.serverTimestamp(), // However, does not reflect in the current donor is online
-      unreadCount: 0,
-    };
-
-    let newChat = chatsCollection.doc();
-    const data = {
-      chatId: newChat.id,
-      post: chatPost,
-      [npo]: chatNPO,
-      [donor]: chatDonor,
-    };
-    await newChat.set(data);
-
     return newChat.get();
   }
 
