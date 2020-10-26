@@ -3,7 +3,7 @@ export const getByCategoryIdAndStatus = (categoryId, status) => {
 };
 
 export const getByCategoryIdAndStatusAndNotExpired = (categoryId, status, currentDateTime) => {
-  return `categories.id:'${categoryId}' AND status:'${status}' AND expireDateTime >= ${currentDateTime}`;
+  return `categories.id:'${categoryId}' AND status:'${status}'`;
 };
 
 export const getByStatus = (status) => {
@@ -11,7 +11,7 @@ export const getByStatus = (status) => {
 };
 
 export const getByStatusAndNotExpired = (status, currentDateTime) => {
-  return `status:'${status}' AND expireDateTime >= ${currentDateTime}`;
+  return `status:'${status}'`;
 };
 
 export const getNpoNotBlocked = () => {
