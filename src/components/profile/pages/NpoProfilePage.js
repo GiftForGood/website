@@ -3,6 +3,7 @@ import { Stack } from '@kiwicom/orbit-components/lib';
 import Grid from '@kiwicom/orbit-components/lib/utils/Grid';
 import styled from 'styled-components';
 import api from '@api';
+import client from '@utils/axios';
 import { npo as npoProfileType } from '@constants/userType';
 import useUser from '../../session/modules/useUser';
 
@@ -23,19 +24,25 @@ const Wrapper = styled.div`
 const NpoProfilePage = ({ userId }) => {
   const [isShowPastWishes, setIsShowPastWishes] = useState(true);
   const [isShowCompletedDonations, setIsShowCompletedDonations] = useState(false);
+  const [isEmailVerified, setIsEmailVerified] = useState(false);
   const [isMine, setIsMine] = useState(false);
   const [npo, setNpo] = useState(null);
   const user = useUser();
 
-  const fetchUserInfo = () => {
-    api.users.getNPO(userId).then((userDoc) => {
-      if (userDoc.exists) {
-        setIsMine(isMyProfile(userDoc));
-        setNpo(userDoc.data());
-      } else {
-        setIsMine(false);
-      }
-    });
+  const fetchUserInfo = async () => {
+    const [userDoc, emailVerifiedResp] = await Promise.all([
+      api.users.getNPO(userId),
+      client.post('/api/emailVerified', { id: userId }),
+    ]);
+    if (userDoc.exists) {
+      setIsMine(isMyProfile(userDoc));
+      setNpo(userDoc.data());
+    } else {
+      setIsMine(false);
+    }
+    if (emailVerifiedResp.status === 200) {
+      setIsEmailVerified(emailVerifiedResp.data.emailVerified);
+    }
   };
 
   const isMyProfile = (userDoc) => {
@@ -53,7 +60,7 @@ const NpoProfilePage = ({ userId }) => {
     <Wrapper>
       <Header title={npo ? npo.name : 'Profile'} />
       <Grid desktop={{ columns: '1fr 5fr' }}>
-        <ProfilePanel user={npo} />
+        <ProfilePanel user={npo} isEmailVerified={isEmailVerified} />
         <Stack>
           <ProfileHeaderBar
             profileType={npoProfileType}
