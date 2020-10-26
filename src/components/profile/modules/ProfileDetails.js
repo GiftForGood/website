@@ -1,9 +1,19 @@
 import React from 'react';
 import ProfileAvatar from '../../imageContainers/ProfileAvatar';
+import KiwicomGuarantee from '@kiwicom/orbit-components/lib/icons/KiwicomGuarantee';
 import { Stack, Text, Heading } from '@kiwicom/orbit-components/lib';
+import { colors } from '@constants/colors';
 import { npo } from '@constants/userType';
 
-const ProfileDetails = ({ profileImageUrl, npoOrgName, npoOrgAddress, npoContact, name, userType }) => {
+const ProfileDetails = ({
+  profileImageUrl,
+  npoOrgName,
+  npoOrgAddress,
+  isNpoVerifiedByAdmin,
+  npoContact,
+  name,
+  userType,
+}) => {
   const isNpo = userType === npo;
   return (
     <Stack direction="column" justify="center">
@@ -11,8 +21,14 @@ const ProfileDetails = ({ profileImageUrl, npoOrgName, npoOrgAddress, npoContact
       <Stack direction="column" spacing="tight" justify="start">
         <Heading type="title2">{name}</Heading>
         {isNpo && <Text weight="bold">{npoOrgName}</Text>}
-        {isNpo && <Text>{npoOrgAddress}</Text>}
+        {isNpoVerifiedByAdmin && (
+          <Stack direction="row" inline spacing="extraTight" align="center">
+            <Text size="small">Verified NPO</Text>
+            <KiwicomGuarantee customColor={colors.verifiedIconBackground} />
+          </Stack>
+        )}
       </Stack>
+      {isNpo && <Text>{npoOrgAddress}</Text>}
       {isNpo && <Text>{npoContact}</Text>}
     </Stack>
   );

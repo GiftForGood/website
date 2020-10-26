@@ -1,7 +1,7 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
-import { Heading, Stack, Text, Grid, Tile } from '@kiwicom/orbit-components/lib';
+import { Heading, Stack, Text, Grid, Tile, TextLink } from '@kiwicom/orbit-components/lib';
 import { partners } from '@constants/partners';
 
 const MainContainer = styled.div`
@@ -60,7 +60,17 @@ const PartnersSection = () => {
                   <Stack spacing="none" spaceAfter="large">
                     <Heading type="title2">About {partner.name}</Heading>
                   </Stack>
-                  <Text>{partner.description}</Text>
+                  <Text as="span">{partner.description}</Text>
+                  <Text as="span">
+                    Visit us at{' '}
+                    <TextLink external standAlone stopPropagation href="https://www.cityofgood.sg">
+                      www.cityofgood.sg
+                    </TextLink>
+                    .
+                    <br />
+                    <br />
+                    NVPC provides strategic advice and assistance in supporting the sustainable growth of GiftforGood.
+                  </Text>
                 </DetailsContainer>
               </Grid>
             </CardContainer>
