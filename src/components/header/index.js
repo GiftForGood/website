@@ -8,6 +8,10 @@ const Header = ({ title }) => {
       <title>{title}</title>
       <link rel="icon" href={favicon} />
       <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0,user-scalable=0" />
+      <meta
+        name="description"
+        content="GiftForGood is an online in-kind donations platform that connects donors and non-profit organisations to effectively meet the needs of beneficiaries."
+      />
     </Head>
   );
 };
