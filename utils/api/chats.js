@@ -442,8 +442,7 @@ class ChatsAPI {
       status: DELIVERED,
     };
     chatsCollection.doc(id).update(data);
-    chatDoc = await this.getChat(id);
-    return chatDoc.data();
+    return await this.getChat(id);
   }
 
   /**

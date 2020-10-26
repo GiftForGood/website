@@ -20,7 +20,7 @@ const ConfirmDeliveredModal = ({
   }
   const router = useRouter();
   const deliveredMessage =
-    'I have delivered the items to the beneficiary, please confirm and mark the wish as completed!';
+    'I have delivered the items to the beneficiary, please confirm and mark the wish as completed.';
 
   const onConfirm = async () => {
     if (isNewChat) {
@@ -36,8 +36,8 @@ const ConfirmDeliveredModal = ({
       api.chats
         .sendTextMessage(selectedChatId, deliveredMessage)
         .then(async () => {
-          let updatedChat = await api.chats.markWishAsDelivered(selectedChatId);
-          setChat(updatedChat);
+          let updatedChatDoc = await api.chats.markWishAsDelivered(selectedChatId);
+          setChat(updatedChatDoc.data());
         })
         .catch((err) => console.error(err));
     }
