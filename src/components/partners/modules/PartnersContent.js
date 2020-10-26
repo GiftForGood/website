@@ -60,10 +60,10 @@ const PartnersSection = () => {
                   <Stack spacing="none" spaceAfter="large">
                     <Heading type="title2">About {partner.name}</Heading>
                   </Stack>
-                  <Text>
-                    {partner.description}
+                  <Text as="span">{partner.description}</Text>
+                  <Text as="span">
                     Visit us at{' '}
-                    <TextLink external href="https://www.cityofgood.sg">
+                    <TextLink external standAlone stopPropagation href="https://www.cityofgood.sg">
                       www.cityofgood.sg
                     </TextLink>
                     .
