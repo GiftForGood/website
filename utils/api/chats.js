@@ -643,6 +643,8 @@ class ChatsAPI {
       throw new ChatError('invalid-post-status', `only can start a chat on a pending ${postType}`);
     }
 
+    const timeNow = firebase.firestore.FieldValue.serverTimestamp();
+
     let postId = null;
     if (postType === wishes) {
       postId = postInfo.wishId;
@@ -662,7 +664,7 @@ class ChatsAPI {
       id: npoInfo.userId,
       profileImageUrl: npoInfo.profileImageUrl,
       status: OFF, // By default, status will always be off
-      lastActiveDateTime: firebase.firestore.FieldValue.serverTimestamp(),
+      lastActiveDateTime: timeNow,
       unreadCount: 0,
       organization: npoInfo.organization,
     };
@@ -672,13 +674,14 @@ class ChatsAPI {
       id: donorInfo.userId,
       profileImageUrl: donorInfo.profileImageUrl,
       status: OFF, // By default, status will always be off
-      lastActiveDateTime: firebase.firestore.FieldValue.serverTimestamp(),
+      lastActiveDateTime: timeNow,
       unreadCount: 0,
     };
 
     let newChat = chatsCollection.doc();
     const data = {
       chatId: newChat.id,
+      createdDateTime: timeNow,
       post: chatPost,
       [npo]: chatNPO,
       [donor]: chatDonor,
