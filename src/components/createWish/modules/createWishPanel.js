@@ -12,6 +12,7 @@ import {
   ListChoice,
   TextLink,
   Alert,
+  Checkbox,
 } from '@kiwicom/orbit-components/lib';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -33,6 +34,8 @@ import WishContext from '../context';
 import useUser from '@components/session/modules/useUser';
 import { createdWish } from '@utils/algolia/insights';
 
+import { remoteConfig } from '@utils/firebase';
+
 const Container = styled.div`
   min-width: 300px;
   width: 100%;
@@ -52,6 +55,8 @@ const CreateWishPanel = ({ wish, mode }) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const { state, dispatch } = useContext(WishContext);
+
+  const [seasonal, setSeasonal] = useState(null);
 
   const user = useUser();
 
@@ -130,6 +135,7 @@ const CreateWishPanel = ({ wish, mode }) => {
       .min(1, 'A category must be provided')
       .max(3, 'Only 3 selected categories allowed'),
     location: Yup.string().required('Required'),
+    seasonal: Yup.boolean().required('Required'),
   });
 
   const formik = useFormik({
@@ -138,6 +144,7 @@ const CreateWishPanel = ({ wish, mode }) => {
       description: '',
       categories: [],
       location: '',
+      seasonal: false,
     },
     validationSchema: validationSchema,
     enableReinitialize: true,
@@ -169,6 +176,17 @@ const CreateWishPanel = ({ wish, mode }) => {
   // Used to fetch all categories
   useEffect(() => {
     fetchCategories();
+  }, []);
+
+  // Fetch seasonal
+  useEffect(() => {
+    remoteConfig.fetchAndActivate().then(() => {
+      const currentEventString = remoteConfig.getValue('currentEvent').asString();
+      if (currentEventString) {
+        const currentEvent = JSON.parse(currentEventString);
+        setSeasonal(currentEvent);
+      }
+    });
   }, []);
 
   // Used to edit wishes
@@ -307,6 +325,16 @@ const CreateWishPanel = ({ wish, mode }) => {
                   error={formik.touched.location && formik.errors.location ? formik.errors.location : ''}
                   disabled={formik.isSubmitting}
                 />
+
+                {seasonal ? (
+                  <Checkbox
+                    label={seasonal.question}
+                    info={seasonal.help}
+                    onChange={formik.handleChange}
+                    name="seasonal"
+                    checked={formik.values.seasonal}
+                  />
+                ) : null}
 
                 {isDesktop ? null : <LivePreviewPanel />}
 
