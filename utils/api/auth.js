@@ -25,7 +25,6 @@ class AuthAPI {
     const userProfile = firebaseAuth.currentUser;
 
     await this._validateDonor(userProfile);
-    // TODO: On Error, delete user from auth user
     const [donorDoc, userDoc] = await Promise.all([
       this._createDonor(userProfile),
       this._createUser(userProfile.uid, DONOR),
@@ -51,7 +50,6 @@ class AuthAPI {
     const userProfile = firebaseAuth.currentUser;
 
     await this._validateDonor(userProfile);
-    // TODO: On Error, delete user from auth user
     const [donorDoc, userDoc] = await Promise.all([
       this._createDonor(userProfile),
       this._createUser(userProfile.uid, DONOR),
@@ -81,7 +79,6 @@ class AuthAPI {
     const userProfile = firebaseAuth.currentUser;
 
     await this._validateNPO(userProfile);
-    // TODO: On Error, delete user from auth user
     const [npoDoc, userDoc] = await Promise.all([
       this._createNPO(userProfile, name, contact, organization),
       this._createUser(userProfile.uid, NPO),
