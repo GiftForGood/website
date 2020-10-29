@@ -104,11 +104,22 @@ class AuthAPI {
     await this._googleAuth();
     const token = await firebaseAuth.currentUser.getIdToken();
     const userProfile = firebaseAuth.currentUser;
-    if (!(await this._doesUserExist(DONOR, userProfile.uid, userProfile.email))) {
-      this.logout();
-      throw new AuthError('invalid-user', 'donor account does not exist');
+
+    let donorDoc;
+    if (!(await this._doesUserExist(DONOR, userProfile.uid))) {
+      // Create the donor account if doesn't exist
+      if (await this._doesUserExist(NPO, userProfile.uid)) {
+        throw new AuthError('unable-to-create-user', 'User already signed up as a NPO');
+      }
+
+      const [newDonorDoc, userDoc] = await Promise.all([
+        this._createDonor(userProfile),
+        this._createUser(userProfile.uid, DONOR),
+      ]);
+      donorDoc = newDonorDoc;
+    } else {
+      donorDoc = await this._updateUserLoginTime(DONOR, userProfile.uid);
     }
-    const donorDoc = await this._updateUserLoginTime(DONOR, userProfile.uid);
 
     return [token, userProfile, donorDoc];
   }
@@ -128,7 +139,7 @@ class AuthAPI {
     await firebaseAuth.signInWithEmailAndPassword(email, password);
     const token = await firebaseAuth.currentUser.getIdToken();
     const userProfile = firebaseAuth.currentUser;
-    if (!(await this._doesUserExist(DONOR, userProfile.uid, userProfile.email))) {
+    if (!(await this._doesUserExist(DONOR, userProfile.uid))) {
       this.logout();
       throw new AuthError('invalid-user', 'donor account does not exist');
     }
@@ -152,7 +163,7 @@ class AuthAPI {
     await firebaseAuth.signInWithEmailAndPassword(email, password);
     const token = await firebaseAuth.currentUser.getIdToken();
     const userProfile = firebaseAuth.currentUser;
-    if (!(await this._doesUserExist(NPO, userProfile.uid, userProfile.email))) {
+    if (!(await this._doesUserExist(NPO, userProfile.uid))) {
       this.logout();
       throw new AuthError('invalid-user', 'npo account does not exist');
     }
@@ -365,18 +376,9 @@ class AuthAPI {
     return newUser.get();
   }
 
-  async _doesUserExist(type, id, email) {
-    const idSnapshot = await db.collection(`${type}s`).doc(id).get();
-    if (idSnapshot.exists) {
-      return true;
-    }
-
-    const emailSnapshot = await donorsCollection.where('email', '==', email).get();
-    if (!emailSnapshot.empty) {
-      return true;
-    }
-
-    return false;
+  async _doesUserExist(type, id) {
+    const snapshot = await db.collection(`${type}s`).doc(id).get();
+    return snapshot.exists;
   }
 
   async _updateUserLoginTime(type, id) {
@@ -395,11 +397,11 @@ class AuthAPI {
       throw new AuthError('unable-to-create-user', 'No user profile');
     }
 
-    if (await this._doesUserExist(DONOR, userInfo.uid, userInfo.email)) {
+    if (await this._doesUserExist(DONOR, userInfo.uid)) {
       throw new AuthError('unable-to-create-user', 'Donor account already exists');
     }
 
-    if (await this._doesUserExist(NPO, userInfo.uid, userInfo.email)) {
+    if (await this._doesUserExist(NPO, userInfo.uid)) {
       throw new AuthError('unable-to-create-user', 'User already signed up as a NPO');
     }
   }
@@ -409,11 +411,11 @@ class AuthAPI {
       throw new AuthError('unable-to-create-user', 'No user profile');
     }
 
-    if (await this._doesUserExist(NPO, userInfo.uid, userInfo.email)) {
+    if (await this._doesUserExist(NPO, userInfo.uid)) {
       throw new AuthError('unable-to-create-user', 'NPO account already exists');
     }
 
-    if (await this._doesUserExist(DONOR, userInfo.uid, userInfo.email)) {
+    if (await this._doesUserExist(DONOR, userInfo.uid)) {
       throw new AuthError('unable-to-create-user', 'User already signed up as a Donor');
     }
   }
