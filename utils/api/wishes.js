@@ -67,7 +67,9 @@ class WishesAPI {
       isBumped: false,
     };
 
-    if (this._isValidEvent(eventKey, eventName, eventImageUrl)) {
+    if (eventKey !== '') {
+      this._validateEvent(eventKey, eventName, eventImageUrl);
+
       const event = {
         key: eventKey,
         name: eventName,
@@ -273,11 +275,14 @@ class WishesAPI {
    * @param {string} description The wish description text
    * @param {array} categories A list of categories id that the wish belongs to
    * @param {array} locations A list of locations text that the wish belongs to
+   * @param {string} eventKey The key for an event
+   * @param {string} eventName The name for an event
+   * @param {string} eventImageUrl The image url for an event
    * @throws {WishError}
    * @throws {FirebaseError}
    * @return {object} A firebase document of the updated wish
    */
-  async update(id, title, description, categories, locations) {
+  async update(id, title, description, categories, locations, eventKey = '', eventName = '', eventImageUrl = '') {
     const wishInfo = await this._getWishInfo(id);
     if (wishInfo.status !== PENDING) {
       throw new WishError('invalid-wish-status', 'only can update a pending wish');
@@ -290,13 +295,34 @@ class WishesAPI {
 
     const categoryInfos = getCustomPostCategoryInfos(allCategoryInfos);
 
-    const data = {
+    let data = {
       title: title,
       description: description,
       categories: categoryInfos,
       locations: locationInfos,
       updatedDateTime: firebase.firestore.FieldValue.serverTimestamp(),
     };
+
+    // Events
+    if (typeof wishInfo.event === 'undefined' && eventKey !== '') {
+      // Setting event
+      this._validateEvent(eventKey, eventName, eventImageUrl);
+
+      const event = {
+        key: eventKey,
+        name: eventName,
+        imageUrl: eventImageUrl,
+        createdDateTime: firebase.firestore.FieldValue.serverTimestamp(),
+      };
+      data['event'] = event;
+    } else if (typeof wishInfo.event !== 'undefined') {
+      if (eventKey !== '') {
+        throw new WishError('invalid-event-update', 'wish already has an existing event');
+      }
+
+      const event = firebase.firestore.FieldValue.delete();
+      data['event'] = event;
+    }
 
     let wishDoc = wishesCollection.doc(id);
     await wishDoc.update(data);
@@ -440,16 +466,14 @@ class WishesAPI {
     return snapshot.data();
   }
 
-  _isValidEvent(key, name, imageUrl) {
+  _validateEvent(key, name, imageUrl) {
     if (key === '') {
-      return false;
+      throw new WishError('invalid-event-parameters', 'event key cannot be empty');
     }
 
     if (key !== '' && (name === '' || imageUrl === '')) {
-      return false;
+      throw new WishError('invalid-event-parameters', 'some event parameters is empty');
     }
-
-    return true;
   }
 
   _validateOrderBy(orderByType) {
