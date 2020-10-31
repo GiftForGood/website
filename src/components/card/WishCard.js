@@ -83,6 +83,22 @@ const BadgeWrapper = styled.div`
   margin-bottom: 8px !important;
 `;
 
+const SeasonalContainer = styled.div`
+  position: absolute;
+  left: 45%;
+  right: 50%;
+  top: -15px;
+`;
+
+const SeasonalSmallTag = styled.img`
+  border-radius: 50%;
+  background-color: white;
+  height: 20px;
+  width: 20px;
+  padding: 8px;
+  box-shadow: 0px 0px 5px 0px rgba(37, 42, 49, 0.16), 0px 2px 8px 0px rgba(37, 42, 49, 0.12);
+`;
+
 const CardDescription = ({ title, description }) => {
   return (
     <Stack direction="column" spacing="tight">
@@ -125,6 +141,7 @@ const Tags = ({ categoryTags, wishId }) => {
  * @param {boolean} isBumped is whether the wish post is bumped
  * @param {string} categoryId is the category id
  * @param {string} categoryName is the category name of the wish currently displayed in
+ * @param {object} seasonal is the event object of the wish
  */
 const WishCard = ({
   wishId,
@@ -140,6 +157,7 @@ const WishCard = ({
   categoryId,
   categoryName,
   onClick,
+  seasonal,
 }) => {
   const timeAgo = getTimeDifferenceFromNow(postedDateTime);
   const router = useRouter();
@@ -153,6 +171,14 @@ const WishCard = ({
   };
   return (
     <CardContainer>
+      {seasonal ? (
+        <>
+          <SeasonalContainer>
+            <SeasonalSmallTag src={seasonal.imageUrl} />
+          </SeasonalContainer>
+        </>
+      ) : null}
+
       <Grid style={{ height: '100%', paddingLeft: '10px', paddingRight: '10px' }} rows="2fr 6fr 2fr" cols="1fr">
         <CardHeaderContainer>
           <CardHeader

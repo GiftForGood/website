@@ -22,7 +22,7 @@ import RedButton from '../../buttons/RedButton';
 import styled from 'styled-components';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 
-import { setTitle, setDescription, setAllCategories, setPostedDateTime } from '../actions';
+import { setTitle, setDescription, setAllCategories, setPostedDateTime, setSeasonalEvent } from '../actions';
 import LivePreviewPanel from './livePreviewPanel';
 import { useRouter } from 'next/router';
 
@@ -83,6 +83,11 @@ const CreateWishPanel = ({ wish, mode }) => {
       let description = values.description;
       let categoryIds = values.categories.map((category) => category.id);
       let locations = [values.location];
+      let isSeasonal = values.seasonal;
+      if (isSeasonal) {
+        description += `\n\n${seasonal.hashtag}`;
+      }
+      // TODO: submit event key and name.
       const wishDoc = await api.wishes.create(title, description, categoryIds, locations);
       let wishId = wishDoc.data().wishId;
       logSuccessfullyCreatedWish();
@@ -109,6 +114,9 @@ const CreateWishPanel = ({ wish, mode }) => {
       let description = values.description;
       let categoryIds = values.categories.map((category) => category.id);
       let locations = [values.location];
+      let isSeasonal = values.seasonal;
+      // TODO: submit event key and name --> can be null?
+
       const wishDoc = await api.wishes.update(id, title, description, categoryIds, locations);
       let wishId = wishDoc.data().wishId;
       router.push(`/wishes/${wishId}`);
@@ -170,6 +178,7 @@ const CreateWishPanel = ({ wish, mode }) => {
       dispatch(setDescription(formik.values.description));
       dispatch(setAllCategories(formik.values.categories));
       dispatch(setPostedDateTime(wish ? wish.postedDateTime : Date.now()));
+      dispatch(setSeasonalEvent(formik.values.seasonal ? seasonal : null));
     }
   }, [formik.values]);
 
@@ -197,6 +206,7 @@ const CreateWishPanel = ({ wish, mode }) => {
         description: wish.description,
         categories: wish.categories,
         location: wish.locations[0].fullAddress,
+        seasonal: wish.event ? true : false,
       };
       setEditWish(editWish);
       setSelectedCategories(wish.categories);

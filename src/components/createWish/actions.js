@@ -32,3 +32,10 @@ export function setPostedDateTime(postedDateTime) {
     postedDateTime,
   };
 }
+
+export function setSeasonalEvent(seasonal) {
+  return {
+    type: 'create-wish/SET_SEASONAL',
+    seasonal,
+  };
+}
