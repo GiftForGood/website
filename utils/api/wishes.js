@@ -23,11 +23,14 @@ class WishesAPI {
    * @param {string} description The wish description text
    * @param {array} categories A list of categories id that the wish belongs to
    * @param {array} locations A list of locations text that the wish belongs to
+   * @param {string} eventKey The key for an event
+   * @param {string} eventName The name for an event
+   * @param {string} eventImageUrl The image url for an event
    * @throws {WishError}
    * @throws {FirebaseError}
    * @return {object} A firebase document of the created wish
    */
-  async create(title, description, categories, locations) {
+  async create(title, description, categories, locations, eventKey = '', eventName = '', eventImageUrl = '') {
     let userInfo = {};
     let organizationInfo = {};
 
@@ -48,7 +51,7 @@ class WishesAPI {
     const timeNow = firebase.firestore.FieldValue.serverTimestamp();
     const expiryDateTime = moment(timeNow).add(1, 'month').toDate();
     const firestoreExpiryDateTime = firebase.firestore.Timestamp.fromDate(expiryDateTime);
-    const data = {
+    let data = {
       wishId: newWish.id,
       title: title,
       description: description,
@@ -63,8 +66,19 @@ class WishesAPI {
       expireDateTime: firestoreExpiryDateTime,
       isBumped: false,
     };
-    await newWish.set(data);
 
+    if (this._isValidEvent(eventKey, eventName, eventImageUrl)) {
+      const event = {
+        key: eventKey,
+        name: eventName,
+        imageUrl: eventImageUrl,
+        createdDateTime: timeNow,
+      };
+
+      data['event'] = event;
+    }
+
+    await newWish.set(data);
     return newWish.get();
   }
 
@@ -424,6 +438,18 @@ class WishesAPI {
     }
 
     return snapshot.data();
+  }
+
+  _isValidEvent(key, name, imageUrl) {
+    if (key === '') {
+      return false;
+    }
+
+    if (key !== '' && (name === '' || imageUrl === '')) {
+      return false;
+    }
+
+    return true;
   }
 
   _validateOrderBy(orderByType) {
