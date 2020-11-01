@@ -84,11 +84,21 @@ const CreateWishPanel = ({ wish, mode }) => {
       let categoryIds = values.categories.map((category) => category.id);
       let locations = [values.location];
       let isSeasonal = values.seasonal;
+      let wishDoc;
       if (isSeasonal) {
         description += `\n\n${seasonal.hashtag}`;
+        wishDoc = await api.wishes.create(
+          title,
+          description,
+          categoryIds,
+          locations,
+          seasonal.key,
+          seasonal.name,
+          seasonal.imageUrl
+        );
+      } else {
+        wishDoc = await api.wishes.create(title, description, categoryIds, locations);
       }
-      // TODO: submit event key and name.
-      const wishDoc = await api.wishes.create(title, description, categoryIds, locations);
       let wishId = wishDoc.data().wishId;
       logSuccessfullyCreatedWish();
       createdWish(user, wishId);
@@ -115,9 +125,33 @@ const CreateWishPanel = ({ wish, mode }) => {
       let categoryIds = values.categories.map((category) => category.id);
       let locations = [values.location];
       let isSeasonal = values.seasonal;
-      // TODO: submit event key and name --> can be null?
-
-      const wishDoc = await api.wishes.update(id, title, description, categoryIds, locations);
+      let wishDoc;
+      if (!editWish.seasonal && isSeasonal) {
+        description += `\n\n${seasonal.hashtag}`;
+        wishDoc = await api.wishes.update(
+          id,
+          title,
+          description,
+          categoryIds,
+          locations,
+          seasonal.key,
+          seasonal.name,
+          seasonal.imageUrl
+        );
+      } else if (editWish.seasonal && isSeasonal) {
+        wishDoc = await api.wishes.update(
+          id,
+          title,
+          description,
+          categoryIds,
+          locations,
+          wish.event.key,
+          wish.event.name,
+          wish.event.imageUrl
+        );
+      } else {
+        wishDoc = await api.wishes.update(id, title, description, categoryIds, locations);
+      }
       let wishId = wishDoc.data().wishId;
       router.push(`/wishes/${wishId}`);
     } catch (error) {
@@ -178,9 +212,10 @@ const CreateWishPanel = ({ wish, mode }) => {
       dispatch(setDescription(formik.values.description));
       dispatch(setAllCategories(formik.values.categories));
       dispatch(setPostedDateTime(wish ? wish.postedDateTime : Date.now()));
+      console.log('seasonal', seasonal);
       dispatch(setSeasonalEvent(formik.values.seasonal ? seasonal : null));
     }
-  }, [formik.values]);
+  }, [formik.values, seasonal]);
 
   // Used to fetch all categories
   useEffect(() => {
