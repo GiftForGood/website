@@ -26,7 +26,8 @@ const SeasonalLargeTag = ({ name, iconUrl, hashtag = '' }) => {
   const router = useRouter();
 
   const handleClick = () => {
-    router.push(`/wishes/category?q=${hashtag}`);
+    const encodedSearch = encodeURIComponent(hashtag);
+    router.push(`/wishes/category?q=${encodedSearch}`);
   };
 
   return (
