@@ -59,8 +59,6 @@ const WishPage = ({ wishId, wishDetails, npoDetails, user, prevHref, categoryNam
     viewedWishDetails(userObject, wishId);
   }, []);
 
-  console.log('wishKey', wish?.event?.key);
-  console.log('currentEventKey', remoteConfig?.configs?.currentEvent?.key);
   return (
     <Wrapper>
       <Desktop>
