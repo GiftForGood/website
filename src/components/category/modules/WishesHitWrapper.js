@@ -83,7 +83,13 @@ const WishesHitWrapper = ({ hits, category, hasPrevious, hasMore, refinePrevious
               onClick={() => {
                 clickedOnWish(userObject, objectID);
               }}
-              seasonal={remoteConfig?.configs?.currentEvent && event ? event : null}
+              seasonal={
+                remoteConfig?.configs?.currentEvent.key &&
+                event?.key &&
+                remoteConfig?.configs?.currentEvent.key === event?.key
+                  ? event
+                  : null
+              }
             />
           );
         })}

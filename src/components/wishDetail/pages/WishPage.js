@@ -59,6 +59,8 @@ const WishPage = ({ wishId, wishDetails, npoDetails, user, prevHref, categoryNam
     viewedWishDetails(userObject, wishId);
   }, []);
 
+  console.log('wishKey', wish?.event?.key);
+  console.log('currentEventKey', remoteConfig?.configs?.currentEvent?.key);
   return (
     <Wrapper>
       <Desktop>
@@ -71,12 +73,14 @@ const WishPage = ({ wishId, wishDetails, npoDetails, user, prevHref, categoryNam
           <Map npoOrgName={wish.organization.name} locations={wish.locations} />
         </LeftPanel>
         <RightPanel>
-          {remoteConfig?.configs?.currentEvent ? (
+          {remoteConfig?.configs?.currentEvent?.key &&
+          wish?.event?.key &&
+          remoteConfig?.configs?.currentEvent?.key === wish?.event?.key ? (
             <SeasonalContainer>
               <SeasonalLargeTag
                 name={wish?.event?.name}
                 iconUrl={wish?.event?.imageUrl}
-                hashtag={wish?.event.hashtag}
+                hashtag={wish?.event?.hashtag}
               />
             </SeasonalContainer>
           ) : null}
