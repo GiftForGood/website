@@ -10,6 +10,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import { initGA, logPageView } from '@utils/analytics';
 import 'react-quill/dist/quill.snow.css';
+import { RemoteConfigProvider } from '@components/remoteConfig/RemoteConfig';
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -62,12 +63,14 @@ class MyApp extends App {
     const { Component, pageProps } = this.props;
     return (
       <Provider store={store}>
-        <ThemeProvider theme={{ orbit: tokens }}>
-          <>
-            <GlobalStyle />
-            <Component {...pageProps} />
-          </>
-        </ThemeProvider>
+        <RemoteConfigProvider>
+          <ThemeProvider theme={{ orbit: tokens }}>
+            <>
+              <GlobalStyle />
+              <Component {...pageProps} />
+            </>
+          </ThemeProvider>
+        </RemoteConfigProvider>
       </Provider>
     );
   }
