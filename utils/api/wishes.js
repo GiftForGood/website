@@ -316,12 +316,15 @@ class WishesAPI {
       };
       data['event'] = event;
     } else if (typeof wishInfo.event !== 'undefined') {
-      if (eventKey !== '') {
+      if (eventKey !== '' && eventKey !== wishInfo.event.key) {
         throw new WishError('invalid-event-update', 'wish already has an existing event');
       }
 
-      const event = firebase.firestore.FieldValue.delete();
-      data['event'] = event;
+      if (eventKey === '') {
+        // Remove an event
+        const event = firebase.firestore.FieldValue.delete();
+        data['event'] = event; 
+      }
     }
 
     let wishDoc = wishesCollection.doc(id);
