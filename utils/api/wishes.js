@@ -26,6 +26,7 @@ class WishesAPI {
    * @param {string} eventKey The key for an event
    * @param {string} eventName The name for an event
    * @param {string} eventImageUrl The image url for an event
+   * @param {string} eventHashtag The hashtag for an event
    * @throws {WishError}
    * @throws {FirebaseError}
    * @return {object} A firebase document of the created wish
@@ -288,6 +289,7 @@ class WishesAPI {
    * @param {string} eventKey The key for an event
    * @param {string} eventName The name for an event
    * @param {string} eventImageUrl The image url for an event
+   * @param {string} eventHashtag The hashtag for an event
    * @throws {WishError}
    * @throws {FirebaseError}
    * @return {object} A firebase document of the updated wish
