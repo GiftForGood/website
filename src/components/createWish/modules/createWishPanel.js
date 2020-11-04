@@ -136,7 +136,8 @@ const CreateWishPanel = ({ wish, mode }) => {
           locations,
           seasonal.key,
           seasonal.name,
-          seasonal.imageUrl
+          seasonal.imageUrl,
+          seasonal.hashtag
         );
       } else if (editWish.seasonal && isSeasonal) {
         wishDoc = await api.wishes.update(
@@ -147,7 +148,8 @@ const CreateWishPanel = ({ wish, mode }) => {
           locations,
           wish.event.key,
           wish.event.name,
-          wish.event.imageUrl
+          wish.event.imageUrl,
+          wish.event.hashtag
         );
       } else {
         wishDoc = await api.wishes.update(id, title, description, categoryIds, locations);
@@ -212,7 +214,6 @@ const CreateWishPanel = ({ wish, mode }) => {
       dispatch(setDescription(formik.values.description));
       dispatch(setAllCategories(formik.values.categories));
       dispatch(setPostedDateTime(wish ? wish.postedDateTime : Date.now()));
-      console.log('seasonal', seasonal);
       dispatch(setSeasonalEvent(formik.values.seasonal ? seasonal : null));
     }
   }, [formik.values, seasonal]);
