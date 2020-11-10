@@ -94,7 +94,8 @@ const CreateWishPanel = ({ wish, mode }) => {
           locations,
           seasonal.key,
           seasonal.name,
-          seasonal.imageUrl
+          seasonal.imageUrl,
+          seasonal.hashtag
         );
       } else {
         wishDoc = await api.wishes.create(title, description, categoryIds, locations);
