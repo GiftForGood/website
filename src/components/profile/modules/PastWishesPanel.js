@@ -11,9 +11,10 @@ import InfiniteScroll from '../../scroller/InfiniteScroller';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 import { deserializeFirestoreTimestampToUnixTimestamp } from '@utils/firebase/deserializer';
 import EmptyStateImage from '@components/imageContainers/EmptyStateImage';
+import { useRemoteConfig } from '@components/remoteConfig/RemoteConfig';
 
 const GridSectionContainer = styled.div`
-  margin-top: 20px;
+  margin-top: 25px;
 `;
 
 const WishesContainer = styled.div`
@@ -46,6 +47,8 @@ const PastWishesPanel = ({ isMine, userId }) => {
   const [seeMoreIsLoading, setSeeMoreIsLoading] = useState(false);
   const [pageIsLoading, setPageIsLoading] = useState(true);
   const { isLargeMobile } = useMediaQuery();
+  const remoteConfig = useRemoteConfig();
+
 
   const fetchPastWishes = (lastQueriedDocument) => {
     setPageIsLoading(true);
@@ -129,7 +132,8 @@ const PastWishesPanel = ({ isMine, userId }) => {
             columns: '1fr 1fr',
           }}
           rows="auto"
-          gap="20px"
+          rowGap="30px"
+          columnGap="20px"
           columns="1fr"
         >
           <PastWishes />
@@ -166,7 +170,8 @@ const PastWishesPanel = ({ isMine, userId }) => {
             columns: '1fr 1fr',
           }}
           rows="auto"
-          gap="20px"
+          rowGap="30px"
+          columnGap="20px"
         >
           <PastWishes />
         </Grid>
@@ -190,6 +195,7 @@ const PastWishesPanel = ({ isMine, userId }) => {
         isBumped,
         status,
         expireDateTime,
+        event,
       } = pastWishData;
       const categoryTags = pastWish.data().categories.map((category) => category.name);
       return (
@@ -210,6 +216,11 @@ const PastWishesPanel = ({ isMine, userId }) => {
           bumpCallback={bumpCallback}
           isMine={isMine}
           status={status}
+          seasonal={remoteConfig?.configs?.currentEvent.key &&
+            event?.key &&
+            remoteConfig?.configs?.currentEvent.key === event?.key
+              ? event
+              : null}
         />
       );
     });

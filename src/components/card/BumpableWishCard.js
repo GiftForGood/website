@@ -12,6 +12,7 @@ import WishCardStatus from './WishCardStatus';
 import { PENDING } from '@constants/postStatus';
 import { BUMP_DURATION } from '@constants/wishes';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
+import { SeasonalContainer, SeasonalSmallTag } from '@components/seasonal';
 
 const CardContainer = styled.div`
   display: flex;
@@ -144,6 +145,7 @@ const Tags = ({ categoryTags, wishId }) => {
  * @param {function} bumpCallback is to update the caller past wishes
  * @param {boolean} isMine is to know if the card belongs to the user
  * @param {string} status is the status of the post
+ * @param {object} seasonal is the event object of the wish
  */
 const WishCard = ({
   index,
@@ -161,6 +163,7 @@ const WishCard = ({
   bumpCallback,
   isMine,
   status,
+  seasonal
 }) => {
   const [openBumpModal, setOpenBumpModal] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -200,6 +203,13 @@ const WishCard = ({
   return (
     <>
       <CardContainer>
+        {seasonal ? (
+          <>
+            <SeasonalContainer>
+              <SeasonalSmallTag src={seasonal.imageUrl} />
+            </SeasonalContainer>
+          </>
+        ) : null}
         <Grid style={{ height: '100%' }} rows={status !== PENDING ? '2fr 0.5fr 6fr 2fr' : '2fr 6fr 2fr'} cols="1fr">
           <CardHeaderContainer>
             <CardHeader

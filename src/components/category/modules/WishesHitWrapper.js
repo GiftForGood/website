@@ -56,7 +56,6 @@ const WishesHitWrapper = ({ hits, category, hasPrevious, hasMore, refinePrevious
           columns: '1fr 1fr',
         }}
         rows="auto"
-        // gap="20px"
         rowGap="30px"
         columnGap="20px"
       >
