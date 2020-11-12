@@ -23,24 +23,12 @@ class WishesAPI {
    * @param {string} description The wish description text
    * @param {array} categories A list of categories id that the wish belongs to
    * @param {array} locations A list of locations text that the wish belongs to
-   * @param {string} eventKey The key for an event
-   * @param {string} eventName The name for an event
-   * @param {string} eventImageUrl The image url for an event
-   * @param {string} eventHashtag The hashtag for an event
+   * @param {object} event The event fields
    * @throws {WishError}
    * @throws {FirebaseError}
    * @return {object} A firebase document of the created wish
    */
-  async create(
-    title,
-    description,
-    categories,
-    locations,
-    eventKey = '',
-    eventName = '',
-    eventImageUrl = '',
-    eventHashtag = ''
-  ) {
+  async create(title, description, categories, locations, event = {}) {
     let userInfo = {};
     let organizationInfo = {};
 
@@ -77,16 +65,11 @@ class WishesAPI {
       isBumped: false,
     };
 
-    if (eventKey !== '') {
-      this._validateEvent(eventKey, eventName, eventImageUrl, eventHashtag);
+    if (Object.keys(event).length > 0) {
+      this._validateEvent(event);
 
-      const event = {
-        key: eventKey,
-        name: eventName,
-        imageUrl: eventImageUrl,
-        hashtag: eventHashtag,
-        createdDateTime: timeNow,
-      };
+      let newEvent = event;
+      newEvent['createdDateTime'] = timeNow;
 
       data['event'] = event;
     }
@@ -286,25 +269,12 @@ class WishesAPI {
    * @param {string} description The wish description text
    * @param {array} categories A list of categories id that the wish belongs to
    * @param {array} locations A list of locations text that the wish belongs to
-   * @param {string} eventKey The key for an event
-   * @param {string} eventName The name for an event
-   * @param {string} eventImageUrl The image url for an event
-   * @param {string} eventHashtag The hashtag for an event
+   * @param {string} event The event fields
    * @throws {WishError}
    * @throws {FirebaseError}
    * @return {object} A firebase document of the updated wish
    */
-  async update(
-    id,
-    title,
-    description,
-    categories,
-    locations,
-    eventKey = '',
-    eventName = '',
-    eventImageUrl = '',
-    eventHashtag = ''
-  ) {
+  async update(id, title, description, categories, locations, event = {}) {
     const wishInfo = await this._getWishInfo(id);
     if (wishInfo.status !== PENDING) {
       throw new WishError('invalid-wish-status', 'only can update a pending wish');
@@ -326,24 +296,22 @@ class WishesAPI {
     };
 
     // Events
-    if (typeof wishInfo.event === 'undefined' && eventKey !== '') {
+    const hasEvent = Object.keys(event).length > 0;
+    if (wishInfo.event === undefined && hasEvent) {
       // Setting event
-      this._validateEvent(eventKey, eventName, eventImageUrl, eventHashtag);
+      this._validateEvent(event);
 
-      const event = {
-        key: eventKey,
-        name: eventName,
-        imageUrl: eventImageUrl,
-        hashtag: eventHashtag,
-        createdDateTime: firebase.firestore.FieldValue.serverTimestamp(),
-      };
+      let newEvent = event;
+      newEvent['createdDateTime'] = firebase.firestore.FieldValue.serverTimestamp();
+
       data['event'] = event;
-    } else if (typeof wishInfo.event !== 'undefined') {
-      if (eventKey !== '' && eventKey !== wishInfo.event.key) {
+    } else if (wishInfo.event !== undefined) {
+      const isValidEventKey = event.key !== undefined && event.key !== '';
+      if (hasEvent && isValidEventKey && event.key !== wishInfo.event.key) {
         throw new WishError('invalid-event-update', 'wish already has an existing event');
       }
 
-      if (eventKey === '') {
+      if (!hasEvent) {
         // Remove an event
         const event = firebase.firestore.FieldValue.delete();
         data['event'] = event;
@@ -492,13 +460,19 @@ class WishesAPI {
     return snapshot.data();
   }
 
-  _validateEvent(key, name, imageUrl, hashtag) {
-    if (key === '') {
+  _validateEvent(event) {
+    const { key, name, imageUrl, hashtag } = event;
+    const isValidKey = key !== undefined && key !== '';
+    const isValidName = name !== undefined && name !== '';
+    const isValidImageUrl = imageUrl !== undefined && imageUrl !== '';
+    const isValidHashtag = hashtag !== undefined && hashtag !== '';
+
+    if (!isValidKey) {
       throw new WishError('invalid-event-parameters', 'event key cannot be empty');
     }
 
-    if (key !== '' && (name === '' || imageUrl === '' || hashtag === '')) {
-      throw new WishError('invalid-event-parameters', 'some event parameters is empty');
+    if (isValidKey && (!isValidName || !isValidImageUrl || !isValidHashtag)) {
+      throw new WishError('invalid-event-parameters', 'some event parameters are empty');
     }
   }
 
