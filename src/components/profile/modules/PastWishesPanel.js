@@ -49,7 +49,6 @@ const PastWishesPanel = ({ isMine, userId }) => {
   const { isLargeMobile } = useMediaQuery();
   const remoteConfig = useRemoteConfig();
 
-
   const fetchPastWishes = (lastQueriedDocument) => {
     setPageIsLoading(true);
     api.wishes
@@ -216,11 +215,13 @@ const PastWishesPanel = ({ isMine, userId }) => {
           bumpCallback={bumpCallback}
           isMine={isMine}
           status={status}
-          seasonal={remoteConfig?.configs?.currentEvent.key &&
+          seasonal={
+            remoteConfig?.configs?.currentEvent.key &&
             event?.key &&
             remoteConfig?.configs?.currentEvent.key === event?.key
               ? event
-              : null}
+              : null
+          }
         />
       );
     });

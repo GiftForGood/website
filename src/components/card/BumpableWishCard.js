@@ -163,7 +163,7 @@ const WishCard = ({
   bumpCallback,
   isMine,
   status,
-  seasonal
+  seasonal,
 }) => {
   const [openBumpModal, setOpenBumpModal] = useState(false);
   const [loading, setLoading] = useState(false);
