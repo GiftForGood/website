@@ -87,16 +87,7 @@ const CreateWishPanel = ({ wish, mode }) => {
       let wishDoc;
       if (isSeasonal) {
         description += `\n\n${seasonal.hashtag}`;
-        wishDoc = await api.wishes.create(
-          title,
-          description,
-          categoryIds,
-          locations,
-          seasonal.key,
-          seasonal.name,
-          seasonal.imageUrl,
-          seasonal.hashtag
-        );
+        wishDoc = await api.wishes.create(title, description, categoryIds, locations, seasonal);
       } else {
         wishDoc = await api.wishes.create(title, description, categoryIds, locations);
       }
@@ -129,29 +120,9 @@ const CreateWishPanel = ({ wish, mode }) => {
       let wishDoc;
       if (!editWish.seasonal && isSeasonal) {
         description += `\n\n${seasonal.hashtag}`;
-        wishDoc = await api.wishes.update(
-          id,
-          title,
-          description,
-          categoryIds,
-          locations,
-          seasonal.key,
-          seasonal.name,
-          seasonal.imageUrl,
-          seasonal.hashtag
-        );
+        wishDoc = await api.wishes.update(id, title, description, categoryIds, locations, seasonal);
       } else if (editWish.seasonal && isSeasonal) {
-        wishDoc = await api.wishes.update(
-          id,
-          title,
-          description,
-          categoryIds,
-          locations,
-          wish.event.key,
-          wish.event.name,
-          wish.event.imageUrl,
-          wish.event.hashtag
-        );
+        wishDoc = await api.wishes.update(id, title, description, categoryIds, locations, wish.event);
       } else {
         wishDoc = await api.wishes.update(id, title, description, categoryIds, locations);
       }
