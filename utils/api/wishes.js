@@ -69,6 +69,7 @@ class WishesAPI {
       this._validateEvent(event);
 
       let newEvent = event;
+      newEvent[event.key] = true;
       newEvent['createdDateTime'] = timeNow;
 
       data['event'] = event;
@@ -302,6 +303,7 @@ class WishesAPI {
       this._validateEvent(event);
 
       let newEvent = event;
+      newEvent[event.key] = true;
       newEvent['createdDateTime'] = firebase.firestore.FieldValue.serverTimestamp();
 
       data['event'] = event;
