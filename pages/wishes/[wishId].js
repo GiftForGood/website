@@ -10,6 +10,7 @@ import { ogImagePath } from '@constants/imagePaths';
 import { useRouter } from 'next/router';
 import Header from '@components/header';
 import { deserializeFirestoreTimestampToUnixTimestamp } from '@utils/firebase/deserializer';
+import WishHeader from '@components/header/WishHeader';
 
 const TopNavigationBar = dynamic(() => import('@components/navbar/modules/TopNavigationBar'), {
   ssr: false,
@@ -56,16 +57,7 @@ const Wish = ({ wishId, wishDetails, npoDetails, user, prevHref, categoryName })
   return (
     <SessionProvider user={user}>
       <Header title={wishDetails.title} />
-      <Head>
-        {/* meta property for sharing purposes */}
-        <meta property="og:url" content={`https://www.giftforgood.io${router.asPath}`} />
-        <meta property="og:type" content="website" />
-        <meta property="og:title" content="GiftForGood" />
-        <meta property="og:description" content="Check out this wish from GiftForGood!" />
-        <meta property="og:image" content={ogImagePath} />
-        <meta property="og:image:secure_url" content={ogImagePath} />
-        <meta property="og:image:type" content="image/jpeg" />
-      </Head>
+      <WishHeader title={wishDetails.title} description={wishDetails.description} path={router.asPath} />
       <TopNavigationBar showNews={true} />
       <WishPage
         wishId={wishId}
