@@ -28,9 +28,6 @@ export default class MyDocument extends Document {
               window.dataLayer = window.dataLayer || [];
               function gtag(){dataLayer.push(arguments);}
               gtag('js', new Date());
-              gtag('config', UA-173491025-1, {
-                page_path: window.location.pathname,
-              });
           `,
                 }}
               />
