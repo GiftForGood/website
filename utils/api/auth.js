@@ -79,11 +79,13 @@ class AuthAPI {
     const userProfile = firebaseAuth.currentUser;
 
     await this._validateNPO(userProfile);
+    const organizationInfo = await this._getOrganizationInfo(organization);
     const [npoDoc, userDoc] = await Promise.all([
-      this._createNPO(userProfile, name, contact, organization),
+      this._createNPO(userProfile, name, contact, organizationInfo),
       this._createUser(userProfile.uid, NPO),
     ]);
-    await this._createNPOVerificationData(userProfile, name, contact, organization, registrationNumber, activities);
+    // This function needs to be after `createNPO` as it needs the npo data to be there
+    await this._createNPOVerificationData(userProfile, name, contact, organizationInfo, registrationNumber, activities);
 
     return [token, userProfile, npoDoc];
   }
@@ -281,9 +283,7 @@ class AuthAPI {
     return snapshot.exists;
   }
 
-  async _createNPO(userProfile, name, contact, organizationName) {
-    const organizationInfo = await this._getOrganizationInfo(organizationName);
-
+  async _createNPO(userProfile, name, contact, organizationInfo) {
     let profileImageUrlMapping = { raw: '' };
     for (const sizeText of ALL_TEXT) {
       profileImageUrlMapping[sizeText] = '';
@@ -319,8 +319,7 @@ class AuthAPI {
     return newNPO.get();
   }
 
-  async _createNPOVerificationData(userProfile, name, contact, organizationName, registrationNumber, activities) {
-    const organizationInfo = await this._getOrganizationInfo(organizationName);
+  async _createNPOVerificationData(userProfile, name, contact, organizationInfo, registrationNumber, activities) {
     const timeNow = firebase.firestore.FieldValue.serverTimestamp();
 
     const organization = {
