@@ -365,15 +365,6 @@ class AuthAPI {
     return userDoc.get();
   }
 
-  async _uploadNPOProofImage(npoId, proofFile) {
-    const ext = path.extname(proofFile.name);
-    const storageRef = firebaseStorage.ref();
-    const proofFileRef = storageRef.child(`npos/${npoId}/proofs/${npoId}_proof_v1${ext}`);
-    await proofFileRef.put(proofFile);
-
-    return proofFileRef.getDownloadURL();
-  }
-
   async _getOrganizationInfo(name) {
     const snapshot = await db.collection('npoOrganizations').where('name', '==', name).get();
 
