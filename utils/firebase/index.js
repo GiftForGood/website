@@ -16,25 +16,18 @@ var config = {
   measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
 };
 
-// Use emulator when it's localhost (realtime)
-if (process.env.NODE_ENV === 'development') {
-  config['databaseURL'] = 'http://localhost:9000/?ns=giftforgood';
-}
-
 if (!firebase.apps.length) {
   firebase.initializeApp(config);
 }
 
 const firebaseAuth = firebase.auth();
-let db = firebase.firestore();
+const db = firebase.firestore();
 const firebaseStorage = firebase.storage();
 
-// Use emulator when it's localhost (firestore)
+// Use emulator when it's localhost
 if (process.env.NODE_ENV === 'development') {
-  db.settings({
-    host: 'localhost:8080',
-    ssl: false,
-  });
+  db.useEmulator('localhost', 8080); // firestore
+  firebase.database().useEmulator('localhost', 9000); // Realtime Database
 }
 
 // Remote config requires the browser to work due to caching.
