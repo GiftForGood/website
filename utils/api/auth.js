@@ -83,6 +83,7 @@ class AuthAPI {
     const [npoDoc, userDoc] = await Promise.all([
       this._createNPO(userProfile, name, contact, organizationInfo),
       this._createUser(userProfile.uid, NPO),
+      this._updateNPOOrganizationMemberStatus(organizationInfo),
     ]);
     // This function needs to be after `createNPO` as it needs the npo data to be there
     await this._createNPOVerificationData(userProfile, name, contact, organizationInfo, registrationNumber, activities);
@@ -346,6 +347,17 @@ class AuthAPI {
     await newVerificationData.set(data);
 
     return newVerificationData.get();
+  }
+
+  async _updateNPOOrganizationMemberStatus(organizationInfo) {
+    const data = {
+      isMember: true,
+    };
+
+    const npoOrgDoc = db.collection('npoOrganizations').doc(organizationInfo.id);
+    await npoOrgDoc.update(data);
+
+    return npoOrgDoc.get();
   }
 
   async _doesNPOExist(id) {
