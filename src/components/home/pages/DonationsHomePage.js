@@ -6,7 +6,7 @@ import { Grid } from '@kiwicom/orbit-components/lib';
 import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import { donationsHomePageDetails } from '@constants/homePageDetails';
-import RoutingCarousel from '@components/carousel/RoutingCarousel';
+import { MaxWidthContainer } from '@components/containers';
 
 const HomePageContainer = styled.div`
   display: flex;
@@ -24,11 +24,10 @@ const ResponsiveTitle = styled.div`
   `)};
 `;
 
-const CategoriesContainer = styled.div`
-  margin: 0 auto;
-  width: 90vw;
-  max-width: 1280px;
-`;
+const CategoriesContainer = styled(MaxWidthContainer)`
+  margin-top: 0;
+  margin-bottom: 0;
+`
 
 const styles = {
   gridContainer: {
