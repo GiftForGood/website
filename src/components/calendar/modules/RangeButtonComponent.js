@@ -5,16 +5,16 @@ import { Button, Stack, Text } from '@kiwicom/orbit-components/lib';
 import { ChevronLeft, ChevronRight } from '@kiwicom/orbit-components/lib/icons';
 
 const circleButton = styled.button`
-  background: ${colors.calendarUnselectedBackground};
+  background: ${colors.calendarUnselectedButton.background};
 
-  box-shadow: 1px 1px 2px 2px ${colors.calendarUnselectedHoverActiveFocus};
+  box-shadow: 1px 1px 2px 2px ${colors.calendarUnselectedButton.hover};
 
   :hover {
-    background: ${colors.calendarUnselectedHoverActiveFocus};
+    background: ${colors.calendarUnselectedButton.hover};
   }
 
   :focus {
-    box-shadow: 1px 1px 2px 2px ${colors.calendarUnselectedHoverActiveFocus};
+    box-shadow: 1px 1px 2px 2px ${colors.calendarUnselectedButton.hover};
   }
 `;
 

@@ -75,9 +75,9 @@ const Rule = ({ pass, title }) => {
   return (
     <Stack direction="row">
       {pass ? (
-        <Check customColor={colors.passwordCorrect} size="small" />
+        <Check customColor={colors.passwordText.correct} size="small" />
       ) : (
-        <Close customColor={colors.passwordWrong} size="small" />
+        <Close customColor={colors.passwordText.wrong} size="small" />
       )}
       <Text size="small">{title}</Text>
     </Stack>

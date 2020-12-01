@@ -14,11 +14,11 @@ const TagContainer = styled.div`
 const StatusTag = ({ postStatus }) => {
   let tagColor;
   if (postStatus === COMPLETED) {
-    tagColor = colors.completedTagBackground;
+    tagColor = colors.primaryTeal.background;
   } else if (postStatus === CLOSED) {
-    tagColor = colors.closedTagBackground;
+    tagColor = colors.primaryRed.background;
   } else {
-    tagColor = colors.pendingTagBackground;
+    tagColor = colors.pendingTag.background;
   }
 
   return (

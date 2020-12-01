@@ -17,7 +17,7 @@ import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 const Container = styled.div`
   height: 100%;
   width: 100%;
-  background-color: ${colors.footerBackground};
+  background-color: ${colors.footer.background};
   position: relative;
   bottom: 0;
 `;

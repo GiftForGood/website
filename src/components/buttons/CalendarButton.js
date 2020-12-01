@@ -12,7 +12,7 @@ const CalendarButtonStyle = styled.button`
   transition: transform 0.2s;
 
   :active {
-    background: ${colors.npoHoverActive};
+    background: ${colors.primaryBlue.hoverActive};
   }
 
   :hover {

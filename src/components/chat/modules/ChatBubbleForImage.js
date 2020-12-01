@@ -13,7 +13,7 @@ const ChatBubbleImage = styled.img`
   padding: 5px 5px 5px 5px;
   border-radius: 5px;
   background-color: ${(props) =>
-    props.isByLoggedInUser ? colors.myChatBubbleBackground : colors.oppositeChatBubbleBackground};
+    props.isByLoggedInUser ? colors.myChatBubble.background : colors.oppositeChatBubble.background};
 `;
 
 /**

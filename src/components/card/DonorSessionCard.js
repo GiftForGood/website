@@ -32,7 +32,7 @@ const CardAction = styled.div`
 `;
 
 const HeadingColor = styled.div`
-  color: ${colors.donorBackground};
+  color: ${colors.primaryRed.background};
 `;
 
 const Card = ({ onClick, buttonTitle }) => {
