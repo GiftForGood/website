@@ -4,14 +4,16 @@ import { Heading } from '@kiwicom/orbit-components/lib';
 import IconCredits from './IconCredits';
 import ImageCredits from './ImageCredits';
 import LibraryCredits from './LibraryCredits';
+import { MaxWidthContainer } from '@components/containers';
 
-const CreditsContainer = styled.div`
+const CreditsContainer = styled(MaxWidthContainer)`
   position: relative;
-  max-width: 1280px;
   display: flex;
   flex-direction: column;
-  margin: 0 auto;
   padding: 0 50px;
+  margin-top: 0;
+  margin-bottom: 0;
+  width: auto;
 `;
 
 const CreditsTitleContainer = styled.div`
