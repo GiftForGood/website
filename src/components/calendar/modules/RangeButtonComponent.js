@@ -7,14 +7,14 @@ import { ChevronLeft, ChevronRight } from '@kiwicom/orbit-components/lib/icons';
 const circleButton = styled.button`
   background: ${colors.calendarUnselectedButton.background};
 
-  box-shadow: 1px 1px 2px 2px ${colors.calendarUnselectedButton.hover};
+  box-shadow: 1px 1px 2px 2px ${colors.calendarUnselectedButton.hoverActive};
 
   :hover {
-    background: ${colors.calendarUnselectedButton.hover};
+    background: ${colors.calendarUnselectedButton.hoverActive};
   }
 
   :focus {
-    box-shadow: 1px 1px 2px 2px ${colors.calendarUnselectedButton.hover};
+    box-shadow: 1px 1px 2px 2px ${colors.calendarUnselectedButton.hoverActive};
   }
 `;
 

@@ -18,7 +18,7 @@ export const colors = {
     focus: '#16a595',
   },
   calendarUnselectedButton: {
-    bacground: '#ffffff',
+    background: '#ffffff',
     hoverActive: '#e7e7e7',
     focus: '#e7e7e7',
   },
