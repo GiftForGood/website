@@ -9,7 +9,7 @@ import api from '@api';
 
 const Container = styled.div`
   display: ${({ shown }) => (shown ? 'flex' : 'none')};
-  background-color: ${colors.donorBackground};
+  background-color: ${colors.primaryRed.background};
   z-index: 700;
   padding: 10px;
   word-break: break-all;

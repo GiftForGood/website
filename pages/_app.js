@@ -36,7 +36,7 @@ const GlobalStyle = createGlobalStyle`
   }
 
   .carousel .slide {
-    background: ${colors.bannerBackground};
+    background: ${colors.white};
   }
 
   .control-dots {

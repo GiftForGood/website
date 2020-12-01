@@ -18,7 +18,7 @@ const NpoPartnersContainer = styled.div``;
 const CardContainer = styled.div`
   display: flex;
   border-radius: 3px;
-  border: 1px solid ${colors.separatorBackground};
+  border: 1px solid ${colors.separator.background};
   min-height: 250px;
 `;
 

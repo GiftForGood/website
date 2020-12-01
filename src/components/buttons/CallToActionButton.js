@@ -15,19 +15,19 @@ import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 import { NOT_VERIFIED_MESSAGE_NPO, NOT_VERIFIED_MESSAGE_DONOR } from '@constants/callToActionButton';
 
 const CallToActionButtonStyle = styled.button`
-  background: ${colors.donorBackground};
+  background: ${colors.primaryRed.background};
   height: 30px;
 
   :active {
-    background: ${colors.donorHoverActive};
+    background: ${colors.primaryRed.hoverActive};
   }
 
   :hover {
-    background: ${colors.donorHoverActive};
+    background: ${colors.primaryRed.hoverActive};
   }
 
   :focus:not(:focus-visible) {
-    background: ${colors.donorHoverActive};
+    background: ${colors.primaryRed.hoverActive};
     box-shadow: 0 0 0 3px rgba(222, 24, 24, 0.5);
   }
 
@@ -37,20 +37,20 @@ const CallToActionButtonStyle = styled.button`
 `;
 
 const BottomCallToActionButtonStyle = styled.button`
-  background: ${colors.donorBackground};
+  background: ${colors.primaryRed.background};
   height: 40px;
   border-radius: 30px;
 
   :active {
-    background: ${colors.donorHoverActive};
+    background: ${colors.primaryRed.hoverActive};
   }
 
   :hover {
-    background: ${colors.donorHoverActive};
+    background: ${colors.primaryRed.hoverActive};
   }
 
   :focus:not(:focus-visible) {
-    background: ${colors.donorHoverActive};
+    background: ${colors.primaryRed.hoverActive};
     box-shadow: 0 0 0 3px rgba(222, 24, 24, 0.5);
   }
 

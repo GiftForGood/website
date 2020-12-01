@@ -2,18 +2,18 @@ import styled from 'styled-components';
 import { colors } from '@constants/colors';
 
 const BlueButton = styled.button`
-  background: ${colors.npoBackground};
+  background: ${colors.primaryBlue.background};
 
   :active {
-    background: ${colors.npoHoverActive};
+    background: ${colors.primaryBlue.hoverActive};
   }
 
   :hover {
-    background: ${colors.npoHoverActive};
+    background: ${colors.primaryBlue.hoverActive};
   }
 
   :focus:not(:focus-visible) {
-    background: ${colors.npoHoverActive};
+    background: ${colors.primaryBlue.hoverActive};
     box-shadow: 0 0 0 3px rgba(4, 65, 170, 0.5);
   }
 

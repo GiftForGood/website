@@ -2,23 +2,23 @@ import styled from 'styled-components';
 import { colors } from '@constants/colors';
 
 const ChatSuggestDatesButton = styled.button`
-  background: ${colors.chatSuggestDateButtonBackground};
+  background: ${colors.chatSuggestDateButton.background};
 
   :active {
-    background: ${colors.chatSuggestDateButtonHoverActive};
+    background: ${colors.chatSuggestDateButton.hoverActive};
   }
 
   :hover {
-    background: ${colors.chatSuggestDateButtonHoverActive};
+    background: ${colors.chatSuggestDateButton.hoverActive};
   }
 
   :focus {
-    box-shadow: 0 0 0 3px ${colors.chatSuggestDateButtonFocus};
+    box-shadow: 0 0 0 3px ${colors.chatSuggestDateButton.focus};
   }
 
   :focus:not(:focus-visible) {
-    box-shadow: 0 0 0 3px ${colors.chatSuggestDateButtonFocus};
-    background: ${colors.chatSuggestDateButtonHoverActive};
+    box-shadow: 0 0 0 3px ${colors.chatSuggestDateButton.focus};
+    background: ${colors.chatSuggestDateButton.hoverActive};
   }
 `;
 

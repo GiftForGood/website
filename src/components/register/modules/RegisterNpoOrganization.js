@@ -22,7 +22,7 @@ import NpoOrganizationDropdownField from '../../inputfield/NpoOrganizationDropdo
 import { newOrganizationGoogleFormPath } from '@constants/googleFormPaths';
 
 const HeadingColor = styled.div`
-  color: ${colors.npoBackground};
+  color: ${colors.primaryBlue.background};
 `;
 
 const NextButtonContainer = styled.div`

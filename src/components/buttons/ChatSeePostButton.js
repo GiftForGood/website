@@ -2,23 +2,23 @@ import styled from 'styled-components';
 import { colors } from '@constants/colors';
 
 const ChatSeePostButton = styled.button`
-  background: ${colors.chatSeePostButtonBackground};
+  background: ${colors.chatSeePostButton.background};
 
   :active {
-    background: ${colors.chatSeePostButtonHoverActive};
+    background: ${colors.chatSeePostButton.hoverActive};
   }
 
   :hover {
-    background: ${colors.chatSeePostButtonHoverActive};
+    background: ${colors.chatSeePostButton.hoverActive};
   }
 
   :focus {
-    box-shadow: 0 0 0 3px ${colors.chatSeePostButtonFocus};
+    box-shadow: 0 0 0 3px ${colors.chatSeePostButton.focus};
   }
 
   :focus:not(:focus-visible) {
-    box-shadow: 0 0 0 3px ${colors.chatSeePostButtonFocus};
-    background: ${colors.chatSeePostButtonHoverActive};
+    box-shadow: 0 0 0 3px ${colors.chatSeePostButton.focus};
+    background: ${colors.chatSeePostButton.hoverActive};
   }
 `;
 
