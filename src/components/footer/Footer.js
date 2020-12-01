@@ -29,7 +29,7 @@ const Wrapper = styled(MaxWidthContainer)`
   padding-bottom: 40px;
   margin-top: 0;
   margin-bottom: 0;
-`
+`;
 
 const Link = styled.a`
   :link {
