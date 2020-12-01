@@ -5,13 +5,14 @@ import NpoApplicationPanel from '../modules/NpoApplicationPanel';
 import SettingsTabs from '@components/tabs/SettingsTabs';
 import { Stack } from '@kiwicom/orbit-components/lib';
 import { TABS } from '@constants/settings';
+import { MaxWidthContainer } from '@components/containers';
 
-const Container = styled.div`
+const Container = styled(MaxWidthContainer)`
   display: flex;
   justify-content: center;
-  max-width: 1280px;
+
+  width: 100%;
   margin-top: 25px;
-  margin-bottom: 40px;
 
   ${media.largeMobile(css`
     width: 90vw;
