@@ -27,7 +27,7 @@ const ResponsiveTitle = styled.div`
 const CategoriesContainer = styled(MaxWidthContainer)`
   margin-top: 0;
   margin-bottom: 0;
-`
+`;
 
 const styles = {
   gridContainer: {
@@ -36,12 +36,9 @@ const styles = {
   },
 };
 
-const TopDonationsContainer = styled.div`
-  width: 90vw;
-  max-width: 1280px;
-  margin: 0 auto;
-  margin-bottom: 40px;
+const TopDonationsContainer = styled(MaxWidthContainer)`
   overflow-x: hidden;
+  margin-top: 0;
 `;
 
 const DonationsHomePage = () => {
