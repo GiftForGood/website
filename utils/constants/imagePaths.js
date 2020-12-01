@@ -34,3 +34,8 @@ export const favicon = '/assets/favicon.ico';
 
 export const emptyStateImagePath =
   'https://res.cloudinary.com/giftforgood/image/upload/v1600521695/empty-state/undraw_empty_xct9_g1ndx6.svg';
+
+export const howItWorksNpoImagePath =
+  'https://res.cloudinary.com/giftforgood/image/upload/v1598422154/banners/gfgbanner.png';
+export const howItWorksDonorImagePath =
+  'https://res.cloudinary.com/giftforgood/image/upload/v1598422154/banners/gfgbanner.png';

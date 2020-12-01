@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import dynamic from 'next/dynamic';
 import Banner from '../modules/Banner';
 import Categories from '../../category/modules/Categories';
 import TopDonations from '../modules/TopDonations';
@@ -7,6 +8,10 @@ import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import { donationsHomePageDetails } from '@constants/homePageDetails';
 import RoutingCarousel from '@components/carousel/RoutingCarousel';
+import useLocalStorage from '@utils/hooks/useLocalStorage';
+import { gridRowsWithHowItWorks, gridRows } from '@constants/homePageGridRows';
+
+const HowItWorks = dynamic(() => import('@components/howItWorks/pages/HowItWorks'), { ssr: false });
 
 const HomePageContainer = styled.div`
   display: flex;
@@ -53,19 +58,42 @@ const DonationsHomePage = () => {
     topCategoriesTitle,
     pageType,
   } = donationsHomePageDetails;
+  const [isShowHowItWorks, setIsShowHowItWorks] = useLocalStorage('isShowHowItWorks', true);
+  const [largeDesktopGridRules, setLargeDesktopGridRules] = useState({
+    rows: isShowHowItWorks ? gridRowsWithHowItWorks.largeDesktop : gridRows.largeDesktop,
+    rowGap: '30px',
+  });
+  const [desktopGridRules, setDesktopGridRules] = useState({
+    rows: isShowHowItWorks ? gridRowsWithHowItWorks.desktop : gridRows.desktop,
+  });
+  const [tabletGridRules, setTabletGridRules] = useState({
+    rows: isShowHowItWorks ? gridRowsWithHowItWorks.tablet : gridRows.tablet,
+  });
+  const [mobileGridRules, setMobileGridRules] = useState({
+    rows: isShowHowItWorks ? gridRowsWithHowItWorks.mobile : gridRows.mobile,
+  });
+
+  useEffect(() => {
+    setLargeDesktopGridRules({ rows: isShowHowItWorks ? gridRowsWithHowItWorks.largeDesktop : gridRows.largeDesktop });
+    setDesktopGridRules({ rows: isShowHowItWorks ? gridRowsWithHowItWorks.desktop : gridRows.desktop });
+    setTabletGridRules({ rows: isShowHowItWorks ? gridRowsWithHowItWorks.tablet : gridRows.tablet });
+    setMobileGridRules({ rows: isShowHowItWorks ? gridRowsWithHowItWorks.mobile : gridRows.mobile });
+  }, [isShowHowItWorks]);
+
   return (
     <HomePageContainer>
       <Grid
         style={styles.gridContainer}
-        rows="1fr 0.5fr auto"
+        rows={mobileGridRules.rows}
         rowGap="25px"
         columns="1fr"
-        desktop={{
-          rows: '1.5fr 1fr auto',
-          rowGap: '30px',
-        }}
+        largeDesktop={largeDesktopGridRules}
+        desktop={desktopGridRules}
+        tablet={tabletGridRules}
+        largeMobile={mobileGridRules}
       >
         <Banner type={pageType} />
+        {isShowHowItWorks && <HowItWorks setIsShowHowItWorks={setIsShowHowItWorks} />}
         <CategoriesContainer>
           <ResponsiveTitle>{categoriesTitle}</ResponsiveTitle>
           <Categories type="donations" />
