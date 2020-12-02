@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
+import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 
 import { Stack, TextLink } from '@kiwicom/orbit-components/lib';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
@@ -11,14 +12,32 @@ import { DONOR, NPO } from '@constants/usersType';
 
 const Container = styled.div`
   margin: 0 auto;
-  margin-bottom: 20px;
+  margin-bottom: 5px;
   max-width: 1280px;
-  padding: 5px;
   width: 90vw;
+
+  ${media.desktop(css`
+    min-height: 400px;
+    margin-bottom: 20px;
+  `)};
+
+  ${media.tablet(css`
+    min-height: 300px;
+    margin-bottom: 10px;
+  `)};
+
+  ${media.largeMobile(css`
+    min-height: 250px;
+  `)};
+
+  ${media.mediumMobile(css`
+    min-height: 200px;
+  `)};
 `;
 
 const UndoContainer = styled.div`
   margin: 0 auto;
+  min-height: 30px;
 `;
 
 const ResponsiveTitle = styled.div`
