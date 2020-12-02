@@ -12,7 +12,7 @@ const ChatTextContainer = styled.div`
   padding: 5px 15px 5px 15px;
   border-radius: 5px;
   background-color: ${(props) =>
-    props.isByLoggedInUser ? colors.myChatBubbleBackground : colors.oppositeChatBubbleBackground};
+    props.isByLoggedInUser ? colors.myChatBubble.background : colors.oppositeChatBubble.background};
 `;
 
 const ChatButtonsContainer = styled.div`

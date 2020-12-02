@@ -67,7 +67,7 @@ const CardHeader = ({ imageUrl, name, timeAgo, isBumped, profileHref }) => {
         <ClickableProfile href={profileHref} />
       </ProfileDetailsContainer>
       <TimePostedContainer>
-        {isBumped ? <Replace customColor={colors.bump} /> : <TimePosted timeAgo={timeAgo} />}
+        {isBumped ? <Replace customColor={colors.primaryTeal.background} /> : <TimePosted timeAgo={timeAgo} />}
       </TimePostedContainer>
     </CardHeaderContainer>
   );

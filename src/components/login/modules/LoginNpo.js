@@ -15,7 +15,7 @@ import client from '@utils/axios';
 import { useRouter } from 'next/router';
 
 const HeadingColor = styled.div`
-  color: ${colors.npoBackground};
+  color: ${colors.primaryBlue.background};
 `;
 
 const LoginNpo = ({ redirectUrlAfterLogin }) => {

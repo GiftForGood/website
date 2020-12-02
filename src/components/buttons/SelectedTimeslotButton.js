@@ -2,19 +2,19 @@ import styled from 'styled-components';
 import { colors } from '@constants/colors';
 
 const SelectedTimeslotButton = styled.button`
-  background: ${colors.calendarSelectedBackground};
+  background: ${colors.primaryTeal.background};
 
   :hover {
-    background: ${colors.calendarSelectedHoverActive};
+    background: ${colors.primaryTeal.hoverActive};
   }
 
   :focus {
-    box-shadow: 0 0 0 3px ${colors.calendarSelectedFocus};
+    box-shadow: 0 0 0 3px ${colors.primaryTeal.focus};
   }
 
   :focus:not(:focus-visible) {
-    background: ${colors.calendarSelectedHoverActive};
-    box-shadow: 0 0 0 3px ${colors.calendarSelectedFocus};
+    background: ${colors.primaryTeal.hoverActive};
+    box-shadow: 0 0 0 3px ${colors.primaryTeal.focus};
   }
 `;
 

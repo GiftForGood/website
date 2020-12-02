@@ -69,7 +69,7 @@ const CardImageContainer = styled.div`
     max-height: calc(3 * 450px / 6);
   `)}
   position: relative;
-  background-color: ${colors.imageLoadingBackground};
+  background-color: ${colors.imageLoading.background};
 `;
 
 const CardImage = styled.img`

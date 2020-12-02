@@ -29,7 +29,7 @@ import CheckIconWrapper from './CheckIconWrapper';
 import TextLink from '@kiwicom/orbit-components/lib/TextLink';
 
 const HeadingColor = styled.div`
-  color: ${colors.donorBackground};
+  color: ${colors.primaryRed.background};
 `;
 
 const RegisterDonor = () => {
