@@ -6,15 +6,14 @@ import { Stack, TextLink } from '@kiwicom/orbit-components/lib';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 import DesktopSteps from '../modules/DesktopSteps';
 import MobileSteps from '../modules/MobileSteps';
+import { MaxWidthContainer } from '@components/containers';
 
 import { colors } from '@constants/colors';
 import { DONOR, NPO } from '@constants/usersType';
 
-const Container = styled.div`
-  margin: 0 auto;
+const Container = styled(MaxWidthContainer)`
   margin-bottom: 5px;
-  max-width: 1280px;
-  width: 90vw;
+  margin-top: 0;
 
   ${media.desktop(css`
     min-height: 400px;
