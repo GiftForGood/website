@@ -1,7 +1,7 @@
 import cookie from 'cookie';
 import admin from '@utils/admin-firebase';
 import AuthError from '@api/error/authError';
-import { deserializeFirestoreTimestampToUnixTimestampNode } from '@utils/firebase/deserializer';
+import { deserializeFirestoreTimestampToUnixTimestampNode } from '@utils/firebase/deserializerNode';
 
 /**
  * Checks if a user is authenticated or not.
