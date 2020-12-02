@@ -50,13 +50,13 @@ const unselectedLink = styled.a`
   text-decoration: none;
 
   :hover {
-    color: ${colors.primaryRed.background};
+    color: ${colors.primaryTeal.background};
     text-decoration: underline;
   }
 `;
 
 const selectedLink = styled.a`
-  color: ${colors.primaryRed.background};
+  color: ${colors.primaryTeal.background};
   text-decoration: underline;
 
   :hover {
