@@ -19,9 +19,22 @@ export async function isAuthenticated(req, res) {
     let user = await getUser(currentUser.customClaims, currentUser.uid);
 
     // Checking for user type from 3 different sources because Cloud function doesnt update the claims fast enough.
-    const donor = decodedClaims?.donor || user?.user.donor || currentUser.customClaims?.donor || false;
-    const npo = decodedClaims?.npo || user?.npo || currentUser.customClaims?.npo || false;
-    const isClaimSet = currentUser.customClaims?.donor || currentUser.customClaims?.npo || false;
+    const donor =
+      (decodedClaims && decodedClaims.donor) ||
+      (user && user.donor) ||
+      (currentUser.customClaims && currentUser.customClaims.donor) ||
+      false;
+
+    const npo =
+      (decodedClaims && decodedClaims.npo) ||
+      (user && user.npo) ||
+      (currentUser.customClaims && currentUser.customClaims.npo) ||
+      false;
+
+    const isClaimSet =
+      (currentUser.customClaims && currentUser.customClaims.donor) ||
+      (currentUser.customClaims && currentUser.customClaims.npo) ||
+      false;
 
     let data = {
       user: {
