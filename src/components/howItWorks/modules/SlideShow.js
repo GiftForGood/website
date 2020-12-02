@@ -60,10 +60,15 @@ const SlideShow = ({ contents, closeSlideShow, type, show = false }) => {
     }
   };
 
+  const closeAndResetSlideShow = () => {
+    setCurrentSlide(0);
+    closeSlideShow();
+  };
+
   return (
     <>
       {show ? (
-        <Modal onClose={closeSlideShow} size="small">
+        <Modal onClose={closeAndResetSlideShow} size="small">
           <ModalHeader title={`How it works as a ${type.toUpperCase()}`}></ModalHeader>
           <ModalSection>
             <Carousel
@@ -99,7 +104,7 @@ const SlideShow = ({ contents, closeSlideShow, type, show = false }) => {
             </Carousel>
 
             <Stack direction="row" justify="between">
-              <ButtonLink onClick={closeSlideShow} type="secondary">
+              <ButtonLink onClick={closeAndResetSlideShow} type="secondary">
                 Close
               </ButtonLink>
               <Button
