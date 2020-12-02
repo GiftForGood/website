@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import MaxWidthContainer from '@components/containers/maxWidthContainer';
+import { MaxWidthContainer } from '@components/containers';
 import Grid from '@kiwicom/orbit-components/lib/utils/Grid';
 import Stack from '@kiwicom/orbit-components/lib/Stack';
 import { ListChoice } from '@kiwicom/orbit-components/lib/';
