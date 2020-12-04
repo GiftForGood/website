@@ -56,7 +56,7 @@ const TileContainer = styled.div`
   ${(props) =>
     props.isSelected &&
     css`
-      border: 2px solid ${colors.chatSelected};
+      border: 2px solid ${colors.chatCardSelected.background};
     `}
 `;
 

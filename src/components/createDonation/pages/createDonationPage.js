@@ -8,12 +8,14 @@ import initialState from '../initialState';
 import reducer from '../reducers';
 import DonationContext from '../context';
 
-const Container = styled.div`
+import { MaxWidthContainer } from '@components/containers';
+
+const Container = styled(MaxWidthContainer)`
   display: flex;
   justify-content: center;
   flex-direction: column;
 
-  max-width: 1280px;
+  width: 100%;
   margin-top: 25px;
   margin-bottom: 40px;
 

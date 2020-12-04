@@ -12,6 +12,7 @@ import {
   ListChoice,
   TextLink,
   Alert,
+  Checkbox,
 } from '@kiwicom/orbit-components/lib';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -21,7 +22,7 @@ import RedButton from '../../buttons/RedButton';
 import styled from 'styled-components';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 
-import { setTitle, setDescription, setAllCategories, setPostedDateTime } from '../actions';
+import { setTitle, setDescription, setAllCategories, setPostedDateTime, setSeasonalEvent } from '../actions';
 import LivePreviewPanel from './livePreviewPanel';
 import { useRouter } from 'next/router';
 
@@ -32,6 +33,8 @@ import ExpirePostAlert from './ExpirePostAlert';
 import WishContext from '../context';
 import useUser from '@components/session/modules/useUser';
 import { createdWish } from '@utils/algolia/insights';
+
+import { remoteConfig } from '@utils/firebase';
 
 const Container = styled.div`
   min-width: 300px;
@@ -52,6 +55,8 @@ const CreateWishPanel = ({ wish, mode }) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const { state, dispatch } = useContext(WishContext);
+
+  const [seasonal, setSeasonal] = useState(null);
 
   const user = useUser();
 
@@ -78,7 +83,14 @@ const CreateWishPanel = ({ wish, mode }) => {
       let description = values.description;
       let categoryIds = values.categories.map((category) => category.id);
       let locations = [values.location];
-      const wishDoc = await api.wishes.create(title, description, categoryIds, locations);
+      let isSeasonal = values.seasonal;
+      let wishDoc;
+      if (isSeasonal) {
+        description += `\n\n${seasonal.hashtag}`;
+        wishDoc = await api.wishes.create(title, description, categoryIds, locations, seasonal);
+      } else {
+        wishDoc = await api.wishes.create(title, description, categoryIds, locations);
+      }
       let wishId = wishDoc.data().wishId;
       logSuccessfullyCreatedWish();
       createdWish(user, wishId);
@@ -104,7 +116,16 @@ const CreateWishPanel = ({ wish, mode }) => {
       let description = values.description;
       let categoryIds = values.categories.map((category) => category.id);
       let locations = [values.location];
-      const wishDoc = await api.wishes.update(id, title, description, categoryIds, locations);
+      let isSeasonal = values.seasonal;
+      let wishDoc;
+      if (!editWish.seasonal && isSeasonal) {
+        description += `\n\n${seasonal.hashtag}`;
+        wishDoc = await api.wishes.update(id, title, description, categoryIds, locations, seasonal);
+      } else if (editWish.seasonal && isSeasonal) {
+        wishDoc = await api.wishes.update(id, title, description, categoryIds, locations, wish.event);
+      } else {
+        wishDoc = await api.wishes.update(id, title, description, categoryIds, locations);
+      }
       let wishId = wishDoc.data().wishId;
       router.push(`/wishes/${wishId}`);
     } catch (error) {
@@ -130,6 +151,7 @@ const CreateWishPanel = ({ wish, mode }) => {
       .min(1, 'A category must be provided')
       .max(3, 'Only 3 selected categories allowed'),
     location: Yup.string().required('Required'),
+    seasonal: Yup.boolean().required('Required'),
   });
 
   const formik = useFormik({
@@ -138,6 +160,7 @@ const CreateWishPanel = ({ wish, mode }) => {
       description: '',
       categories: [],
       location: '',
+      seasonal: false,
     },
     validationSchema: validationSchema,
     enableReinitialize: true,
@@ -163,12 +186,24 @@ const CreateWishPanel = ({ wish, mode }) => {
       dispatch(setDescription(formik.values.description));
       dispatch(setAllCategories(formik.values.categories));
       dispatch(setPostedDateTime(wish ? wish.postedDateTime : Date.now()));
+      dispatch(setSeasonalEvent(formik.values.seasonal ? seasonal : null));
     }
-  }, [formik.values]);
+  }, [formik.values, seasonal]);
 
   // Used to fetch all categories
   useEffect(() => {
     fetchCategories();
+  }, []);
+
+  // Fetch seasonal
+  useEffect(() => {
+    remoteConfig.fetchAndActivate().then(() => {
+      const currentEventString = remoteConfig.getValue('currentEvent').asString();
+      if (currentEventString) {
+        const currentEvent = JSON.parse(currentEventString);
+        setSeasonal(currentEvent);
+      }
+    });
   }, []);
 
   // Used to edit wishes
@@ -179,6 +214,7 @@ const CreateWishPanel = ({ wish, mode }) => {
         description: wish.description,
         categories: wish.categories,
         location: wish.locations[0].fullAddress,
+        seasonal: wish.event ? true : false,
       };
       setEditWish(editWish);
       setSelectedCategories(wish.categories);
@@ -307,6 +343,16 @@ const CreateWishPanel = ({ wish, mode }) => {
                   error={formik.touched.location && formik.errors.location ? formik.errors.location : ''}
                   disabled={formik.isSubmitting}
                 />
+
+                {seasonal ? (
+                  <Checkbox
+                    label={seasonal.question}
+                    info={seasonal.help}
+                    onChange={formik.handleChange}
+                    name="seasonal"
+                    checked={formik.values.seasonal}
+                  />
+                ) : null}
 
                 {isDesktop ? null : <LivePreviewPanel />}
 

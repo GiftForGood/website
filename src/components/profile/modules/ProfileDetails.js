@@ -24,7 +24,7 @@ const ProfileDetails = ({
         {isNpoVerifiedByAdmin && (
           <Stack direction="row" inline spacing="extraTight" align="center">
             <Text size="small">Verified NPO</Text>
-            <KiwicomGuarantee customColor={colors.verifiedIconBackground} />
+            <KiwicomGuarantee customColor={colors.verifiedIcon.background} />
           </Stack>
         )}
       </Stack>

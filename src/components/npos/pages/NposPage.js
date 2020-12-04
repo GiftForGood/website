@@ -10,6 +10,7 @@ import { searchClient } from '@utils/algolia';
 import BlackText from '@components/text/BlackText';
 import NposHitWrapper from '../modules/NposHitWrapper';
 import { NPOS_BATCH_SIZE } from '@constants/npos';
+import { MaxWidthContainer } from '@components/containers';
 
 const NposSortFilterPanel = dynamic(() => import('../modules/NposSortFilterPanel'), {
   ssr: false,
@@ -17,12 +18,8 @@ const NposSortFilterPanel = dynamic(() => import('../modules/NposSortFilterPanel
 
 const NposInfiniteHit = connectInfiniteHits(NposHitWrapper);
 
-const Container = styled.div`
-  width: 90vw;
-  max-width: 1280px;
-  margin: 0 auto;
+const Container = styled(MaxWidthContainer)`
   margin-top: 25px;
-  margin-bottom: 40px;
 `;
 
 const UsersContainer = styled.div`

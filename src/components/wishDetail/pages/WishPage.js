@@ -11,6 +11,8 @@ import Desktop from '@kiwicom/orbit-components/lib/Desktop';
 import BreadcrumbsPanel from '../../postDetails/BreadcrumbsPanel';
 import useUser from '@components/session/modules/useUser';
 import { viewedWishDetails } from '@utils/algolia/insights';
+import SeasonalLargeTag from '@components/postDetails/SeasonalLargeTag';
+import { useRemoteConfig } from '@components/remoteConfig/RemoteConfig';
 
 const Wrapper = styled.div`
   margin: 0 auto;
@@ -39,6 +41,11 @@ const BreadcrumbsWrapper = styled.div`
   padding: 15px 0px 15px 40px;
 `;
 
+const SeasonalContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+`;
+
 const WishPage = ({ wishId, wishDetails, npoDetails, user, prevHref, categoryName }) => {
   const wish = wishDetails;
   const npo = npoDetails;
@@ -46,6 +53,7 @@ const WishPage = ({ wishId, wishDetails, npoDetails, user, prevHref, categoryNam
   const loginUserId = user == null ? '' : user.user.userId;
   const loginUserType = user == null ? '' : user.user.donor ? donorType : npoType;
   const userObject = useUser();
+  const remoteConfig = useRemoteConfig();
 
   useEffect(() => {
     viewedWishDetails(userObject, wishId);
@@ -63,6 +71,18 @@ const WishPage = ({ wishId, wishDetails, npoDetails, user, prevHref, categoryNam
           <Map npoOrgName={wish.organization.name} locations={wish.locations} />
         </LeftPanel>
         <RightPanel>
+          {remoteConfig?.configs?.currentEvent?.key &&
+          wish?.event?.key &&
+          remoteConfig?.configs?.currentEvent?.key === wish?.event?.key ? (
+            <SeasonalContainer>
+              <SeasonalLargeTag
+                name={wish?.event?.name}
+                iconUrl={wish?.event?.imageUrl}
+                hashtag={wish?.event?.hashtag}
+              />
+            </SeasonalContainer>
+          ) : null}
+
           <WishInformation
             loginUserId={loginUserId}
             loginUserType={loginUserType}

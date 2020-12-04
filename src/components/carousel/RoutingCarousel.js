@@ -22,9 +22,9 @@ const RoutingCarousel = () => {
     <CarouselContainer>
       <Row className="scrollableDonation">
         <Stack direction="row" align="start" spacing="natural">
-          <RoutingCard label="All wishes" bgColor={colors.npoBackground} href="/wishes/category" />
-          <RoutingCard label="All donations" bgColor={colors.donorBackground} href="/donations/category" />
-          <RoutingCard label="NPOs" bgColor={colors.yellowBackground} href="/npos" />
+          <RoutingCard label="All wishes" bgColor={colors.primaryBlue.background} href="/wishes/category" />
+          <RoutingCard label="All donations" bgColor={colors.primaryRed.background} href="/donations/category" />
+          <RoutingCard label="NPOs" bgColor={colors.yellow} href="/npos" />
         </Stack>
       </Row>
     </CarouselContainer>

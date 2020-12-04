@@ -26,7 +26,7 @@ export async function getServerSideProps({ params, req, res, query }) {
 const WishesHome = ({ user, next }) => {
   return (
     <SessionProvider user={user}>
-      <Header title="Wishes | GiftForGood" />
+      <Header title="Gift for Good | Donations in-kind Singapore" />
       <TopNavigationBar showNews={true} searchDefaultIndex={WISHES} />
       <WishesHomePage />
       <BottomNavigation />

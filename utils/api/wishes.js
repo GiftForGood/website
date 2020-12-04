@@ -23,11 +23,12 @@ class WishesAPI {
    * @param {string} description The wish description text
    * @param {array} categories A list of categories id that the wish belongs to
    * @param {array} locations A list of locations text that the wish belongs to
+   * @param {object} event The event fields
    * @throws {WishError}
    * @throws {FirebaseError}
    * @return {object} A firebase document of the created wish
    */
-  async create(title, description, categories, locations) {
+  async create(title, description, categories, locations, event = {}) {
     let userInfo = {};
     let organizationInfo = {};
 
@@ -48,7 +49,7 @@ class WishesAPI {
     const timeNow = firebase.firestore.FieldValue.serverTimestamp();
     const expiryDateTime = moment(timeNow).add(1, 'month').toDate();
     const firestoreExpiryDateTime = firebase.firestore.Timestamp.fromDate(expiryDateTime);
-    const data = {
+    let data = {
       wishId: newWish.id,
       title: title,
       description: description,
@@ -63,8 +64,18 @@ class WishesAPI {
       expireDateTime: firestoreExpiryDateTime,
       isBumped: false,
     };
-    await newWish.set(data);
 
+    if (Object.keys(event).length > 0) {
+      this._validateEvent(event);
+
+      let newEvent = event;
+      newEvent[event.key] = true;
+      newEvent['createdDateTime'] = timeNow;
+
+      data['event'] = event;
+    }
+
+    await newWish.set(data);
     return newWish.get();
   }
 
@@ -259,11 +270,12 @@ class WishesAPI {
    * @param {string} description The wish description text
    * @param {array} categories A list of categories id that the wish belongs to
    * @param {array} locations A list of locations text that the wish belongs to
+   * @param {string} event The event fields
    * @throws {WishError}
    * @throws {FirebaseError}
    * @return {object} A firebase document of the updated wish
    */
-  async update(id, title, description, categories, locations) {
+  async update(id, title, description, categories, locations, event = {}) {
     const wishInfo = await this._getWishInfo(id);
     if (wishInfo.status !== PENDING) {
       throw new WishError('invalid-wish-status', 'only can update a pending wish');
@@ -276,13 +288,37 @@ class WishesAPI {
 
     const categoryInfos = getCustomPostCategoryInfos(allCategoryInfos);
 
-    const data = {
+    let data = {
       title: title,
       description: description,
       categories: categoryInfos,
       locations: locationInfos,
       updatedDateTime: firebase.firestore.FieldValue.serverTimestamp(),
     };
+
+    // Events
+    const hasEvent = Object.keys(event).length > 0;
+    if (wishInfo.event === undefined && hasEvent) {
+      // Setting event
+      this._validateEvent(event);
+
+      let newEvent = event;
+      newEvent[event.key] = true;
+      newEvent['createdDateTime'] = firebase.firestore.FieldValue.serverTimestamp();
+
+      data['event'] = event;
+    } else if (wishInfo.event !== undefined) {
+      const isValidEventKey = event.key !== undefined && event.key !== '';
+      if (hasEvent && isValidEventKey && event.key !== wishInfo.event.key) {
+        throw new WishError('invalid-event-update', 'wish already has an existing event');
+      }
+
+      if (!hasEvent) {
+        // Remove an event
+        const event = firebase.firestore.FieldValue.delete();
+        data['event'] = event;
+      }
+    }
 
     let wishDoc = wishesCollection.doc(id);
     await wishDoc.update(data);
@@ -424,6 +460,22 @@ class WishesAPI {
     }
 
     return snapshot.data();
+  }
+
+  _validateEvent(event) {
+    const { key, name, imageUrl, hashtag } = event;
+    const isValidKey = key !== undefined && key !== '';
+    const isValidName = name !== undefined && name !== '';
+    const isValidImageUrl = imageUrl !== undefined && imageUrl !== '';
+    const isValidHashtag = hashtag !== undefined && hashtag !== '';
+
+    if (!isValidKey) {
+      throw new WishError('invalid-event-parameters', 'event key cannot be empty');
+    }
+
+    if (isValidKey && (!isValidName || !isValidImageUrl || !isValidHashtag)) {
+      throw new WishError('invalid-event-parameters', 'some event parameters are empty');
+    }
   }
 
   _validateOrderBy(orderByType) {

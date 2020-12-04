@@ -11,9 +11,10 @@ import InfiniteScroll from '../../scroller/InfiniteScroller';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 import { deserializeFirestoreTimestampToUnixTimestamp } from '@utils/firebase/deserializer';
 import EmptyStateImage from '@components/imageContainers/EmptyStateImage';
+import { useRemoteConfig } from '@components/remoteConfig/RemoteConfig';
 
 const GridSectionContainer = styled.div`
-  margin-top: 20px;
+  margin-top: 25px;
 `;
 
 const WishesContainer = styled.div`
@@ -46,6 +47,7 @@ const CompletedWishesPanel = ({ isMine, userId }) => {
   const [pageIsLoading, setpageIsLoading] = useState(true);
   const [seeMoreIsLoading, setSeeMoreIsLoading] = useState(false);
   const { isLargeMobile } = useMediaQuery();
+  const remoteConfig = useRemoteConfig();
 
   const fetchCompletedWishes = (lastQueriedDocument) => {
     setpageIsLoading(true);
@@ -123,7 +125,8 @@ const CompletedWishesPanel = ({ isMine, userId }) => {
             columns: '1fr 1fr',
           }}
           rows="auto"
-          gap="20px"
+          rowGap="30px"
+          columnGap="20px"
           columns="1fr"
         >
           <CompletedWishes />
@@ -160,7 +163,8 @@ const CompletedWishesPanel = ({ isMine, userId }) => {
             columns: '1fr 1fr',
           }}
           rows="auto"
-          gap="20px"
+          rowGap="30px"
+          columnGap="20px"
         >
           <CompletedWishes />
         </Grid>
@@ -174,7 +178,17 @@ const CompletedWishesPanel = ({ isMine, userId }) => {
     return completedWishes.map((completedWish, index) => {
       const completedWishData = completedWish.data();
       deserializeFirestoreTimestampToUnixTimestamp(completedWishData);
-      const { wishId, organization, title, description, user, postedDateTime, isBumped, status } = completedWishData;
+      const {
+        wishId,
+        organization,
+        title,
+        description,
+        user,
+        postedDateTime,
+        isBumped,
+        status,
+        event,
+      } = completedWishData;
       const categoryTags = completedWish.data().categories.map((category) => category.name);
       return (
         <BumpableWishCard
@@ -192,6 +206,13 @@ const CompletedWishesPanel = ({ isMine, userId }) => {
           isBumped={isBumped}
           isMine={false}
           status={status}
+          seasonal={
+            remoteConfig?.configs?.currentEvent.key &&
+            event?.key &&
+            remoteConfig?.configs?.currentEvent.key === event?.key
+              ? event
+              : null
+          }
         />
       );
     });

@@ -3,6 +3,7 @@ const initialState = {
   description: '',
   categories: [],
   postedDateTime: '',
+  seasonal: {},
 };
 
 export default initialState;

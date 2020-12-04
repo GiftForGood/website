@@ -13,22 +13,22 @@ const SeeMoreButton = styled.button`
   transition: transform 0.2s;
 
   :hover {
-    background: ${colors.seeMoreHoverFocusActive};
+    background: ${colors.seeMoreButton.background};
     box-shadow: 0px 0px 5px 0px rgba(37, 42, 49, 0.16), 0px 2px 8px 0px rgba(37, 42, 49, 0.12);
   }
 
   :active {
-    background: ${colors.seeMoreHoverFocusActive};
+    background: ${colors.seeMoreButton.background};
     box-shadow: 0px 0px 5px 0px rgba(37, 42, 49, 0.16), 0px 2px 8px 0px rgba(37, 42, 49, 0.12);
   }
 
   :focus {
-    background: ${colors.seeMoreHoverFocusActive};
+    background: ${colors.seeMoreButton.background};
     box-shadow: 0px 0px 5px 0px rgba(37, 42, 49, 0.16), 0px 2px 8px 0px rgba(37, 42, 49, 0.12);
   }
 
   :focus:not(:focus-visible) {
-    background: ${colors.seeMoreHoverFocusActive};
+    background: ${colors.seeMoreButton.background};
     box-shadow: 0px 0px 5px 0px rgba(37, 42, 49, 0.16), 0px 2px 8px 0px rgba(37, 42, 49, 0.12);
   }
 `;

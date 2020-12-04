@@ -8,24 +8,24 @@ import { CardSection } from '@kiwicom/orbit-components/lib/Card';
 import { wishes } from '@constants/postType';
 
 const CheckProfileLink = styled.a`
-  color: ${colors.npoBackground};
+  color: ${colors.primaryBlue.background};
 
   :link {
-    color: ${colors.npoBackground};
+    color: ${colors.primaryBlue.background};
     text-decoration: none;
   }
 
   :visited {
-    color: ${colors.npoBackground};
+    color: ${colors.primaryBlue.background};
   }
 
   :active {
-    color: ${colors.npoHoverActive};
+    color: ${colors.primaryBlue.hoverActive};
     text-decoration: underline;
   }
 
   :hover {
-    color: ${colors.npoHoverActive};
+    color: ${colors.primaryBlue.hoverActive};
     text-decoration: underline;
   }
 `;
@@ -45,7 +45,7 @@ const UserInfoCard = ({ postType, postUserId, postUserName, profileImageUrl, npo
         <Text>{isWishPost ? 'NPO Information' : 'Donor Information'}</Text>
         {isNpoVerifiedByAdmin && isWishPost && (
           <Stack direction="row" inline spacing="extraTight" align="center">
-            <KiwicomGuarantee customColor={colors.verifiedIconBackground} />
+            <KiwicomGuarantee customColor={colors.verifiedIcon.background} />
             <Text size="small">Verified NPO</Text>
           </Stack>
         )}

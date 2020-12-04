@@ -4,7 +4,8 @@ export const getTopNCategoriesFromAlgoliaWithExpireDateTime = async (algoliaInde
   const index = searchClient.initIndex(algoliaIndex);
   return index.search('', {
     facets: ['categories.id'],
-    facetFilters: [['status:pending'], [`expireDateTime >= ${Date.now()}`]],
+    facetFilters: [['status:pending']],
+    // numericFilters: [[`expireDateTime >= ${Date.now()}`]]
   });
 };
 

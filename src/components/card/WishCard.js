@@ -5,6 +5,7 @@ import { getTimeDifferenceFromNow } from '@api/time';
 import styled, { css } from 'styled-components';
 import { useRouter } from 'next/router';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
+import { SeasonalContainer, SeasonalSmallTag } from '@components/seasonal';
 
 const CardContainer = styled.div`
   display: flex;
@@ -125,6 +126,7 @@ const Tags = ({ categoryTags, wishId }) => {
  * @param {boolean} isBumped is whether the wish post is bumped
  * @param {string} categoryId is the category id
  * @param {string} categoryName is the category name of the wish currently displayed in
+ * @param {object} seasonal is the event object of the wish
  */
 const WishCard = ({
   wishId,
@@ -140,6 +142,7 @@ const WishCard = ({
   categoryId,
   categoryName,
   onClick,
+  seasonal,
 }) => {
   const timeAgo = getTimeDifferenceFromNow(postedDateTime);
   const router = useRouter();
@@ -153,6 +156,14 @@ const WishCard = ({
   };
   return (
     <CardContainer>
+      {seasonal ? (
+        <>
+          <SeasonalContainer>
+            <SeasonalSmallTag src={seasonal.imageUrl} />
+          </SeasonalContainer>
+        </>
+      ) : null}
+
       <Grid style={{ height: '100%', paddingLeft: '10px', paddingRight: '10px' }} rows="2fr 6fr 2fr" cols="1fr">
         <CardHeaderContainer>
           <CardHeader

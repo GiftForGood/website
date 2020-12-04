@@ -20,7 +20,7 @@ const ProfilePanel = ({ user }) => {
         npoOrgAddress={user ? (user.organization ? user.organization.address : '') : ''}
         npoContact={user ? (user.organization ? user.organization.contact : '') : ''}
         name={user ? user.name : ''}
-        isNpoVerifiedByAdmin={user ? user.emailVerified && user.isVerifiedByAdmin : ''}
+        isNpoVerifiedByAdmin={user ? user.isVerifiedByAdmin : ''}
         userType={npo}
       />
     </ProfilePanelWrapper>

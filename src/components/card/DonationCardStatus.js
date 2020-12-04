@@ -25,9 +25,9 @@ const CardStatusWrapper = styled.div`
 const getColor = (status) => {
   switch (status) {
     case COMPLETED:
-      return colors.completedTagBackground;
+      return colors.primaryTeal.background;
     case CLOSED:
-      return colors.closedTagBackground;
+      return colors.primaryRed.background;
     default:
       return 'black';
   }

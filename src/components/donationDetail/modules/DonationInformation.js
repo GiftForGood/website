@@ -18,7 +18,7 @@ const ValidPeriodContainer = styled.div`
 const LocationContainer = styled.div`
   padding-left: 20px;
   padding-right: 20px;
-  border-left: 1px solid ${colors.separatorBackground};
+  border-left: 1px solid ${colors.separator.background};
   height: 100%;
 `;
 

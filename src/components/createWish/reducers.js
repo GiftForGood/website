@@ -31,6 +31,13 @@ const createWishReducer = (state = initialState, action) => {
         ...state,
         postedDateTime: action.postedDateTime,
       };
+
+    case 'create-wish/SET_SEASONAL':
+      return {
+        ...state,
+        seasonal: action.seasonal,
+      };
+
     default:
       return state;
   }

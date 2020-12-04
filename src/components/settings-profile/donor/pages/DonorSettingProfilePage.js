@@ -2,13 +2,14 @@ import React from 'react';
 import DonorEditProfilePanel from '../modules/DonorEditProfilePanel';
 import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
+import { MaxWidthContainer } from '@components/containers';
 
-const Container = styled.div`
+const Container = styled(MaxWidthContainer)`
   display: flex;
   justify-content: center;
-  max-width: 1280px;
+
+  width: 100%;
   margin-top: 25px;
-  margin-bottom: 40px;
 
   ${media.largeMobile(css`
     width: 90vw;
