@@ -99,7 +99,7 @@ const SlideShow = ({ contents, closeSlideShow, type, show = false }) => {
               }}
             >
               {contents.map((content) => (
-                <BannerContent src={content.src} description={content.description} />
+                <BannerContent src={content.src} description={content.description} key={content.src} />
               ))}
             </Carousel>
 

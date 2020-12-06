@@ -121,7 +121,7 @@ const TopDonations = ({ numberOfPosts, numberOfCategories }) => {
                 )}`;
                 return (
                   <DonationCard
-                    key={donation.donationId}
+                    key={`${category.id}-${donation.objectID}`}
                     name={donation.user.userName}
                     title={donation.title}
                     description={donation.description}

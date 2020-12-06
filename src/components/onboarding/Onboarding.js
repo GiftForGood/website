@@ -106,7 +106,7 @@ const Onboarding = ({ type, show = false, name = '' }) => {
               }}
             >
               {onboardingContent.map((content) => (
-                <BannerContent src={content.src} description={content.description} />
+                <BannerContent src={content.src} description={content.description} key={content.src} />
               ))}
             </Carousel>
 
