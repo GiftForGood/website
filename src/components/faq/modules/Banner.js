@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Heading } from '@kiwicom/orbit-components/lib';
+import { colors } from '@constants/colors';
 
 const BannerContainer = styled.div`
   position: relative;
@@ -8,11 +9,11 @@ const BannerContainer = styled.div`
   margin-bottom: 30px;
 `;
 
-const BannerImageContainer = styled.div`
+const BannerBackgroundContainer = styled.div`
   height: 100%;
   min-height: 300px;
   position: relative;
-  background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(${(props) => props.src});
+  background: ${colors.primaryTeal.background};
   background-size: cover;
   background-position: 50% 50%;
   display: flex;
@@ -29,7 +30,7 @@ const BannerTextContainer = styled.div`
 const Banner = () => {
   return (
     <BannerContainer>
-      <BannerImageContainer src="https://res.cloudinary.com/giftforgood/image/upload/v1591517911/donations-banner.jpg">
+      <BannerBackgroundContainer>
         <BannerTextContainer>
           <Heading as="h1" type="display" inverted spaceAfter="medium">
             Hello there!
@@ -38,7 +39,7 @@ const Banner = () => {
             How can we help you?
           </Heading>
         </BannerTextContainer>
-      </BannerImageContainer>
+      </BannerBackgroundContainer>
     </BannerContainer>
   );
 };
