@@ -1,6 +1,8 @@
 import React from 'react';
-import styled from 'styled-components';
-import { Heading, Stack } from '@kiwicom/orbit-components/lib';
+import styled, { css } from 'styled-components';
+import { Heading, Stack, TextLink } from '@kiwicom/orbit-components/lib';
+import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
+import Banner from '../modules/Banner';
 import ChatTopic from '../modules/chat';
 import DeliveryTopic from '../modules/delivery';
 import GeneralTopic from '../modules/general';
@@ -13,30 +15,39 @@ import { MaxWidthContainer } from '@components/containers';
 
 const FaqContainer = styled(MaxWidthContainer)`
   position: relative;
-  display: flex;
-  flex-direction: column;
-  padding: 0 50px;
-  margin-top: 0;
-  margin-bottom: 0;
-  width: auto;
+  padding: 0 20px;
+  margin: 0 auto;
+
+  ${media.desktop(css`
+    padding: 0 50px;
+  `)}
 `;
 
 const Faq = () => {
   return (
-    <FaqContainer>
-      <Heading type="title1" spaceAfter="largest">
-        Topics
-      </Heading>
-      <Stack direction="column">
-        <GeneralTopic />
-        <RegisteringTopic />
-        <PostingTopic />
-        <DeliveryTopic />
-        <ChatTopic />
-        <ProfileTopic />
-        <ReportingTopic />
-      </Stack>
-    </FaqContainer>
+    <>
+      <Banner />
+      <FaqContainer>
+        <Heading type="title1" spaceAfter="largest">
+          Topics
+        </Heading>
+        <Stack direction="column" spaceAfter="largest">
+          <GeneralTopic />
+          <RegisteringTopic />
+          <PostingTopic />
+          <DeliveryTopic />
+          <ChatTopic />
+          <ProfileTopic />
+          <ReportingTopic />
+        </Stack>
+        <Heading type="title1" spaceAfter="largest">
+          Do you have any other questions?
+        </Heading>
+        <TextLink size="large" href="mailto: hello@giftforgood.io">
+          Contact Us
+        </TextLink>
+      </FaqContainer>
+    </>
   );
 };
 

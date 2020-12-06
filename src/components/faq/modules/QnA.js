@@ -1,28 +1,37 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { useState } from 'react';
 import styled from 'styled-components';
-import { MaxWidthContainer } from '@components/containers';
+import ChevronRight from '@kiwicom/orbit-components/lib/icons/ChevronRight';
 
-const QnAContainer = styled(MaxWidthContainer)`
+const QnAContainer = styled.div`
   position: relative;
   display: flex;
   flex-direction: column;
-  margin-top: 0;
-  margin-bottom: 0;
-  width: auto;
 `;
 
-const QuestionContainer = styled.div``;
+const AnimatedChevron = styled(ChevronRight)`
+  transition-duration: 0.2s;
+  transform: ${({ isToggled }) => (isToggled ? 'rotate(90deg)' : 'rotate(0deg)')};
+`;
 
-const AnswerContainer = styled.div``;
+const QuestionContainer = styled.div`
+  cursor: pointer;
+`;
+
+const AnswerContainer = styled.div`
+  margin-left: 20px;
+`;
 
 const QnA = ({ question, answer }) => {
+  const [isToggledAnswer, setIsToggledAnswer] = useState(false);
   return (
     <QnAContainer>
-      <QuestionContainer>
-        <summary>{question}</summary>
+      <QuestionContainer onClick={() => setIsToggledAnswer((isToggledAnswer) => !isToggledAnswer)}>
+        <summary>
+          <AnimatedChevron isToggled={isToggledAnswer} />
+          {question}
+        </summary>
       </QuestionContainer>
-      <AnswerContainer>{answer}</AnswerContainer>
+      {isToggledAnswer && <AnswerContainer>{answer}</AnswerContainer>}
     </QnAContainer>
   );
 };
