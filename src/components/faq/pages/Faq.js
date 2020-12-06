@@ -16,7 +16,6 @@ import { MaxWidthContainer } from '@components/containers';
 const FaqContainer = styled(MaxWidthContainer)`
   position: relative;
   padding: 0 20px;
-  margin: 0 auto;
 
   ${media.desktop(css`
     padding: 0 50px;
@@ -40,7 +39,7 @@ const Faq = () => {
           <ProfileTopic />
           <ReportingTopic />
         </Stack>
-        <Heading type="title1" spaceAfter="largest">
+        <Heading type="title1" spaceAfter="large">
           Do you have any other questions?
         </Heading>
         <TextLink size="large" href="mailto: hello@giftforgood.io">
