@@ -12,15 +12,15 @@ import { colors } from '@constants/colors';
 
 const getColor = (props) => {
   if (props.isDragAccept) {
-    return colors.dragDropAccept;
+    return colors.dragAndDrop.accept;
   }
   if (props.isDragReject) {
-    return colors.dragDropReject;
+    return colors.dragAndDrop.reject;
   }
   if (props.isDragActive) {
-    return colors.dragDropActive;
+    return colors.dragAndDrop.active;
   }
-  return colors.dragDropDefault;
+  return colors.dragAndDrop.default;
 };
 
 const DragNDropContainer = styled.div`
@@ -33,8 +33,8 @@ const DragNDropContainer = styled.div`
   border-radius: 2px;
   border-color: ${(props) => getColor(props)};
   border-style: dashed;
-  background-color: ${colors.dragDropBackground};
-  color: ${colors.dragDropText};
+  background-color: ${colors.dragAndDrop.background};
+  color: ${colors.dragAndDrop.text};
   outline: none;
   transition: border 0.24s ease-in-out;
 `;
@@ -64,7 +64,7 @@ const NormalText = styled.p`
 
 const Error = styled(NormalText)`
   font-size: 12px;
-  color: ${colors.dragDropErrorText};
+  color: ${colors.dragAndDrop.errorText};
   font-weight: 500;
   line-height: 16px;
   width: 100%;
@@ -118,7 +118,7 @@ const Image = ({ src, onDeleteClick }) => {
           iconLeft={<Remove />}
           height="26px"
           icons={{ width: '14px' }}
-          backgroundActive={colors.dndBackgroundActive}
+          backgroundActive={colors.dragAndDrop.backgroundActive}
           boxShadowActive={`inset 0 0 6px 3px rgba(37,42,49,0.08)`}
           onClick={onDeleteClick}
         />

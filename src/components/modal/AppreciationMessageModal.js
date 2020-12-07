@@ -8,16 +8,16 @@ import { useRouter } from 'next/router';
 import api from '@api';
 
 const submitButton = styled.button`
-  background: ${colors.appreciationSelectedBackground};
+  background: ${colors.primaryTeal.background};
 
   width: 80px;
 
   :hover {
-    background: ${colors.appreciationSelectedHoverActive};
+    background: ${colors.primaryTeal.hoverActive};
   }
 
   :focus {
-    box-shadow: 0 0 0 3px ${colors.appreciationSelectedFocus};
+    box-shadow: 0 0 0 3px ${colors.primaryTeal.focus};
   }
 `;
 

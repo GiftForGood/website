@@ -3,6 +3,7 @@ import 'firebase/auth';
 import 'firebase/firestore';
 import 'firebase/database';
 import 'firebase/storage';
+import 'firebase/remote-config';
 
 var config = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -36,4 +37,13 @@ if (process.env.NODE_ENV === 'development') {
   });
 }
 
-export { firebaseAuth, db, firebaseStorage, firebase };
+// Remote config requires the browser to work due to caching.
+let remoteConfig;
+if (process.browser) {
+  remoteConfig = firebase.remoteConfig();
+  remoteConfig.settings = {
+    minimumFetchIntervalMillis: 10000, // How often can it fetch? 10s once.
+  };
+}
+
+export { firebaseAuth, db, firebaseStorage, firebase, remoteConfig };

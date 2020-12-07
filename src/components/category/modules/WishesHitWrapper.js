@@ -6,6 +6,7 @@ import { Grid } from '@kiwicom/orbit-components/lib';
 import useUser from '@components/session/modules/useUser';
 import { clickedOnWish } from '@utils/algolia/insights';
 import EmptyStateImage from '@components/imageContainers/EmptyStateImage';
+import { useRemoteConfig } from '@components/remoteConfig/RemoteConfig';
 
 /**
  * https://www.algolia.com/doc/api-reference/widgets/infinite-hits/react/#create-a-react-component
@@ -23,6 +24,7 @@ const WishesHitWrapper = ({ hits, category, hasPrevious, hasMore, refinePrevious
 
   const sentinel = useRef(null);
   const userObject = useUser();
+  const remoteConfig = useRemoteConfig();
 
   const onSentinelIntersection = (entries) => {
     entries.forEach((entry) => {
@@ -54,10 +56,11 @@ const WishesHitWrapper = ({ hits, category, hasPrevious, hasMore, refinePrevious
           columns: '1fr 1fr',
         }}
         rows="auto"
-        gap="20px"
+        rowGap="30px"
+        columnGap="20px"
       >
         {hits.map((hit) => {
-          const { objectID, categories, organization, title, description, user, postedDateTime, isBumped } = hit;
+          const { objectID, categories, organization, title, description, user, postedDateTime, isBumped, event } = hit;
           const postHref = `/wishes/${objectID}`;
           const profileHref = `/profile/${user.userId}`;
           const categoryTags = categories.map((category) => category.name);
@@ -79,6 +82,13 @@ const WishesHitWrapper = ({ hits, category, hasPrevious, hasMore, refinePrevious
               onClick={() => {
                 clickedOnWish(userObject, objectID);
               }}
+              seasonal={
+                remoteConfig?.configs?.currentEvent.key &&
+                event?.key &&
+                remoteConfig?.configs?.currentEvent.key === event?.key
+                  ? event
+                  : null
+              }
             />
           );
         })}

@@ -3,14 +3,11 @@ import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import { Heading, Stack, Text, TextLink, Grid, Tile } from '@kiwicom/orbit-components/lib';
 import api from '@api';
+import { MaxWidthContainer } from '@components/containers';
 
-const MainContainer = styled.div`
-  max-width: 1280px;
-  margin: 0 auto;
-  margin-top: 50px;
+const MainContainer = styled(MaxWidthContainer)`
   margin-bottom: 50px;
   padding: 0 20px;
-  width: 90%;
 `;
 
 const PartnersContainer = styled.div`

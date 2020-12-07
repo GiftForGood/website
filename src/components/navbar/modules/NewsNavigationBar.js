@@ -5,7 +5,7 @@ import { colors } from '@constants/colors';
 
 const Container = styled.div`
   display: ${({ shown }) => (shown ? 'flex' : 'none')};
-  background-color: ${colors.newsBackground};
+  background-color: ${colors.newsBar.background};
   z-index: 700;
   padding: 10px;
 `;

@@ -3,14 +3,11 @@ import styled from 'styled-components';
 import { Stack, Text, Grid } from '@kiwicom/orbit-components/lib';
 import { npoPartners } from '@constants/npoPartners';
 import { colors } from '@constants/colors';
+import { MaxWidthContainer } from '@components/containers';
 
-const MainContainer = styled.div`
-  max-width: 1280px;
-  margin: 0 auto;
-  margin-top: 50px;
+const MainContainer = styled(MaxWidthContainer)`
   margin-bottom: 50px;
   padding: 0 20px;
-  width: 90%;
 `;
 
 const NpoPartnersContainer = styled.div``;
@@ -18,7 +15,7 @@ const NpoPartnersContainer = styled.div``;
 const CardContainer = styled.div`
   display: flex;
   border-radius: 3px;
-  border: 1px solid ${colors.separatorBackground};
+  border: 1px solid ${colors.separator.background};
   min-height: 250px;
 `;
 

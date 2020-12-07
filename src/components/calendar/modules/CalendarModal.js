@@ -6,16 +6,16 @@ import { Button, Heading, Stack } from '@kiwicom/orbit-components/lib';
 import Modal, { ModalSection, ModalFooter } from '@kiwicom/orbit-components/lib/Modal';
 
 const okButton = styled.button`
-  background: ${colors.calendarSelectedBackground};
+  background: ${colors.primaryTeal.background};
 
   width: 80px;
 
   :hover {
-    background: ${colors.calendarSelectedHoverActive};
+    background: ${colors.primaryTeal.hoverActive};
   }
 
   :focus {
-    box-shadow: 0 0 0 3px ${colors.calendarSelectedFocus};
+    box-shadow: 0 0 0 3px ${colors.primaryTeal.focus};
   }
 `;
 

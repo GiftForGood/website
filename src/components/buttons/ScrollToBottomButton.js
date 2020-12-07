@@ -2,23 +2,23 @@ import styled from 'styled-components';
 import { colors } from '@constants/colors';
 
 const ScrollToBottomButton = styled.button`
-  background: ${colors.chatScrollToBottomButtonBackground};
+  background: ${colors.chatScrollToBottomButton.background};
 
   :active {
-    background: ${colors.chatScrollToBottomButtonHoverActive};
+    background: ${colors.chatScrollToBottomButton.hoverActive};
   }
 
   :hover {
-    background: ${colors.chatScrollToBottomButtonHoverActive};
+    background: ${colors.chatScrollToBottomButton.hoverActive};
   }
 
   :focus {
-    box-shadow: 0 0 0 3px ${colors.chatScrollToBottomButtonFocus};
+    box-shadow: 0 0 0 3px ${colors.chatScrollToBottomButton.focus};
   }
 
   :focus:not(:focus-visible) {
-    box-shadow: 0 0 0 3px ${colors.chatScrollToBottomButtonFocus};
-    background: ${colors.chatScrollToBottomButtonHoverActive};
+    box-shadow: 0 0 0 3px ${colors.chatScrollToBottomButton.focus};
+    background: ${colors.chatScrollToBottomButton.hoverActive};
   }
 `;
 

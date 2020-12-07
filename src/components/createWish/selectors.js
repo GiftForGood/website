@@ -13,3 +13,7 @@ export function getCategories(state) {
 export function getPostedDateTime(state) {
   return state.postedDateTime;
 }
+
+export function getSeasonal(state) {
+  return state.seasonal;
+}

@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { Stack, Heading, Text } from '@kiwicom/orbit-components/lib';
 import styled from 'styled-components';
 import WishCard from '../../card/WishCard';
-import { getTitle, getDescription, getCategories, getPostedDateTime } from '../selectors';
+import { getTitle, getDescription, getCategories, getPostedDateTime, getSeasonal } from '../selectors';
 import useUser from '../../session/modules/useUser';
 import WishContext from '../context';
 
@@ -16,6 +16,7 @@ const LivePreviewPanel = () => {
   const description = getDescription(state);
   const categories = getCategories(state);
   const postedDateTime = getPostedDateTime(state);
+  const seasonal = getSeasonal(state);
   const user = useUser();
 
   if (!user) {
@@ -43,6 +44,7 @@ const LivePreviewPanel = () => {
               profileHref={profileHref}
               categoryTags={categories.map((category) => category.name)}
               isBumped={false}
+              seasonal={seasonal}
             />
           </Stack>
         </Stack>
