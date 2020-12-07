@@ -5,6 +5,7 @@ import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import ProfilePhoto from '../modules/ProfilePhoto';
 import { Stack, Heading, Button, Text } from '@kiwicom/orbit-components/lib';
+import OrganizationWishes from '../modules/OrganizationWishes';
 
 const CoverPhotoContainer = styled(MaxWidthContainer)`
   margin-top: 0;
@@ -19,24 +20,22 @@ const ProfilePhotoContainer = styled.div`
   transform: translateX(-55%);
 `;
 
+const ContentContainer = styled(MaxWidthContainer)`
+  margin-top: 10px;
+`;
+
 const OrganizationalPage = ({ organization, isMine }) => {
   return (
     <div>
       <CoverPhotoContainer>
-        <CoverPhoto
-          showEdit={true}
-          src={organization.coverPhotoUrl}
-        >
+        <CoverPhoto showEdit={true} src={organization.coverPhotoUrl}>
           <ProfilePhotoContainer>
-            <ProfilePhoto
-              src={organization.profileImageUrl?.raw}
-              showEdit={true}
-            />
+            <ProfilePhoto src={organization.profileImageUrl?.raw} showEdit={true} />
           </ProfilePhotoContainer>
         </CoverPhoto>
       </CoverPhotoContainer>
 
-      <MaxWidthContainer>
+      <ContentContainer>
         <Stack>
           <Stack justify="center">
             <Heading as="h1" type="title2">
@@ -58,8 +57,10 @@ const OrganizationalPage = ({ organization, isMine }) => {
           </Stack>
 
           <Text>{organization.description}</Text>
+
+          <OrganizationWishes organization={organization} />
         </Stack>
-      </MaxWidthContainer>
+      </ContentContainer>
     </div>
   );
 };
