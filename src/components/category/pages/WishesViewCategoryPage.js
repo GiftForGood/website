@@ -12,6 +12,7 @@ import { wishesSortByRule } from '@utils/algolia/sortByRules';
 import dynamic from 'next/dynamic';
 import useUser from '@components/session/modules/useUser';
 import { searchClient } from '@utils/algolia';
+import { MaxWidthContainer } from '@components/containers';
 
 const WishesSortFilterPanel = dynamic(() => import('../modules/WishesSortFilterPanel'), {
   ssr: false,
@@ -19,10 +20,7 @@ const WishesSortFilterPanel = dynamic(() => import('../modules/WishesSortFilterP
 
 const WishesInfiniteHit = connectInfiniteHits(WishesHitWrapper);
 
-const ViewCategoryContainer = styled.div`
-  width: 90vw;
-  max-width: 1280px;
-  margin: 0 auto;
+const ViewCategoryContainer = styled(MaxWidthContainer)`
   margin-top: 25px;
   margin-bottom: 40px;
 `;

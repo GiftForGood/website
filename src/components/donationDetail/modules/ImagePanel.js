@@ -11,7 +11,7 @@ const CarouselImage = styled.img`
   height: 100vw;
   width: 100vw;
   object-fit: cover;
-  background-color: ${colors.imageLoadingBackground};
+  background-color: ${colors.imageLoading.background};
   ${media.desktop(css`
     width: 500px;
     height: 500px;
@@ -27,7 +27,7 @@ const ImageCarouselContainer = styled.div`
 `;
 
 const ThumbnailImage = styled.img`
-  background-color: ${colors.imageLoadingBackground};
+  background-color: ${colors.imageLoading.background};
   object-fit: cover;
   width: calc(75px + 2vw);
   height: calc(75px + 2vw);

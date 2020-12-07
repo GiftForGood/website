@@ -22,7 +22,7 @@ const ListOfChatsContainer = styled.div`
   `)}
   max-height: 100vh;
   overflow-y: scroll;
-  border-right: 1px solid ${colors.chatBorders};
+  border-right: 1px solid ${colors.borders.background};
   display: ${({ isShow }) => {
     return isShow ? 'unset' : 'none';
   }};
@@ -31,7 +31,7 @@ const ListOfChatsContainer = styled.div`
 const EmptyChatContainer = styled.div`
   height: 100%;
   width: 100%;
-  border-right: 1px solid ${colors.chatBorders};
+  border-right: 1px solid ${colors.borders.background};
   display: ${({ isShow }) => {
     return isShow ? 'unset' : 'none';
   }};

@@ -1,5 +1,5 @@
 import React from 'react';
-import MaxWithContainer from '@components/containers/maxWidthContainer';
+import { MaxWidthContainer } from '@components/containers';
 import dynamic from 'next/dynamic';
 import Header from '@components/header';
 import api from '@api';
@@ -27,9 +27,9 @@ const PrivacyPolicy = ({ legal }) => {
     <>
       <Header title="Privacy Policy | GiftForGood" />
       <StaticNavbar />
-      <MaxWithContainer>
+      <MaxWidthContainer>
         <Quill content={legal ? legal.content : null} />
-      </MaxWithContainer>
+      </MaxWidthContainer>
       <Footer />
     </>
   );

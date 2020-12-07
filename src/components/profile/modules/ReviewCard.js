@@ -22,7 +22,7 @@ const ReviewCard = ({ isLoading, reviewByImageUrl, reviewByName, reviewRating, r
                 <Text>
                   {reviewByName} ∙ {reviewDateTime}
                 </Text>
-                <RatingStars rating={reviewRating} size="small" color={colors.ratingStarBackground} showEmpty />
+                <RatingStars rating={reviewRating} size="small" color={colors.primaryRed.background} showEmpty />
               </Stack>
             </Stack>
             <Text>{reviewDescription}</Text>
