@@ -104,4 +104,7 @@ export const colors = {
     border: '#d1d1d1',
     borderHover: '#767676',
   },
+  faq: {
+    background: '#C4C4C4',
+  },
 };
