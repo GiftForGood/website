@@ -46,10 +46,6 @@ class NPOOrganizationAPI {
    * @return {object} A firebase document of all the edit history
    */
   async getEditHistory(id, lastQueriedDocument = null) {
-    /* TODO: 
-      Validate if user belongs to same org
-      Get history
-    */
     if (!(await this._doesNPOBelongToOrganization(id))) {
       throw new NPOOrganizationsError('invalid-user', 'user does not belong to organization');
     }
