@@ -2,6 +2,7 @@ import { db, firebaseAuth, firebase } from '../firebase';
 import { v4 as uuidv4 } from 'uuid';
 import * as path from 'path';
 import { ORGANIZATION_ACTIONS } from '@constants/npoOrganization';
+import { NPO_ORGANIZATION_EDIT_HISTORY_BATCH_SIZE } from './constants';
 import NPOOrganizationsError from './error/npoOrganizationsError';
 import { getExistingImageNames, uploadImage, deleteImages, isValidImageExtensions } from './common/images';
 
@@ -38,7 +39,7 @@ class NPOOrganizationAPI {
   }
 
   /**
-   * Get a batch of edit history belonging to a npo organization. Only return results of NPO_ORGANIZATION_EDIT_HISTORY_SIZE
+   * Get a batch of edit history belonging to a npo organization. Only return results of NPO_ORGANIZATION_EDIT_HISTORY_BATCH_SIZE
    * @param {string} id The organization id
    * @throws {NPOOrganizationError}
    * @throws {FirebaseError}
@@ -49,6 +50,20 @@ class NPOOrganizationAPI {
       Validate if user belongs to same org
       Get history
     */
+    if (!(await this._doesNPOBelongToOrganization(id))) {
+      throw new NPOOrganizationsError('invalid-user', 'user does not belong to organization');
+    }
+
+    const SORT_ORDER = 'desc';
+
+    let query = npoOrganizationsCollection.doc(id).collection('actionsByUser');
+    query = query.orderBy('appliedDateTime', SORT_ORDER);
+    if (lastQueriedDocument !== null) {
+      query = query.startAfter(lastQueriedDocument);
+    }
+
+    const snapshot = await query.limit(NPO_ORGANIZATION_EDIT_HISTORY_BATCH_SIZE).get();
+    return snapshot.docs;
   }
 
   /**
