@@ -71,7 +71,6 @@ const ProfilePhoto = ({ onImageSelected, src, showEdit }) => {
 
   return (
     <Container>
-
       <Image src={hasUpload ? file.preview : src} />
       <input
         type="file"
