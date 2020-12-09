@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Stack, Button, ListChoice } from '@kiwicom/orbit-components/lib';
-import Modal, { ModalSection, ModalHeader } from '@kiwicom/orbit-components/lib/Modal';
+import Modal, { ModalSection, ModalHeader, ModalFooter } from '@kiwicom/orbit-components/lib/Modal';
 import { deserializeFirestoreTimestampToUnixTimestamp } from '@utils/firebase/deserializer';
 import api from '@api';
 import { getFormattedDate } from '@api/time';
@@ -16,7 +16,7 @@ const HistoryModal = ({ organization, onClose }) => {
   }, []);
 
   return (
-    <Modal size="small">
+    <Modal size="small" onClose={onClose} fixedFooter>
       <ModalHeader title="Edit history" />
       <ModalSection>
         <Stack spacing="compact" spaceAfter="largest">
@@ -28,12 +28,12 @@ const HistoryModal = ({ organization, onClose }) => {
             return <HistoryItem email={email} type={type} dateTime={getFormattedDate(appliedDateTime)} />;
           })}
         </Stack>
-        <Stack direction="row">
-          <Button type="secondary" fullWidth="100%" size="small" onClick={onClose}>
-            Close
-          </Button>
-        </Stack>
       </ModalSection>
+      <ModalFooter>
+        <Button type="secondary" fullWidth="100%" size="small" onClick={onClose}>
+          Close
+        </Button>
+      </ModalFooter>
     </Modal>
   );
 };
