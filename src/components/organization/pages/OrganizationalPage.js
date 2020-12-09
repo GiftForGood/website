@@ -28,14 +28,14 @@ const ContentContainer = styled(MaxWidthContainer)`
 
 const OrganizationalPage = ({ organization, isMine }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [updatedDesciption, setUpdatedDescription] = useState('');
+  const [updatedDescription, setUpdatedDescription] = useState('');
   const router = useRouter();
   const [isOpenHistory, setIsOpenHistory] = useState(false);
 
   const saveDescription = () => {
-    if (updatedDesciption) {
+    if (updatedDescription) {
       setIsEditing(false);
-      api.npoOrganization.update(organization.id, updatedDesciption, '', '').then(() => {
+      api.npoOrganization.update(organization.id, updatedDescription, '', '').then(() => {
         router.reload();
       });
     }
@@ -43,17 +43,21 @@ const OrganizationalPage = ({ organization, isMine }) => {
 
   const saveProfileImage = (file) => {
     if (file) {
-      api.npoOrganization.update(organization.id, organization.description ? organization.description : '', '', file).then(() => {
-        router.reload();
-      });
+      api.npoOrganization
+        .update(organization.id, organization.description ? organization.description : '', '', file)
+        .then(() => {
+          router.reload();
+        });
     }
   };
 
   const saveCoverImage = (file) => {
     if (file) {
-      api.npoOrganization.update(organization.id, organization.description ? organization.description : '', file, '').then(() => {
-        router.reload();
-      });
+      api.npoOrganization
+        .update(organization.id, organization.description ? organization.description : '', file, '')
+        .then(() => {
+          router.reload();
+        });
     }
   };
 
@@ -137,7 +141,7 @@ const OrganizationalPage = ({ organization, isMine }) => {
                 setUpdatedDescription(event.target.value);
               }}
               placeholder="Your organization description"
-              value={updatedDesciption}
+              value={updatedDescription}
             />
           ) : (
             <Text>{organization.description ? organization.description : 'No description'}</Text>
