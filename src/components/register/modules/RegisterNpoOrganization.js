@@ -15,10 +15,9 @@ import {
 } from '../actions';
 import { getOrganization } from '../selectors';
 import styled from 'styled-components';
-import BlueButton from '../../buttons/BlueButton';
+import BlueButton from '@components/buttons/BlueButton';
 import { colors } from '@constants/colors';
-import api from '@api';
-import NpoOrganizationDropdownField from '../../inputfield/NpoOrganizationDropdownField';
+import NpoOrganizationDropdownField from '@components/inputfield/NpoOrganizationDropdownField';
 import { newOrganizationGoogleFormPath } from '@constants/googleFormPaths';
 
 const HeadingColor = styled.div`
@@ -33,12 +32,7 @@ const NextButtonContainer = styled.div`
 
 const RegisterNpoOrganization = () => {
   const dispatch = useDispatch();
-  const [organizations, setOrganizations] = useState([]);
   const submittedForm = useSelector(getOrganization);
-
-  useEffect(() => {
-    getAllOrganizations();
-  }, []);
 
   const handleBackToLandingOnClick = () => {
     dispatch(setIsBackToLanding());
@@ -48,20 +42,6 @@ const RegisterNpoOrganization = () => {
   const handleFormSubmission = (values) => {
     dispatch(setNpoOrganizationDetails(values));
     dispatch(setIsNpoDetails());
-  };
-
-  const getAllOrganizations = () => {
-    api.npoOrganization.getAll().then((snapshot) => {
-      let parsedOrganizations = [];
-      snapshot.forEach((doc) => {
-        let obj = {
-          label: doc.data().name,
-          value: doc.data().name,
-        };
-        parsedOrganizations.push(obj);
-      });
-      setOrganizations(parsedOrganizations);
-    });
   };
 
   const validationSchema = Yup.object().shape({
@@ -119,7 +99,6 @@ const RegisterNpoOrganization = () => {
               }}
               error={formik.touched.name && formik.errors.name ? formik.errors.name : ''}
               label="Organization you are from"
-              options={organizations}
               value={formik.values.name}
             />
             {formik.touched.name && formik.errors.name ? null : (

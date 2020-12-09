@@ -1,10 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Popover from 'react-tiny-popover';
 import styled from 'styled-components';
-import { ListChoice, InputField, ButtonLink, Loading } from '@kiwicom/orbit-components/lib';
-import { ChevronDown } from '@kiwicom/orbit-components/lib/icons';
+import { ListChoice, InputField } from '@kiwicom/orbit-components/lib';
 import useDebouncedEffect from '@utils/hooks/useDebouncedEffect';
 import BlackText from '../text/BlackText';
+import { InstantSearch, connectSearchBox, Index, Configure, connectHits } from 'react-instantsearch-dom';
+import algoliasearch from 'algoliasearch/lite';
+
+const searchClient = algoliasearch(process.env.NEXT_PUBLIC_ALGOLIA_APP_ID, process.env.NEXT_PUBLIC_ALGOLIA_SEARCH_KEY);
 
 const ContentContainer = styled.div`
   background: white;
@@ -16,106 +19,73 @@ const NoMatchFoundContainer = styled.div`
   padding: 10px 10px 10px 10px;
 `;
 
-const NpoOrganizationDropdownField = ({ onSelected, error, label, disabled, value, options }) => {
+const NpoOrganizationDropdownField = ({ onSelected, error, label, disabled, value }) => {
   const inputRef = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
-  const [currentList, setCurrentList] = useState([]);
-  const [values, setValues] = useState([]);
   const [selected, setSelected] = useState('');
-
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    if (options) {
-      setValues(options);
-      setCurrentList(options);
-      setLoading(false);
-    }
-  }, [options]);
 
   useEffect(() => {
     setSelected(value);
   }, [value]);
 
-  const setValue = (value) => {
-    setSelected(value);
-    onSelected(value);
-  };
-
-  const NoMatchFoundText = () => (
-    <NoMatchFoundContainer>
-      <BlackText size="normal">No match found</BlackText>
-    </NoMatchFoundContainer>
-  );
-
   return (
-    <Popover
-      isOpen={isOpen}
-      position={['bottom']}
-      disableReposition
-      onClickOutside={() => {
-        setIsOpen(false);
-      }}
-      containerStyle={{
-        zIndex: 1000,
-        width: '300px',
-        boxShadow: '0 8px 13px 0 rgba(44, 44, 45, 0.27)',
-        borderRadius: '5px',
-        position: 'fixed',
-        maxHeight: '400px',
-        overflowY: 'auto',
-      }}
-      align="start"
-      transitionDuration={0.1}
-      content={({ position, nudgedLeft, nudgedTop, targetRect, popoverRect }) => {
-        return (
-          <ContentContainer>
-            <>
-              {loading ? (
-                <Loading />
-              ) : currentList.length === 0 ? (
-                <NoMatchFoundText />
-              ) : (
-                currentList.map((data) => {
-                  return (
-                    <ListChoice
-                      key={data.label}
-                      title={data.label}
-                      onClick={() => {
-                        setValue(data.value);
-                        setIsOpen(false);
-                      }}
-                    />
-                  );
-                })
-              )}
-            </>
-          </ContentContainer>
-        );
-      }}
-    >
-      <div onClick={() => setIsOpen(true)}>
-        <NpoOrganizationInputField
-          inputRef={inputRef}
-          options={values}
-          currentList={currentList}
-          setCurrentList={setCurrentList}
-          value={selected}
-          label={label}
-          error={error}
-          disabled={disabled}
-        />
-      </div>
-    </Popover>
+    <InstantSearch searchClient={searchClient} indexName="organizations">
+      <Popover
+        isOpen={isOpen}
+        position={['bottom']}
+        disableReposition
+        onClickOutside={() => {
+          setIsOpen(false);
+        }}
+        containerStyle={{
+          zIndex: 1000,
+          width: '300px',
+          boxShadow: '0 8px 13px 0 rgba(44, 44, 45, 0.27)',
+          borderRadius: '5px',
+          position: 'fixed',
+          maxHeight: '400px',
+          overflowY: 'auto',
+        }}
+        align="start"
+        transitionDuration={0.1}
+        content={({ position, nudgedLeft, nudgedTop, targetRect, popoverRect }) => {
+          return (
+            <ContentContainer>
+              <>
+                <Index indexName="organizations">
+                  <CustomHits
+                    onClick={(name) => {
+                      onSelected(name);
+                      setSelected(name);
+                      setIsOpen(false);
+                    }}
+                  />
+                  <Configure hitsPerPage={8} />
+                </Index>
+              </>
+            </ContentContainer>
+          );
+        }}
+      >
+        <div onClick={() => setIsOpen(true)}>
+          <CustomSearchBox inputRef={inputRef} error={error} label={label} disabled={disabled} value={selected} />
+        </div>
+      </Popover>
+    </InstantSearch>
   );
 };
 
-const NpoOrganizationInputField = ({ inputRef, options, setCurrentList, value, error, label, disabled }) => {
+const NpoOrganizationInputField = ({
+  currentRefinement,
+  isSearchStalled,
+  refine,
+  inputRef,
+  error,
+  label,
+  disabled,
+  value,
+}) => {
   const [search, setSearch] = useState('');
-
-  useEffect(() => {
-    setSearch(value);
-  }, [value]);
 
   const onChange = (e) => {
     setSearch(e.target.value);
@@ -124,18 +94,15 @@ const NpoOrganizationInputField = ({ inputRef, options, setCurrentList, value, e
   // Only search after 100ms after the user stop typing. This is to prevent hanging in searching the long list.
   useDebouncedEffect(
     () => {
-      let filter = search;
-      let shouldBeInList = [];
-      for (let i = 0; i < options.length; i++) {
-        if (options[i].label.toLowerCase().indexOf(filter.toLowerCase()) > -1) {
-          shouldBeInList.push(options[i]);
-        }
-      }
-      setCurrentList(shouldBeInList);
+      refine(search);
     },
     100,
     [search]
   );
+
+  useEffect(() => {
+    setSearch(value);
+  }, [value]);
 
   return (
     <InputField
@@ -146,9 +113,35 @@ const NpoOrganizationInputField = ({ inputRef, options, setCurrentList, value, e
       error={error}
       label={label}
       disabled={disabled}
-      suffix={<ButtonLink iconLeft={<ChevronDown />} size="normal" transparent />}
     />
   );
 };
+
+const Results = ({ hits, onClick }) => {
+  const handleOnClick = (name) => {
+    onClick(name);
+  };
+
+  const NoMatchFoundText = () => (
+    <NoMatchFoundContainer>
+      <BlackText size="normal">No match found</BlackText>
+    </NoMatchFoundContainer>
+  );
+
+  if (hits.length === 0) {
+    return <NoMatchFoundText />;
+  }
+
+  return (
+    <>
+      {hits.map((hit) => (
+        <ListChoice title={hit.name} onClick={() => handleOnClick(hit.name)} key={hit.objectID} />
+      ))}
+    </>
+  );
+};
+
+const CustomSearchBox = connectSearchBox(NpoOrganizationInputField);
+const CustomHits = connectHits(Results);
 
 export default NpoOrganizationDropdownField;
