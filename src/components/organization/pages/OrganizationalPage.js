@@ -7,6 +7,7 @@ import { Stack, Heading, Button, Text, Textarea } from '@kiwicom/orbit-component
 import OrganizationWishes from '../modules/OrganizationWishes';
 import api from '@api';
 import { useRouter } from 'next/router';
+import HistoryModal from '../modules/HistoryModal';
 
 const CoverPhotoContainer = styled(MaxWidthContainer)`
   margin-top: 0;
@@ -29,6 +30,7 @@ const OrganizationalPage = ({ organization, isMine }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [updatedDesciption, setUpdatedDescription] = useState('');
   const router = useRouter();
+  const [isOpenHistory, setIsOpenHistory] = useState(false);
 
   const saveDescription = () => {
     if (updatedDesciption) {
@@ -54,6 +56,8 @@ const OrganizationalPage = ({ organization, isMine }) => {
       });
     }
   };
+
+  const closeHistoryModal = () => setIsOpenHistory(false);
 
   return (
     <div>
@@ -120,7 +124,9 @@ const OrganizationalPage = ({ organization, isMine }) => {
                   </Button>
                 )}
 
-                <Button size="small">See history</Button>
+                <Button size="small" onClick={() => setIsOpenHistory(true)}>
+                  See history
+                </Button>
               </Stack>
             ) : null}
           </Stack>
@@ -139,6 +145,8 @@ const OrganizationalPage = ({ organization, isMine }) => {
 
           <OrganizationWishes organization={organization} />
         </Stack>
+
+        {isOpenHistory ? <HistoryModal onClose={closeHistoryModal} organization={organization} /> : null}
       </ContentContainer>
     </div>
   );
