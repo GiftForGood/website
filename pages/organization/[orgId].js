@@ -22,7 +22,7 @@ export async function getServerSideProps({ params, req, res, query }) {
   if (npoOrgSnapshot.exists) {
     organization = npoOrgSnapshot.data();
   }
-  if (user?.organization?.id === organization?.id) {
+  if (user?.user?.organization?.id === organization?.id) {
     isMine = true;
   }
 

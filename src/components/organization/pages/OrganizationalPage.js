@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import CoverPhoto from '../modules/CoverPhoto';
 import { MaxWidthContainer } from '@components/containers';
 import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import ProfilePhoto from '../modules/ProfilePhoto';
-import { Stack, Heading, Button, Text } from '@kiwicom/orbit-components/lib';
+import { Stack, Heading, Button, Text, Textarea } from '@kiwicom/orbit-components/lib';
 import OrganizationWishes from '../modules/OrganizationWishes';
+import api from '@api';
+import { useRouter } from 'next/router';
 
 const CoverPhotoContainer = styled(MaxWidthContainer)`
   margin-top: 0;
@@ -25,6 +27,19 @@ const ContentContainer = styled(MaxWidthContainer)`
 `;
 
 const OrganizationalPage = ({ organization, isMine }) => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [updatedDesciption, setUpdatedDescription] = useState('');
+  const router = useRouter();
+
+  const saveDescription = () => {
+    if (updatedDesciption) {
+      setIsEditing(false);
+      api.npoOrganization.update(organization.id, updatedDesciption, '', '').then(() => {
+        router.reload();
+      });
+    }
+  };
+
   return (
     <div>
       <CoverPhotoContainer>
@@ -50,14 +65,50 @@ const OrganizationalPage = ({ organization, isMine }) => {
 
             {isMine ? (
               <Stack direction="row" inline justify="end">
-                <Button size="small">Edit</Button>
+                {isEditing ? (
+                  <>
+                    <Button size="small" onClick={saveDescription}>
+                      Save
+                    </Button>
+                    <Button
+                      size="small"
+                      type="neutral"
+                      onClick={() => {
+                        setIsEditing(false);
+                        setUpdatedDescription('');
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                  </>
+                ) : (
+                  <Button
+                    size="small"
+                    onClick={() => {
+                      setIsEditing(true);
+                      setUpdatedDescription(organization.description);
+                    }}
+                  >
+                    Edit
+                  </Button>
+                )}
+
                 <Button size="small">See history</Button>
               </Stack>
             ) : null}
           </Stack>
-          
-          {}
-          <Text>{organization.description ? organization.description : 'No description'}</Text>
+
+          {isEditing ? (
+            <Textarea
+              onChange={(event) => {
+                setUpdatedDescription(event.target.value);
+              }}
+              placeholder="Your organization description"
+              value={updatedDesciption}
+            />
+          ) : (
+            <Text>{organization.description ? organization.description : 'No description'}</Text>
+          )}
 
           <OrganizationWishes organization={organization} />
         </Stack>
