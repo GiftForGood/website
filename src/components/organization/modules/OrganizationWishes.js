@@ -5,7 +5,7 @@ import { WISHES_BATCH_SIZE } from '@api/constants';
 import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import { InstantSearch, Configure, connectInfiniteHits } from 'react-instantsearch-dom';
-import WishesHitWrapper from '@components/category/modules/WishesHitWrapper';
+import WishesHitWrapper from '@components/organization/modules/WishesHitWrapper';
 import { getNpoWishes } from '@utils/algolia/filteringRules';
 import { wishesSortByRule } from '@utils/algolia/sortByRules';
 import dynamic from 'next/dynamic';
