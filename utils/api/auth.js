@@ -79,11 +79,14 @@ class AuthAPI {
     const userProfile = firebaseAuth.currentUser;
 
     await this._validateNPO(userProfile);
+    const organizationInfo = await this._getOrganizationInfo(organization);
     const [npoDoc, userDoc] = await Promise.all([
-      this._createNPO(userProfile, name, contact, organization),
+      this._createNPO(userProfile, name, contact, organizationInfo),
       this._createUser(userProfile.uid, NPO),
+      this._updateNPOOrganizationMemberStatus(organizationInfo),
     ]);
-    await this._createNPOVerificationData(userProfile, name, contact, organization, registrationNumber, activities);
+    // This function needs to be after `createNPO` as it needs the npo data to be there
+    await this._createNPOVerificationData(userProfile, name, contact, organizationInfo, registrationNumber, activities);
 
     return [token, userProfile, npoDoc];
   }
@@ -276,9 +279,7 @@ class AuthAPI {
     return newDonor.get();
   }
 
-  async _createNPO(userProfile, name, contact, organizationName) {
-    const organizationInfo = await this._getOrganizationInfo(organizationName);
-
+  async _createNPO(userProfile, name, contact, organizationInfo) {
     let profileImageUrlMapping = { raw: '' };
     for (const sizeText of ALL_TEXT) {
       profileImageUrlMapping[sizeText] = '';
@@ -314,8 +315,7 @@ class AuthAPI {
     return newNPO.get();
   }
 
-  async _createNPOVerificationData(userProfile, name, contact, organizationName, registrationNumber, activities) {
-    const organizationInfo = await this._getOrganizationInfo(organizationName);
+  async _createNPOVerificationData(userProfile, name, contact, organizationInfo, registrationNumber, activities) {
     const timeNow = firebase.firestore.FieldValue.serverTimestamp();
 
     const organization = {
@@ -344,13 +344,15 @@ class AuthAPI {
     return newVerificationData.get();
   }
 
-  async _uploadNPOProofImage(npoId, proofFile) {
-    const ext = path.extname(proofFile.name);
-    const storageRef = firebaseStorage.ref();
-    const proofFileRef = storageRef.child(`npos/${npoId}/proofs/${npoId}_proof_v1${ext}`);
-    await proofFileRef.put(proofFile);
+  async _updateNPOOrganizationMemberStatus(organizationInfo) {
+    const data = {
+      isMember: true,
+    };
 
-    return proofFileRef.getDownloadURL();
+    const npoOrgDoc = db.collection('npoOrganizations').doc(organizationInfo.id);
+    await npoOrgDoc.update(data);
+
+    return npoOrgDoc.get();
   }
 
   async _getOrganizationInfo(name) {
