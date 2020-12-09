@@ -43,7 +43,7 @@ const OrganizationalPage = ({ organization, isMine }) => {
 
   const saveProfileImage = (file) => {
     if (file) {
-      api.npoOrganization.update(organization.id, organization.description, '', file).then(() => {
+      api.npoOrganization.update(organization.id, organization.description ? organization.description : '', '', file).then(() => {
         router.reload();
       });
     }
@@ -51,7 +51,7 @@ const OrganizationalPage = ({ organization, isMine }) => {
 
   const saveCoverImage = (file) => {
     if (file) {
-      api.npoOrganization.update(organization.id, organization.description, file, '').then(() => {
+      api.npoOrganization.update(organization.id, organization.description ? organization.description : '', file, '').then(() => {
         router.reload();
       });
     }
