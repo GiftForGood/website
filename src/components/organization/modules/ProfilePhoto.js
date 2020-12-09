@@ -60,7 +60,7 @@ const ProfilePhoto = ({ onImageSelected, src, showEdit }) => {
         <Button
           size="small"
           onClick={() => {
-            onImageSelected();
+            onImageSelected(file);
           }}
         >
           Save

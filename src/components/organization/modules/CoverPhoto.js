@@ -65,7 +65,7 @@ const CoverPhoto = ({ onImageSelected, src, showEdit, children }) => {
           size="small"
           width="100%"
           onClick={() => {
-            onImageSelected();
+            onImageSelected(file);
           }}
         >
           Save

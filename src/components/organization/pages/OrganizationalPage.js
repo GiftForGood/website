@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import CoverPhoto from '../modules/CoverPhoto';
 import { MaxWidthContainer } from '@components/containers';
 import styled, { css } from 'styled-components';
-import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import ProfilePhoto from '../modules/ProfilePhoto';
 import { Stack, Heading, Button, Text, Textarea } from '@kiwicom/orbit-components/lib';
 import OrganizationWishes from '../modules/OrganizationWishes';
@@ -40,12 +39,40 @@ const OrganizationalPage = ({ organization, isMine }) => {
     }
   };
 
+  const saveProfileImage = (file) => {
+    if (file) {
+      api.npoOrganization.update(organization.id, organization.description, '', file).then(() => {
+        router.reload();
+      });
+    }
+  };
+
+  const saveCoverImage = (file) => {
+    if (file) {
+      api.npoOrganization.update(organization.id, organization.description, file, '').then(() => {
+        router.reload();
+      });
+    }
+  };
+
   return (
     <div>
       <CoverPhotoContainer>
-        <CoverPhoto showEdit={isMine} src={organization.coverPhotoUrl}>
+        <CoverPhoto
+          showEdit={isMine}
+          src={organization.coverImageUrl?.large ? organization.coverImageUrl?.large : organization.coverImageUrl?.raw}
+          onImageSelected={saveCoverImage}
+        >
           <ProfilePhotoContainer>
-            <ProfilePhoto src={organization.profileImageUrl?.raw} showEdit={isMine} />
+            <ProfilePhoto
+              src={
+                organization.profileImageUrl?.large
+                  ? organization.profileImageUrl?.large
+                  : organization.profileImageUrl?.raw
+              }
+              showEdit={isMine}
+              onImageSelected={saveProfileImage}
+            />
           </ProfilePhotoContainer>
         </CoverPhoto>
       </CoverPhotoContainer>
