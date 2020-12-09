@@ -4,6 +4,7 @@ import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import CameraIconButton from '@components/buttons/CameraIconButton';
 import { v4 as uuidv4 } from 'uuid';
 import { Button, Stack } from '@kiwicom/orbit-components/lib';
+import { colors } from '@constants/colors';
 
 const Container = styled.div`
   position: relative;
@@ -18,6 +19,7 @@ const Image = styled.img`
   object-fit: cover;
   border-radius: 50%;
   border: 5px solid white;
+  background-color: ${colors.primaryBlue.focus};
 `;
 
 const ButtonContainer = styled.div`
@@ -69,6 +71,7 @@ const ProfilePhoto = ({ onImageSelected, src, showEdit }) => {
 
   return (
     <Container>
+
       <Image src={hasUpload ? file.preview : src} />
       <input
         type="file"

@@ -28,9 +28,9 @@ const OrganizationalPage = ({ organization, isMine }) => {
   return (
     <div>
       <CoverPhotoContainer>
-        <CoverPhoto showEdit={true} src={organization.coverPhotoUrl}>
+        <CoverPhoto showEdit={isMine} src={organization.coverPhotoUrl}>
           <ProfilePhotoContainer>
-            <ProfilePhoto src={organization.profileImageUrl?.raw} showEdit={true} />
+            <ProfilePhoto src={organization.profileImageUrl?.raw} showEdit={isMine} />
           </ProfilePhotoContainer>
         </CoverPhoto>
       </CoverPhotoContainer>
@@ -55,8 +55,9 @@ const OrganizationalPage = ({ organization, isMine }) => {
               </Stack>
             ) : null}
           </Stack>
-
-          <Text>{organization.description}</Text>
+          
+          {}
+          <Text>{organization.description ? organization.description : 'No description'}</Text>
 
           <OrganizationWishes organization={organization} />
         </Stack>

@@ -21,6 +21,16 @@ class NPOOrganizationAPI {
   async get(name) {
     return npoOrganizationsCollection.where('name', '==', name).get();
   }
+
+  /**
+   * Get a NPO organization info by it's id
+   * @param {string} id The NPO organization id
+   * @throws {FirebaseError}
+   * @return {object} A firebase document of the NPO organization info
+   */
+  async getById(id) {
+    return npoOrganizationsCollection.doc(id).get();
+  }
 }
 
 export default NPOOrganizationAPI;
