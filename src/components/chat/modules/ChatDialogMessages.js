@@ -210,10 +210,11 @@ const ChatDialogMessages = ({ postType, inputRowHeight, isShowPostDetails }) => 
    */
   const scrollHandler = () => {
     // note:
-    // safari browsers' bottom has scrollTop of 0, negative values when scroll up
+    // safari and chrome browsers' bottom has scrollTop of 0, negative values when scroll up
     // other browsers' bottom has scrollTop of scrollHeight - clientHeight
     const bottomScrollTop = isSafari ? 0 : scrollerRef.current.scrollHeight - scrollerRef.current.clientHeight;
-    if (scrollerRef.current.scrollTop < bottomScrollTop) {
+    const currScrollTop = scrollerRef.current.scrollTop;
+    if (currScrollTop < bottomScrollTop && currScrollTop !== 0) {
       setIsShowScrollerButton(true);
     } else {
       setIsShowScrollerButton(false);
