@@ -20,12 +20,12 @@ const HistoryModal = ({ organization, onClose }) => {
       <ModalHeader title="Edit history" />
       <ModalSection>
         <Stack spacing="compact" spaceAfter="largest">
-          {history.map((item) => {
+          {history.map((item, index) => {
             const historyItemData = item.data();
             deserializeFirestoreTimestampToUnixTimestamp(historyItemData);
             const { email, type, appliedDateTime } = historyItemData;
 
-            return <HistoryItem email={email} type={type} dateTime={getFormattedDate(appliedDateTime)} />;
+            return <HistoryItem key={index} email={email} type={type} dateTime={getFormattedDate(appliedDateTime)} />;
           })}
         </Stack>
       </ModalSection>
@@ -39,15 +39,19 @@ const HistoryModal = ({ organization, onClose }) => {
 };
 
 const HistoryItem = ({ email, dateTime, type }) => {
+  const description = `By: ${email} at ${dateTime}`;
+  let title = `Updated organization's`;
   if (type === ORGANIZATION_ACTIONS.UPDATE_DESC) {
-    return <ListChoice description={`By: ${email} at ${dateTime}`} title={`Updated organization's description`} />;
+    title = `${title} description`;
   } else if (type === ORGANIZATION_ACTIONS.UPDATE_COVER_IMAGE) {
-    return <ListChoice description={`By: ${email} at ${dateTime}`} title={`Updated organization's cover image`} />;
+    title = `${title} cover image`;
   } else if (type === ORGANIZATION_ACTIONS.UPDATE_PROFILE_IMAGE) {
-    return <ListChoice description={`By: ${email} at ${dateTime}`} title={`Updated organization's profile image`} />;
+    title = `${title} profile image`;
   } else {
-    return <ListChoice description={`By: ${email} at ${dateTime}`} title={type} />;
+    title = `${title} ${type}`;
   }
+
+  return <ListChoice description={description} title={title} />;
 };
 
 export default HistoryModal;
