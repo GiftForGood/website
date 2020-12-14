@@ -139,7 +139,7 @@ const TopWishes = ({ numberOfPosts, numberOfCategories }) => {
   return (
     <Stack desktop={{ direction: 'row' }} direction="column" align="start" spacing="extraLoose">
       {topCategories.map((category) => (
-        <InstantSearch searchClient={searchClient} indexName="wishes">
+        <InstantSearch key={category.id} searchClient={searchClient} indexName="wishes">
           <TopCategories category={category} />
           <Configure
             filters={getByCategoryIdAndStatusAndNotExpired(category.id, 'pending', Date.now())}

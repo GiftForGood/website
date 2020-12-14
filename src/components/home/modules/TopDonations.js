@@ -152,7 +152,7 @@ const TopDonations = ({ numberOfPosts, numberOfCategories }) => {
   return (
     <Stack direction="column" align="start" spacing="natural">
       {topCategories.map((category) => (
-        <InstantSearch searchClient={searchClient} indexName="donations">
+        <InstantSearch key={category.id} searchClient={searchClient} indexName="donations">
           <TopCategories category={category} />
           <Configure filters={getByCategoryIdAndStatus(category.id, 'pending')} hitsPerPage={numberOfPosts} />
         </InstantSearch>

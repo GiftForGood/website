@@ -56,6 +56,7 @@ const NposHitWrapper = ({ hits, category, hasPrevious, hasMore, refinePrevious, 
           const href = `/profile/${objectID}`;
           return (
             <NpoUserCard
+              key={objectID}
               userId={userId}
               name={name}
               organization={organization}

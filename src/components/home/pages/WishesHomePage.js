@@ -44,6 +44,7 @@ const styles = {
 const TopWishesContainer = styled(MaxWidthContainer)`
   overflow-x: hidden;
   margin-top: 0;
+  padding: 0 5px 5px 5px;
 `;
 
 const WishesHomePage = () => {

@@ -79,11 +79,14 @@ class AuthAPI {
     const userProfile = firebaseAuth.currentUser;
 
     await this._validateNPO(userProfile);
+    const organizationInfo = await this._getOrganizationInfo(organization);
     const [npoDoc, userDoc] = await Promise.all([
-      this._createNPO(userProfile, name, contact, organization),
+      this._createNPO(userProfile, name, contact, organizationInfo),
       this._createUser(userProfile.uid, NPO),
+      this._updateNPOOrganizationMemberStatus(organizationInfo),
     ]);
-    await this._createNPOVerificationData(userProfile, name, contact, organization, registrationNumber, activities);
+    // This function needs to be after `createNPO` as it needs the npo data to be there
+    await this._createNPOVerificationData(userProfile, name, contact, organizationInfo, registrationNumber, activities);
 
     return [token, userProfile, npoDoc];
   }
@@ -101,11 +104,22 @@ class AuthAPI {
     await this._googleAuth();
     const token = await firebaseAuth.currentUser.getIdToken();
     const userProfile = firebaseAuth.currentUser;
-    if (!(await this._doesDonorExist(userProfile.uid))) {
-      this.logout();
-      throw new AuthError('invalid-user', 'donor account does not exist');
+
+    let donorDoc;
+    if (!(await this._doesUserExist(DONOR, userProfile.uid))) {
+      // Create the donor account if doesn't exist
+      if (await this._doesUserExist(NPO, userProfile.uid)) {
+        throw new AuthError('unable-to-create-user', 'User already signed up as a NPO');
+      }
+
+      const [newDonorDoc, userDoc] = await Promise.all([
+        this._createDonor(userProfile),
+        this._createUser(userProfile.uid, DONOR),
+      ]);
+      donorDoc = newDonorDoc;
+    } else {
+      donorDoc = await this._updateUserLoginTime(DONOR, userProfile.uid);
     }
-    const donorDoc = await this._updateDonorLoginTime(userProfile.uid);
 
     return [token, userProfile, donorDoc];
   }
@@ -125,11 +139,11 @@ class AuthAPI {
     await firebaseAuth.signInWithEmailAndPassword(email, password);
     const token = await firebaseAuth.currentUser.getIdToken();
     const userProfile = firebaseAuth.currentUser;
-    if (!(await this._doesDonorExist(userProfile.uid))) {
+    if (!(await this._doesUserExist(DONOR, userProfile.uid))) {
       this.logout();
       throw new AuthError('invalid-user', 'donor account does not exist');
     }
-    const donorDoc = await this._updateDonorLoginTime(userProfile.uid);
+    const donorDoc = await this._updateUserLoginTime(DONOR, userProfile.uid);
 
     return [token, userProfile, donorDoc];
   }
@@ -149,11 +163,11 @@ class AuthAPI {
     await firebaseAuth.signInWithEmailAndPassword(email, password);
     const token = await firebaseAuth.currentUser.getIdToken();
     const userProfile = firebaseAuth.currentUser;
-    if (!(await this._doesNPOExist(userProfile.uid))) {
+    if (!(await this._doesUserExist(NPO, userProfile.uid))) {
       this.logout();
       throw new AuthError('invalid-user', 'npo account does not exist');
     }
-    const userDoc = await this._updateNPOLoginTime(userProfile.uid);
+    const userDoc = await this._updateUserLoginTime(NPO, userProfile.uid);
 
     return [token, userProfile, userDoc];
   }
@@ -265,25 +279,7 @@ class AuthAPI {
     return newDonor.get();
   }
 
-  async _updateDonorLoginTime(id) {
-    const userDoc = donorsCollection.doc(id);
-
-    const data = {
-      lastLoggedInDateTime: firebase.firestore.FieldValue.serverTimestamp(),
-    };
-    await userDoc.update(data);
-
-    return userDoc.get();
-  }
-
-  async _doesDonorExist(id) {
-    const snapshot = await donorsCollection.doc(id).get();
-    return snapshot.exists;
-  }
-
-  async _createNPO(userProfile, name, contact, organizationName) {
-    const organizationInfo = await this._getOrganizationInfo(organizationName);
-
+  async _createNPO(userProfile, name, contact, organizationInfo) {
     let profileImageUrlMapping = { raw: '' };
     for (const sizeText of ALL_TEXT) {
       profileImageUrlMapping[sizeText] = '';
@@ -319,8 +315,7 @@ class AuthAPI {
     return newNPO.get();
   }
 
-  async _createNPOVerificationData(userProfile, name, contact, organizationName, registrationNumber, activities) {
-    const organizationInfo = await this._getOrganizationInfo(organizationName);
+  async _createNPOVerificationData(userProfile, name, contact, organizationInfo, registrationNumber, activities) {
     const timeNow = firebase.firestore.FieldValue.serverTimestamp();
 
     const organization = {
@@ -349,29 +344,15 @@ class AuthAPI {
     return newVerificationData.get();
   }
 
-  async _doesNPOExist(id) {
-    const snapshot = await nposCollection.doc(id).get();
-    return snapshot.exists;
-  }
-
-  async _updateNPOLoginTime(id) {
-    const userDoc = nposCollection.doc(id);
-
+  async _updateNPOOrganizationMemberStatus(organizationInfo) {
     const data = {
-      lastLoggedInDateTime: firebase.firestore.FieldValue.serverTimestamp(),
+      isMember: true,
     };
-    await userDoc.update(data);
 
-    return userDoc.get();
-  }
+    const npoOrgDoc = db.collection('npoOrganizations').doc(organizationInfo.id);
+    await npoOrgDoc.update(data);
 
-  async _uploadNPOProofImage(npoId, proofFile) {
-    const ext = path.extname(proofFile.name);
-    const storageRef = firebaseStorage.ref();
-    const proofFileRef = storageRef.child(`npos/${npoId}/proofs/${npoId}_proof_v1${ext}`);
-    await proofFileRef.put(proofFile);
-
-    return proofFileRef.getDownloadURL();
+    return npoOrgDoc.get();
   }
 
   async _getOrganizationInfo(name) {
@@ -394,16 +375,32 @@ class AuthAPI {
     return newUser.get();
   }
 
+  async _doesUserExist(type, id) {
+    const snapshot = await db.collection(`${type}s`).doc(id).get();
+    return snapshot.exists;
+  }
+
+  async _updateUserLoginTime(type, id) {
+    const userDoc = db.collection(`${type}s`).doc(id);
+
+    const data = {
+      lastLoggedInDateTime: firebase.firestore.FieldValue.serverTimestamp(),
+    };
+    await userDoc.update(data);
+
+    return userDoc.get();
+  }
+
   async _validateDonor(userInfo) {
     if (userInfo == null) {
       throw new AuthError('unable-to-create-user', 'No user profile');
     }
 
-    if (await this._doesDonorExist(userInfo.uid)) {
+    if (await this._doesUserExist(DONOR, userInfo.uid)) {
       throw new AuthError('unable-to-create-user', 'Donor account already exists');
     }
 
-    if (await this._doesNPOExist(userInfo.uid)) {
+    if (await this._doesUserExist(NPO, userInfo.uid)) {
       throw new AuthError('unable-to-create-user', 'User already signed up as a NPO');
     }
   }
@@ -413,11 +410,11 @@ class AuthAPI {
       throw new AuthError('unable-to-create-user', 'No user profile');
     }
 
-    if (await this._doesNPOExist(userInfo.uid)) {
+    if (await this._doesUserExist(NPO, userInfo.uid)) {
       throw new AuthError('unable-to-create-user', 'NPO account already exists');
     }
 
-    if (await this._doesDonorExist(userInfo.uid)) {
+    if (await this._doesUserExist(DONOR, userInfo.uid)) {
       throw new AuthError('unable-to-create-user', 'User already signed up as a Donor');
     }
   }
