@@ -109,7 +109,7 @@ const BottomNavigation = () => {
             <>
               <BottonNavItem onClick={handlePostPageClick}>
                 <Plus />
-                <Text>Post</Text>
+                <Text>{user.npo ? 'Post' : 'Donate'}</Text>
               </BottonNavItem>
               <BottonNavItem onClick={handleChatPageClick}>
                 <Messages />

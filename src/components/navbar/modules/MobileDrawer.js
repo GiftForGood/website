@@ -6,9 +6,11 @@ import client from '@utils/axios';
 import { logout } from '../../session/actions';
 import { useDispatch } from 'react-redux';
 import useLocalStorage from '@utils/hooks/useLocalStorage';
+import { useRouter } from 'next/router';
 import useUser from '../../session/modules/useUser';
 
 const MobileDrawer = ({ shown, onClose }) => {
+  const router = useRouter();
   const user = useUser();
   const [registeredObjectString, setRegisteredObjectString] = useLocalStorage(
     'registered',
