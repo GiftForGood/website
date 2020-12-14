@@ -25,6 +25,7 @@ const MobileDrawer = ({ shown, onClose }) => {
       if (response.status === 200) {
         dispatch(logout());
         setRegisteredObjectString('{"isNewlyRegistered":true}');
+        onClose();
         router.push('/');
       } else {
         throw response.error;
