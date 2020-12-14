@@ -48,6 +48,10 @@ const BottonNavItem = styled.div`
   }
 `;
 
+const EmptyRowNav = styled.div`
+  height: ${BOTTOMBAR_HEIGHT}px;
+`;
+
 const BottomNavigation = () => {
   const { isDesktop } = useMediaQuery();
   const router = useRouter();
@@ -92,38 +96,41 @@ const BottomNavigation = () => {
   };
 
   return (
-    <BottomNav>
-      <BottomNavContainer>
-        <Stack justify="center" align="center" spacing="none" direction="row">
-          <BottonNavItem onClick={handleWishPageClick}>
-            <StarFull />
-            <Text>Wishes</Text>
-          </BottonNavItem>
+    <>
+      <EmptyRowNav />
+      <BottomNav>
+        <BottomNavContainer>
+          <Stack justify="center" align="center" spacing="none" direction="row">
+            <BottonNavItem onClick={handleWishPageClick}>
+              <StarFull />
+              <Text>Wishes</Text>
+            </BottonNavItem>
 
-          <BottonNavItem onClick={handleDonationPageClick}>
-            <StarFull />
-            <Text>Donations</Text>
-          </BottonNavItem>
+            <BottonNavItem onClick={handleDonationPageClick}>
+              <StarFull />
+              <Text>Donations</Text>
+            </BottonNavItem>
 
-          {user && (
-            <>
-              <BottonNavItem onClick={handlePostPageClick}>
-                <Plus />
-                <Text>{user.npo ? 'Post' : 'Donate'}</Text>
-              </BottonNavItem>
-              <BottonNavItem onClick={handleChatPageClick}>
-                <Messages />
-                <Text>Chat</Text>
-              </BottonNavItem>
-              <BottonNavItem onClick={handleProfilePageClick}>
-                <AccountCircle />
-                <Text>Me</Text>
-              </BottonNavItem>
-            </>
-          )}
-        </Stack>
-      </BottomNavContainer>
-    </BottomNav>
+            {user && (
+              <>
+                <BottonNavItem onClick={handlePostPageClick}>
+                  <Plus />
+                  <Text>{user.npo ? 'Post' : 'Donate'}</Text>
+                </BottonNavItem>
+                <BottonNavItem onClick={handleChatPageClick}>
+                  <Messages />
+                  <Text>Chat</Text>
+                </BottonNavItem>
+                <BottonNavItem onClick={handleProfilePageClick}>
+                  <AccountCircle />
+                  <Text>Me</Text>
+                </BottonNavItem>
+              </>
+            )}
+          </Stack>
+        </BottomNavContainer>
+      </BottomNav>
+    </>
   );
 };
 
