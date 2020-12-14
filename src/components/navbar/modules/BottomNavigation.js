@@ -1,8 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 import { BOTTOMBAR_HEIGHT } from '@constants/navbar';
+import { donationLogoPath, wishLogoPath } from '@constants/imagePaths';
 import { Stack, Text } from '@kiwicom/orbit-components';
-import { AccountCircle, Messages, Plus, StarFull } from '@kiwicom/orbit-components/lib/icons';
+import { AccountCircle, Messages, Plus } from '@kiwicom/orbit-components/lib/icons';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 import { useRouter } from 'next/router';
 import useUser from '../../session/modules/useUser';
@@ -50,6 +51,10 @@ const BottonNavItem = styled.div`
 
 const EmptyRowNav = styled.div`
   height: ${BOTTOMBAR_HEIGHT}px;
+`;
+
+const ImageLogo = styled.img`
+  padding: 2px 0 2px 0;
 `;
 
 const BottomNavigation = () => {
@@ -102,12 +107,12 @@ const BottomNavigation = () => {
         <BottomNavContainer>
           <Stack justify="center" align="center" spacing="none" direction="row">
             <BottonNavItem onClick={handleWishPageClick}>
-              <StarFull />
+              <ImageLogo alt="wish logo" src={wishLogoPath} height={20} />
               <Text>Wishes</Text>
             </BottonNavItem>
 
             <BottonNavItem onClick={handleDonationPageClick}>
-              <StarFull />
+              <ImageLogo alt="donation logo" src={donationLogoPath} height={20} />
               <Text>Donations</Text>
             </BottonNavItem>
 
