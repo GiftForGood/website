@@ -1,11 +1,13 @@
 import React from 'react';
 import styled from 'styled-components';
-import { BOTTOMBAR_HEIGHT } from '@constants/navbar';
-import { donationLogoPath, wishLogoPath } from '@constants/imagePaths';
 import { Stack, Text } from '@kiwicom/orbit-components';
 import { AccountCircle, Messages, Plus } from '@kiwicom/orbit-components/lib/icons';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 import { useRouter } from 'next/router';
+
+import { colors } from '@constants/colors';
+import { donationLogoPath, wishLogoPath } from '@constants/imagePaths';
+import { BOTTOMBAR_HEIGHT } from '@constants/navbar';
 import useUser from '../../session/modules/useUser';
 import {
   logMobilePostDonationToAnalytics,
@@ -55,6 +57,11 @@ const EmptyRowNav = styled.div`
 
 const ImageLogo = styled.img`
   padding: 2px 0 2px 0;
+`;
+
+const CTABackground = styled.div`
+  background-color: ${colors.primaryRed.background};
+  border-radius: 5px;
 `;
 
 const BottomNavigation = () => {
@@ -119,7 +126,9 @@ const BottomNavigation = () => {
             {user && (
               <>
                 <BottonNavItem onClick={handlePostPageClick}>
-                  <Plus />
+                  <CTABackground>
+                    <Plus customColor={colors.white} />
+                  </CTABackground>
                   <Text>{user.npo ? 'Post' : 'Donate'}</Text>
                 </BottonNavItem>
                 <BottonNavItem onClick={handleChatPageClick}>
