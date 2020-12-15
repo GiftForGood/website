@@ -62,6 +62,7 @@ const SlideShow = ({ contents, closeSlideShow, type, show = false }) => {
 
   const closeAndResetSlideShow = () => {
     setCurrentSlide(0);
+    setButtonLabel('Next');
     closeSlideShow();
   };
 
@@ -115,7 +116,7 @@ const SlideShow = ({ contents, closeSlideShow, type, show = false }) => {
                     setButtonLabel('Done');
                   }
                   if (currentSlide + 1 === contents.length) {
-                    closeSlideShow();
+                    closeAndResetSlideShow();
                   }
                 }}
               >
