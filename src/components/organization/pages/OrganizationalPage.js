@@ -8,6 +8,8 @@ import OrganizationWishes from '../modules/OrganizationWishes';
 import api from '@api';
 import { useRouter } from 'next/router';
 import HistoryModal from '../modules/HistoryModal';
+import ToastContainer from '@components/toast/ToastContainer';
+import { toast } from 'react-toastify';
 
 const CoverPhotoContainer = styled(MaxWidthContainer)`
   margin-top: 0;
@@ -63,6 +65,10 @@ const OrganizationalPage = ({ organization, isMine }) => {
 
   const closeHistoryModal = () => setIsOpenHistory(false);
 
+  const onError = (message) => {
+    toast.error(message);
+  }
+
   return (
     <div>
       <CoverPhotoContainer>
@@ -70,6 +76,7 @@ const OrganizationalPage = ({ organization, isMine }) => {
           showEdit={isMine}
           src={organization.coverImageUrl?.large ? organization.coverImageUrl?.large : organization.coverImageUrl?.raw}
           onImageSelected={saveCoverImage}
+          onError={onError}
         >
           <ProfilePhotoContainer>
             <ProfilePhoto
@@ -80,6 +87,7 @@ const OrganizationalPage = ({ organization, isMine }) => {
               }
               showEdit={isMine}
               onImageSelected={saveProfileImage}
+              onError={onError}
             />
           </ProfilePhotoContainer>
         </CoverPhoto>
@@ -152,6 +160,8 @@ const OrganizationalPage = ({ organization, isMine }) => {
 
         {isOpenHistory ? <HistoryModal onClose={closeHistoryModal} organization={organization} /> : null}
       </ContentContainer>
+
+      <ToastContainer position="bottom-left" autoClose={4000} hideProgressBar={true} closeButton={false} />
     </div>
   );
 };

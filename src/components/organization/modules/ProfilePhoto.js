@@ -5,6 +5,7 @@ import CameraIconButton from '@components/buttons/CameraIconButton';
 import { v4 as uuidv4 } from 'uuid';
 import { Button, Stack } from '@kiwicom/orbit-components/lib';
 import { colors } from '@constants/colors';
+import { MAXIMUM_FILE_SIZE_LIMIT } from '@constants/files';
 
 const Container = styled.div`
   position: relative;
@@ -28,7 +29,7 @@ const ButtonContainer = styled.div`
   right: 0;
 `;
 
-const ProfilePhoto = ({ onImageSelected, src, showEdit }) => {
+const ProfilePhoto = ({ onImageSelected, src, showEdit, onError }) => {
   const [hasUpload, setHasUpload] = useState(false);
   const inputFile = useRef(null);
   const [file, setFile] = useState(null);
@@ -42,6 +43,11 @@ const ProfilePhoto = ({ onImageSelected, src, showEdit }) => {
     event.preventDefault();
     const file = event.target.files[0];
     if (file) {
+      if (file.size > MAXIMUM_FILE_SIZE_LIMIT) {
+        onError('Unable to upload files that are more than 25mb');
+        return;
+      }
+
       setHasUpload(true);
       const updatedFile = Object.assign(file, {
         preview: URL.createObjectURL(file),
@@ -85,6 +91,8 @@ const ProfilePhoto = ({ onImageSelected, src, showEdit }) => {
           {hasUpload ? <SaveAndCancel /> : <CameraIconButton onClick={onButtonClick} />}
         </ButtonContainer>
       ) : null}
+
+      
     </Container>
   );
 };
