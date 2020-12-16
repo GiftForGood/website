@@ -35,7 +35,7 @@ const ButtonsWrapper = styled.div`
   width: 90%;
 `;
 
-const ChatDialogContent = ({ post, chat }) => {
+const ChatDialogContent = ({ post, chat, setChat }) => {
   const { state, dispatch } = useContext(ChatContext);
   const loggedInUser = getUser(state);
   const isNewChat = getIsNewChat(state);
@@ -48,15 +48,15 @@ const ChatDialogContent = ({ post, chat }) => {
   const [inputRowHeight, setInputRowHeight] = useState(68);
   const [isShowPostDetails, setIsShowPostDetails] = useState(isTablet); // hide post details initially if using mobile
 
-  let chatPostTitle, oppositeUser, chatPostType, chatPostId, postOwnerId, postEnquirerId, postStatus;
+  let chatPostTitle, oppositeUser, chatPostType, chatPostId, postOwnerId, postEnquirerId, postStatus, chatStatus;
   const isCreatingNewChatForAPost = postId !== null && isNewChat;
   // obtain post details accordingly
   if (isCreatingNewChatForAPost) {
     // get from post
     chatPostTitle = post.title;
     oppositeUser = post.user;
-    postOwnerId = post.user.id;
-    postEnquirerId = loggedInUser.user.id;
+    postOwnerId = post.user.userId;
+    postEnquirerId = loggedInUser.user.userId;
     chatPostType = postType;
     chatPostId = postId;
     postStatus = post.status;
@@ -69,6 +69,7 @@ const ChatDialogContent = ({ post, chat }) => {
     postOwnerId = chat.post.type === donations ? chat.donor.id : chat.npo.id;
     postEnquirerId = chat.post.type === donations ? chat.npo.id : chat.donor.id;
     postStatus = chat.post.status;
+    chatStatus = chat.status;
   }
 
   return (
@@ -103,9 +104,11 @@ const ChatDialogContent = ({ post, chat }) => {
               postId={chatPostId}
               postType={chatPostType}
               postStatus={postStatus}
+              chatStatus={chatStatus}
               oppositeUser={oppositeUser}
               postOwnerId={postOwnerId}
               postEnquirerId={postEnquirerId}
+              setChat={setChat}
             />
             <ChatDialogViewPostRow postType={chatPostType} postId={chatPostId} postTitle={chatPostTitle} />
           </>
@@ -181,7 +184,7 @@ const ChatDialog = ({ isShow }) => {
 
   return (
     <ChatDialogContainer isShow={isShow}>
-      <ChatDialogContent post={post} chat={chat} />
+      <ChatDialogContent post={post} chat={chat} setChat={setChat} />
     </ChatDialogContainer>
   );
 };
