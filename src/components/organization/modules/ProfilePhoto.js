@@ -57,18 +57,19 @@ const ProfilePhoto = ({ onImageSelected, src, showEdit, onError }) => {
     }
   };
 
+  const handleCancel = () => setHasUpload(false);
+
+  const handleSave = () => onImageSelected(file);
+
+  const hiddenInputStyle = { display: 'none' };
+
   const SaveAndCancel = () => {
     return (
       <Stack direction="row">
-        <Button size="small" type="neutral" onClick={() => setHasUpload(false)}>
+        <Button size="small" type="neutral" onClick={handleCancel}>
           Cancel
         </Button>
-        <Button
-          size="small"
-          onClick={() => {
-            onImageSelected(file);
-          }}
-        >
+        <Button size="small" onClick={handleSave}>
           Save
         </Button>
       </Stack>
@@ -82,7 +83,7 @@ const ProfilePhoto = ({ onImageSelected, src, showEdit, onError }) => {
         type="file"
         id="coverPhoto"
         ref={inputFile}
-        style={{ display: 'none' }}
+        style={hiddenInputStyle}
         accept=".png, .jpg, .jpeg"
         onChange={onCoverPhotoChange}
       />
@@ -91,8 +92,6 @@ const ProfilePhoto = ({ onImageSelected, src, showEdit, onError }) => {
           {hasUpload ? <SaveAndCancel /> : <CameraIconButton onClick={onButtonClick} />}
         </ButtonContainer>
       ) : null}
-
-      
     </Container>
   );
 };

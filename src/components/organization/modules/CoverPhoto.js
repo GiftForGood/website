@@ -61,19 +61,19 @@ const CoverPhoto = ({ onImageSelected, src, showEdit, children, onError }) => {
     }
   };
 
+  const handleCancel = () => setHasUpload(false);
+
+  const handleSave = () => onImageSelected(file);
+
+  const hiddenInputStyle = { display: 'none' };
+
   const SaveAndCancel = () => {
     return (
       <Stack>
-        <Button size="small" type="neutral" onClick={() => setHasUpload(false)}>
+        <Button size="small" type="neutral" onClick={handleCancel}>
           Cancel
         </Button>
-        <Button
-          size="small"
-          width="100%"
-          onClick={() => {
-            onImageSelected(file);
-          }}
-        >
+        <Button size="small" width="100%" onClick={handleSave}>
           Save
         </Button>
       </Stack>
@@ -87,7 +87,7 @@ const CoverPhoto = ({ onImageSelected, src, showEdit, children, onError }) => {
         type="file"
         id="coverPhoto"
         ref={inputFile}
-        style={{ display: 'none' }}
+        style={hiddenInputStyle}
         accept=".png, .jpg, .jpeg"
         onChange={onCoverPhotoChange}
       />

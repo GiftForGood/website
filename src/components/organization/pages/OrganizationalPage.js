@@ -67,7 +67,7 @@ const OrganizationalPage = ({ organization, isMine }) => {
 
   const onError = (message) => {
     toast.error(message);
-  }
+  };
 
   return (
     <div>
