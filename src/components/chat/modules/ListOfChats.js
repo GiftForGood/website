@@ -170,7 +170,7 @@ const ListOfChats = ({ isShow }) => {
           <TileGroup>
             {chatDocs &&
               chatDocs.map((chat) => {
-                const { chatId, donor, npo, lastMessage, post } = chat.data();
+                const { chatId, donor, npo, lastMessage, post, status } = chat.data();
                 // get opposite user's details
                 const { name, profileImageUrl } = user.user.userId === donor.id ? npo : donor;
 
@@ -185,6 +185,7 @@ const ListOfChats = ({ isShow }) => {
                     lastMessage={lastMessage}
                     profileImageUrl={profileImageUrl}
                     post={post}
+                    chatStatus={status}
                     isSelected={isSelected}
                     isNewChat={isNewChat}
                     setIsNewChat={(isNewChat) => dispatch(setIsNewChat(isNewChat))}
