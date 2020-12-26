@@ -5,12 +5,13 @@ import Banner from '../modules/Banner';
 import TeamDescription from '../modules/TeamDescription';
 import { Heading, Alert, Stack } from '@kiwicom/orbit-components/lib';
 import HowItWorks from '@components/aboutUs/modules/HowItWorks';
-
+import Stats from '@components/aboutUs/modules/Stats';
 const AboutUsPage = () => {
   return (
     <>
       <Banner />
       <HowItWorks />
+      <Stats />
       <TeamDescription />
     </>
   );
