@@ -8,4 +8,7 @@ module.exports = withImages({
 
     return config;
   },
+  images: {
+    domains: ['res.cloudinary.com'],
+  },
 });

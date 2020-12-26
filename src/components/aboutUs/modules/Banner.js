@@ -19,13 +19,14 @@ const BannerImageContainer = styled.div`
   background-position: 50% 50%;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   padding: 50px;
 `;
 
 const BannerTextContainer = styled.div`
   max-width: 1280px;
   margin: 0 auto;
+  width: 100%;
 `;
 
 const Banner = () => {
@@ -34,13 +35,9 @@ const Banner = () => {
       <BannerImageContainer src="https://res.cloudinary.com/giftforgood/image/upload/v1591517911/donations-banner.jpg">
         <BannerTextContainer>
           <Heading as="h1" type="display" inverted spaceAfter="medium">
-            Welcome to the GiftforGood!
+            Gift for Good
           </Heading>
-          <WhiteText size="extraLarge">
-            The GiftforGood team is a team from Developer Student Club NUS,that comprises of a mixture of current and
-            prior NUS undergraduates. Our team's vision is to galvanise in-kind donations towards a more generous
-            Singapore.
-          </WhiteText>
+          <WhiteText size="extraLarge">Galvanising in-kind donations in Singapore</WhiteText>
         </BannerTextContainer>
       </BannerImageContainer>
     </BannerContainer>
