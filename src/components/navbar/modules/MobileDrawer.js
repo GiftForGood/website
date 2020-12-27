@@ -63,6 +63,9 @@ const MobileDrawer = ({ shown, onClose }) => {
           <ButtonLink transparent href="/about" type="secondary">
             About Us
           </ButtonLink>
+          <ButtonLink transparent href="/who-are-we" type="secondary">
+            Who Are We
+          </ButtonLink>
           <ButtonLink transparent href="/partners" type="secondary">
             Partners
           </ButtonLink>
