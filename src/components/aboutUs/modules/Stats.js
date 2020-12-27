@@ -48,8 +48,8 @@ const Stats = () => {
             align="center"
             justify="center"
           >
-            {stats.map((stat) => (
-              <StatsContent src={stat.src} title={stat.title} description={stat.description} />
+            {stats.map((stat, index) => (
+              <StatsContent key={index} src={stat.src} title={stat.title} description={stat.description} />
             ))}
           </Stack>
         </Stack>

@@ -67,13 +67,15 @@ const HowItWorks = () => {
           justify="center"
         >
           {activeTab === 'donor'
-            ? onboardingDonor.map((content) => (
-                <HowItWorksContent src={content.src} description={content.description} />
+            ? onboardingDonor.map((content, index) => (
+                <HowItWorksContent key={index} src={content.src} description={content.description} />
               ))
             : null}
 
           {activeTab === 'npo'
-            ? onboardingNpo.map((content) => <HowItWorksContent src={content.src} description={content.description} />)
+            ? onboardingNpo.map((content, index) => (
+                <HowItWorksContent key={index} src={content.src} description={content.description} />
+              ))
             : null}
         </Stack>
       </Stack>
