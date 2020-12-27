@@ -6,18 +6,16 @@ import { ModalSection, ModalHeader } from '@kiwicom/orbit-components/lib/Modal';
 import { Carousel } from 'react-responsive-carousel';
 import Button from '@kiwicom/orbit-components/lib/Button';
 import ButtonLink from '@kiwicom/orbit-components/lib/ButtonLink';
-import { onboardingDonor, onboardingNpo } from '@constants/onboarding';
 import { DONOR } from '@constants/usersType';
 import { colors } from '@constants/colors';
 import BlueButton from '@components/buttons/BlueButton';
 import RedButton from '@components/buttons/RedButton';
 import Linkify from 'react-linkify';
-import { useRouter } from 'next/router';
 
 const Image = styled.img`
-  height: 200px;
+  height: 120px;
   width: 100%;
-  margin-bottom: 50px;
+  margin-bottom: 30px;
 `;
 
 const BannerContentContainer = styled.div`
@@ -52,11 +50,8 @@ const BannerContent = ({ src, description }) => {
   );
 };
 
-const Onboarding = ({ type, show = false, name = '' }) => {
-  const router = useRouter();
-  const [shown, setShown] = useState(show);
+const SlideShow = ({ contents, closeSlideShow, type, show = false }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [onboardingContent, setOnboardingContent] = useState(type === DONOR ? onboardingDonor : onboardingNpo);
   const [buttonLabel, setButtonLabel] = useState('Next');
 
   const updateCurrentSlide = (index) => {
@@ -65,18 +60,17 @@ const Onboarding = ({ type, show = false, name = '' }) => {
     }
   };
 
-  const closeOnboarding = () => {
-    setShown(false);
-    router.push('/', '/', {
-      shallow: true,
-    });
+  const closeAndResetSlideShow = () => {
+    setCurrentSlide(0);
+    setButtonLabel('Next');
+    closeSlideShow();
   };
 
   return (
     <>
-      {shown ? (
-        <Modal onClose={closeOnboarding} size="small">
-          <ModalHeader title={`Welcome, ${name}!`}></ModalHeader>
+      {show ? (
+        <Modal onClose={closeAndResetSlideShow} size="small">
+          <ModalHeader title={`How it works as a ${type.toUpperCase()}`}></ModalHeader>
           <ModalSection>
             <Carousel
               showThumbs={false}
@@ -105,24 +99,24 @@ const Onboarding = ({ type, show = false, name = '' }) => {
                 );
               }}
             >
-              {onboardingContent.map((content) => (
+              {contents.map((content) => (
                 <BannerContent src={content.src} description={content.description} key={content.src} />
               ))}
             </Carousel>
 
             <Stack direction="row" justify="between">
-              <ButtonLink onClick={closeOnboarding} type="secondary">
-                Skip intro
+              <ButtonLink onClick={closeAndResetSlideShow} type="secondary">
+                Close
               </ButtonLink>
               <Button
                 asComponent={type === DONOR ? RedButton : BlueButton}
                 onClick={() => {
                   setCurrentSlide(currentSlide + 1);
-                  if (currentSlide + 2 === onboardingContent.length) {
+                  if (currentSlide + 2 === contents.length) {
                     setButtonLabel('Done');
                   }
-                  if (currentSlide + 1 === onboardingContent.length) {
-                    closeOnboarding();
+                  if (currentSlide + 1 === contents.length) {
+                    closeAndResetSlideShow();
                   }
                 }}
               >
@@ -136,10 +130,10 @@ const Onboarding = ({ type, show = false, name = '' }) => {
   );
 };
 
-Onboarding.propTypes = {
+SlideShow.propTypes = {
   type: PropTypes.string.isRequired,
   show: PropTypes.bool.isRequired,
-  name: PropTypes.string.isRequired,
+  contents: PropTypes.array.isRequired,
 };
 
-export default Onboarding;
+export default SlideShow;

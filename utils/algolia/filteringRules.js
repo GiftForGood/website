@@ -17,3 +17,7 @@ export const getByStatusAndNotExpired = (status, currentDateTime) => {
 export const getNpoNotBlocked = () => {
   return `isBlocked: '${false}'`;
 };
+
+export const getNpoWishes = (orgId) => {
+  return `organization.id: '${orgId}'`;
+};

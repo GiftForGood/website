@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Stack, Tile, NotificationBadge } from '@kiwicom/orbit-components/lib';
+import { Stack, Tile, NotificationBadge, Badge } from '@kiwicom/orbit-components/lib';
 import { useRouter } from 'next/router';
 import styled, { css } from 'styled-components';
 import ProfileAvatar from '../../components/imageContainers/ProfileAvatar';
@@ -7,6 +7,8 @@ import BlackText from '../../components/text/BlackText';
 import { getFormattedDate } from '@api/time';
 import { IMAGE, CALENDAR } from '@constants/chatContentType';
 import { colors } from '@constants/colors';
+import { COMPLETED, CLOSED } from '@constants/postStatus';
+import { DELIVERED } from '@constants/chatStatus';
 
 const DetailsContainer = styled.div`
   display: flex;
@@ -46,7 +48,7 @@ const OneLineTextContainer = styled.div`
 
 const NotificationBadgeWrapper = styled.div`
   position: absolute;
-  bottom: 10px;
+  top: 40px;
   right: 0;
 `;
 
@@ -56,6 +58,10 @@ const TileContainer = styled.div`
     css`
       border: 2px solid ${colors.chatCardSelected.background};
     `}
+`;
+
+const StatusBadgeContainer = styled.div`
+  padding-top: 10px;
 `;
 
 const LastMessageDate = ({ date }) => {
@@ -86,6 +92,7 @@ const ChatWithUserCard = ({
   profileImageUrl,
   name,
   post,
+  chatStatus,
   unreadCount,
   isSelected,
   lastMessage,
@@ -122,6 +129,17 @@ const ChatWithUserCard = ({
       router.push(`/chat`, routeWithUpdatedChatId, { shallow: true });
     }
   };
+
+  const StatusBadge = () => {
+    if (post.status === COMPLETED || post.status === CLOSED) {
+      return <Badge type="neutral">{post.status.toUpperCase()}</Badge>;
+    }
+    if (chatStatus === DELIVERED) {
+      return <Badge type="neutral">{chatStatus.toUpperCase()}</Badge>;
+    }
+    return null;
+  };
+
   return (
     <TileContainer isSelected={isSelected}>
       <Tile onClick={handleClickChat}>
@@ -148,6 +166,9 @@ const ChatWithUserCard = ({
                     {contentType === IMAGE ? 'Sent an image' : contentType === CALENDAR ? 'Sent a calendar' : content}
                   </BlackText>
                 </OneLineTextContainer>
+                <StatusBadgeContainer>
+                  <StatusBadge />
+                </StatusBadgeContainer>
               </Stack>
             </Stack>
             {unreadCount > 0 && (

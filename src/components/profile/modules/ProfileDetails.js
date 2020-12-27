@@ -1,7 +1,7 @@
 import React from 'react';
 import ProfileAvatar from '../../imageContainers/ProfileAvatar';
 import KiwicomGuarantee from '@kiwicom/orbit-components/lib/icons/KiwicomGuarantee';
-import { Stack, Text, Heading } from '@kiwicom/orbit-components/lib';
+import { Stack, Text, Heading, TextLink } from '@kiwicom/orbit-components/lib';
 import { colors } from '@constants/colors';
 import { npo } from '@constants/userType';
 
@@ -13,6 +13,7 @@ const ProfileDetails = ({
   npoContact,
   name,
   userType,
+  npoOrgId,
 }) => {
   const isNpo = userType === npo;
   return (
@@ -26,6 +27,12 @@ const ProfileDetails = ({
             <Text size="small">Verified NPO</Text>
             <KiwicomGuarantee customColor={colors.verifiedIcon.background} />
           </Stack>
+        )}
+
+        {isNpo && npoOrgId && (
+          <TextLink href={`/organization/${npoOrgId}`} type="secondary" size="small">
+            Visit my organization
+          </TextLink>
         )}
       </Stack>
       {isNpo && <Text>{npoOrgAddress}</Text>}
