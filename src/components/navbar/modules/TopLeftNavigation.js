@@ -1,7 +1,5 @@
 import React from 'react';
 import { Stack, ButtonLink } from '@kiwicom/orbit-components/';
-import { MenuHamburger } from '@kiwicom/orbit-components/lib/icons';
-import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 import LogoButton from '../../buttons/LogoButton';
 import { companyLogoImagePath } from '@constants/imagePaths';
 import styled, { css } from 'styled-components';
@@ -22,38 +20,31 @@ const SearchBarContainer = styled.div`
   `)};
 `;
 
-const TopLeftNavigation = ({ onHamburgerClick, searchDefaultIndex }) => {
-  const { isDesktop } = useMediaQuery();
+const TopLeftNavigation = ({ searchDefaultIndex }) => {
   return (
     <Stack direction="row" shrink spacing="tight">
-      {isDesktop ? (
-        <>
-          <LogoButton src={companyLogoImagePath} height={45} href={'/'} />
-          <SearchBarContainer>
-            <NavSearchBar searchDefaultIndex={searchDefaultIndex} />
-          </SearchBarContainer>
+      <LogoButton src={companyLogoImagePath} height={45} href={'/'} />
+      <SearchBarContainer>
+        <NavSearchBar searchDefaultIndex={searchDefaultIndex} />
+      </SearchBarContainer>
 
-          <Link href="/">
-            <ButtonLink type="secondary" href={'/'}>
-              Wishes
-            </ButtonLink>
-          </Link>
+      <Link href="/">
+        <ButtonLink type="secondary" href={'/'}>
+          Wishes
+        </ButtonLink>
+      </Link>
 
-          <Link href="/donations">
-            <ButtonLink type="secondary" href={'/donations'}>
-              Donations
-            </ButtonLink>
-          </Link>
+      <Link href="/donations">
+        <ButtonLink type="secondary" href={'/donations'}>
+          Donations
+        </ButtonLink>
+      </Link>
 
-          <Link href="/npos">
-            <ButtonLink type="secondary" href={'/npos'}>
-              NPOs
-            </ButtonLink>
-          </Link>
-        </>
-      ) : (
-        <ButtonLink iconLeft={<MenuHamburger />} transparent type="secondary" onClick={onHamburgerClick} />
-      )}
+      <Link href="/npos">
+        <ButtonLink type="secondary" href={'/npos'}>
+          NPOs
+        </ButtonLink>
+      </Link>
     </Stack>
   );
 };
