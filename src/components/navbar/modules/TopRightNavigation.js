@@ -153,7 +153,8 @@ const LoggedInButtons = () => {
 
 const NotLoggedInButtons = () => {
   const router = useRouter();
-  const onLoginClick = () => router.push('/login');
+  const redirectString = router.asPath !== '/' ? `?redirect=${router.asPath}` : '';
+  const onLoginClick = () => router.push(`/login${redirectString}`);
   const onRegisterClick = () => router.push('/register');
   return (
     <>
