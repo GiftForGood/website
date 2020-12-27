@@ -26,9 +26,9 @@ const AboutUs = ({ user }) => {
       <Header title="About Us | GiftForGood" />
       <TopNavigationBar showNews={true} searchDefaultIndex={WISHES} />
       <AboutUsPage />
+      <MobileFooter />
       <BottomNavigation />
       <Footer />
-      <MobileFooter />
     </SessionProvider>
   );
 };

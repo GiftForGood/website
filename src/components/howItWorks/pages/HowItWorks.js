@@ -66,7 +66,7 @@ const selectedLink = styled.a`
 `;
 
 const HowItWorks = ({ setIsShowHowItWorks }) => {
-  const [currentTab, setCurrentTab] = useState(NPO);
+  const [currentTab, setCurrentTab] = useState(DONOR);
   const [shouldShowUndo, setShouldShowUndo] = useState(false);
   const [timerId, setTimerId] = useState(null);
   const { isDesktop } = useMediaQuery();
@@ -104,17 +104,17 @@ const HowItWorks = ({ setIsShowHowItWorks }) => {
       <Stack direction="row" spacing="loose" spaceAfter="large" shrink>
         <TextLink
           type="secondary"
-          asComponent={currentTab === NPO ? selectedLink : unselectedLink}
-          onClick={() => setCurrentTab(NPO)}
-        >
-          I am a NPO
-        </TextLink>
-        <TextLink
-          type="secondary"
           asComponent={currentTab === DONOR ? selectedLink : unselectedLink}
           onClick={() => setCurrentTab(DONOR)}
         >
           I am a Donor
+        </TextLink>
+        <TextLink
+          type="secondary"
+          asComponent={currentTab === NPO ? selectedLink : unselectedLink}
+          onClick={() => setCurrentTab(NPO)}
+        >
+          I am a NPO
         </TextLink>
       </Stack>
       {isDesktop ? <DesktopSteps type={currentTab} /> : <MobileSteps type={currentTab} />}
