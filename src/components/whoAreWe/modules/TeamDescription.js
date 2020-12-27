@@ -51,9 +51,9 @@ const TeamSection = ({ teamMembers }) => {
 
   return (
     <Stack direction="column" spacing="loose">
-      {teamMembers.map((member) => {
+      {teamMembers.map((member, index) => {
         return isTablet ? (
-          <Stack direction="row" spacing="extraLoose">
+          <Stack key={index} direction="row" spacing="extraLoose">
             <ProfileAvatar width="125" height="125" imageUrl={member.imageUrl} />
             <MemberDescriptionContainer>
               <Stack direction="column">
@@ -76,7 +76,7 @@ const TeamSection = ({ teamMembers }) => {
             </MemberDescriptionContainer>
           </Stack>
         ) : (
-          <Stack direction="column" spacing="compact" align="center">
+          <Stack key={index} direction="column" spacing="compact" align="center">
             <ProfileAvatar width="100" height="100" imageUrl={member.imageUrl} />
             <MemberDescriptionContainer>
               <Stack direction="column" align="center">

@@ -28,3 +28,23 @@ export const onboardingNpo = [
     description: 'Use our promo codes for discounted delivery rates! https://www.giftforgood.io/delivery-partners',
   },
 ];
+
+export const stats = [
+  {
+    src:
+      'https://res.cloudinary.com/giftforgood/image/upload/v1608970817/onboarding/undraw_Team_page_re_cffb_ymbfh4.svg',
+    title: '25+',
+    description: 'Registered Charities',
+  },
+  {
+    src:
+      'https://res.cloudinary.com/giftforgood/image/upload/v1608970816/onboarding/undraw_Post_online_re_1b82_ocut8f.svg',
+    title: '130+',
+    description: 'Wishes',
+  },
+  {
+    src: 'https://res.cloudinary.com/giftforgood/image/upload/v1608970813/onboarding/undraw_deliveries_131a_b8wapu.svg',
+    title: '170+',
+    description: 'Donors',
+  },
+];

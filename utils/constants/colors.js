@@ -2,6 +2,7 @@ export const colors = {
   yellow: '#FFC620',
   white: '#ffffff',
   subtleGrey: '#707070', // used in view all button's border, footer description of donation cards
+  paleGrey: '#EEEEEE',
   primaryRed: {
     background: '#ed5555',
     hoverActive: '#eb3e3e',
