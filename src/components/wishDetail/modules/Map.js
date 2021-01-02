@@ -20,6 +20,7 @@ const Map = ({ npoOrgName, locations }) => {
       const map = new google.maps.Map(document.getElementById('map'), {
         zoom: locations.length > 1 ? 11 : 16, // determines the magnification level of the map
         center: centerLocation,
+        clickableIcons: false,
       });
 
       locations.map((location, index) => {
