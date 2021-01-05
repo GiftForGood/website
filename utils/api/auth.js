@@ -177,12 +177,13 @@ class AuthAPI {
    * @throws {FirebaseError}
    */
   async sendVerificationEmail() {
-    let url = FIREBASE_EMAIL_ACTION_URL + '/';
+    const user = firebaseAuth.currentUser;
+
+    const url = `${FIREBASE_EMAIL_ACTION_URL}?verificationUserId=${user.uid}`;
     const actionCodeSettings = {
       url: url,
     };
 
-    const user = firebaseAuth.currentUser;
     return user.sendEmailVerification(actionCodeSettings);
   }
 
