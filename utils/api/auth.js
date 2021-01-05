@@ -256,6 +256,7 @@ class AuthAPI {
     const timeNow = firebase.firestore.FieldValue.serverTimestamp();
     const data = {
       userId: userInfo.uid,
+      isEmailVerified: userInfo.emailVerified,
       name: name,
       profileImageUrl: profileImageUrlMapping,
       numberOfReviews: 0,
@@ -290,6 +291,7 @@ class AuthAPI {
     const timeNow = firebase.firestore.FieldValue.serverTimestamp();
     const data = {
       userId: userId,
+      isEmailVerified: userProfile.emailVerified,
       name: name,
       contactNumber: contact,
       profileImageUrl: profileImageUrlMapping,
