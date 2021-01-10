@@ -29,6 +29,9 @@ export const algoliaLogoPath =
   'https://res.cloudinary.com/giftforgood/image/upload/v1594824628/footer/logo-algolia-nebula-blue-full_ocvxtb.svg';
 export const groundUpCentralLogoPath =
   'https://res.cloudinary.com/giftforgood/image/upload/v1594736348/footer/groundup-central_logo-2C_vtsh9t.png';
+export const wishLogoPath = 'https://res.cloudinary.com/giftforgood/image/upload/v1607953770/icons/wishlist_qb4osy.svg';
+export const donationLogoPath =
+  'https://res.cloudinary.com/giftforgood/image/upload/v1607953769/icons/heart_orydxr.svg';
 
 export const favicon = '/assets/favicon.ico';
 
@@ -38,4 +41,4 @@ export const emptyStateImagePath =
 export const howItWorksNpoImagePath =
   'https://res.cloudinary.com/giftforgood/image/upload/v1607875620/banners/mobile_npo_how_it_works_qu3kc8.jpg';
 export const howItWorksDonorImagePath =
-  'https://res.cloudinary.com/giftforgood/image/upload/v1607875620/banners/mobile_donor_how_it_works_aybyrm.jpg';
+  'https://res.cloudinary.com/giftforgood/image/upload/v1609052165/banners/2020-12-27_14.48.39_ibszvm.jpg';

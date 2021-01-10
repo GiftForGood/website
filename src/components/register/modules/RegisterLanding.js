@@ -9,6 +9,8 @@ import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 
 import NpoSessionCard from '../../card/NpoSessionCard';
 import DonorSessionCard from '../../card/DonorSessionCard';
+import { companyIconImagePath } from '@constants/imagePaths';
+import Image from 'next/image';
 
 const Container = styled.div`
   display: flex;
@@ -34,6 +36,10 @@ const RegisterLanding = (props, state) => {
   return (
     <Container>
       <Text align="center" as="div">
+        <a href="/">
+          <Image src={companyIconImagePath} height="100px" width="100px" />
+        </a>
+
         <Heading spaceAfter="largest" size="large" weight="bold">
           Join GiftForGood
         </Heading>
