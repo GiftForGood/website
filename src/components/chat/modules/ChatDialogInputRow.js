@@ -13,6 +13,7 @@ import { isMobile } from 'react-device-detect';
 import ChatContext from '../context';
 import { setSelectedChatId, setIsNewChat } from '../actions';
 import { getSelectedChatId, getIsNewChat } from '../selectors';
+import useDraftedInput from '@utils/hooks/useDraftedInput';
 
 const InputRowContainer = styled.div`
   width: 95%;
@@ -57,8 +58,7 @@ const ChatDialogInputRow = ({ postType, postId }, ref) => {
   const { state, dispatch } = useContext(ChatContext);
   const isNewChat = getIsNewChat(state);
   const selectedChatId = getSelectedChatId(state);
-
-  const [inputMessage, setInputMessage] = useState('');
+  const [inputMessage, setInputMessage] = useDraftedInput(`chat-${selectedChatId}`, '');
   const [alertMessage, setAlertMessage] = useState('');
   const textAreaRef = useRef(null);
   const router = useRouter();
