@@ -1,7 +1,7 @@
 import Head from 'next/head';
-import { ogImagePath } from '@constants/imagePaths';
+import { wishOpenGraph } from '@constants/imagePaths';
 
-const WishHeader = ({ title, description, path }) => {
+const WishHeader = ({ title, description, path, id }) => {
   return (
     <Head>
       {/* meta property for sharing purposes */}
@@ -9,9 +9,9 @@ const WishHeader = ({ title, description, path }) => {
       <meta property="og:type" content="website" />
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
-      <meta property="og:image" content={ogImagePath} />
-      <meta property="og:image:secure_url" content={ogImagePath} />
-      <meta property="og:image:type" content="image/jpeg" />
+      <meta property="og:image" content={`${wishOpenGraph}${id}`} />
+      <meta property="og:image:secure_url" content={`${wishOpenGraph}${id}`} />
+      <meta property="og:image:type" content="image/png" />
     </Head>
   );
 };

@@ -57,7 +57,7 @@ const Wish = ({ wishId, wishDetails, npoDetails, user, prevHref, categoryName })
   return (
     <SessionProvider user={user}>
       <Header title={wishDetails.title} />
-      <WishHeader title={wishDetails.title} description={wishDetails.description} path={router.asPath} />
+      <WishHeader title={wishDetails.title} description={wishDetails.description} path={router.asPath} id={wishId}/>
       <TopNavigationBar showNews={true} />
       <WishPage
         wishId={wishId}

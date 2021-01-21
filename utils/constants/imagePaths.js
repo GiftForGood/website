@@ -42,3 +42,5 @@ export const howItWorksNpoImagePath =
   'https://res.cloudinary.com/giftforgood/image/upload/v1607875620/banners/mobile_npo_how_it_works_qu3kc8.jpg';
 export const howItWorksDonorImagePath =
   'https://res.cloudinary.com/giftforgood/image/upload/v1609052165/banners/2020-12-27_14.48.39_ibszvm.jpg';
+
+export const wishOpenGraph = 'https://gfg-og.vercel.app/api/wishes/og?id=';
