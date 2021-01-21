@@ -12,6 +12,7 @@ const WishHeader = ({ title, description, path, id }) => {
       <meta property="og:image" content={`${wishOpenGraph}${id}`} />
       <meta property="og:image:secure_url" content={`${wishOpenGraph}${id}`} />
       <meta property="og:image:type" content="image/png" />
+      <meta name="twitter:card" content="summary_large_image" />
     </Head>
   );
 };
