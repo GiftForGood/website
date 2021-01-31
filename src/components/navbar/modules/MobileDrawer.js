@@ -1,22 +1,60 @@
 import React from 'react';
 import { Stack, ButtonLink, Separator, Drawer } from '@kiwicom/orbit-components';
-import CallToActionButton from '@components/buttons/CallToActionButton';
+
+import api from '@api';
+import client from '@utils/axios';
+import { logout } from '../../session/actions';
+import { useDispatch } from 'react-redux';
+import useLocalStorage from '@utils/hooks/useLocalStorage';
+import { useRouter } from 'next/router';
+import useUser from '../../session/modules/useUser';
 
 const MobileDrawer = ({ shown, onClose }) => {
+  const router = useRouter();
+  const user = useUser();
+  const [registeredObjectString, setRegisteredObjectString] = useLocalStorage(
+    'registered',
+    '{"isNewlyRegistered":true}'
+  );
+  const dispatch = useDispatch();
+
+  const onLogoutClick = async () => {
+    try {
+      await api.auth.logout();
+      let response = await client.post('/api/sessionLogout');
+      if (response.status === 200) {
+        dispatch(logout());
+        setRegisteredObjectString('{"isNewlyRegistered":true}');
+        onClose();
+        router.push('/');
+      } else {
+        throw response.error;
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
-    <Drawer shown={shown} position="left" onClose={onClose} suppressed={false}>
+    <Drawer shown={shown} position="right" onClose={onClose} suppressed={false}>
       <Stack direction="column">
         <Stack direction="column" spacing="tight">
-          <ButtonLink transparent type="secondary" href={'/'}>
-            Wishes
-          </ButtonLink>
-          <ButtonLink transparent type="secondary" href={'/donations'}>
-            Donations
-          </ButtonLink>
-          <ButtonLink transparent type="secondary" href={'/npos'}>
-            NPOs
-          </ButtonLink>
-          <CallToActionButton fullWidth={true} />
+          {user ? (
+            <>
+              <ButtonLink transparent type="secondary" onClick={onLogoutClick}>
+                Logout
+              </ButtonLink>
+            </>
+          ) : (
+            <>
+              <ButtonLink transparent type="secondary" href={'/register'}>
+                Register
+              </ButtonLink>
+              <ButtonLink transparent type="secondary" href={'/login'}>
+                Login
+              </ButtonLink>
+            </>
+          )}
         </Stack>
 
         <Separator fullWidth />
@@ -24,6 +62,9 @@ const MobileDrawer = ({ shown, onClose }) => {
         <Stack direction="column" spacing="tight">
           <ButtonLink transparent href="/about" type="secondary">
             About Us
+          </ButtonLink>
+          <ButtonLink transparent href="/who-are-we" type="secondary">
+            Who Are We
           </ButtonLink>
           <ButtonLink transparent href="/partners" type="secondary">
             Partners

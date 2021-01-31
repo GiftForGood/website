@@ -13,22 +13,22 @@ import {
 } from '@constants/imagePaths';
 import { colors } from '@constants/colors';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
+import { MaxWidthContainer } from '@components/containers';
 
 const Container = styled.div`
   height: 100%;
   width: 100%;
-  background-color: ${colors.footerBackground};
+  background-color: ${colors.footer.background};
   position: relative;
   bottom: 0;
 `;
 
-const Wrapper = styled.div`
-  margin: 0 auto;
-  width: 90vw;
-  max-width: 1280px;
+const Wrapper = styled(MaxWidthContainer)`
   box-sizing: border-box;
   padding-top: 40px;
   padding-bottom: 40px;
+  margin-top: 0;
+  margin-bottom: 0;
 `;
 
 const Link = styled.a`
@@ -95,6 +95,9 @@ const Footer = () => {
           <Text weight="bold">About GiftForGood</Text>
           <TextLink asComponent={Link} href="/about" type="secondary" size="small">
             About Us
+          </TextLink>
+          <TextLink asComponent={Link} href="/who-are-we" type="secondary" size="small">
+            Who Are We
           </TextLink>
           <TextLink asComponent={Link} href="/partners" type="secondary" size="small">
             Partners

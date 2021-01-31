@@ -11,14 +11,14 @@ import { colors } from '@constants/colors';
 
 const BorderContainer = styled.div`
   border-radius: 5px;
-  border: 1px solid ${colors.nposCardBorder};
+  border: 1px solid ${colors.nposCard.border};
   transition: border-color 0.1s ease-in-out;
   display: flex;
   flex-direction: column;
   width: 340px;
 
   :hover {
-    border-color: ${colors.nposCardBorderHover};
+    border-color: ${colors.nposCard.borderHover};
   }
 `;
 

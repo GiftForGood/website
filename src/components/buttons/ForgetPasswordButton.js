@@ -2,14 +2,14 @@ import styled from 'styled-components';
 import { colors } from '@constants/colors';
 
 const ForgetPasswordButton = styled.button`
-  background: ${colors.loginBackground};
+  background: ${colors.loginButton.background};
 
   :active {
-    background: ${colors.loginHoverActive};
+    background: ${colors.loginButton.hoverActive};
   }
 
   :hover {
-    background: ${colors.loginHoverActive};
+    background: ${colors.loginButton.hoverActive};
   }
 
   :focus {
@@ -18,7 +18,7 @@ const ForgetPasswordButton = styled.button`
 
   :focus:not(:focus-visible) {
     box-shadow: 0 0 0 3px rgba(46, 46, 46, 0.5);
-    background: ${colors.loginHoverActive};
+    background: ${colors.loginButton.hoverActive};
   }
 `;
 

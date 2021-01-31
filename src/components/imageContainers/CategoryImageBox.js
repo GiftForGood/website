@@ -16,7 +16,7 @@ const SquareBox = styled.div`
   border-radius: 1vw;
 
   :hover {
-    background-color: ${colors.categoryHover};
+    background-color: ${colors.category.hover};
   }
 `;
 

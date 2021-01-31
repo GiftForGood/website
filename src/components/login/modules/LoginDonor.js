@@ -17,7 +17,7 @@ import client from '@utils/axios';
 import AuthError from '@api/error/authError';
 
 const HeadingColor = styled.div`
-  color: ${colors.donorBackground};
+  color: ${colors.primaryRed.background};
 `;
 
 const LoginDonor = ({ redirectUrlAfterLogin }) => {

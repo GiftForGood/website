@@ -22,7 +22,7 @@ const ListOfChatsContainer = styled.div`
   `)}
   max-height: 100vh;
   overflow-y: scroll;
-  border-right: 1px solid ${colors.chatBorders};
+  border-right: 1px solid ${colors.borders.background};
   display: ${({ isShow }) => {
     return isShow ? 'unset' : 'none';
   }};
@@ -31,7 +31,7 @@ const ListOfChatsContainer = styled.div`
 const EmptyChatContainer = styled.div`
   height: 100%;
   width: 100%;
-  border-right: 1px solid ${colors.chatBorders};
+  border-right: 1px solid ${colors.borders.background};
   display: ${({ isShow }) => {
     return isShow ? 'unset' : 'none';
   }};
@@ -170,7 +170,7 @@ const ListOfChats = ({ isShow }) => {
           <TileGroup>
             {chatDocs &&
               chatDocs.map((chat) => {
-                const { chatId, donor, npo, lastMessage, post } = chat.data();
+                const { chatId, donor, npo, lastMessage, post, status } = chat.data();
                 // get opposite user's details
                 const { name, profileImageUrl } = user.user.userId === donor.id ? npo : donor;
 
@@ -185,6 +185,7 @@ const ListOfChats = ({ isShow }) => {
                     lastMessage={lastMessage}
                     profileImageUrl={profileImageUrl}
                     post={post}
+                    chatStatus={status}
                     isSelected={isSelected}
                     isNewChat={isNewChat}
                     setIsNewChat={(isNewChat) => dispatch(setIsNewChat(isNewChat))}

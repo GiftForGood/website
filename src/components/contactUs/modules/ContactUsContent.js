@@ -3,15 +3,13 @@ import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import { Heading, Text, TextLink } from '@kiwicom/orbit-components/lib';
 import { contactUsGoogleFormPath } from '@constants/googleFormPaths';
+import { MaxWidthContainer } from '@components/containers';
 
 const TitleContainer = styled.div`
   margin-bottom: 50px;
 `;
 
-const MainContainer = styled.div`
-  max-width: 1280px;
-  margin: 0 auto;
-  margin-top: 50px;
+const MainContainer = styled(MaxWidthContainer)`
   padding: 0 10px;
 `;
 

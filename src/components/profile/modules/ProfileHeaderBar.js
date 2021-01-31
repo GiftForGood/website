@@ -15,17 +15,17 @@ const unselectedLink = styled.a`
   text-decoration: none;
 
   :hover {
-    color: ${colors.ratingStarBackground};
+    color: ${colors.primaryRed.background};
     text-decoration: underline;
   }
 `;
 
 const selectedLink = styled.a`
-  color: ${colors.ratingStarBackground};
+  color: ${colors.primaryRed.background};
   text-decoration: underline;
 
   :hover {
-    color: ${colors.ratingStarBackground};
+    color: ${colors.primaryRed.background};
     text-decoration: none;
   }
 `;

@@ -112,7 +112,7 @@ const TopWishes = ({ numberOfPosts, numberOfCategories }) => {
           const profileHref = `/profile/${wish.user.userId}`;
           return (
             <GroupWishCard
-              key={wish.wishId}
+              key={`${category.id}-${wish.objectID}`}
               name={wish.organization.name}
               title={wish.title}
               description={wish.description}
@@ -139,7 +139,7 @@ const TopWishes = ({ numberOfPosts, numberOfCategories }) => {
   return (
     <Stack desktop={{ direction: 'row' }} direction="column" align="start" spacing="extraLoose">
       {topCategories.map((category) => (
-        <InstantSearch searchClient={searchClient} indexName="wishes">
+        <InstantSearch key={category.id} searchClient={searchClient} indexName="wishes">
           <TopCategories category={category} />
           <Configure
             filters={getByCategoryIdAndStatusAndNotExpired(category.id, 'pending', Date.now())}

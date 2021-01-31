@@ -26,7 +26,7 @@ const BannerContentContainer = styled.div`
 
 const Indicator = styled.li`
   background: ${({ selected, type }) =>
-    selected ? (type === DONOR ? colors.donorBackground : colors.npoBackground) : '#bdbdbd'};
+    selected ? (type === DONOR ? colors.primaryRed.background : colors.primaryBlue.background) : '#bdbdbd'};
   width: 10px;
   height: 10px;
   display: inline-block;
@@ -106,7 +106,7 @@ const Onboarding = ({ type, show = false, name = '' }) => {
               }}
             >
               {onboardingContent.map((content) => (
-                <BannerContent src={content.src} description={content.description} />
+                <BannerContent src={content.src} description={content.description} key={content.src} />
               ))}
             </Carousel>
 

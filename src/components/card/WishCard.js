@@ -6,6 +6,8 @@ import styled, { css } from 'styled-components';
 import { useRouter } from 'next/router';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import { SeasonalContainer, SeasonalSmallTag } from '@components/seasonal';
+import { PENDING } from '@constants/postStatus';
+import WishCardStatus from './WishCardStatus';
 
 const CardContainer = styled.div`
   display: flex;
@@ -28,7 +30,10 @@ const CardContainer = styled.div`
 `;
 
 const CardHeaderContainer = styled.div`
-  padding: 10px;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-top: 10px;
+  padding-bottom: 10px;
   display: flex;
 `;
 
@@ -60,6 +65,8 @@ const CardDescriptionContainer = styled.div`
   margin: 10px;
   display: flex;
   flex-direction: column;
+  padding-left: 10px;
+  padding-right: 10px;
 `;
 
 const CardDescriptionFooterContainer = styled.div`
@@ -69,6 +76,8 @@ const CardDescriptionFooterContainer = styled.div`
   `)}
   display: flex;
   align-items: center;
+  padding-left: 10px;
+  padding-right: 10px;
 `;
 
 const ClickableDiv = styled.a`
@@ -142,6 +151,7 @@ const WishCard = ({
   categoryId,
   categoryName,
   onClick,
+  status = null,
   seasonal,
 }) => {
   const timeAgo = getTimeDifferenceFromNow(postedDateTime);
@@ -164,7 +174,11 @@ const WishCard = ({
         </>
       ) : null}
 
-      <Grid style={{ height: '100%', paddingLeft: '10px', paddingRight: '10px' }} rows="2fr 6fr 2fr" cols="1fr">
+      <Grid
+        style={{ height: '100%' }}
+        rows={status && status !== PENDING ? '2fr 0.5fr 6fr 2fr' : '2fr 6fr 2fr'}
+        cols="1fr"
+      >
         <CardHeaderContainer>
           <CardHeader
             name={name}
@@ -174,6 +188,9 @@ const WishCard = ({
             profileHref={profileHref}
           />
         </CardHeaderContainer>
+
+        {status && status !== PENDING ? <WishCardStatus status={status} /> : null}
+
         <CardDescriptionContainer>
           <CardDescription title={title} description={description} />
         </CardDescriptionContainer>

@@ -3,6 +3,7 @@ import ProfileAvatar from '../imageContainers/ProfileAvatar';
 import ReportPostModal from '../modal/ReportPostModal';
 import ClosePostModal from '../modal/ClosePostModal';
 import SharePostModal from '../modal/SharePostModal';
+import RegisterLoginModal from '../modal/RegisterLoginModal';
 import ChatButton from '../buttons/ChatButton';
 import Verified from '../session/modules/Verified';
 import api from '@api';
@@ -19,7 +20,6 @@ import { useRouter } from 'next/router';
 import { COMPLETED, CLOSED } from '@constants/postStatus';
 import { donations, wishes } from '@constants/postType';
 import { donor, npo } from '@constants/userType';
-import { colors } from '@constants/colors';
 import { logStartChatToAnalytics } from '@utils/analytics';
 import styled from 'styled-components';
 import { clickedOnStartChatWithDonation, clickedOnStartChatWithWish } from '@utils/algolia/insights';
@@ -62,6 +62,7 @@ const PostDetailsHeader = ({
   const [showReportPostModal, setShowPostPostModal] = useState(false);
   const [showClosePostModal, setShowClosePostModal] = useState(false);
   const [showSharePostModal, setShowSharePostModal] = useState(false);
+  const [showRegisterLoginModal, setShowRegisterLoginModal] = useState(false);
 
   const userObject = useUser();
 
@@ -89,9 +90,16 @@ const PostDetailsHeader = ({
     }
   };
 
-  const handleOnClickChatBtn = (event) => {
+  const handleOnClickChatBtn = (event, isDisabled) => {
     event.preventDefault();
     let destination = `/chat?postId=${postId}&postType=${postType}`;
+
+    // user not logged in or not verified logged in user
+    if (isDisabled) {
+      setShowRegisterLoginModal(true);
+      return;
+    }
+
     if (chatType === 'Chat') {
       logStartChatToAnalytics();
       if (postType === donations) {
@@ -226,21 +234,24 @@ const PostDetailsHeader = ({
           {({ isDisabled }) => {
             return (
               <>
-                <Button
-                  disabled={
-                    isDisabled ||
-                    (!isOwnPost && isPostTypeSameAsUserType) ||
-                    (chatType === 'Chat' && (isClosedPost || isCompletedPost))
-                      ? true
-                      : false
-                  }
-                  size="small"
-                  asComponent={ChatButton}
-                  onClick={handleOnClickChatBtn}
-                  width="150px"
-                >
-                  {chatType}
-                </Button>
+                {chatType === 'Chat' && (isClosedPost || isCompletedPost) ? (
+                  <Button disabled size="small" type={isClosedPost ? 'critical' : 'primary'} width="150px">
+                    {postStatus.toUpperCase()}
+                  </Button>
+                ) : (
+                  <Button
+                    disabled={!isOwnPost && isPostTypeSameAsUserType}
+                    size="small"
+                    asComponent={ChatButton}
+                    onClick={(e) => handleOnClickChatBtn(e, isDisabled)}
+                    width="150px"
+                  >
+                    {chatType}
+                  </Button>
+                )}
+                {showRegisterLoginModal && (
+                  <RegisterLoginModal redirectUrl={router.asPath} onClose={() => setShowRegisterLoginModal(false)} />
+                )}
                 {showSharePostModal ? (
                   <SharePostModal
                     postId={postId}

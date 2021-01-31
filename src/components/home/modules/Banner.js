@@ -4,6 +4,7 @@ import { Grid } from '@kiwicom/orbit-components/lib';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import BannerCarousel from './BannerCarousel';
 import SideBanner from './SideBanner';
+import { MaxWidthContainer } from '@components/containers';
 
 // only display when it is desktop
 const AdvertisementContainer = styled.div`
@@ -16,13 +17,14 @@ const AdvertisementContainer = styled.div`
   `)};
 `;
 
-const BannerContainer = styled.div`
+const BannerContainer = styled(MaxWidthContainer)`
   ${media.desktop(css`
     width: 90vw;
   `)};
-  max-width: 1280px;
-  margin: 0 auto;
+  width: 100%;
   height: 100%;
+  margin-top: 0;
+  margin-bottom: 0;
 `;
 
 /**
