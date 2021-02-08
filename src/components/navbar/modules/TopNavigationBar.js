@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Stack } from '@kiwicom/orbit-components';
 import TopLeftNavigation from './TopLeftNavigation';
 import TopRightNavigation from './TopRightNavigation';
+import MobileTopNavigation from './MobileTopNavigation';
 import styled, { css } from 'styled-components';
 import EmailVerificationNavigationBar from './EmailVerificationNavigationBar';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
@@ -11,6 +12,7 @@ import NewsNavigationBar from '../modules/NewsNavigationBar';
 import { useDispatch } from 'react-redux';
 import { setNavbarHeight } from '../actions';
 import MobileDrawer from './MobileDrawer';
+import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 
 const TopNavigationBarContainer = styled.nav`
   position: fixed;
@@ -57,6 +59,7 @@ const TopNavigationBar = ({ showNews, searchDefaultIndex }) => {
   const [shown, setShown] = useState(true);
   const [prevScrollPosition, setPrevScrollPosition] = useState(0);
   const dispatch = useDispatch();
+  const { isDesktop } = useMediaQuery();
 
   const ref = useRef(null);
   const [height, setHeight] = useState(0);
@@ -101,10 +104,14 @@ const TopNavigationBar = ({ showNews, searchDefaultIndex }) => {
         <EmailVerificationNavigationBar />
 
         <NavigationBarContainer>
-          <Stack justify="between" spacing="none">
-            <TopLeftNavigation onHamburgerClick={onHamburgerClick} searchDefaultIndex={searchDefaultIndex} />
-            <TopRightNavigation />
-          </Stack>
+          {isDesktop ? (
+            <Stack justify="between" spacing="none">
+              <TopLeftNavigation />
+              <TopRightNavigation />
+            </Stack>
+          ) : (
+            <MobileTopNavigation onHamburgerClick={onHamburgerClick} />
+          )}
         </NavigationBarContainer>
       </TopNavigationBarContainer>
 

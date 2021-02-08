@@ -96,6 +96,9 @@ const Footer = () => {
           <TextLink asComponent={Link} href="/about" type="secondary" size="small">
             About Us
           </TextLink>
+          <TextLink asComponent={Link} href="/who-are-we" type="secondary" size="small">
+            Who Are We
+          </TextLink>
           <TextLink asComponent={Link} href="/partners" type="secondary" size="small">
             Partners
           </TextLink>

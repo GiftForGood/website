@@ -177,12 +177,13 @@ class AuthAPI {
    * @throws {FirebaseError}
    */
   async sendVerificationEmail() {
-    let url = FIREBASE_EMAIL_ACTION_URL + '/';
+    const user = firebaseAuth.currentUser;
+
+    const url = `${FIREBASE_EMAIL_ACTION_URL}?verificationUserId=${user.uid}`;
     const actionCodeSettings = {
       url: url,
     };
 
-    const user = firebaseAuth.currentUser;
     return user.sendEmailVerification(actionCodeSettings);
   }
 
@@ -256,6 +257,7 @@ class AuthAPI {
     const timeNow = firebase.firestore.FieldValue.serverTimestamp();
     const data = {
       userId: userInfo.uid,
+      isEmailVerified: userInfo.emailVerified,
       name: name,
       profileImageUrl: profileImageUrlMapping,
       numberOfReviews: 0,
@@ -290,6 +292,7 @@ class AuthAPI {
     const timeNow = firebase.firestore.FieldValue.serverTimestamp();
     const data = {
       userId: userId,
+      isEmailVerified: userProfile.emailVerified,
       name: name,
       contactNumber: contact,
       profileImageUrl: profileImageUrlMapping,

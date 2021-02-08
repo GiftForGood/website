@@ -5,8 +5,6 @@ import useUser from '../../session/modules/useUser';
 import { AccountCircle, Notification, Messages, Search } from '@kiwicom/orbit-components/lib/icons';
 import CallToActionButton from '../../buttons/CallToActionButton';
 import { useRouter } from 'next/router';
-import Desktop from '@kiwicom/orbit-components/lib/Desktop';
-import Mobile from '@kiwicom/orbit-components/lib/Mobile';
 import api from '@api';
 import client from '@utils/axios';
 import styled from 'styled-components';
@@ -130,58 +128,36 @@ const LoggedInButtons = () => {
   };
 
   return (
-    <>
-      <Desktop>
-        <Stack direction="row" justify="end" align="center" shrink spacing="extraTight">
-          {/* <NotificationButtonContainer>
-            <ButtonLink iconLeft={<Notification />} transparent type="secondary" onClick={onNotificationClick} />
-            {user.unreadNotificationsCount > 0 && (
-              <NotificationBadgeWrapper>
-                <NotificationBadge type="criticalInverted">{user.unreadNotificationsCount}</NotificationBadge>
-              </NotificationBadgeWrapper>
-            )}
-          </NotificationButtonContainer> */}
-          <NotificationButtonContainer>
-            <ButtonLink iconLeft={<Messages />} transparent type="secondary" href="/chat" />
-            {user.unreadChatNotificationsCount > 0 && (
-              <NotificationBadgeWrapper>
-                <NotificationBadge type="criticalInverted">{user.unreadChatNotificationsCount}</NotificationBadge>
-              </NotificationBadgeWrapper>
-            )}
-          </NotificationButtonContainer>
-          <AccountButton onNotificationClick={onNotificationClick} onLogoutClick={onLogoutClick} user={user} />
-          <CallToActionButton />
-        </Stack>
-      </Desktop>
-
-      <Mobile>
-        <Stack direction="row" justify="end" align="center" shrink spacing="extraTight">
-          <ButtonLink iconLeft={<Search />} transparent type="secondary" href="/search" />
-          <NotificationButtonContainer>
-            <ButtonLink iconLeft={<Messages />} transparent type="secondary" href="/chat" />
-            {user.unreadChatNotificationsCount > 0 && (
-              <NotificationBadgeWrapper>
-                <NotificationBadge type="criticalInverted">{user.unreadChatNotificationsCount}</NotificationBadge>
-              </NotificationBadgeWrapper>
-            )}
-          </NotificationButtonContainer>
-          <AccountButton onNotificationClick={onNotificationClick} onLogoutClick={onLogoutClick} user={user} />
-        </Stack>
-      </Mobile>
-    </>
+    <Stack direction="row" justify="end" align="center" shrink spacing="extraTight">
+      {/* <NotificationButtonContainer>
+        <ButtonLink iconLeft={<Notification />} transparent type="secondary" onClick={onNotificationClick} />
+        {user.unreadNotificationsCount > 0 && (
+          <NotificationBadgeWrapper>
+            <NotificationBadge type="criticalInverted">{user.unreadNotificationsCount}</NotificationBadge>
+          </NotificationBadgeWrapper>
+        )}
+      </NotificationButtonContainer> */}
+      <NotificationButtonContainer>
+        <ButtonLink iconLeft={<Messages />} transparent type="secondary" href="/chat" />
+        {user.unreadChatNotificationsCount > 0 && (
+          <NotificationBadgeWrapper>
+            <NotificationBadge type="criticalInverted">{user.unreadChatNotificationsCount}</NotificationBadge>
+          </NotificationBadgeWrapper>
+        )}
+      </NotificationButtonContainer>
+      <AccountButton onNotificationClick={onNotificationClick} onLogoutClick={onLogoutClick} user={user} />
+      <CallToActionButton />
+    </Stack>
   );
 };
 
 const NotLoggedInButtons = () => {
   const router = useRouter();
-  const onLoginClick = () => router.push('/login');
+  const redirectString = router.asPath !== '/' ? `?redirect=${router.asPath}` : '';
+  const onLoginClick = () => router.push(`/login${redirectString}`);
   const onRegisterClick = () => router.push('/register');
   return (
     <>
-      <Mobile>
-        <ButtonLink iconLeft={<Search />} transparent type="secondary" href="/search" width="20px" />
-      </Mobile>
-
       <ButtonLink transparent type="secondary" onClick={onRegisterClick}>
         Register
       </ButtonLink>

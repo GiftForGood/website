@@ -8,7 +8,8 @@ import { WISHES } from '../utils/constants/search';
 
 const TopNavigationBar = dynamic(() => import('../src/components/navbar/modules/TopNavigationBar'), { ssr: false });
 const BottomNavigation = dynamic(() => import('../src/components/navbar/modules/BottomNavigation'), { ssr: false });
-const Footer = dynamic(() => import('../src/components/footer/Footer'), { ssr: false });
+const MobileFooter = dynamic(() => import('@components/footer/MobileFooter'), { ssr: false });
+const Footer = dynamic(() => import('@components/footer/Footer'), { ssr: false });
 
 export async function getServerSideProps({ params, req, res, query }) {
   let user = await isAuthenticated(req, res);
@@ -25,6 +26,7 @@ const AboutUs = ({ user }) => {
       <Header title="About Us | GiftForGood" />
       <TopNavigationBar showNews={true} searchDefaultIndex={WISHES} />
       <AboutUsPage />
+      <MobileFooter />
       <BottomNavigation />
       <Footer />
     </SessionProvider>
