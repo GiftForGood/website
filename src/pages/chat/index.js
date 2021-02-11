@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 // components
 import { Grid } from '@kiwicom/orbit-components/lib';
-import { ListOfChats, ChatDialog } from '../components';
+import { ListOfChats, ChatDialog } from './components';
 import Error from 'next/error';
 import Router from 'next/router';
 
@@ -15,11 +15,11 @@ import {
   ChatContext,
   initialState,
   reducer,
-  // getters
+  // selectors
   getSelectedChatId,
   getIsNewChat,
   getHasError,
-  // setters
+  // actions
   setSelectedChatId,
   setIsNewChat,
   setHasError,
@@ -27,12 +27,12 @@ import {
   setPostId,
   setPostType,
   setIsViewingChatsForMyPost,
-} from '../context';
+} from './context';
 
 // hooks
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 import useWindowDimensions from '@utils/hooks/useWindowDimensions';
-import useNavbarHeight from '../../../components/navbar/modules/useNavbarHeight';
+import useNavbarHeight from '../../components/navbar/modules/useNavbarHeight';
 
 const NoChatsContainer = styled.div`
   margin: 0 auto;

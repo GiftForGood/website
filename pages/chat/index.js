@@ -3,7 +3,7 @@ import dynamic from 'next/dynamic';
 
 // components
 import Error from 'next/error';
-import ChatPage from '@pages/chat/pages';
+import ChatPage from '@pages/chat';
 import Header from '@components/header';
 import SessionProvider from '@components/session/modules/SessionProvider';
 
