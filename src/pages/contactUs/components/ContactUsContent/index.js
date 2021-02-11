@@ -1,5 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
+
+// components
 import { Heading, Text, TextLink } from '@kiwicom/orbit-components/lib';
 import { contactUsGoogleFormPath } from '@constants/googleFormPaths';
 import { MaxWidthContainer } from '@components/containers';
