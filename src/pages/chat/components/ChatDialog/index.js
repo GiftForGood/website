@@ -1,21 +1,35 @@
 import React, { useState, useEffect, useContext } from 'react';
-import Measure from 'react-measure';
-import { Stack, ButtonLink, Button } from '@kiwicom/orbit-components/lib';
-import ChatDialogUserRow from './ChatDialogUserRow';
-import ChatDialogViewPostRow from './ChatDialogViewPostRow';
-import ChatDialogMessages from './ChatDialogMessages';
-import ChatDialogInputRow from './ChatDialogInputRow';
-import BlackText from '../../text/BlackText';
-import api from '@api';
 import styled from 'styled-components';
+
+// components
+import { Stack, ButtonLink, Button } from '@kiwicom/orbit-components/lib';
+import { ChatDialogInputRow, ChatDialogMessages, ChatDialogUserRow, ChatDialogViewPostRow } from './components';
+import BlackText from '@components/text/BlackText';
 import ChevronLeft from '@kiwicom/orbit-components/lib/icons/ChevronLeft';
 import ChevronDown from '@kiwicom/orbit-components/lib/icons/ChevronDown';
 import ChevronUp from '@kiwicom/orbit-components/lib/icons/ChevronUp';
-import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
+import Measure from 'react-measure';
+
+// constants and utils
+import api from '@api';
 import { donations } from '@constants/postType';
-import ChatContext from '../context';
-import { setSelectedChatId, setIsNewChat } from '../actions';
-import { getSelectedChatId, getIsNewChat, getPostId, getPostType, getUser } from '../selectors';
+
+// hooks
+import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
+
+// context
+import {
+  ChatContext,
+  // actions
+  setSelectedChatId,
+  setIsNewChat,
+  // selectors
+  getSelectedChatId,
+  getIsNewChat,
+  getPostId,
+  getPostType,
+  getUser,
+} from '../../context';
 
 const ChatDialogContainer = styled.div`
   width: 100%;

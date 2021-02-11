@@ -1,10 +1,14 @@
 import React from 'react';
-import { Button, Stack } from '@kiwicom/orbit-components/lib';
-import BlackText from '../../text/BlackText';
 import styled from 'styled-components';
-import { donations, wishes } from '@constants/postType';
+
+// components
+import { Button, Stack } from '@kiwicom/orbit-components/lib';
+import BlackText from '@components/text/BlackText';
 import { CardSection } from '@kiwicom/orbit-components/lib/Card';
-import SeePostButton from '../../../components/buttons/ChatSeePostButton';
+import SeePostButton from '@components/buttons/ChatSeePostButton';
+
+// constants and utils
+import { donations, wishes } from '@constants/postType';
 import router from 'next/router';
 
 const TextContainer = styled.div`

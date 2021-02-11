@@ -1,9 +1,13 @@
 import React from 'react';
-import BlackText from '../../text/BlackText';
-import WhiteText from '../../text/WhiteText';
 import styled from 'styled-components';
-import { colors } from '@constants/colors';
+
+// components
+import BlackText from '@components/text/BlackText';
+import WhiteText from '@components/text/WhiteText';
 import Linkify from 'react-linkify';
+
+// constants
+import { colors } from '@constants/colors';
 
 const ChatBubbleContainer = styled.div`
   width: fit-content;

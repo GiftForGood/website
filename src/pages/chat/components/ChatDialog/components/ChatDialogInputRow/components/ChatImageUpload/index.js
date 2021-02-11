@@ -1,14 +1,28 @@
 import React, { useCallback, useContext } from 'react';
+
+// components
 import Gallery from '@kiwicom/orbit-components/lib/icons/Gallery';
-import { useDropzone } from 'react-dropzone';
 import ChatError from '@api/error/chatError';
+
+// context
+import {
+  ChatContext,
+  // actions
+  setSelectedChatId,
+  setIsNewChat,
+  // selectors
+  getSelectedChatId,
+  getIsNewChat,
+} from '../../../../../../context';
+
+// hooks
+import { useRouter } from 'next/router';
+import { useDropzone } from 'react-dropzone';
+
+// utils and constants
 import api from '@api';
 import { donations } from '@constants/postType';
 import { MAXIMUM_FILE_SIZE_LIMIT } from '@constants/files';
-import { useRouter } from 'next/router';
-import ChatContext from '../context';
-import { setSelectedChatId, setIsNewChat } from '../actions';
-import { getSelectedChatId, getIsNewChat } from '../selectors';
 
 const ChatImageUpload = ({ postType, postId, setAlertMessage, onCloseAlert }) => {
   const router = useRouter();
