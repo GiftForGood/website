@@ -13,7 +13,7 @@ import {
   TopicProfile,
   TopicRegistering,
   TopicReporting,
-} from '../components';
+} from './components';
 import { MaxWidthContainer } from '@components/containers';
 
 const FaqContainer = styled(MaxWidthContainer)`
