@@ -6,7 +6,8 @@
       "@constants/*": ["utils/constants/*"],
       "@api/*": ["utils/api/*"],
       "@api": ["utils/api/index"],
-      "@utils/*": ["utils/*"]
+      "@utils/*": ["utils/*"],
+      "@pages/*": ["src/pages/*"]
     }
   }
 }

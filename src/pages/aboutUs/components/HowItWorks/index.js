@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Section from './Section';
+import Section from '../Section';
 import { Stack, Heading, ButtonLink, Text } from '@kiwicom/orbit-components/lib';
 import Image from 'next/image';
 import styled from 'styled-components';

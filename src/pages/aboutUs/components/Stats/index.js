@@ -1,5 +1,5 @@
 import React from 'react';
-import Section from './Section';
+import Section from '../Section';
 import styled from 'styled-components';
 import { colors } from '@constants/colors';
 import { Stack, Heading, Text } from '@kiwicom/orbit-components/lib';
