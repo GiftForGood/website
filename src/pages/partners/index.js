@@ -1,5 +1,5 @@
 import React from 'react';
-import { PartnersContent, NpoPartnersContent } from '../components';
+import { PartnersContent, NpoPartnersContent } from './components';
 
 const PartnersPage = () => {
   return (

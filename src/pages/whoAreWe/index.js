@@ -1,7 +1,7 @@
 import React from 'react';
 
 // components
-import { Banner, TeamDescription } from '../components';
+import { Banner, TeamDescription } from './components';
 
 const WhoAreWePage = () => {
   return (
