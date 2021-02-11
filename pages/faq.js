@@ -1,7 +1,9 @@
 import React from 'react';
+import dynamic from 'next/dynamic';
+
+// components
 import SessionProvider from '@components/session/modules/SessionProvider';
 import { isAuthenticated } from '@utils/authentication/authentication';
-import dynamic from 'next/dynamic';
 import Header from '@components/header';
 import Faq from '@pages/faq/pages';
 
