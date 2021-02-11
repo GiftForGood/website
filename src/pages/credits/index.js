@@ -1,10 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
+
+// components
 import { Heading } from '@kiwicom/orbit-components/lib';
-import IconCredits from './IconCredits';
-import ImageCredits from './ImageCredits';
-import LibraryCredits from './LibraryCredits';
 import { MaxWidthContainer } from '@components/containers';
+import { IconCredits, ImageCredits, LibraryCredits } from './components';
 
 const CreditsContainer = styled(MaxWidthContainer)`
   position: relative;
@@ -24,7 +24,7 @@ const CreditsTitleContainer = styled.div`
 
 const CreditDetailsContainer = styled.div``;
 
-const CreditsContent = () => {
+const CreditsPage = () => {
   return (
     <CreditsContainer>
       <CreditsTitleContainer>
@@ -41,4 +41,4 @@ const CreditsContent = () => {
   );
 };
 
-export default CreditsContent;
+export default CreditsPage;

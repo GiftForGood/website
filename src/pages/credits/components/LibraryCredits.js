@@ -1,7 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
+
+// components
 import { Heading, Stack, TextLink } from '@kiwicom/orbit-components/lib';
-import BlackText from '../../text/BlackText';
 
 const LibraryCreditsContainer = styled.div`
   margin-bottom: 50px;
