@@ -14,17 +14,17 @@ const ImageTextContainer = styled.div`
 const HowItWorksContent = ({ src, description }) => {
   return (
     <ImageTextContainer>
-      <Stack inline direction='column' justify='center' align='center'>
-        <Image height='200px' width='200px' src={src} />
+      <Stack inline direction="column" justify="center" align="center">
+        <Image height="200px" width="200px" src={src} />
 
         <Linkify
           componentDecorator={(decoratedHref, decoratedText, key) => (
-            <a target='blank' href={decoratedHref} key={key}>
+            <a target="blank" href={decoratedHref} key={key}>
               {decoratedText}
             </a>
           )}
         >
-          <Text align='center'>{description}</Text>
+          <Text align="center">{description}</Text>
         </Linkify>
       </Stack>
     </ImageTextContainer>
@@ -40,10 +40,10 @@ const HowItWorks = () => {
 
   return (
     <Section>
-      <Stack direction='column' align='center'>
+      <Stack direction="column" align="center">
         <Heading>How it works</Heading>
 
-        <Stack direction='row' justify='center' spacing='small'>
+        <Stack direction="row" justify="center" spacing="small">
           <ButtonLink onClick={setAsDonor} type={activeTab === 'donor' ? 'primary' : 'secondary'}>
             As a donor
           </ButtonLink>
@@ -62,20 +62,20 @@ const HowItWorks = () => {
             direction: 'row',
             align: 'start',
           }}
-          direction='column'
-          align='center'
-          justify='center'
+          direction="column"
+          align="center"
+          justify="center"
         >
           {activeTab === 'donor'
             ? onboardingDonor.map((content, index) => (
-              <HowItWorksContent key={index} src={content.src} description={content.description} />
-            ))
+                <HowItWorksContent key={index} src={content.src} description={content.description} />
+              ))
             : null}
 
           {activeTab === 'npo'
             ? onboardingNpo.map((content, index) => (
-              <HowItWorksContent key={index} src={content.src} description={content.description} />
-            ))
+                <HowItWorksContent key={index} src={content.src} description={content.description} />
+              ))
             : null}
         </Stack>
       </Stack>

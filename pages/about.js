@@ -23,7 +23,7 @@ export async function getServerSideProps({ params, req, res, query }) {
 const AboutUs = ({ user }) => {
   return (
     <SessionProvider user={user}>
-      <Header title='About Us | GiftForGood' />
+      <Header title="About Us | GiftForGood" />
       <TopNavigationBar showNews={true} searchDefaultIndex={WISHES} />
       <AboutUsPage />
       <MobileFooter />
