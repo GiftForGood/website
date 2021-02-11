@@ -1,7 +1,11 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
+
+// components
 import { Heading, Stack, Text, Grid, Tile, TextLink } from '@kiwicom/orbit-components/lib';
+
+// constants and utils
 import { partners } from '@constants/partners';
 
 const MainContainer = styled.div`

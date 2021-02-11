@@ -1,9 +1,13 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Stack, Text, Grid } from '@kiwicom/orbit-components/lib';
+
+// constants and utils
 import { npoPartners } from '@constants/npoPartners';
 import { colors } from '@constants/colors';
+
+// components
 import { MaxWidthContainer } from '@components/containers';
+import { Stack, Text, Grid } from '@kiwicom/orbit-components/lib';
 
 const MainContainer = styled(MaxWidthContainer)`
   margin-bottom: 50px;
