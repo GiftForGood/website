@@ -1,7 +1,7 @@
 import React from 'react';
 import SessionProvider from '@components/session/modules/SessionProvider';
 import { isAuthenticated } from '@utils/authentication/authentication';
-import ContactUsPage from '@components/contactUs/pages/ContactUsPage';
+import ContactUsPage from '@pages/contactUs';
 import dynamic from 'next/dynamic';
 import Header from '@components/header';
 import { WISHES } from '@constants/search';
