@@ -1,5 +1,5 @@
 import React from 'react';
-import Section from './Section';
+import Section from '../Section';
 import styled from 'styled-components';
 import { colors } from '@constants/colors';
 import { Stack, Heading, Text } from '@kiwicom/orbit-components/lib';
@@ -16,12 +16,12 @@ const ImageTextContainer = styled.div`
 const StatsContent = ({ src, title, description }) => {
   return (
     <ImageTextContainer>
-      <Stack inline direction="column" justify="center" align="center">
-        <Image height="200px" width="200px" src={src} />
-        <Heading as="h1" type="display">
+      <Stack inline direction='column' justify='center' align='center'>
+        <Image height='200px' width='200px' src={src} />
+        <Heading as='h1' type='display'>
           {title}
         </Heading>
-        <Text align="center">{description}</Text>
+        <Text align='center'>{description}</Text>
       </Stack>
     </ImageTextContainer>
   );
@@ -34,7 +34,7 @@ const Stats = () => {
   return (
     <Background>
       <Section>
-        <Stack direction="column" align="center">
+        <Stack direction='column' align='center'>
           <Stack
             desktop={{
               direction: 'row',
@@ -44,9 +44,9 @@ const Stats = () => {
               direction: 'row',
               align: 'start',
             }}
-            direction="column"
-            align="center"
-            justify="center"
+            direction='column'
+            align='center'
+            justify='center'
           >
             {stats.map((stat, index) => (
               <StatsContent key={index} src={stat.src} title={stat.title} description={stat.description} />

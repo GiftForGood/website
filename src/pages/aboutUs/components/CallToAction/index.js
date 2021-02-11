@@ -1,4 +1,4 @@
-import Section from './Section';
+import Section from '../Section';
 import { Stack, Heading, Button } from '@kiwicom/orbit-components/lib';
 import RedButton from '@components/buttons/RedButton';
 import { useRouter } from 'next/router';
