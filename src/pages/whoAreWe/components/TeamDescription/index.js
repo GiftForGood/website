@@ -1,12 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { Heading, Stack } from '@kiwicom/orbit-components/lib';
-import BlackText from '../../text/BlackText';
-import GreyText from '../../text/GreyText';
-import ProfileAvatar from '@components/imageContainers/ProfileAvatar';
-import { marketingTeamMembers, techTeamMembers, partnershipTeamMembers } from '../../../../utils/constants/members';
-import Linkify from 'react-linkify';
+
+// hooks
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
+
+// components
+import BlackText from '@components/text/BlackText';
+import GreyText from '@components/text/GreyText';
+import ProfileAvatar from '@components/imageContainers/ProfileAvatar';
+import { Heading, Stack } from '@kiwicom/orbit-components/lib';
+import Linkify from 'react-linkify';
+
+// utils and constants
+import { marketingTeamMembers, techTeamMembers, partnershipTeamMembers } from '@utils/constants/members';
 
 const DescriptionContainer = styled.div`
   position: relative;

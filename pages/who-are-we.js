@@ -1,7 +1,7 @@
 import React from 'react';
 import SessionProvider from '../src/components/session/modules/SessionProvider';
 import { isAuthenticated } from '../utils/authentication/authentication';
-import WhoAreWePage from '../src/components/whoAreWe/pages/WhoAreWePage';
+import WhoAreWePage from '../src/pages/whoAreWe/pages';
 import dynamic from 'next/dynamic';
 import Header from '../src/components/header';
 import { WISHES } from '../utils/constants/search';

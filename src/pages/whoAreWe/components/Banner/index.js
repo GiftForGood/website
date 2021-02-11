@@ -1,8 +1,9 @@
 import React from 'react';
-import styled, { css } from 'styled-components';
-import { Heading, Text } from '@kiwicom/orbit-components/lib';
-import WhiteText from '../../text/WhiteText';
-import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
+import styled from 'styled-components';
+
+// components
+import { Heading } from '@kiwicom/orbit-components/lib';
+import WhiteText from '@components/text/WhiteText';
 
 const BannerContainer = styled.div`
   position: relative;
