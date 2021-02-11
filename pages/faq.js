@@ -5,7 +5,7 @@ import dynamic from 'next/dynamic';
 import SessionProvider from '@components/session/modules/SessionProvider';
 import { isAuthenticated } from '@utils/authentication/authentication';
 import Header from '@components/header';
-import Faq from '@pages/faq/pages';
+import Faq from '@pages/faq';
 
 const TopNavigationBar = dynamic(() => import('@components/navbar/modules/TopNavigationBar'), { ssr: false });
 const BottomNavigation = dynamic(() => import('@components/navbar/modules/BottomNavigation'), { ssr: false });

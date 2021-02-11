@@ -3,7 +3,7 @@ import dynamic from 'next/dynamic';
 
 // components
 import SessionProvider from '@components/session/modules/SessionProvider';
-import WhoAreWePage from '@pages/whoAreWe/pages';
+import WhoAreWePage from '@pages/whoAreWe';
 import Header from '@components/header';
 
 // constants and utils
