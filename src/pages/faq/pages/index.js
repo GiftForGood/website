@@ -1,16 +1,19 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
-import { Heading, Stack, TextLink } from '@kiwicom/orbit-components/lib';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
-import Banner from '../modules/Banner';
-import ChatTopic from '../modules/chat';
-import DeliveryTopic from '../modules/delivery';
-import GeneralTopic from '../modules/general';
-import PostingTopic from '../modules/posting';
-import ProfileTopic from '../modules/profile';
-import RegisteringTopic from '../modules/registering';
-import ReportingTopic from '../modules/reporting';
 
+// components
+import { Heading, Stack, TextLink } from '@kiwicom/orbit-components/lib';
+import {
+  Banner,
+  TopicChat,
+  TopicDelivery,
+  TopicGeneral,
+  TopicPosting,
+  TopicProfile,
+  TopicRegistering,
+  TopicReporting,
+} from '../components';
 import { MaxWidthContainer } from '@components/containers';
 
 const FaqContainer = styled(MaxWidthContainer)`
@@ -31,13 +34,13 @@ const Faq = () => {
           Topics
         </Heading>
         <Stack direction="column" spaceAfter="largest">
-          <GeneralTopic />
-          <RegisteringTopic />
-          <PostingTopic />
-          <DeliveryTopic />
-          <ChatTopic />
-          <ProfileTopic />
-          <ReportingTopic />
+          <TopicGeneral />
+          <TopicRegistering />
+          <TopicPosting />
+          <TopicDelivery />
+          <TopicChat />
+          <TopicProfile />
+          <TopicReporting />
         </Stack>
         <Heading type="title1" spaceAfter="large">
           Do you have any other questions?
