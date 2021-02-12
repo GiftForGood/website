@@ -1,4 +1,6 @@
 import React, { useEffect } from 'react';
+
+// constants and utils
 import { GOOGLE_MAP_URL } from '@constants/thirdPartyAPIUrl';
 
 const Map = ({ npoOrgName, locations }) => {
