@@ -1,6 +1,8 @@
 import React from 'react';
-import BlackText from '../../text/BlackText';
 import styled from 'styled-components';
+
+// components
+import BlackText from '@components/text/BlackText';
 
 const MessageContainer = styled.div`
   max-width: min(500px, 90%);

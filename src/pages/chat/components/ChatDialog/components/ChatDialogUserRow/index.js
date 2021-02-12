@@ -1,26 +1,42 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Button, Stack } from '@kiwicom/orbit-components/lib';
-import CalendarModal from '../../calendar/modules/CalendarModal';
-import AppreciationMessageModal from '../../modal/AppreciationMessageModal';
-import ConfirmCompletionModal from '../../modal/ConfirmCompletionModal';
-import ConfirmDeliveredModal from '../../modal/ConfirmDeliveredModal';
-import ProfileAvatar from '../../imageContainers/ProfileAvatar';
-import BlackText from '../../text/BlackText';
-import SuggestDateButton from '../../../components/buttons/ChatSuggestDatesButton';
-import CompleteButton from '../../../components/buttons/ChatCompleteButton';
-import DeliveredButton from '../../../components/buttons/ChatDeliveredButton';
 import styled from 'styled-components';
+
+// components
+import { Button, Stack } from '@kiwicom/orbit-components/lib';
+import CalendarModal from '@components/calendar/modules/CalendarModal';
+import AppreciationMessageModal from '@components/modal/AppreciationMessageModal';
+import ConfirmCompletionModal from '@components/modal/ConfirmCompletionModal';
+import ConfirmDeliveredModal from '@components/modal/ConfirmDeliveredModal';
+import ProfileAvatar from '@components/imageContainers/ProfileAvatar';
+import BlackText from '@components/text/BlackText';
+import SuggestDateButton from '@components/buttons/ChatSuggestDatesButton';
+import CompleteButton from '@components/buttons/ChatCompleteButton';
+import DeliveredButton from '@components/buttons/ChatDeliveredButton';
+import StatusTag from '@components/tags/StatusTag';
 import { CardSection } from '@kiwicom/orbit-components/lib/Card';
+
+// context
+import {
+  ChatContext,
+  // actions
+  setSelectedChatId,
+  setIsNewChat,
+  setHasError,
+  // selectors
+  getSelectedChatId,
+  getIsNewChat,
+  getUser,
+} from '../../../../context';
+
+// hooks
+import { useRouter } from 'next/router';
+
+// utils and constants
 import { PENDING, COMPLETED } from '@constants/postStatus';
 import { DELIVERED } from '@constants/chatStatus';
-import StatusTag from '../../../components/tags/StatusTag';
 import { donations, wishes } from '@constants/postType';
-import { useRouter } from 'next/router';
-import api from '@api';
 import { getFormattedDateRange } from '@api/time';
-import ChatContext from '../context';
-import { setSelectedChatId, setIsNewChat, setHasError } from '../actions';
-import { getSelectedChatId, getIsNewChat, getUser } from '../selectors';
+import api from '@api';
 
 const AvatarContainer = styled.div`
   float: left;

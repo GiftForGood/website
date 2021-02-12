@@ -1,18 +1,25 @@
 import React, { useState, useEffect, useContext, useReducer, useMemo } from 'react';
-import { Grid } from '@kiwicom/orbit-components/lib';
-import ListOfChats from '../modules/ListOfChats';
-import ChatDialog from '../modules/ChatDialog';
-import api from '@api';
-import Error from 'next/error';
 import styled from 'styled-components';
-import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
+
+// components
+import { Grid } from '@kiwicom/orbit-components/lib';
+import { ListOfChats, ChatDialog } from './components';
+import Error from 'next/error';
 import Router from 'next/router';
-import useWindowDimensions from '@utils/hooks/useWindowDimensions';
-import useNavbarHeight from '../../navbar/modules/useNavbarHeight';
-import ChatContext from '../context';
-import initialState from '../initialState';
-import reducer from '../reducers';
+
+// constants and utils
+import api from '@api';
+
+// context
 import {
+  ChatContext,
+  initialState,
+  reducer,
+  // selectors
+  getSelectedChatId,
+  getIsNewChat,
+  getHasError,
+  // actions
   setSelectedChatId,
   setIsNewChat,
   setHasError,
@@ -20,8 +27,12 @@ import {
   setPostId,
   setPostType,
   setIsViewingChatsForMyPost,
-} from '../actions';
-import { getSelectedChatId, getIsNewChat, getHasError } from '../selectors';
+} from './context';
+
+// hooks
+import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
+import useWindowDimensions from '@utils/hooks/useWindowDimensions';
+import useNavbarHeight from '../../components/navbar/modules/useNavbarHeight';
 
 const NoChatsContainer = styled.div`
   margin: 0 auto;

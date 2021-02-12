@@ -1,10 +1,14 @@
 import React from 'react';
 import styled from 'styled-components';
-import { colors } from '@constants/colors';
+
+// components
 import { Stack } from '@kiwicom/orbit-components/lib';
-import WhiteText from '../../text/WhiteText';
-import BlackText from '../../text/BlackText';
-import CalendarButton from '../../buttons/CalendarButton';
+import WhiteText from '@components/text/WhiteText';
+import BlackText from '@components/text/BlackText';
+import CalendarButton from '@components/buttons/CalendarButton';
+
+// constants and utils
+import { colors } from '@constants/colors';
 import api from '@api';
 
 const ChatTextContainer = styled.div`

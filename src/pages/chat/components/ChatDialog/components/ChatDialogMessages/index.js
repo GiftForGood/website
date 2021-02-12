@@ -1,21 +1,27 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
+import styled from 'styled-components';
+
+// hooks
+import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
+import useWindowDimensions from '@utils/hooks/useWindowDimensions';
+import useNavbarHeight from '@components/navbar/modules/useNavbarHeight';
+
+// components
+import { CardSection } from '@kiwicom/orbit-components/lib/Card';
+import { NewChatTipsForWish, LeftMessageSection, RightMessageSection } from './components';
+import InfiniteScroll from '@components/scroller/InfiniteScroller';
+import ScrollToBottomButton from '@components/buttons/ScrollToBottomButton';
 import { Stack, Loading, Button, NotificationBadge } from '@kiwicom/orbit-components/lib';
 import { ChevronDown } from '@kiwicom/orbit-components/lib/icons';
+
+// utils and constants
 import api from '@api';
-import styled from 'styled-components';
-import { CardSection } from '@kiwicom/orbit-components/lib/Card';
-import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
-import NewChatTips from './NewChatTipsForWish';
-import InfiniteScroll from '../../scroller/InfiniteScroller';
-import { wishes } from '@constants/postType';
 import { CHAT_MESSAGES_BATCH_SIZE } from '@api/constants';
-import { LeftMessageSection, RightMessageSection } from './ChatMessageSection';
-import ScrollToBottomButton from '../../buttons/ScrollToBottomButton';
-import useWindowDimensions from '@utils/hooks/useWindowDimensions';
 import { isSafari } from 'react-device-detect';
-import ChatContext from '../context';
-import { getSelectedChatId, getIsNewChat, getUser } from '../selectors';
-import useNavbarHeight from '../../navbar/modules/useNavbarHeight';
+import { wishes } from '@constants/postType';
+
+// context
+import { ChatContext, getSelectedChatId, getIsNewChat, getUser } from '../../../../context';
 
 /**
  * To be changed if any of the heights change, the extra "+1 or +2" for the top/bottom borders
@@ -242,7 +248,7 @@ const ChatDialogMessages = ({ postType, inputRowHeight, isShowPostDetails }) => 
     return (
       <CardSection>
         <MessageContainer offsetHeight={offsetHeight} viewportHeight={viewportHeight}>
-          <NewChatTips postType={postType} />
+          <NewChatTipsForWish postType={postType} />
         </MessageContainer>
       </CardSection>
     );

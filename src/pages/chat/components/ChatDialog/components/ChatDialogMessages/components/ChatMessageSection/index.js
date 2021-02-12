@@ -1,12 +1,14 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
+
+// components
+import { ChatBubbleForText, ChatBubbleForImage, ChatBubbleForCalendar } from './components';
+import ProfileAvatar from '@components/imageContainers/ProfileAvatar';
+import GreyText from '@components/text/GreyText';
 import { Stack } from '@kiwicom/orbit-components/lib';
-import ChatBubbleForText from './ChatBubbleForText';
-import ChatBubbleForImage from './ChatBubbleForImage';
-import ChatBubbleForCalendar from './ChatBubbleForCalendar';
-import ProfileAvatar from '../../imageContainers/ProfileAvatar';
-import GreyText from '../../text/GreyText';
+
+// utils and constants
 import { getTimeDifferenceFromNow } from '@api/time';
 
 // to following two containers are used to prevent the

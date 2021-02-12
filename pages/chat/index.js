@@ -1,13 +1,18 @@
 import React from 'react';
 import dynamic from 'next/dynamic';
-import SessionProvider from '@components/session/modules/SessionProvider';
-import { isAuthenticated } from '@utils/authentication/authentication';
-import api from '@api';
+
+// components
 import Error from 'next/error';
-import ChatPage from '@components/chat/pages/ChatPage';
+import ChatPage from '@pages/chat';
 import Header from '@components/header';
+import SessionProvider from '@components/session/modules/SessionProvider';
+
+// constants and utils
+import api from '@api';
+import { isAuthenticated } from '@utils/authentication/authentication';
 import { donations, wishes } from '@constants/postType';
 
+// dynamic imports
 const TopNavigationBar = dynamic(() => import('@components/navbar/modules/TopNavigationBar'), {
   ssr: false,
 });

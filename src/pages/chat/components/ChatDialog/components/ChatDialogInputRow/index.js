@@ -1,19 +1,33 @@
 import React, { useState, forwardRef, useRef, useContext } from 'react';
-import { Button, Stack, Alert } from '@kiwicom/orbit-components/lib';
-import ChatButton from '../../../components/buttons/ChatButton';
-import ChatImageUpload from './ChatImageUpload';
-import api from '@api';
 import styled, { css } from 'styled-components';
-import { donations } from '@constants/postType';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
+
+// components
+import { Button, Stack, Alert } from '@kiwicom/orbit-components/lib';
+import ChatButton from '@components/buttons/ChatButton';
+import { ChatImageUpload } from './components';
 import TextareaAutosize from 'react-textarea-autosize';
+
+// constants and utils
+import api from '@api';
+import { isMobile } from 'react-device-detect';
+import { donations } from '@constants/postType';
+
+// hooks
 import { useRouter } from 'next/router';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
-import { isMobile } from 'react-device-detect';
-import ChatContext from '../context';
-import { setSelectedChatId, setIsNewChat } from '../actions';
-import { getSelectedChatId, getIsNewChat } from '../selectors';
 import useDraftedInput from '@utils/hooks/useDraftedInput';
+
+// context
+import {
+  ChatContext,
+  // actions
+  setSelectedChatId,
+  setIsNewChat,
+  // selectors
+  getSelectedChatId,
+  getIsNewChat,
+} from '../../../../context';
 
 const InputRowContainer = styled.div`
   width: 95%;
