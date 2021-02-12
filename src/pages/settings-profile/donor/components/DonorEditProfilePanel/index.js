@@ -1,15 +1,21 @@
 import React, { useEffect, useState } from 'react';
-import { Button, InputField, Stack, Heading, Card, CardSection, InputFile, Alert } from '@kiwicom/orbit-components/lib';
 import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
-import useUser from '../../../session/modules/useUser';
-import ProfileAvatar from '../../../imageContainers/ProfileAvatar';
+
+// components
+import ProfileAvatar from '@components/imageContainers/ProfileAvatar';
+import SaveChangesButton from '@components/buttons/SaveChangesButton';
+import { Button, InputField, Stack, Heading, Card, CardSection, InputFile, Alert } from '@kiwicom/orbit-components/lib';
+
+// constants and utils
 import api from '@api';
 import { MAXIMUM_FILE_SIZE_LIMIT } from '@constants/files';
+import * as Yup from 'yup';
+
+// hooks
 import { useRouter } from 'next/router';
-import SaveChangesButton from '../../../buttons/SaveChangesButton';
+import { useFormik } from 'formik';
+import useUser from '@components/session/modules/useUser';
 
 const Container = styled.div`
   width: 100%;

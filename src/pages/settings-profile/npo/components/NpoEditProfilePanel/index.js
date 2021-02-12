@@ -1,4 +1,8 @@
 import React, { useEffect, useState } from 'react';
+import styled, { css } from 'styled-components';
+import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
+
+// components
 import {
   Button,
   InputField,
@@ -11,16 +15,18 @@ import {
   Alert,
   Text,
 } from '@kiwicom/orbit-components/lib';
-import styled, { css } from 'styled-components';
-import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
-import { useFormik } from 'formik';
+import ProfileAvatar from '@components/imageContainers/ProfileAvatar';
+import SaveChangesButton from '@components/buttons/SaveChangesButton';
+
+// constants and utils
 import * as Yup from 'yup';
-import useUser from '../../../session/modules/useUser';
-import ProfileAvatar from '../../../imageContainers/ProfileAvatar';
 import api from '@api';
-import { useRouter } from 'next/router';
-import SaveChangesButton from '../../../buttons/SaveChangesButton';
 import { MAXIMUM_FILE_SIZE_LIMIT } from '@constants/files';
+
+// hooks
+import { useFormik } from 'formik';
+import useUser from '@components/session/modules/useUser';
+import { useRouter } from 'next/router';
 
 const Container = styled.div`
   width: 100%;

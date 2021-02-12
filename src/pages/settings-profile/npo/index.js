@@ -1,12 +1,15 @@
 import React from 'react';
-import NpoEditProfilePanel from '../modules/NpoEditProfilePanel';
 import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
-import VerticalTabs from '@components/tabs/VerticalTabs';
+
+// components
+import { NpoEditProfilePanel } from './components';
 import { Stack } from '@kiwicom/orbit-components/lib';
 import SettingsTabs from '@components/tabs/SettingsTabs';
-import { TABS } from '@constants/settings';
 import { MaxWidthContainer } from '@components/containers';
+
+// constants
+import { TABS } from '@constants/settings';
 
 const Container = styled(MaxWidthContainer)`
   display: flex;

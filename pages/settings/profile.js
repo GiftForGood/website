@@ -1,12 +1,17 @@
 import React from 'react';
-import SessionProvider from '@components/session/modules/SessionProvider';
-import { isAuthenticated } from '@utils/authentication/authentication';
 import dynamic from 'next/dynamic';
-import NpoSettingProfilePage from '@components/settings-profile/npo/pages/NpoSettingProfilePage';
-import DonorSettingProfilePage from '@components/settings-profile/donor/pages/DonorSettingProfilePage';
-import { isNpoUser, isDonorUser } from '@utils/authentication/userType';
+
+// components
+import SessionProvider from '@components/session/modules/SessionProvider';
+import NpoSettingProfilePage from '@pages/settings-profile/npo';
+import DonorSettingProfilePage from '@pages/settings-profile/donor';
 import Header from '@components/header';
 
+// constants and utils
+import { isNpoUser, isDonorUser } from '@utils/authentication/userType';
+import { isAuthenticated } from '@utils/authentication/authentication';
+
+// dynamic imports
 const TopNavigationBar = dynamic(() => import('@components/navbar/modules/TopNavigationBar'), { ssr: false });
 const Footer = dynamic(() => import('@components/footer/Footer'), { ssr: false });
 

@@ -1,7 +1,9 @@
 import React from 'react';
-import DonorEditProfilePanel from '../modules/DonorEditProfilePanel';
 import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
+
+// components
+import { DonorEditProfilePanel } from './components';
 import { MaxWidthContainer } from '@components/containers';
 
 const Container = styled(MaxWidthContainer)`
