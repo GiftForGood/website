@@ -1,12 +1,17 @@
 import React from 'react';
+import dynamic from 'next/dynamic';
+
+// utils and constants
 import { isAuthenticated } from '@utils/authentication/authentication';
 import { isVerified } from '@utils/authentication/verification';
 import { isDonor } from '@utils/authentication/userType';
+
+// components
 import SessionProvider from '@components/session/modules/SessionProvider';
-import CreateDonationPage from '@components/createDonation/pages/createDonationPage';
-import dynamic from 'next/dynamic';
+import CreateDonationPage from '@pages/createDonation';
 import Header from '@components/header';
 
+// dynamic imports
 const TopNavigationBar = dynamic(() => import('@components/navbar/modules/TopNavigationBar'), { ssr: false });
 const Footer = dynamic(() => import('@components/footer/Footer'), { ssr: false });
 

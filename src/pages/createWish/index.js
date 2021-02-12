@@ -2,15 +2,16 @@ import React, { useReducer, useMemo } from 'react';
 import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 
-import CreateWishPanel from '../modules/createWishPanel';
-import LivePreviewPanel from '../modules/livePreviewPanel';
+// components
+import CreateWishPanel from './components/CreateWishPanel';
+import LivePreviewPanel from './components/CreateWishPanel/components/LivePreviewPanel';
+import { MaxWidthContainer } from '@components/containers';
+
+// hooks
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 
-import initialState from '../initialState';
-import reducer from '../reducers';
-import WishContext from '../context';
-
-import { MaxWidthContainer } from '@components/containers';
+// context
+import { initialState, reducer, WishContext } from './context';
 
 const Container = styled(MaxWidthContainer)`
   display: flex;

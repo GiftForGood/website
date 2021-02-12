@@ -3,7 +3,7 @@ import { isAuthenticated } from '@utils/authentication/authentication';
 import { isVerified } from '@utils/authentication/verification';
 import { isNpo } from '@utils/authentication/userType';
 import SessionProvider from '@components/session/modules/SessionProvider';
-import CreateWishPage from '@components/createWish/pages/createWishPage';
+import CreateWishPage from '@pages/createWish';
 import dynamic from 'next/dynamic';
 import api from '@api';
 import Error from 'next/error';

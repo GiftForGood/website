@@ -1,5 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
-import RedButton from '../../buttons/RedButton';
+import styled from 'styled-components';
+
+// components
+import RedButton from '@components/buttons/RedButton';
 import {
   Button,
   InputField,
@@ -16,16 +19,30 @@ import {
   Radio,
   ChoiceGroup,
 } from '@kiwicom/orbit-components/lib';
-import styled from 'styled-components';
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
+import { DragNDropInputField, LivePreviewDonation } from './components';
+import ToastContainer from '@components/toast/ToastContainer';
+import MrtDropdownField from '@components/inputfield/MrtDropdownField';
+
+// constants and utils
 import { months } from '@constants/month';
 import api from '@api';
-import DragNDropInputField from './DragNDropInputField';
 import moment from 'moment';
-import LivePreviewDonation from './livePreviewDonation';
-import { useDispatch } from 'react-redux';
+import * as Yup from 'yup';
+import { getDay, getMonth, getYear } from '@api/time';
+import { v4 as uuidv4 } from 'uuid';
+import { logSuccessfullyCreatedDonation } from '@utils/analytics';
+import { createdDonation } from '@utils/algolia/insights';
+
+// hooks
+import { useFormik } from 'formik';
+import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
+import { useRouter } from 'next/router';
+import useUser from '@components/session/modules/useUser';
+
+// context
 import {
+  DonationContext,
+  // actions
   setTitle,
   setDescription,
   setAllCategories,
@@ -34,18 +51,7 @@ import {
   setValidFrom,
   setValidTo,
   resetToInitialState,
-} from '../actions';
-import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
-import { toast } from 'react-toastify';
-import ToastContainer from '../../toast/ToastContainer';
-import { useRouter } from 'next/router';
-import { getDay, getMonth, getYear } from '@api/time';
-import { v4 as uuidv4 } from 'uuid';
-import MrtDropdownField from '../../inputfield/MrtDropdownField';
-import { logSuccessfullyCreatedDonation } from '@utils/analytics';
-import DonationContext from '../context';
-import useUser from '@components/session/modules/useUser';
-import { createdDonation } from '@utils/algolia/insights';
+} from '../../context';
 
 const Container = styled.div`
   min-width: 300px;

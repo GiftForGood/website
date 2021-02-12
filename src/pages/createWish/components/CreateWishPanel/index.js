@@ -1,4 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
+import styled from 'styled-components';
+
+// components
 import {
   Button,
   InputField,
@@ -14,27 +17,34 @@ import {
   Alert,
   Checkbox,
 } from '@kiwicom/orbit-components/lib';
-import { useFormik } from 'formik';
+import RedButton from '@components/buttons/RedButton';
+import { LivePreviewPanel, ExpirePostAlert } from './components';
+import GooglePlacesAutoCompleteField from '@components/inputfield/GooglePlacesAutoCompleteField';
+
+// constants and utils
 import * as Yup from 'yup';
 import api from '@api';
-import RedButton from '../../buttons/RedButton';
-
-import styled from 'styled-components';
-import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
-
-import { setTitle, setDescription, setAllCategories, setPostedDateTime, setSeasonalEvent } from '../actions';
-import LivePreviewPanel from './livePreviewPanel';
-import { useRouter } from 'next/router';
-
-import { getExpireWishDate, getExpireWishDateFormat } from '@api/time';
-import GooglePlacesAutoCompleteField from '../../inputfield/GooglePlacesAutoCompleteField';
-import { logSuccessfullyCreatedWish } from '@utils/analytics';
-import ExpirePostAlert from './ExpirePostAlert';
-import WishContext from '../context';
-import useUser from '@components/session/modules/useUser';
 import { createdWish } from '@utils/algolia/insights';
-
+import { logSuccessfullyCreatedWish } from '@utils/analytics';
 import { remoteConfig } from '@utils/firebase';
+import { getExpireWishDate, getExpireWishDateFormat } from '@api/time';
+
+// hooks
+import { useFormik } from 'formik';
+import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
+import { useRouter } from 'next/router';
+import useUser from '@components/session/modules/useUser';
+
+// context
+import {
+  WishContext,
+  // actions
+  setTitle,
+  setDescription,
+  setAllCategories,
+  setPostedDateTime,
+  setSeasonalEvent,
+} from '../../context';
 
 const Container = styled.div`
   min-width: 300px;

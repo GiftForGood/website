@@ -1,10 +1,24 @@
 import React, { useContext } from 'react';
-import { Stack, Heading, Text } from '@kiwicom/orbit-components/lib';
 import styled from 'styled-components';
-import DonationCard from '../../card/DonationCard';
-import { getTitle, getDescription, getCoverImage, getItemCondition, getValidFrom, getValidTo } from '../selectors';
-import useUser from '../../session/modules/useUser';
-import DonationContext from '../context';
+
+// components
+import DonationCard from '@components/card/DonationCard';
+import { Stack, Heading, Text } from '@kiwicom/orbit-components/lib';
+
+// hooks
+import useUser from '@components/session/modules/useUser';
+
+// context
+import {
+  DonationContext,
+  // selectors
+  getTitle,
+  getDescription,
+  getCoverImage,
+  getItemCondition,
+  getValidFrom,
+  getValidTo,
+} from '../../../../context';
 
 const Container = styled.div`
   padding: 20px;

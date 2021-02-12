@@ -1,15 +1,20 @@
 import React from 'react';
+import dynamic from 'next/dynamic';
+
+// components
+import CreateWishPage from '@pages/createWish';
+import Header from '@components/header';
+import Error from 'next/error';
+import SessionProvider from '@components/session/modules/SessionProvider';
+
+// constants and utils
+import { deserializeFirestoreTimestampToUnixTimestamp } from '@utils/firebase/deserializer';
 import { isAuthenticated } from '@utils/authentication/authentication';
 import { isVerified } from '@utils/authentication/verification';
 import { isNpo } from '@utils/authentication/userType';
 import api from '@api';
-import SessionProvider from '@components/session/modules/SessionProvider';
-import CreateWishPage from '@components/createWish/pages/createWishPage';
-import dynamic from 'next/dynamic';
-import Header from '@components/header';
-import { deserializeFirestoreTimestampToUnixTimestamp } from '@utils/firebase/deserializer';
-import Error from 'next/error';
 
+// dynamic imports
 const TopNavigationBar = dynamic(() => import('@components/navbar/modules/TopNavigationBar'), { ssr: false });
 const Footer = dynamic(() => import('@components/footer/Footer'), { ssr: false });
 

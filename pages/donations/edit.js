@@ -3,7 +3,7 @@ import { isAuthenticated } from '@utils/authentication/authentication';
 import { isVerified } from '@utils/authentication/verification';
 import { isDonor } from '@utils/authentication/userType';
 import SessionProvider from '@components/session/modules/SessionProvider';
-import CreateDonationPage from '@components/createDonation/pages/createDonationPage';
+import CreateDonationPage from '@pages/createDonation';
 import dynamic from 'next/dynamic';
 import api from '@api';
 import Error from 'next/error';

@@ -1,14 +1,14 @@
 import React, { useReducer, useMemo } from 'react';
 import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
-import CreateDonationPanel from '../modules/createDonationPanel';
+
+// components
+import CreateDonationPanel from './components/CreateDonationPanel';
 import { Heading, Alert, Stack } from '@kiwicom/orbit-components/lib';
-
-import initialState from '../initialState';
-import reducer from '../reducers';
-import DonationContext from '../context';
-
 import { MaxWidthContainer } from '@components/containers';
+
+// context
+import { initialState, reducer, DonationContext } from './context';
 
 const Container = styled(MaxWidthContainer)`
   display: flex;
