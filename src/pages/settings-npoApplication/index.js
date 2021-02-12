@@ -1,11 +1,15 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
-import NpoApplicationPanel from '../modules/NpoApplicationPanel';
+
+// components
+import { MaxWidthContainer } from '@components/containers';
+import NpoApplicationPanel from './components/NpoApplicationPanel';
 import SettingsTabs from '@components/tabs/SettingsTabs';
 import { Stack } from '@kiwicom/orbit-components/lib';
+
+// constants and utils
 import { TABS } from '@constants/settings';
-import { MaxWidthContainer } from '@components/containers';
 
 const Container = styled(MaxWidthContainer)`
   display: flex;

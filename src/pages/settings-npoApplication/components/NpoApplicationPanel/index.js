@@ -1,14 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { Button, InputField, Stack, Heading, Card, CardSection, Alert, Textarea } from '@kiwicom/orbit-components/lib';
 import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
-import BadgeStatus from './BadgeStatus';
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
-import api from '@api';
-import useUser from '@components/session/modules/useUser';
-import { STATUS } from '@constants/npoApplication';
+
+// components
+import { Button, InputField, Stack, Heading, Card, CardSection, Alert, Textarea } from '@kiwicom/orbit-components/lib';
+import BadgeStatus from './components/BadgeStatus';
 import SaveChangesButton from '@components/buttons/SaveChangesButton';
+
+// hooks
+import { useFormik } from 'formik';
+import useUser from '@components/session/modules/useUser';
+
+// utils and constants
+import api from '@api';
+import * as Yup from 'yup';
+import { STATUS } from '@constants/npoApplication';
 
 const Container = styled.div`
   width: 100%;
