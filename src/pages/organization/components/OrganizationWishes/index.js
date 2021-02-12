@@ -1,19 +1,25 @@
-import React, { useState, useEffect } from 'react';
-import BlackText from '@components/text/BlackText';
-import { Grid } from '@kiwicom/orbit-components/lib';
-import { WISHES_BATCH_SIZE } from '@api/constants';
+import React from 'react';
 import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
-import { InstantSearch, Configure, connectInfiniteHits } from 'react-instantsearch-dom';
-import WishesHitWrapper from '@components/organization/modules/WishesHitWrapper';
-import { getNpoWishes } from '@utils/algolia/filteringRules';
-import { wishesSortByRule } from '@utils/algolia/sortByRules';
 import dynamic from 'next/dynamic';
-import useUser from '@components/session/modules/useUser';
-import { searchClient } from '@utils/algolia';
+
+// components
+import BlackText from '@components/text/BlackText';
+import { Grid } from '@kiwicom/orbit-components/lib';
+import { InstantSearch, Configure, connectInfiniteHits } from 'react-instantsearch-dom';
+import { WishesHitWrapper } from './components';
 import { MaxWidthContainer } from '@components/containers';
 
-const WishesSortFilterPanel = dynamic(() => import('@components/organization/modules/OrgWishesSortFilterPanel'), {
+// constants and utils
+import { WISHES_BATCH_SIZE } from '@api/constants';
+import { getNpoWishes } from '@utils/algolia/filteringRules';
+import { wishesSortByRule } from '@utils/algolia/sortByRules';
+import { searchClient } from '@utils/algolia';
+
+// hooks
+import useUser from '@components/session/modules/useUser';
+
+const WishesSortFilterPanel = dynamic(() => import('./components/OrgWishesSortFilterPanel'), {
   ssr: false,
 });
 

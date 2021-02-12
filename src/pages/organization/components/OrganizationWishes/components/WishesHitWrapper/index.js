@@ -1,12 +1,16 @@
 import React, { useEffect, useRef } from 'react';
-import { useRouter } from 'next/router';
-import WishCard from '../../card/WishCard';
-import BlackText from '../../text/BlackText';
+
+// components
+import WishCard from '@components/card/WishCard';
 import { Grid } from '@kiwicom/orbit-components/lib';
-import useUser from '@components/session/modules/useUser';
-import { clickedOnWish } from '@utils/algolia/insights';
 import EmptyStateImage from '@components/imageContainers/EmptyStateImage';
+
+// hooks
+import useUser from '@components/session/modules/useUser';
 import { useRemoteConfig } from '@components/remoteConfig/RemoteConfig';
+
+// utils
+import { clickedOnWish } from '@utils/algolia/insights';
 
 /**
  * https://www.algolia.com/doc/api-reference/widgets/infinite-hits/react/#create-a-react-component

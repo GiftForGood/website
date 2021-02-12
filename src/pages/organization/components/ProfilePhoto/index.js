@@ -1,9 +1,12 @@
 import React, { useRef, useState } from 'react';
-import styled, { css } from 'styled-components';
-import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
+import styled from 'styled-components';
+
+// components
 import CameraIconButton from '@components/buttons/CameraIconButton';
-import { v4 as uuidv4 } from 'uuid';
 import { Button, Stack } from '@kiwicom/orbit-components/lib';
+
+// constants and utils
+import { v4 as uuidv4 } from 'uuid';
 import { colors } from '@constants/colors';
 import { MAXIMUM_FILE_SIZE_LIMIT } from '@constants/files';
 
