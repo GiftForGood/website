@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
-import { Heading, Stack, Text, TextLink, Grid, Tile } from '@kiwicom/orbit-components/lib';
-import api from '@api';
+
+// components
 import { MaxWidthContainer } from '@components/containers';
+import { Heading, Stack, Text, TextLink, Grid, Tile } from '@kiwicom/orbit-components/lib';
+
+// utils
+import api from '@api';
 
 const MainContainer = styled(MaxWidthContainer)`
   margin-bottom: 50px;
