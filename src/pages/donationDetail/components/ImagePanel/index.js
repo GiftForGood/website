@@ -1,11 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
-import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
+
+// components
 import { Stack } from '@kiwicom/orbit-components/lib';
-import CarouselScrollButton from '../../buttons/CarouselScrollButton';
+import CarouselScrollButton from '@components/buttons/CarouselScrollButton';
 import { Carousel } from 'react-responsive-carousel';
+
+// constants
 import { colors } from '@constants/colors';
+
+// hooks
+import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 
 const CarouselImage = styled.img`
   height: 100vw;
