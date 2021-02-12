@@ -1,11 +1,15 @@
 import React from 'react';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
-import DonationInformationHeader from '../../postDetails/PostDetailsHeader';
+import styled, { css } from 'styled-components';
+
+// components
+import DonationInformationHeader from '../../../../components/postDetails/PostDetailsHeader';
 import { Badge, Stack, Text, Heading } from '@kiwicom/orbit-components/lib';
-import { donations } from '@constants/postType';
 import Separator from '@kiwicom/orbit-components/lib/Separator';
 import Grid from '@kiwicom/orbit-components/lib/utils/Grid';
-import styled, { css } from 'styled-components';
+
+// constants and utils
+import { donations } from '@constants/postType';
 import { getFormattedDate } from '@api/time';
 import { donationItemConditionIconPath, donationDimensionIconPath } from '@constants/imagePaths';
 import { colors } from '@constants/colors';

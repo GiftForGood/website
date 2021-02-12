@@ -1,16 +1,21 @@
 import React, { useEffect } from 'react';
 import styled, { css } from 'styled-components';
-import Grid from '@kiwicom/orbit-components/lib/utils/Grid';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
+
+// components
+import Grid from '@kiwicom/orbit-components/lib/utils/Grid';
+import { DonationInformation, ImagePanel } from './components';
+import DonorInformation from '../../components/postDetails/UserInfoCard';
+import Desktop from '@kiwicom/orbit-components/lib/Desktop';
+import BreadcrumbsPanel from '../../components/postDetails/BreadcrumbsPanel';
+
+// constants and utils
+import { viewedDonationDetails } from '@utils/algolia/insights';
 import { donations } from '@constants/postType';
 import { donor as donorType, npo as npoType } from '@constants/userType';
-import DonationInformation from '../modules/DonationInformation';
-import DonorInformation from '../../postDetails/UserInfoCard';
-import Desktop from '@kiwicom/orbit-components/lib/Desktop';
-import BreadcrumbsPanel from '../../postDetails/BreadcrumbsPanel';
-import ImagePanel from '../modules/ImagePanel';
+
+// hooks
 import useUser from '@components/session/modules/useUser';
-import { viewedDonationDetails } from '@utils/algolia/insights';
 
 const Wrapper = styled.div`
   margin: 0 auto;
