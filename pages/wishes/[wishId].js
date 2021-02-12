@@ -1,17 +1,22 @@
 import React from 'react';
-import api from '@api';
-import WishPage from '@components/wishDetail/pages/WishPage';
 import dynamic from 'next/dynamic';
-import SessionProvider from '@components/session/modules/SessionProvider';
-import Head from 'next/head';
-import { isAuthenticated } from '@utils/authentication/authentication';
-import Error from 'next/error';
-import { ogImagePath } from '@constants/imagePaths';
-import { useRouter } from 'next/router';
-import Header from '@components/header';
-import { deserializeFirestoreTimestampToUnixTimestamp } from '@utils/firebase/deserializer';
-import WishHeader from '@components/header/WishHeader';
 
+// components
+import WishHeader from '@components/header/WishHeader';
+import Header from '@components/header';
+import Error from 'next/error';
+import SessionProvider from '@components/session/modules/SessionProvider';
+import WishDetailPage from '@pages/wishDetail';
+
+// hooks
+import { useRouter } from 'next/router';
+
+// constants and utils
+import { deserializeFirestoreTimestampToUnixTimestamp } from '@utils/firebase/deserializer';
+import { isAuthenticated } from '@utils/authentication/authentication';
+import api from '@api';
+
+// dynamic imports
 const TopNavigationBar = dynamic(() => import('@components/navbar/modules/TopNavigationBar'), {
   ssr: false,
 });
@@ -59,7 +64,7 @@ const Wish = ({ wishId, wishDetails, npoDetails, user, prevHref, categoryName })
       <Header title={wishDetails.title} />
       <WishHeader title={wishDetails.title} description={wishDetails.description} path={router.asPath} id={wishId} />
       <TopNavigationBar showNews={true} />
-      <WishPage
+      <WishDetailPage
         wishId={wishId}
         wishDetails={wishDetails}
         npoDetails={npoDetails}

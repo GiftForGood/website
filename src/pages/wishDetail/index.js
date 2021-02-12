@@ -1,18 +1,23 @@
 import React, { useEffect } from 'react';
 import styled, { css } from 'styled-components';
-import Grid from '@kiwicom/orbit-components/lib/utils/Grid';
-import WishInformation from '../modules/WishInformation';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
-import Map from '../modules/Map';
-import NpoInformation from '../../postDetails/UserInfoCard';
-import { wishes } from '@constants/postType';
-import { donor as donorType, npo as npoType } from '@constants/userType';
+
+// components
 import Desktop from '@kiwicom/orbit-components/lib/Desktop';
-import BreadcrumbsPanel from '../../postDetails/BreadcrumbsPanel';
-import useUser from '@components/session/modules/useUser';
-import { viewedWishDetails } from '@utils/algolia/insights';
+import { Map, WishInformation } from './components'
+import Grid from '@kiwicom/orbit-components/lib/utils/Grid';
 import SeasonalLargeTag from '@components/postDetails/SeasonalLargeTag';
+import BreadcrumbsPanel from '@components/postDetails/BreadcrumbsPanel';
+import NpoInformation from '@components/postDetails/UserInfoCard';
+
+// hooks
 import { useRemoteConfig } from '@components/remoteConfig/RemoteConfig';
+import useUser from '@components/session/modules/useUser';
+
+// constants and utils
+import { viewedWishDetails } from '@utils/algolia/insights';
+import { donor as donorType, npo as npoType } from '@constants/userType';
+import { wishes } from '@constants/postType';
 
 const Wrapper = styled.div`
   margin: 0 auto;
