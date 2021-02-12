@@ -14,7 +14,7 @@ import EmptyStateImage from '@components/imageContainers/EmptyStateImage';
  * @param {function} refinePrevious
  * @param {function} refineNext
  */
-const DonationsHitWrapper = ({ hits, category, hasPrevious, hasMore, refinePrevious, refineNext }) => {
+const DonationsHitWrapper = ({ hits, category, hasPrevious, hasMore, refinePrevious, refineNext, refine }) => {
   if (hits.length === 0) {
     return <EmptyStateImage label="No donations found." />;
   }
