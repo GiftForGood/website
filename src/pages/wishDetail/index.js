@@ -4,7 +4,7 @@ import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 
 // components
 import Desktop from '@kiwicom/orbit-components/lib/Desktop';
-import { Map, WishInformation } from './components'
+import { Map, WishInformation } from './components';
 import Grid from '@kiwicom/orbit-components/lib/utils/Grid';
 import SeasonalLargeTag from '@components/postDetails/SeasonalLargeTag';
 import BreadcrumbsPanel from '@components/postDetails/BreadcrumbsPanel';
