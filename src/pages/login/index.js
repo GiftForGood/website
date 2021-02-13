@@ -3,9 +3,7 @@ import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import styled, { css } from 'styled-components';
 
 // components
-import LoginLanding from './components/LoginLanding';
-import LoginNpo from './components/LoginNpo';
-import LoginDonor from './components/LoginDonor';
+import { LoginDonor, LoginLanding, LoginNpo } from './components';
 
 // hooks
 import { useSelector } from 'react-redux';
