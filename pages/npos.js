@@ -1,11 +1,16 @@
 import React from 'react';
-import SessionProvider from '@components/session/modules/SessionProvider';
-import { isAuthenticated } from '@utils/authentication/authentication';
 import dynamic from 'next/dynamic';
-import Header from '@components/header';
-import { NPOS } from '@constants/search';
-import NposPage from '@components/npos/pages/NposPage';
 
+// components
+import Header from '@components/header';
+import NposPage from '@pages/npos';
+import SessionProvider from '@components/session/modules/SessionProvider';
+
+// constants and utils
+import { NPOS } from '@constants/search';
+import { isAuthenticated } from '@utils/authentication/authentication';
+
+// dynamic imports
 const TopNavigationBar = dynamic(() => import('@components/navbar/modules/TopNavigationBar'), { ssr: false });
 const BottomNavigation = dynamic(() => import('@components/navbar/modules/BottomNavigation'), { ssr: false });
 const Footer = dynamic(() => import('@components/footer/Footer'), { ssr: false });

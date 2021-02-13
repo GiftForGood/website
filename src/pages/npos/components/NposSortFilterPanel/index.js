@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Stack, Button, Modal } from '@kiwicom/orbit-components/lib';
-import NposSortBy from '../modules/NposSortBy';
-import NposFilterBy from '../modules/NposFilterBy';
-import { connectSortBy, connectRefinementList } from 'react-instantsearch-dom';
 import styled from 'styled-components';
+
+// components
+import { Stack, Button, Modal } from '@kiwicom/orbit-components/lib';
+import { NposSortBy, NposFilterBy } from './components';
+import { connectSortBy, connectRefinementList } from 'react-instantsearch-dom';
 import Desktop from '@kiwicom/orbit-components/lib/Desktop';
 import Mobile from '@kiwicom/orbit-components/lib/Mobile';
 import { ModalFooter, ModalSection } from '@kiwicom/orbit-components/lib/Modal';

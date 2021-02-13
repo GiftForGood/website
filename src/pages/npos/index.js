@@ -1,18 +1,23 @@
-import React, { useState, useEffect } from 'react';
-import { Grid } from '@kiwicom/orbit-components/lib';
+import React, { useState } from 'react';
 import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
-import { InstantSearch, Configure, connectInfiniteHits } from 'react-instantsearch-dom';
 import dynamic from 'next/dynamic';
+
+// components
+import { Grid } from '@kiwicom/orbit-components/lib';
+import { InstantSearch, Configure, connectInfiniteHits } from 'react-instantsearch-dom';
+import BlackText from '@components/text/BlackText';
+import { NposHitWrapper } from './components';
+import { MaxWidthContainer } from '@components/containers';
+
+// constants and utils
 import { nposSortByRule } from '@utils/algolia/sortByRules';
 import { getNpoNotBlocked } from '@utils/algolia/filteringRules';
 import { searchClient } from '@utils/algolia';
-import BlackText from '@components/text/BlackText';
-import NposHitWrapper from '../modules/NposHitWrapper';
 import { NPOS_BATCH_SIZE } from '@constants/npos';
-import { MaxWidthContainer } from '@components/containers';
 
-const NposSortFilterPanel = dynamic(() => import('../modules/NposSortFilterPanel'), {
+// dynamic imports
+const NposSortFilterPanel = dynamic(() => import('./components/NposSortFilterPanel'), {
   ssr: false,
 });
 
