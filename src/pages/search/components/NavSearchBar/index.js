@@ -1,8 +1,12 @@
 import React from 'react';
-import { useRouter } from 'next/router';
-import MobileSearchBar from '../modules/MobileSearchBar';
 
-const SearchPage = () => {
+// components
+import { SearchBar } from './components';
+
+// hooks
+import { useRouter } from 'next/router';
+
+const NavSearchBar = ({ searchDefaultIndex }) => {
   const router = useRouter();
 
   const onEnterPressed = (query, selectedIndex) => {
@@ -15,7 +19,11 @@ const SearchPage = () => {
     }
   };
 
-  return <MobileSearchBar onEnterPressed={onEnterPressed} />;
+  return (
+    <>
+      <SearchBar onEnterPressed={onEnterPressed} defaultIndex={searchDefaultIndex} />
+    </>
+  );
 };
 
-export default SearchPage;
+export default NavSearchBar;
