@@ -1,34 +1,41 @@
 import React, { useState } from 'react';
-import { Button, InputField, Stack, Text, SocialButton, Heading, Alert, TextLink } from '@kiwicom/orbit-components/lib';
-import ChevronLeft from '@kiwicom/orbit-components/lib/icons/ChevronLeft';
-
-import { useDispatch } from 'react-redux';
-import { useFormik } from 'formik';
 import * as Yup from 'yup';
-
-import { setIsBackToLanding } from '../actions';
 import styled from 'styled-components';
-import { colors } from '@constants/colors';
-import RedButton from '../../buttons/RedButton';
-import api from '@api';
-import 'isomorphic-unfetch';
-import { useRouter, withRouter } from 'next/router';
+
+// components
+import BlueButton from '@components/buttons/BlueButton';
+import ChevronLeft from '@kiwicom/orbit-components/lib/icons/ChevronLeft';
+import { Button, InputField, Stack, Text, Heading, Alert, TextLink } from '@kiwicom/orbit-components/lib';
+
+// hooks
+import { useRouter } from 'next/router';
+import { useFormik } from 'formik';
+import { useDispatch } from 'react-redux';
+
+// constants and utils
 import client from '@utils/axios';
-import AuthError from '@api/error/authError';
+import api from '@api';
+import { colors } from '@constants/colors';
+
+// redux
+import { setIsBackToLanding } from '../../redux';
 
 const HeadingColor = styled.div`
-  color: ${colors.primaryRed.background};
+  color: ${colors.primaryBlue.background};
 `;
 
-const LoginDonor = ({ redirectUrlAfterLogin }) => {
+const LoginNpo = ({ redirectUrlAfterLogin }) => {
   const dispatch = useDispatch();
+  const router = useRouter();
   const [alertTitle, setAlertTitle] = useState('');
   const [showAlert, setShowAlert] = useState(false);
   const [alertType, setAlertType] = useState('');
   const [alertDescription, setAlertDescription] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
-  const router = useRouter();
+
+  const handleBackToLandingOnClick = () => {
+    dispatch(setIsBackToLanding());
+  };
 
   const displayAlert = (title, description, type) => {
     setShowAlert(true);
@@ -37,14 +44,10 @@ const LoginDonor = ({ redirectUrlAfterLogin }) => {
     setAlertType(type);
   };
 
-  const handleBackToLandingOnClick = () => {
-    dispatch(setIsBackToLanding());
-  };
-
   const handleFormSubmission = async (values) => {
     try {
       setIsLoading(true);
-      const [token, user, userDoc] = await api.auth.loginDonorWithEmailAndPassword(values.email, values.password);
+      const [token, user, userDoc] = await api.auth.loginNPO(values.email, values.password);
       let userData = userDoc.data();
       let response = await client.post('/api/sessionLogin', { token });
       if (response.status === 200) {
@@ -74,36 +77,7 @@ const LoginDonor = ({ redirectUrlAfterLogin }) => {
       } else if (error.code === 'auth/invalid-user') {
         displayAlert('Error', error.message, 'critical');
       } else {
-        displayAlert('Unverified', error.message, 'critical');
-      }
-    }
-  };
-
-  const handleGoogleLogin = async () => {
-    try {
-      setIsGoogleLoading(true);
-      const [token, user, userDoc] = await api.auth.loginDonorWithGoogle();
-      let userData = userDoc.data();
-      let response = await client.post('/api/sessionLogin', { token });
-      if (response.status === 200) {
-        if (redirectUrlAfterLogin) {
-          router.push(redirectUrlAfterLogin);
-        } else {
-          router.push('/');
-        }
-      } else {
-        throw response.error;
-      }
-    } catch (error) {
-      setIsGoogleLoading(false);
-      console.error(error);
-      await api.auth.logout();
-      if (error.code === 'auth/unable-to-create-user') {
         displayAlert('Error', error.message, 'critical');
-      } else if (error.code === 'auth/invalid-user') {
-        displayAlert('Error', error.message, 'critical');
-      } else {
-        displayAlert('Unverified', error.message, 'critical');
       }
     }
   };
@@ -131,7 +105,7 @@ const LoginDonor = ({ redirectUrlAfterLogin }) => {
         circled
         iconLeft={<ChevronLeft />}
         onClick={handleBackToLandingOnClick}
-        spaceAfter="normal"
+        spaceAfter="large"
       />
       <Text align="center" as="div" spaceAfter="largest">
         <Stack direction="row" align="center" justify="center">
@@ -139,25 +113,13 @@ const LoginDonor = ({ redirectUrlAfterLogin }) => {
             I am a
           </Heading>
           <Heading size="large" weight="bold">
-            <HeadingColor>Donor</HeadingColor>
+            <HeadingColor>Non Profit Organization</HeadingColor>
           </Heading>
         </Stack>
       </Text>
-      <SocialButton
-        type="google"
-        fullWidth={true}
-        spaceAfter="normal"
-        onClick={handleGoogleLogin}
-        loading={isGoogleLoading}
-        disabled={isLoading}
-      >
-        Login with Google
-      </SocialButton>
-      <Text align="center" spaceAfter="normal">
-        OR
-      </Text>
+
       <form onSubmit={formik.handleSubmit}>
-        <Stack spacing="extraLoose" spaceAfter="normal">
+        <Stack spacing="extraLoose">
           <InputField
             type="email"
             label="Email"
@@ -182,7 +144,7 @@ const LoginDonor = ({ redirectUrlAfterLogin }) => {
             }
           />
 
-          <Button submit fullWidth={true} asComponent={RedButton} loading={isLoading} disabled={isGoogleLoading}>
+          <Button submit fullWidth={true} asComponent={BlueButton} loading={isLoading}>
             Login
           </Button>
         </Stack>
@@ -197,4 +159,4 @@ const LoginDonor = ({ redirectUrlAfterLogin }) => {
   );
 };
 
-export default withRouter(LoginDonor);
+export default LoginNpo;

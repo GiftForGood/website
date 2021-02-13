@@ -3,7 +3,7 @@ import thunk from 'redux-thunk';
 import logger from 'redux-logger';
 
 import registerReducer from './src/components/register';
-import loginReducer from './src/components/login';
+import { reducer as loginReducer } from '@pages/login/redux';
 import sessionReducer from './src/components/session';
 import navbarReducer from './src/components/navbar';
 
