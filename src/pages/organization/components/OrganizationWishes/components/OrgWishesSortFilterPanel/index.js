@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
+import styled from 'styled-components';
+
+// components
 import { Stack, Button, Modal } from '@kiwicom/orbit-components/lib';
 import Desktop from '@kiwicom/orbit-components/lib/Desktop';
 import Mobile from '@kiwicom/orbit-components/lib/Mobile';
-import OrgWishesFilterBy from './OrgWishesFilterBy';
+import { OrgWishesFilterBy } from './components';
 import { connectRefinementList } from 'react-instantsearch-dom';
 import { ModalFooter, ModalSection } from '@kiwicom/orbit-components/lib/Modal';
-import styled from 'styled-components';
 
 const ModalContainer = styled.div`
   display: ${({ hide }) => (hide ? 'none' : 'box')};

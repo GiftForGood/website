@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
+
+// components
 import { Stack, Button, ListChoice } from '@kiwicom/orbit-components/lib';
 import Modal, { ModalSection, ModalHeader, ModalFooter } from '@kiwicom/orbit-components/lib/Modal';
+
+// constants and utils
 import { deserializeFirestoreTimestampToUnixTimestamp } from '@utils/firebase/deserializer';
 import api from '@api';
 import { getFormattedDate } from '@api/time';

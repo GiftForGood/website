@@ -1,6 +1,8 @@
 import React from 'react';
+
+// components
 import { Stack, Separator, Checkbox } from '@kiwicom/orbit-components/lib';
-import BlackText from '../../text/BlackText';
+import BlackText from '@components/text/BlackText';
 
 const OrgWishesFilterBy = ({ items, currentRefinement, refine }) => {
   return (

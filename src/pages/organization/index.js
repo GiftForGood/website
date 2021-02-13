@@ -1,15 +1,18 @@
 import React, { useState } from 'react';
-import CoverPhoto from '../modules/CoverPhoto';
+import styled from 'styled-components';
+
+// components
+import { CoverPhoto, ProfilePhoto, OrganizationWishes, HistoryModal } from './components';
 import { MaxWidthContainer } from '@components/containers';
-import styled, { css } from 'styled-components';
-import ProfilePhoto from '../modules/ProfilePhoto';
 import { Stack, Heading, Button, Text, Textarea } from '@kiwicom/orbit-components/lib';
-import OrganizationWishes from '../modules/OrganizationWishes';
-import api from '@api';
-import { useRouter } from 'next/router';
-import HistoryModal from '../modules/HistoryModal';
 import ToastContainer from '@components/toast/ToastContainer';
 import { toast } from 'react-toastify';
+
+// hooks
+import { useRouter } from 'next/router';
+
+// utils
+import api from '@api';
 
 const CoverPhotoContainer = styled(MaxWidthContainer)`
   margin-top: 0;
