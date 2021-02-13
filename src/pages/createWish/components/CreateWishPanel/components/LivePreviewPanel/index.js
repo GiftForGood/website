@@ -1,10 +1,23 @@
 import React, { useContext } from 'react';
-import { Stack, Heading, Text } from '@kiwicom/orbit-components/lib';
 import styled from 'styled-components';
-import WishCard from '../../card/WishCard';
-import { getTitle, getDescription, getCategories, getPostedDateTime, getSeasonal } from '../selectors';
-import useUser from '../../session/modules/useUser';
-import WishContext from '../context';
+
+// components
+import WishCard from '@components/card/WishCard';
+import { Stack, Heading, Text } from '@kiwicom/orbit-components/lib';
+
+// hooks
+import useUser from '@components/session/modules/useUser';
+
+// context
+import {
+  WishContext,
+  // selectors
+  getTitle,
+  getDescription,
+  getCategories,
+  getPostedDateTime,
+  getSeasonal,
+} from '../../../../context';
 
 const Container = styled.div`
   padding: 20px;

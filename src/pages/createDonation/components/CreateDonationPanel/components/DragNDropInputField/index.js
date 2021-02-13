@@ -1,14 +1,20 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
-import { useDropzone } from 'react-dropzone';
+
+// components
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { Text, ButtonPrimitive, Alert } from '@kiwicom/orbit-components/lib';
+import Remove from '@kiwicom/orbit-components/lib/icons/Remove';
+import { v4 as uuidv4 } from 'uuid';
+import { colors } from '@constants/colors';
+
+// constants and utils
 import { MAXIMUM_ALLOWED_PHOTOS } from '@constants/donorUploadPhoto';
 import { MAXIMUM_FILE_SIZE_LIMIT } from '@constants/files';
-import { Text, ButtonPrimitive, Alert } from '@kiwicom/orbit-components/lib';
-import { v4 as uuidv4 } from 'uuid';
-import Remove from '@kiwicom/orbit-components/lib/icons/Remove';
-import { colors } from '@constants/colors';
+
+// hooks
+import { useDropzone } from 'react-dropzone';
 
 const getColor = (props) => {
   if (props.isDragAccept) {

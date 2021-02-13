@@ -1,5 +1,9 @@
 import React from 'react';
+
+// components
 import { Alert, Tooltip, TextLink } from '@kiwicom/orbit-components/lib';
+
+// utils and constants
 import { BUMP_DURATION } from '@constants/wishes';
 
 const ExpirePostAlert = () => {
