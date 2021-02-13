@@ -1,4 +1,6 @@
 import React from 'react';
+
+// components
 import { Stack, Separator, Checkbox } from '@kiwicom/orbit-components/lib';
 import BlackText from '@components/text/BlackText';
 

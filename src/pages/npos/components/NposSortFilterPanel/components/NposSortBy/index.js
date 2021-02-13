@@ -1,6 +1,10 @@
-import React, { useEffect } from 'react';
-import { ChoiceGroup, Radio, Separator, Stack } from '@kiwicom/orbit-components/lib';
+import React from 'react';
+
+// components
+import { ChoiceGroup, Radio, Separator } from '@kiwicom/orbit-components/lib';
 import BlackText from '@components/text/BlackText';
+
+// hooks
 import { useRouter } from 'next/router';
 
 /**

@@ -1,4 +1,6 @@
 import React, { useEffect, useRef } from 'react';
+
+// components
 import BlackText from '@components/text/BlackText';
 import { Grid } from '@kiwicom/orbit-components/lib';
 import NpoUserCard from '@components/card/NpoUserCard';
