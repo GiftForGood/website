@@ -8,7 +8,7 @@ import { getCurrentPage } from './redux';
 import { useSelector } from 'react-redux';
 
 // constants and utils
-import { LANDING, NPO_REGISTER, DONOR_REGISTER, NPO_DETAILS } from './utils/SubPages';
+import { LANDING, NPO_REGISTER, DONOR_REGISTER, NPO_DETAILS } from './constants/subPages';
 
 // components
 import { RegisterLanding, RegisterNpoOrganization, RegisterNpoDetails, RegisterDonor } from './components';
