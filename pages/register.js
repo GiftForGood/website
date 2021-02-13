@@ -1,7 +1,13 @@
 import React from 'react';
+
+// hoc
 import { withRouter } from 'next/router';
+
+// constants and utils
 import { isAuthenticated } from '@utils/authentication/authentication';
-import RegisterPage from '@components/register/pages/RegisterPage';
+
+// components
+import RegisterPage from '@pages/register';
 import Header from '@components/header';
 
 // Route back to home page if already authenticated

@@ -1,10 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import { withRouter } from 'next/router';
+import React from 'react';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import styled, { css } from 'styled-components';
+
+// components
 import { Text, Heading } from '@kiwicom/orbit-components/lib';
-import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
+
+// constants
 import { leftRegistrationPanelImagePath } from '@constants/imagePaths';
+
+// hooks
+import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 
 const Wrapper = styled.div`
   background-size: cover;
