@@ -3,7 +3,7 @@ import { Stack, ButtonLink } from '@kiwicom/orbit-components/';
 import LogoButton from '../../buttons/LogoButton';
 import { companyLogoImagePath } from '@constants/imagePaths';
 import styled, { css } from 'styled-components';
-import NavSearchBar from '../../search/modules/NavSearchBar';
+import { NavSearchBar } from '@pages/search/components';
 import Link from 'next/link';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 

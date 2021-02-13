@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
+
+// components
 import { Stack, ButtonLink, InputField, Tag, ListChoice } from '@kiwicom/orbit-components/';
 import { Search } from '@kiwicom/orbit-components/lib/icons';
+
+// constants
 import { WISHES, DONATIONS, NPOS } from '@constants/search';
 
 const MobileSearchBar = ({ onEnterPressed }) => {

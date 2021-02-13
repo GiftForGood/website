@@ -1,5 +1,9 @@
 import React from 'react';
+
+// components
 import { ListChoice } from '@kiwicom/orbit-components/lib';
+
+// hooks
 import { useRouter } from 'next/router';
 
 const Hits = ({ hits, type }) => {
