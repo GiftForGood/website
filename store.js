@@ -2,7 +2,7 @@ import { createStore, applyMiddleware, combineReducers } from 'redux';
 import thunk from 'redux-thunk';
 import logger from 'redux-logger';
 
-import registerReducer from './src/components/register';
+import { reducer as registerReducer } from '@pages/register/redux';
 import loginReducer from './src/components/login';
 import sessionReducer from './src/components/session';
 import navbarReducer from './src/components/navbar';

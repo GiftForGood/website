@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from 'react';
+
+// components
 import { Stack, Text } from '@kiwicom/orbit-components/lib';
 import { Close, Check } from '@kiwicom/orbit-components/lib/icons';
+
+// constants
 import { colors } from '@constants/colors';
+
 const PasswordStrength = ({ password, show, onSecure, onNotSecure }) => {
   const [isMinimum12Chars, setMinimum12Chars] = useState(false);
   const [isAtLeastOneUppercaseChar, setIsAtLeastOneUppercaseChar] = useState(false);

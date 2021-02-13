@@ -1,4 +1,4 @@
-import { LANDING, NPO_REGISTER, DONOR_REGISTER, NPO_DETAILS } from './utils/SubPages';
+import { LANDING, NPO_REGISTER, DONOR_REGISTER, NPO_DETAILS } from '../utils/SubPages';
 const initialState = {
   organization: null,
   name: '',

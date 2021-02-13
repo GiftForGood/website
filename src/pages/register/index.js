@@ -1,18 +1,19 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
-import { getCurrentPage } from '../selectors';
-import { LANDING, NPO_REGISTER, DONOR_REGISTER, NPO_DETAILS } from '../utils/SubPages';
-
-import RegisterLanding from '../modules/RegisterLanding';
-import RegisterNpoOrganization from '../modules/RegisterNpoOrganization';
-import RegisterNpoDetails from '../modules/RegisterNpoDetails';
-import RegisterDonor from '../modules/RegisterDonor';
-
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import styled, { css } from 'styled-components';
-
 import dynamic from 'next/dynamic';
-const RegisterBackground = dynamic(() => import('../modules/RegisterBackground'), { ssr: false });
+
+// redux
+import { getCurrentPage } from './redux';
+import { useSelector } from 'react-redux';
+
+// constants and utils
+import { LANDING, NPO_REGISTER, DONOR_REGISTER, NPO_DETAILS } from './utils/SubPages';
+
+// components
+import { RegisterLanding, RegisterNpoOrganization, RegisterNpoDetails, RegisterDonor } from './components';
+
+const RegisterBackground = dynamic(() => import('./components/RegisterBackground'), { ssr: false });
 
 const Wrapper = styled.div`
   display: flex;

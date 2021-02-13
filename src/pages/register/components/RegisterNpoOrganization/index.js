@@ -1,24 +1,34 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import styled from 'styled-components';
+
+// hoc
 import { withRouter } from 'next/router';
+
+// components
 import { Button, InputField, Textarea, Text, Heading, Alert, TextLink, Stack } from '@kiwicom/orbit-components/lib';
 import ChevronLeft from '@kiwicom/orbit-components/lib/icons/ChevronLeft';
+import BlueButton from '@components/buttons/BlueButton';
+import NpoOrganizationDropdownField from '@components/inputfield/NpoOrganizationDropdownField';
 
+// hooks
 import { useDispatch, useSelector } from 'react-redux';
 import { useFormik } from 'formik';
-import * as Yup from 'yup';
 
+// constants and utils
+import * as Yup from 'yup';
+import { colors } from '@constants/colors';
+import { newOrganizationGoogleFormPath } from '@constants/googleFormPaths';
+
+// redux
 import {
+  // actions
   setIsNpoDetails,
   setIsBackToLanding,
   setNpoOrganizationDetails,
   clearNpoOrganizationDetails,
-} from '../actions';
-import { getOrganization } from '../selectors';
-import styled from 'styled-components';
-import BlueButton from '@components/buttons/BlueButton';
-import { colors } from '@constants/colors';
-import NpoOrganizationDropdownField from '@components/inputfield/NpoOrganizationDropdownField';
-import { newOrganizationGoogleFormPath } from '@constants/googleFormPaths';
+  // selectors
+  getOrganization,
+} from '../../redux';
 
 const HeadingColor = styled.div`
   color: ${colors.primaryBlue.background};
