@@ -1,14 +1,20 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
-import { getCurrentPage } from '../selectors';
-import { LANDING, NPO_LOGIN, DONOR_LOGIN } from '../utils/SubPages';
-
-import LoginLanding from '../modules/LoginLanding';
-import LoginNpo from '../modules/LoginNpo';
-import LoginDonor from '../modules/LoginDonor';
-
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import styled, { css } from 'styled-components';
+
+// components
+import LoginLanding from './components/LoginLanding';
+import LoginNpo from './components/LoginNpo';
+import LoginDonor from './components/LoginDonor';
+
+// hooks
+import { useSelector } from 'react-redux';
+
+// constants and utils
+import { LANDING, NPO_LOGIN, DONOR_LOGIN } from './constants';
+
+// redux
+import { getCurrentPage } from './redux';
 
 const Wrapper = styled.div`
   display: flex;

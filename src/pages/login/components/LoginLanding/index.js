@@ -1,16 +1,22 @@
 import React from 'react';
-import { withRouter } from 'next/router';
-import { useDispatch } from 'react-redux';
-import { Text, Heading, Grid, TextLink, Stack } from '@kiwicom/orbit-components/lib';
-
-import { setIsNpoLogin, setIsDonorLogin } from '../actions';
 import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 
-import NpoSessionCard from '../../card/NpoSessionCard';
-import DonorSessionCard from '../../card/DonorSessionCard';
-import { companyIconImagePath } from '@constants/imagePaths';
+// components
+import { Text, Heading, Grid, TextLink, Stack } from '@kiwicom/orbit-components/lib';
 import Image from 'next/image';
+import NpoSessionCard from '@components/card/NpoSessionCard';
+import DonorSessionCard from '@components/card/DonorSessionCard';
+
+// hooks
+import { useDispatch } from 'react-redux';
+import { withRouter } from 'next/router';
+
+// constants and utils
+import { companyIconImagePath } from '@constants/imagePaths';
+
+// redux
+import { setIsNpoLogin, setIsDonorLogin } from '../../redux';
 
 const Container = styled.div`
   display: flex;

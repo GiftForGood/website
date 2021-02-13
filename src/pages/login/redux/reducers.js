@@ -1,4 +1,4 @@
-import { LANDING, NPO_LOGIN, DONOR_LOGIN } from './utils/SubPages';
+import { LANDING, NPO_LOGIN, DONOR_LOGIN } from '../constants';
 const initialState = {
   currentPage: LANDING,
 };
