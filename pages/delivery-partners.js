@@ -1,11 +1,16 @@
 import React from 'react';
-import SessionProvider from '@components/session/modules/SessionProvider';
-import { isAuthenticated } from '@utils/authentication/authentication';
-import DeliveryPartnersPage from '@components/deliveryPartners/pages/DeliveryPartnersPage';
 import dynamic from 'next/dynamic';
-import Header from '@components/header';
-import { WISHES } from '@constants/search';
 
+// components
+import DeliveryPartnersPage from '@pages/deliveryPartners';
+import Header from '@components/header';
+import SessionProvider from '@components/session/modules/SessionProvider';
+
+// constants and utils
+import { WISHES } from '@constants/search';
+import { isAuthenticated } from '@utils/authentication/authentication';
+
+// dynamic imports
 const TopNavigationBar = dynamic(() => import('@components/navbar/modules/TopNavigationBar'), { ssr: false });
 const BottomNavigation = dynamic(() => import('@components/navbar/modules/BottomNavigation'), { ssr: false });
 const Footer = dynamic(() => import('@components/footer/Footer'), { ssr: false });

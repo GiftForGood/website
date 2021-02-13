@@ -1,5 +1,5 @@
 import React from 'react';
-import DeliveryPartnersContent from '../modules/DeliveryPartnersContent';
+import { DeliveryPartnersContent } from './components';
 
 const DeliveryPartnersPage = () => {
   return <DeliveryPartnersContent />;
