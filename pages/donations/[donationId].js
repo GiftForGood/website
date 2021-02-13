@@ -1,16 +1,23 @@
 import React from 'react';
-import api from '@api';
-import DonationPage from '@components/donationDetail/pages/DonationPage';
 import dynamic from 'next/dynamic';
+
+// components
+import DonationPage from '@pages/donationDetail';
 import SessionProvider from '@components/session/modules/SessionProvider';
 import Head from 'next/head';
-import { isAuthenticated } from '@utils/authentication/authentication';
-import Error from 'next/error';
-import { ogImagePath } from '@constants/imagePaths';
-import { useRouter } from 'next/router';
 import Header from '@components/header';
+import Error from 'next/error';
+
+// constants and utils
+import api from '@api';
+import { isAuthenticated } from '@utils/authentication/authentication';
+import { ogImagePath } from '@constants/imagePaths';
 import { deserializeFirestoreTimestampToUnixTimestamp } from '@utils/firebase/deserializer';
 
+// hooks
+import { useRouter } from 'next/router';
+
+// dynamic imports
 const TopNavigationBar = dynamic(() => import('@components/navbar/modules/TopNavigationBar'), {
   ssr: false,
 });
