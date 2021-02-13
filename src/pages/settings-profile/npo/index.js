@@ -1,11 +1,15 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
-import NpoApplicationPanel from '../modules/NpoApplicationPanel';
-import SettingsTabs from '@components/tabs/SettingsTabs';
+
+// components
+import { NpoEditProfilePanel } from './components';
 import { Stack } from '@kiwicom/orbit-components/lib';
-import { TABS } from '@constants/settings';
+import SettingsTabs from '@components/tabs/SettingsTabs';
 import { MaxWidthContainer } from '@components/containers';
+
+// constants
+import { TABS } from '@constants/settings';
 
 const Container = styled(MaxWidthContainer)`
   display: flex;
@@ -22,15 +26,15 @@ const Container = styled(MaxWidthContainer)`
   `)};
 `;
 
-const NpoApplicationPage = () => {
+const NpoSettingProfilePage = () => {
   return (
     <Container>
       <Stack justify="center" direction="column" desktop={{ direction: 'row' }}>
-        <SettingsTabs activeTab={TABS.NPO_APPLICATION} />
-        <NpoApplicationPanel />
+        <SettingsTabs activeTab={TABS.EDIT_PROFILE} />
+        <NpoEditProfilePanel />
       </Stack>
     </Container>
   );
 };
 
-export default NpoApplicationPage;
+export default NpoSettingProfilePage;

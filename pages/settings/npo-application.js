@@ -1,9 +1,13 @@
 import React from 'react';
-import SessionProvider from '@components/session/modules/SessionProvider';
-import { isAuthenticated } from '@utils/authentication/authentication';
 import dynamic from 'next/dynamic';
+
+// components
 import Header from '@components/header';
-import NpoApplicationPage from '@components/settings-npoApplication/pages/NpoApplicationPage';
+import NpoApplicationPage from '@pages/settings-npoApplication';
+import SessionProvider from '@components/session/modules/SessionProvider';
+
+// constants and utils
+import { isAuthenticated } from '@utils/authentication/authentication';
 
 const TopNavigationBar = dynamic(() => import('@components/navbar/modules/TopNavigationBar'), { ssr: false });
 const Footer = dynamic(() => import('@components/footer/Footer'), { ssr: false });
