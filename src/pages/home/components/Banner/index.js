@@ -1,9 +1,10 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
-import { Grid } from '@kiwicom/orbit-components/lib';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
-import BannerCarousel from './BannerCarousel';
-import SideBanner from './SideBanner';
+
+// components
+import { Grid } from '@kiwicom/orbit-components/lib';
+import { BannerCarousel, SideBanner } from './components';
 import { MaxWidthContainer } from '@components/containers';
 
 // only display when it is desktop

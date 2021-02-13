@@ -1,9 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import styled, { css } from 'styled-components';
-import api from '@api';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
+
+// utils and constants
+import api from '@api';
+
+// hooks
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
-import CarouselScrollButton from '../../buttons/CarouselScrollButton';
+
+// components
+import CarouselScrollButton from '@components/buttons/CarouselScrollButton';
 import { Carousel } from 'react-responsive-carousel';
 
 const BannerImage = styled.img`
