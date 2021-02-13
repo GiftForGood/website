@@ -1,7 +1,11 @@
 import React from 'react';
-import ProfileAvatar from '../../imageContainers/ProfileAvatar';
+
+// components
+import ProfileAvatar from '@components/imageContainers/ProfileAvatar';
 import KiwicomGuarantee from '@kiwicom/orbit-components/lib/icons/KiwicomGuarantee';
 import { Stack, Text, Heading, TextLink } from '@kiwicom/orbit-components/lib';
+
+// constants
 import { colors } from '@constants/colors';
 import { npo } from '@constants/userType';
 

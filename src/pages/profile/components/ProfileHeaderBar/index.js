@@ -1,8 +1,14 @@
 import React from 'react';
 import styled from 'styled-components';
-import EditProfileButton from '../../buttons/EditProfileButton';
-import { useRouter } from 'next/router';
+
+// components
+import EditProfileButton from '@components/buttons/EditProfileButton';
 import { Button, Stack, TextLink, Separator } from '@kiwicom/orbit-components/lib';
+
+// hooks
+import { useRouter } from 'next/router';
+
+// constants and utils
 import { colors } from '@constants/colors';
 import { npo } from '@constants/userType';
 

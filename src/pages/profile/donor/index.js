@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { Stack } from '@kiwicom/orbit-components/lib';
-import Grid from '@kiwicom/orbit-components/lib/utils/Grid';
 import styled from 'styled-components';
+
+// components
+import { Stack, Grid } from '@kiwicom/orbit-components/lib';
+import { ProfileHeaderBar, ProfilePanel } from '../components';
+import { PastDonationsPanel, CompletedWishesPanel } from './components';
+import Header from '@components/header';
+
+// constants and utils
 import api from '@api';
 import { donor as donorProfileType } from '@constants/userType';
-import useUser from '../../session/modules/useUser';
 
-import ProfileHeaderBar from '../modules/ProfileHeaderBar';
-import ProfilePanel from '../modules/ProfilePanel';
-import PastDonationsPanel from '../modules/PastDonationsPanel';
-import CompletedWishesPanel from '../modules/CompletedWishesPanel';
-import Header from '../../header';
+// hooks
+import useUser from '@components/session/modules/useUser';
 
 const Wrapper = styled.div`
   margin: 0 auto;
