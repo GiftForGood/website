@@ -1,11 +1,17 @@
 import React, { useState } from 'react';
-import { Button, InputField, Stack, Text, Heading, Alert } from '@kiwicom/orbit-components/lib';
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
 import styled from 'styled-components';
-import ForgetPasswordButton from '../../buttons/ForgetPasswordButton';
+
+// components
+import ForgetPasswordButton from '@components/buttons/ForgetPasswordButton';
+import { Button, InputField, Stack, Text, Heading, Alert } from '@kiwicom/orbit-components/lib';
+
+// constants and utils
 import { companyIconImagePath } from '@constants/imagePaths';
+import * as Yup from 'yup';
 import api from '@api';
+
+// hooks
+import { useFormik } from 'formik';
 
 const Logo = styled.img`
   height: 100px;
