@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
+
+// components
 import { InputField, ButtonLink } from '@kiwicom/orbit-components/lib';
 import Close from '@kiwicom/orbit-components/lib/icons/Close';
+
+// hooks
 import useDebouncedEffect from '@utils/hooks/useDebouncedEffect';
 
 // Added 500ms of delay so that search does not incur so much request.

@@ -1,11 +1,14 @@
 import React, { useRef, useState } from 'react';
-import { InstantSearch, connectSearchBox, Index, Configure, connectHits } from 'react-instantsearch-dom';
-import SearchBar from './AlgoliaSearchBar';
-import Hits from './Hits';
 import styled from 'styled-components';
+
+// components
+import { InstantSearch, connectSearchBox, Index, Configure, connectHits } from 'react-instantsearch-dom';
+import { SearchBar, Hits } from './components';
 import { Text } from '@kiwicom/orbit-components/lib';
-import { MAXIMUM_SEARCH_DESKTOP } from '@constants/search';
 import Popover from 'react-tiny-popover';
+
+// constants and utils
+import { MAXIMUM_SEARCH_DESKTOP } from '@constants/search';
 import { searchClient } from '@utils/algolia';
 
 const CustomSearchBox = connectSearchBox(SearchBar);
@@ -20,7 +23,7 @@ const ContentContainer = styled.div`
   padding: 0px 10px 8px 10px;
 `;
 
-const NavSearchBar = () => {
+const NavSearchBarDropdownList = () => {
   const inputRef = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -74,4 +77,4 @@ const NavSearchBar = () => {
   );
 };
 
-export default NavSearchBar;
+export default NavSearchBarDropdownList;

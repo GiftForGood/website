@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
-import { InputField, ButtonLink, Popover, ListChoice, Button, Stack } from '@kiwicom/orbit-components/lib';
-import Close from '@kiwicom/orbit-components/lib/icons/Close';
-import ChevronDown from '@kiwicom/orbit-components/lib/icons/ChevronDown';
 import styled, { css } from 'styled-components';
 import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
+
+// components
+import { InputField, ButtonLink, Popover, ListChoice, Stack } from '@kiwicom/orbit-components/lib';
+import Close from '@kiwicom/orbit-components/lib/icons/Close';
+import ChevronDown from '@kiwicom/orbit-components/lib/icons/ChevronDown';
+
+// constants
 import { WISHES } from '@constants/search';
 
 const SearchWrapper = styled.div`
