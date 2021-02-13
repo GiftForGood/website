@@ -1,6 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import SearchPage from '@components/search/pages/SearchPage';
+
+// components
+import SearchPage from '@pages/search';
 import Header from '@components/header';
 
 const Container = styled.div`
