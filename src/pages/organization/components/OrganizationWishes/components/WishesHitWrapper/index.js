@@ -1,10 +1,17 @@
 import React, { useEffect, useRef } from 'react';
-import DonationCard from '../../card/DonationCard';
+
+// components
+import WishCard from '@components/card/WishCard';
 import { Grid } from '@kiwicom/orbit-components/lib';
-import { getFormattedDate } from '@api/time';
-import useUser from '@components/session/modules/useUser';
-import { clickedOnDonation } from '@utils/algolia/insights';
 import EmptyStateImage from '@components/imageContainers/EmptyStateImage';
+
+// hooks
+import useUser from '@components/session/modules/useUser';
+import { useRemoteConfig } from '@components/remoteConfig/RemoteConfig';
+
+// utils
+import { clickedOnWish } from '@utils/algolia/insights';
+
 /**
  * https://www.algolia.com/doc/api-reference/widgets/infinite-hits/react/#create-a-react-component
  * @param {object[]} hits
@@ -14,13 +21,14 @@ import EmptyStateImage from '@components/imageContainers/EmptyStateImage';
  * @param {function} refinePrevious
  * @param {function} refineNext
  */
-const DonationsHitWrapper = ({ hits, category, hasPrevious, hasMore, refinePrevious, refineNext, refine }) => {
+const WishesHitWrapper = ({ hits, category, hasPrevious, hasMore, refinePrevious, refineNext, refine }) => {
   if (hits.length === 0) {
-    return <EmptyStateImage label="No donations found." />;
+    return <EmptyStateImage label="No wishes found." />;
   }
 
   const sentinel = useRef(null);
   const userObject = useUser();
+  const remoteConfig = useRemoteConfig();
 
   const onSentinelIntersection = (entries) => {
     entries.forEach((entry) => {
@@ -52,41 +60,51 @@ const DonationsHitWrapper = ({ hits, category, hasPrevious, hasMore, refinePrevi
           columns: '1fr 1fr',
         }}
         rows="auto"
-        gap="20px"
+        rowGap="30px"
+        columnGap="20px"
       >
         {hits.map((hit) => {
           const {
             objectID,
-            coverImageUrl,
+            categories,
+            organization,
             title,
             description,
             user,
             postedDateTime,
-            itemCondition,
-            validPeriodFrom,
-            validPeriodTo,
+            isBumped,
+            event,
+            status,
           } = hit;
-          const postHref = `/donations/${objectID}`;
+          const postHref = `/wishes/${objectID}`;
           const profileHref = `/profile/${user.userId}`;
-          const validPeriod = `${getFormattedDate(validPeriodFrom)} - ${getFormattedDate(validPeriodTo)}`;
+          const categoryTags = categories.map((category) => category.name);
           return (
-            <DonationCard
+            <WishCard
               key={objectID}
-              name={user.userName}
+              wishId={objectID}
+              name={organization.name}
               title={title}
               description={description}
               profileImageUrl={user.profileImageUrl}
-              coverImageUrl={coverImageUrl}
               postedDateTime={postedDateTime}
               postHref={postHref}
               profileHref={profileHref}
-              itemCondition={itemCondition}
-              validPeriod={validPeriod}
+              categoryTags={categoryTags}
+              isBumped={isBumped}
               categoryId={category.id}
               categoryName={category.name}
               onClick={() => {
-                clickedOnDonation(userObject, objectID);
+                clickedOnWish(userObject, objectID);
               }}
+              status={status}
+              seasonal={
+                remoteConfig?.configs?.currentEvent.key &&
+                event?.key &&
+                remoteConfig?.configs?.currentEvent.key === event?.key
+                  ? event
+                  : null
+              }
             />
           );
         })}
@@ -96,4 +114,4 @@ const DonationsHitWrapper = ({ hits, category, hasPrevious, hasMore, refinePrevi
   );
 };
 
-export default DonationsHitWrapper;
+export default WishesHitWrapper;

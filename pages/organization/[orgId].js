@@ -1,13 +1,17 @@
 import React from 'react';
-import SessionProvider from '@components/session/modules/SessionProvider';
-import { isAuthenticated } from '@utils/authentication/authentication';
 import dynamic from 'next/dynamic';
+
+// components
+import SessionProvider from '@components/session/modules/SessionProvider';
 import Header from '@components/header';
-import { WISHES } from '@constants/search';
-import OrganizationalPage from '@components/organization/pages/OrganizationalPage';
+import OrganizationalPage from '@pages/organization';
 import OrganizationHeader from '@components/header/OrganizationHeader';
-import api from '@api';
 import Error from 'next/error';
+
+// utils and constants
+import { WISHES } from '@constants/search';
+import api from '@api';
+import { isAuthenticated } from '@utils/authentication/authentication';
 
 const TopNavigationBar = dynamic(() => import('@components/navbar/modules/TopNavigationBar'), { ssr: false });
 const BottomNavigation = dynamic(() => import('@components/navbar/modules/BottomNavigation'), { ssr: false });
