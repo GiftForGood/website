@@ -1,19 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
-import Banner from '../modules/Banner';
-import Categories from '../../category/modules/Categories';
-import TopWishes from '../modules/TopWishes';
-import { Grid } from '@kiwicom/orbit-components/lib';
 import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
-import { wishesHomePageDetails } from '@constants/homePageDetails';
+
+// components
+import { Banner } from '../components';
+import Categories from '@components/category/modules/Categories';
+import { TopDonations } from './components';
+import { Grid } from '@kiwicom/orbit-components/lib';
 import { MaxWidthContainer } from '@components/containers';
-import useLocalStorage from '@utils/hooks/useLocalStorage';
+
+// constants and utils
+import { donationsHomePageDetails } from '@constants/homePageDetails';
 import { gridRowsWithHowItWorks, gridRows } from '@constants/homePageGridRows';
+
+// hooks
+import useLocalStorage from '@utils/hooks/useLocalStorage';
 
 const HowItWorks = dynamic(() => import('@components/howItWorks/pages/HowItWorks'), { ssr: false });
 
-const WishesHomePageContainer = styled.div`
+const HomePageContainer = styled.div`
   display: flex;
   ${media.desktop(css`
     margin-top: 30px;
@@ -23,7 +29,7 @@ const WishesHomePageContainer = styled.div`
 const ResponsiveTitle = styled.div`
   font-size: calc(14px + 0.5vw);
   font-weight: bold;
-  margin-bottom: 17.5px;
+  margin-bottom: 10px;
   ${media.desktop(css`
     margin-bottom: 27.5px;
   `)};
@@ -41,20 +47,19 @@ const styles = {
   },
 };
 
-const TopWishesContainer = styled(MaxWidthContainer)`
+const TopDonationsContainer = styled(MaxWidthContainer)`
   overflow-x: hidden;
   margin-top: 0;
-  padding: 0 5px 5px 5px;
 `;
 
-const WishesHomePage = () => {
+const DonationsHomePage = () => {
   const {
     numberOfPostsPerCategory,
     numberOfCategories,
     categoriesTitle,
     topCategoriesTitle,
     pageType,
-  } = wishesHomePageDetails;
+  } = donationsHomePageDetails;
   const [isShowHowItWorks, setIsShowHowItWorks] = useLocalStorage('isShowHowItWorks', true);
   const [largeDesktopGridRules, setLargeDesktopGridRules] = useState({
     rows: isShowHowItWorks ? gridRowsWithHowItWorks.largeDesktop : gridRows.largeDesktop,
@@ -78,7 +83,7 @@ const WishesHomePage = () => {
   }, [isShowHowItWorks]);
 
   return (
-    <WishesHomePageContainer>
+    <HomePageContainer>
       <Grid
         style={styles.gridContainer}
         rows={mobileGridRules.rows}
@@ -88,24 +93,20 @@ const WishesHomePage = () => {
         desktop={desktopGridRules}
         tablet={tabletGridRules}
         largeMobile={mobileGridRules}
-        mediumMobile={mobileGridRules}
       >
         <Banner type={pageType} />
-
         {isShowHowItWorks && <HowItWorks setIsShowHowItWorks={setIsShowHowItWorks} />}
-
         <CategoriesContainer>
           <ResponsiveTitle>{categoriesTitle}</ResponsiveTitle>
-          <Categories type="wishes" />
+          <Categories type="donations" />
         </CategoriesContainer>
-
-        <TopWishesContainer>
+        <TopDonationsContainer>
           <ResponsiveTitle>{topCategoriesTitle}</ResponsiveTitle>
-          <TopWishes numberOfPosts={numberOfPostsPerCategory} numberOfCategories={numberOfCategories} />
-        </TopWishesContainer>
+          <TopDonations numberOfPosts={numberOfPostsPerCategory} numberOfCategories={numberOfCategories} />
+        </TopDonationsContainer>
       </Grid>
-    </WishesHomePageContainer>
+    </HomePageContainer>
   );
 };
 
-export default WishesHomePage;
+export default DonationsHomePage;

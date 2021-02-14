@@ -1,19 +1,24 @@
 import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
-import { Stack, Button, Text } from '@kiwicom/orbit-components/lib';
-import api from '@api';
 import styled from 'styled-components';
-import BlackText from '../../text/BlackText';
-import GreySubtleButton from '../../buttons/GreySubtleButton';
-import DonationCard from '../../card/DonationCard';
-import CarouselScrollButton from '../../buttons/CarouselScrollButton';
-import Desktop from '@kiwicom/orbit-components/lib/Desktop';
-import { getFormattedDate } from '@api/time';
 
+// components
+import { Stack, Button, Text } from '@kiwicom/orbit-components/lib';
+import BlackText from '@components/text/BlackText';
+import GreySubtleButton from '@components/buttons/GreySubtleButton';
+import DonationCard from '@components/card/DonationCard';
+import CarouselScrollButton from '@components/buttons/CarouselScrollButton';
+import Desktop from '@kiwicom/orbit-components/lib/Desktop';
 import { InstantSearch, connectHits, Configure } from 'react-instantsearch-dom';
+
+// constants and utils
+import { getFormattedDate } from '@api/time';
 import { getByCategoryIdAndStatus } from '@utils/algolia/filteringRules';
-import { getTopNCategoriesFromAlgolia, sortObjectEntries } from './algoliaHelpers';
+import { getTopNCategoriesFromAlgolia, sortObjectEntries } from '../../../utils/algoliaHelpers';
 import { searchClient } from '@utils/algolia';
+import api from '@api';
+
+// hooks
+import { useRouter } from 'next/router';
 
 const CategoryHeader = styled.div`
   align-items: center;

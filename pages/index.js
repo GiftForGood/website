@@ -1,13 +1,18 @@
 import React from 'react';
-import SessionProvider from '@components/session/modules/SessionProvider';
-import { isAuthenticated } from '@utils/authentication/authentication';
-import WishesHomePage from '@components/home/pages/WishesHomePage';
 import dynamic from 'next/dynamic';
+
+// components
+import WishesHomePage from '@pages/home/wishes';
 import Header from '@components/header';
-import { WISHES } from '@constants/search';
+import SessionProvider from '@components/session/modules/SessionProvider';
 import Onboarding from '@components/onboarding/Onboarding';
+
+// constants and utils
+import { isAuthenticated } from '@utils/authentication/authentication';
+import { WISHES } from '@constants/search';
 import { DONOR, NPO } from '@constants/usersType';
 
+// dynamic imports
 const TopNavigationBar = dynamic(() => import('@components/navbar/modules/TopNavigationBar'), { ssr: false });
 const BottomNavigation = dynamic(() => import('@components/navbar/modules/BottomNavigation'), { ssr: false });
 const Footer = dynamic(() => import('@components/footer/Footer'), { ssr: false });

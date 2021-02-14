@@ -1,18 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
-import { Stack, Button, Text } from '@kiwicom/orbit-components/lib';
-import api from '@api';
 import styled, { css } from 'styled-components';
-import BlackText from '../../text/BlackText';
-import GroupWishCard from '../../card/GroupWishCard';
-import GreySubtleButton from '../../buttons/GreySubtleButton';
-import Desktop from '@kiwicom/orbit-components/lib/Desktop';
-import Mobile from '@kiwicom/orbit-components/lib/Mobile';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 
+// components
+import { Stack, Button, Text } from '@kiwicom/orbit-components/lib';
+import api from '@api';
+import BlackText from '@components/text/BlackText';
+import GroupWishCard from '@components/card/GroupWishCard';
+import GreySubtleButton from '@components/buttons/GreySubtleButton';
+import Desktop from '@kiwicom/orbit-components/lib/Desktop';
+import Mobile from '@kiwicom/orbit-components/lib/Mobile';
 import { InstantSearch, connectHits, Configure } from 'react-instantsearch-dom';
+
+// hooks
+import { useRouter } from 'next/router';
+
+// constants and utils
 import { getByCategoryIdAndStatusAndNotExpired } from '@utils/algolia/filteringRules';
-import { getTopNCategoriesFromAlgoliaWithExpireDateTime, sortObjectEntries } from './algoliaHelpers';
+import { getTopNCategoriesFromAlgoliaWithExpireDateTime, sortObjectEntries } from '../../../utils/algoliaHelpers';
 import { searchClient } from '@utils/algolia';
 
 // note that the width of each wish column in desktop is calculated using
