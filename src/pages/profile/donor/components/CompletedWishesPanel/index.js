@@ -1,16 +1,22 @@
 import React, { useEffect, useState } from 'react';
-import api from '@api';
-import BumpableWishCard from '../../card/BumpableWishCard';
-import { Grid, Button, Loading, Stack } from '@kiwicom/orbit-components/lib';
 import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
-import SeeMoreButtonStyle from '../../buttons/SeeMoreButton';
-import BlackText from '../../text/BlackText';
-import { WISHES_BATCH_SIZE } from '@api/constants';
-import InfiniteScroll from '../../scroller/InfiniteScroller';
-import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
-import { deserializeFirestoreTimestampToUnixTimestamp } from '@utils/firebase/deserializer';
+
+// components
+import { Grid, Button, Loading, Stack } from '@kiwicom/orbit-components/lib';
+import BumpableWishCard from '@components/card/BumpableWishCard';
+import SeeMoreButtonStyle from '@components/buttons/SeeMoreButton';
+import BlackText from '@components/text/BlackText';
+import InfiniteScroll from '@components/scroller/InfiniteScroller';
 import EmptyStateImage from '@components/imageContainers/EmptyStateImage';
+
+// constants and utils
+import api from '@api';
+import { WISHES_BATCH_SIZE } from '@api/constants';
+import { deserializeFirestoreTimestampToUnixTimestamp } from '@utils/firebase/deserializer';
+
+// hooks
+import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 import { useRemoteConfig } from '@components/remoteConfig/RemoteConfig';
 
 const GridSectionContainer = styled.div`
@@ -41,52 +47,46 @@ const ButtonContainer = styled.div`
   margin-top: 20px;
 `;
 
-const PastWishesPanel = ({ isMine, userId }) => {
-  const [pastWishes, setPastWishes] = useState([]);
+const CompletedWishesPanel = ({ isMine, userId }) => {
+  const [completedWishes, setCompletedWishes] = useState([]);
   const [shouldSeeMore, setShouldSeeMore] = useState(true);
+  const [pageIsLoading, setpageIsLoading] = useState(true);
   const [seeMoreIsLoading, setSeeMoreIsLoading] = useState(false);
-  const [pageIsLoading, setPageIsLoading] = useState(true);
   const { isLargeMobile } = useMediaQuery();
   const remoteConfig = useRemoteConfig();
 
-  const fetchPastWishes = (lastQueriedDocument) => {
-    setPageIsLoading(true);
+  const fetchCompletedWishes = (lastQueriedDocument) => {
+    setpageIsLoading(true);
     api.wishes
-      .getNPOWishes(userId, lastQueriedDocument)
+      .getDonorCompletedWishes(userId, lastQueriedDocument)
       .then((wishesDoc) => {
         const numberOfDocumentsReturned = wishesDoc.docs.length;
         if (numberOfDocumentsReturned < WISHES_BATCH_SIZE) {
           // loaded all documents already, since the number of wishes returned is less than batch size
           setShouldSeeMore(false);
         }
-        setPastWishes([...pastWishes, ...wishesDoc.docs]);
+        setCompletedWishes([...completedWishes, ...wishesDoc.docs]);
         setSeeMoreIsLoading(false);
       })
       .finally(() => {
-        setPageIsLoading(false);
+        setpageIsLoading(false);
       });
   };
 
   useEffect(() => {
-    fetchPastWishes(null);
+    fetchCompletedWishes(null);
   }, []);
 
   const getLastQueriedDocument = () => {
-    if (pastWishes.length === 0) {
+    if (completedWishes.length === 0) {
       return null;
     }
-    return pastWishes[pastWishes.length - 1];
+    return completedWishes[completedWishes.length - 1];
   };
 
   const onSeeMoreClicked = () => {
     setSeeMoreIsLoading(true);
-    fetchPastWishes(getLastQueriedDocument());
-  };
-
-  const bumpCallback = (index, updatedWish) => {
-    let updatedPastWishes = [...pastWishes];
-    updatedPastWishes[index] = updatedWish;
-    setPastWishes(updatedPastWishes);
+    fetchCompletedWishes(getLastQueriedDocument());
   };
 
   const SeeMoreButton = () => {
@@ -102,18 +102,18 @@ const PastWishesPanel = ({ isMine, userId }) => {
   };
 
   const MobilePastWishes = () => {
-    if (pastWishes.length === 0 && pageIsLoading) {
+    if (completedWishes.length === 0 && pageIsLoading) {
       return (
         <Stack justify="center" align="center" direction="column" grow>
-          <Loading dataTest="test" loading text="Please wait, fetching wishes..." type="pageLoader" />
+          <Loading dataTest="test" loading text="Please wait, fetching completed wishes..." type="pageLoader" />
         </Stack>
       );
     }
 
-    if (pastWishes.length === 0) {
+    if (completedWishes.length === 0) {
       return (
         <Stack justify="center" align="center" direction="column" grow>
-          <EmptyStateImage label="No wishes posted yet." />
+          <EmptyStateImage label="No completed wishes yet." />
         </Stack>
       );
     }
@@ -135,25 +135,25 @@ const PastWishesPanel = ({ isMine, userId }) => {
           columnGap="20px"
           columns="1fr"
         >
-          <PastWishes />
+          <CompletedWishes />
         </Grid>
       </InfiniteScroll>
     );
   };
 
-  const DesktopAndTabletPastWishes = () => {
-    if (pastWishes.length === 0 && pageIsLoading) {
+  const DesktopAndTabletCompletedWishes = () => {
+    if (completedWishes.length === 0 && pageIsLoading) {
       return (
         <Stack justify="center" align="center" direction="column" grow>
-          <Loading dataTest="test" loading text="Please wait, fetching wishes..." type="pageLoader" />
+          <Loading dataTest="test" loading text="Please wait, fetching completed wishes..." type="pageLoader" />
         </Stack>
       );
     }
 
-    if (pastWishes.length === 0) {
+    if (completedWishes.length === 0) {
       return (
         <Stack justify="center" align="center" direction="column" grow>
-          <EmptyStateImage label="No wishes posted yet." />
+          <EmptyStateImage label="No completed wishes yet." />
         </Stack>
       );
     }
@@ -172,7 +172,7 @@ const PastWishesPanel = ({ isMine, userId }) => {
           rowGap="30px"
           columnGap="20px"
         >
-          <PastWishes />
+          <CompletedWishes />
         </Grid>
 
         {shouldSeeMore ? <SeeMoreButton /> : null}
@@ -180,10 +180,10 @@ const PastWishesPanel = ({ isMine, userId }) => {
     );
   };
 
-  const PastWishes = () => {
-    return pastWishes.map((pastWish, index) => {
-      const pastWishData = pastWish.data();
-      deserializeFirestoreTimestampToUnixTimestamp(pastWishData);
+  const CompletedWishes = () => {
+    return completedWishes.map((completedWish, index) => {
+      const completedWishData = completedWish.data();
+      deserializeFirestoreTimestampToUnixTimestamp(completedWishData);
       const {
         wishId,
         organization,
@@ -193,10 +193,9 @@ const PastWishesPanel = ({ isMine, userId }) => {
         postedDateTime,
         isBumped,
         status,
-        expireDateTime,
         event,
-      } = pastWishData;
-      const categoryTags = pastWish.data().categories.map((category) => category.name);
+      } = completedWishData;
+      const categoryTags = completedWish.data().categories.map((category) => category.name);
       return (
         <BumpableWishCard
           index={index}
@@ -208,12 +207,10 @@ const PastWishesPanel = ({ isMine, userId }) => {
           profileImageUrl={user.profileImageUrl}
           postedDateTime={postedDateTime}
           postHref={`/wishes/${wishId}`}
-          profileHref={`/profile/${userId}`}
+          profileHref={`/profile/${user.userId}`}
           categoryTags={categoryTags}
           isBumped={isBumped}
-          expireDateTime={expireDateTime}
-          bumpCallback={bumpCallback}
-          isMine={isMine}
+          isMine={false}
           status={status}
           seasonal={
             remoteConfig?.configs?.currentEvent.key &&
@@ -230,10 +227,10 @@ const PastWishesPanel = ({ isMine, userId }) => {
   return (
     <div>
       <GridSectionContainer>
-        <WishesContainer>{isLargeMobile ? <DesktopAndTabletPastWishes /> : <MobilePastWishes />}</WishesContainer>
+        <WishesContainer>{isLargeMobile ? <DesktopAndTabletCompletedWishes /> : <MobilePastWishes />}</WishesContainer>
       </GridSectionContainer>
     </div>
   );
 };
 
-export default PastWishesPanel;
+export default CompletedWishesPanel;

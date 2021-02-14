@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import ReviewCard from './ReviewCard';
-import ReviewHeader from './ReviewHeader';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import styled, { css } from 'styled-components';
+
+// components
+import { ReviewCard, ReviewHeader } from './components';
+
+// constants and utils
 import { getTimeDifferenceFromNow } from '@api/time';
 import { dummyReviews } from '@utils/dummyData/reviews';
 

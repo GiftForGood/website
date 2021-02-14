@@ -1,8 +1,12 @@
 import React from 'react';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
 import styled, { css } from 'styled-components';
+
+// constants
 import { npo } from '@constants/userType';
-import ProfileDetails from './ProfileDetails';
+
+// components
+import { ProfileDetails } from './components';
 
 const ProfilePanelWrapper = styled.div`
   padding: 30px 25px 30px 30px;

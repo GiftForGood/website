@@ -1,9 +1,13 @@
 import React from 'react';
-import ProfileAvatar from '@components/imageContainers/ProfileAvatar';
-import RatingStars from '../../ratingStars';
 import styled from 'styled-components';
-import { colors } from '@constants/colors';
+
+// components
+import ProfileAvatar from '@components/imageContainers/ProfileAvatar';
+import RatingStars from '@components/ratingStars';
 import { Stack, Text, Separator, Loading } from '@kiwicom/orbit-components/lib';
+
+// constants
+import { colors } from '@constants/colors';
 
 const ReviewCardContainer = styled.div`
   padding: 0px 20px 0px 20px;

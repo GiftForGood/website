@@ -1,12 +1,18 @@
 import React from 'react';
 import dynamic from 'next/dynamic';
-import NpoProfilePage from '@components/profile/pages/NpoProfilePage';
+
+// components
+import NpoProfilePage from '@pages/profile/npo';
+import DonorProfilePage from '@pages/profile/donor';
 import SessionProvider from '@components/session/modules/SessionProvider';
+import Error from 'next/error';
+
+// constants and utils
 import { isAuthenticated } from '@utils/authentication/authentication';
 import api from '@api';
 import { containsNPO, containsDonor } from '@utils/authentication/userType';
-import Error from 'next/error';
-import DonorProfilePage from '@components/profile/pages/DonorProfilePage';
+
+// dynamic imports
 const TopNavigationBar = dynamic(() => import('@components/navbar/modules/TopNavigationBar'), {
   ssr: false,
 });
