@@ -1,17 +1,23 @@
 import React, { useEffect, useState } from 'react';
-import api from '@api';
-import DonationCard from '../../card/DonationCard';
-import { Grid, Button, Loading, Stack } from '@kiwicom/orbit-components/lib';
 import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
-import SeeMoreButtonStyle from '../../buttons/SeeMoreButton';
-import BlackText from '../../text/BlackText';
+
+// components
+import { Grid, Button, Loading, Stack } from '@kiwicom/orbit-components/lib';
+import DonationCard from '@components/card/DonationCard';
+import SeeMoreButtonStyle from '@components/buttons/SeeMoreButton';
+import BlackText from '@components/text/BlackText';
+import InfiniteScroll from '@components/scroller/InfiniteScroller';
+import EmptyStateImage from '@components/imageContainers/EmptyStateImage';
+
+// constants and utils
 import { DONATIONS_BATCH_SIZE } from '@api/constants';
-import InfiniteScroll from '../../scroller/InfiniteScroller';
-import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
+import api from '@api';
 import { getFormattedDate } from '@api/time';
 import { deserializeFirestoreTimestampToUnixTimestamp } from '@utils/firebase/deserializer';
-import EmptyStateImage from '@components/imageContainers/EmptyStateImage';
+
+// hooks
+import useMediaQuery from '@kiwicom/orbit-components/lib/hooks/useMediaQuery';
 
 const GridSectionContainer = styled.div`
   margin-top: 20px;
