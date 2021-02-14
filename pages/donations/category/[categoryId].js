@@ -1,13 +1,18 @@
 import React from 'react';
-import api from '@api';
-import ViewCategoryPage from '@components/category/pages/DonationsViewCategoryPage';
 import dynamic from 'next/dynamic';
-import SessionProvider from '@components/session/modules/SessionProvider';
-import { isAuthenticated } from '@utils/authentication/authentication';
-import Error from 'next/error';
-import Header from '@components/header';
-import { DONATIONS } from '@constants/search';
 
+// components
+import Header from '@components/header';
+import Error from 'next/error';
+import SessionProvider from '@components/session/modules/SessionProvider';
+import ViewCategoryPage from '@pages/category/donations';
+
+// utils and constants
+import { DONATIONS } from '@constants/search';
+import { isAuthenticated } from '@utils/authentication/authentication';
+import api from '@api';
+
+// dynamic imports
 const TopNavigationBar = dynamic(() => import('@components/navbar/modules/TopNavigationBar'), {
   ssr: false,
 });
