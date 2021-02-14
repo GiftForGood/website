@@ -1,24 +1,31 @@
-import React, { useState, useEffect } from 'react';
-import Categories from '../modules/Categories';
-import BlackText from '../../text/BlackText';
-import { Grid } from '@kiwicom/orbit-components/lib';
-import { WISHES_BATCH_SIZE } from '@api/constants';
+import React, { useState } from 'react';
 import styled, { css } from 'styled-components';
 import media from '@kiwicom/orbit-components/lib/utils/mediaQuery';
-import { InstantSearch, Configure, connectInfiniteHits } from 'react-instantsearch-dom';
-import WishesHitWrapper from '../modules/WishesHitWrapper';
-import { getByStatusAndNotExpired } from '@utils/algolia/filteringRules';
-import { wishesSortByRule } from '@utils/algolia/sortByRules';
 import dynamic from 'next/dynamic';
-import useUser from '@components/session/modules/useUser';
-import { searchClient } from '@utils/algolia';
-import { MaxWidthContainer } from '@components/containers';
 
-const WishesSortFilterPanel = dynamic(() => import('../modules/WishesSortFilterPanel'), {
+// components
+import { MaxWidthContainer } from '@components/containers';
+import { HitWrapper } from '../components';
+import { InstantSearch, Configure, connectInfiniteHits } from 'react-instantsearch-dom';
+import { Grid } from '@kiwicom/orbit-components/lib';
+import BlackText from '@components/text/BlackText';
+import { Categories } from '../../components';
+
+// hooks
+import useUser from '@components/session/modules/useUser';
+
+// utils and constants
+import { searchClient } from '@utils/algolia';
+import { wishesSortByRule } from '@utils/algolia/sortByRules';
+import { getByStatusAndNotExpired } from '@utils/algolia/filteringRules';
+import { WISHES_BATCH_SIZE } from '@api/constants';
+
+// dynamic imports
+const WishesSortFilterPanel = dynamic(() => import('../components/SortFilterPanel'), {
   ssr: false,
 });
 
-const WishesInfiniteHit = connectInfiniteHits(WishesHitWrapper);
+const WishesInfiniteHit = connectInfiniteHits(HitWrapper);
 
 const ViewAllWishesContainer = styled(MaxWidthContainer)`
   margin-top: 25px;

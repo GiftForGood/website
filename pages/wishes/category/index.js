@@ -1,11 +1,16 @@
 import React from 'react';
-import ViewAllWishesPage from '@components/category/pages/ViewAllWishesPage';
 import dynamic from 'next/dynamic';
-import SessionProvider from '@components/session/modules/SessionProvider';
-import { isAuthenticated } from '@utils/authentication/authentication';
-import Header from '@components/header';
-import { WISHES } from '@constants/search';
 
+// components
+import Header from '@components/header';
+import SessionProvider from '@components/session/modules/SessionProvider';
+import ViewAllWishesPage from '@pages/category/wishes/all';
+
+// utils and components
+import { WISHES } from '@constants/search';
+import { isAuthenticated } from '@utils/authentication/authentication';
+
+// dynamic imports
 const TopNavigationBar = dynamic(() => import('@components/navbar/modules/TopNavigationBar'), {
   ssr: false,
 });
