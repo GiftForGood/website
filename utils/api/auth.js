@@ -83,10 +83,12 @@ class AuthAPI {
     const [npoDoc, userDoc] = await Promise.all([
       this._createNPO(userProfile, name, contact, organizationInfo),
       this._createUser(userProfile.uid, NPO),
-      this._updateNPOOrganizationMemberStatus(organizationInfo),
     ]);
-    // This function needs to be after `createNPO` as it needs the npo data to be there
-    await this._createNPOVerificationData(userProfile, name, contact, organizationInfo, registrationNumber, activities);
+    // These functions needs to be after `createNPO` as it needs the npo data to be there
+    await Promise.all([
+      this._updateNPOOrganizationMemberStatus(organizationInfo),
+      this._createNPOVerificationData(userProfile, name, contact, organizationInfo, registrationNumber, activities),
+    ]);
 
     return [token, userProfile, npoDoc];
   }
