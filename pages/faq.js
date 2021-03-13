@@ -1,9 +1,11 @@
 import React from 'react';
+import dynamic from 'next/dynamic';
+
+// components
 import SessionProvider from '@components/session/modules/SessionProvider';
 import { isAuthenticated } from '@utils/authentication/authentication';
-import dynamic from 'next/dynamic';
 import Header from '@components/header';
-import Faq from '@components/faq/pages/Faq';
+import Faq from '@pages/faq';
 
 const TopNavigationBar = dynamic(() => import('@components/navbar/modules/TopNavigationBar'), { ssr: false });
 const BottomNavigation = dynamic(() => import('@components/navbar/modules/BottomNavigation'), { ssr: false });

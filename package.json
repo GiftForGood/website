@@ -74,6 +74,7 @@
     "babel-plugin-styled-components": "^1.10.7",
     "gray-matter": "^4.0.2",
     "husky": "^4.3.7",
+    "lint-staged": "^10.5.4",
     "prettier": "2.0.5",
     "remark-highlight.js": "^6.0.0",
     "remark-html": "^12.0.0",
@@ -82,7 +83,12 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run format"
+      "pre-commit": "lint-staged"
     }
+  },
+  "lint-staged": {
+    "*.js": [
+      "prettier --write"
+    ]
   }
 }

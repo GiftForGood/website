@@ -1,5 +1,5 @@
 import React from 'react';
-import ViewAllDonationsPage from '@components/category/pages/ViewAllDonationsPage';
+import ViewAllDonationsPage from '@pages/category/donations/all';
 import dynamic from 'next/dynamic';
 import SessionProvider from '@components/session/modules/SessionProvider';
 import { isAuthenticated } from '@utils/authentication/authentication';
