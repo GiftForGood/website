@@ -28,7 +28,9 @@ const firebaseStorage = firebase.storage();
 if (process.env.NODE_ENV === 'development') {
   db.useEmulator('localhost', 8080); // firestore
   firebase.database().useEmulator('localhost', 9000); // Realtime Database
-  firebaseAuth.useEmulator('http://localhost:9099/'); // Auth
+  if (process.env.ENABLE_AUTH_EMULATOR === 'true') {
+    firebaseAuth.useEmulator('http://localhost:9099/'); // Auth
+  }
 }
 
 // Remote config requires the browser to work due to caching.
