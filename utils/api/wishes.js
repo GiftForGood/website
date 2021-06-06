@@ -1,6 +1,7 @@
 import { db, firebaseAuth, firebase } from '../firebase';
 import { WISHES_BATCH_SIZE } from './constants';
 import { TIMESTAMP, NPO_NAME, POSTED_TIMESTAMP } from '../constants/wishesSortType';
+import { WISHES_COLLECTION } from '@constants/firestore';
 import { BUMP_DURATION } from '@constants/wishes';
 import { PENDING, CLOSED, COMPLETED } from '../constants/postStatus';
 import { getLocations, getUpdatedLocations } from './common/location';
@@ -50,19 +51,20 @@ class WishesAPI {
     const expiryDateTime = moment(timeNow).add(1, 'month').toDate();
     const firestoreExpiryDateTime = firebase.firestore.Timestamp.fromDate(expiryDateTime);
     let data = {
-      wishId: newWish.id,
-      title: title,
-      description: description,
-      categories: categoryInfos,
-      locations: locationInfos,
-      status: PENDING,
-      user: userInfo,
-      organization: organizationInfo,
-      postedDateTime: timeNow,
-      updatedDateTime: timeNow,
-      lastActionByUserDateTime: timeNow,
-      expireDateTime: firestoreExpiryDateTime,
-      isBumped: false,
+      [WISHES_COLLECTION.wishId]: newWish.id,
+      [WISHES_COLLECTION.title]: title,
+      [WISHES_COLLECTION.description]: description,
+      [WISHES_COLLECTION.categories]: categoryInfos,
+      [WISHES_COLLECTION.locations]: locationInfos,
+      [WISHES_COLLECTION.status]: PENDING,
+      [WISHES_COLLECTION.user]: userInfo,
+      [WISHES_COLLECTION.organization]: organizationInfo,
+      [WISHES_COLLECTION.postedDateTime]: timeNow,
+      [WISHES_COLLECTION.updatedDateTime]: timeNow,
+      [WISHES_COLLECTION.lastActionByUserDateTime]: timeNow,
+      [WISHES_COLLECTION.expireDateTime]: firestoreExpiryDateTime,
+      [WISHES_COLLECTION.isBumped]: false,
+      [WISHES_COLLECTION.isDisabled]: false,
     };
 
     if (Object.keys(event).length > 0) {
