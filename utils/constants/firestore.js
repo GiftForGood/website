@@ -7,7 +7,7 @@ export const WISHES_COLLECTION = {
   description: 'description',
   categories: 'categories',
   locations: 'locations',
-  user: 'users',
+  user: 'user',
   organization: 'organization',
   closed: 'closed',
   completed: 'completed',
