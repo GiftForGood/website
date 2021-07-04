@@ -37,12 +37,19 @@ const Profile = ({ user, userId, userTypes }) => {
   return (
     <SessionProvider user={user}>
       <TopNavigationBar showNews={true} />
-      {userTypes ? null : <Error statusCode={404} />}
-      {containsNPO(userTypes) ? (
-        <NpoProfilePage userId={userId} />
-      ) : containsDonor(userTypes) ? (
-        <DonorProfilePage userId={userId} />
-      ) : null}
+      {user.disabled ? (
+        <Error statusCode={404} />
+      ) : (
+        <>
+          {userTypes ? null : <Error statusCode={404} />}
+          {containsNPO(userTypes) ? (
+            <NpoProfilePage userId={userId} />
+          ) : containsDonor(userTypes) ? (
+            <DonorProfilePage userId={userId} />
+          ) : null}
+        </>
+      )}
+
       <BottomNavigation />
       <Footer />
     </SessionProvider>

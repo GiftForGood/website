@@ -18,6 +18,7 @@ export const getNpoNotBlocked = () => {
   return `isBlocked: '${false}'`;
 };
 
+// Get NPO Wishes that aren't disabled
 export const getNpoWishes = (orgId) => {
-  return `organization.id: '${orgId}'`;
+  return `organization.id: '${orgId}' AND isDisabled:'false'`;
 };

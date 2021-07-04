@@ -44,6 +44,7 @@ async function handler(req, res) {
             emailVerified: currentUser.emailVerified,
             email: decodedClaims.email,
             isClaimSet: isClaimSet,
+            disabled: currentUser.disabled,
           },
         });
       } catch (error) {
