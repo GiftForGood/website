@@ -197,22 +197,6 @@ const NpoEditProfilePanel = () => {
                     value={user.organization.address}
                   />
 
-                  <InputField
-                    disabled
-                    label="Organization Contact"
-                    name="contact"
-                    placeholder="contact"
-                    value={user.organization.contact}
-                  />
-
-                  <InputField
-                    disabled
-                    label="Organization Website"
-                    name="website"
-                    placeholder="website"
-                    value={user.organization.website}
-                  />
-
                   <div>
                     <Text size="small">
                       Looking to change the fields above?{' '}
